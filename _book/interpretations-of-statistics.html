@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1.4 Interpretations of Statistics | An Introduction to Bayesian Reasoning and Methods</title>
+  <meta name="description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="generator" content="bookdown 0.20.1 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1.4 Interpretations of Statistics | An Introduction to Bayesian Reasoning and Methods" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="github-repo" content="rstudio/bayesian-reasoning-and-methods" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1.4 Interpretations of Statistics | An Introduction to Bayesian Reasoning and Methods" />
+  
+  <meta name="twitter:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  
+
+<meta name="author" content="Kevin Ross" />
+
+
+<meta name="date" content="2021-01-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="consistency.html"/>
+<link rel="next" href="bayes-rule.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="interpretations.html"><a href="interpretations.html"><i class="fa fa-check"></i><b>1</b> Interpretations of Probability and Statistics</a><ul>
+<li class="chapter" data-level="1.1" data-path="randomness.html"><a href="randomness.html"><i class="fa fa-check"></i><b>1.1</b> Instances of randomness</a></li>
+<li class="chapter" data-level="1.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html"><i class="fa fa-check"></i><b>1.2</b> Interpretations of probability</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#rel-freq"><i class="fa fa-check"></i><b>1.2.1</b> Long run relative frequency</a></li>
+<li class="chapter" data-level="1.2.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#subjective-probability"><i class="fa fa-check"></i><b>1.2.2</b> Subjective probability</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="consistency.html"><a href="consistency.html"><i class="fa fa-check"></i><b>1.3</b> Working with probabilities</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="consistency.html"><a href="consistency.html#consistency-requirements"><i class="fa fa-check"></i><b>1.3.1</b> Consistency requirements</a></li>
+<li class="chapter" data-level="1.3.2" data-path="consistency.html"><a href="consistency.html#odds"><i class="fa fa-check"></i><b>1.3.2</b> Odds</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="interpretations-of-statistics.html"><a href="interpretations-of-statistics.html"><i class="fa fa-check"></i><b>1.4</b> Interpretations of Statistics</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bayes-rule.html"><a href="bayes-rule.html"><i class="fa fa-check"></i><b>2</b> Bayes’ Rule</a></li>
+<li class="chapter" data-level="3" data-path="bayes-factor.html"><a href="bayes-factor.html"><i class="fa fa-check"></i><b>3</b> Odds and Bayes Factors</a></li>
+<li class="chapter" data-level="4" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>4</b> Introduction to Estimation</a></li>
+<li class="chapter" data-level="5" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>5</b> Introduction to Inference</a></li>
+<li class="chapter" data-level="6" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>6</b> Introduction to Prediction</a></li>
+<li class="chapter" data-level="7" data-path="continuous.html"><a href="continuous.html"><i class="fa fa-check"></i><b>7</b> Introduction to Continuous Prior and Posterior Distributions</a><ul>
+<li class="chapter" data-level="7.1" data-path="a-brief-review-of-continuous-distributions.html"><a href="a-brief-review-of-continuous-distributions.html"><i class="fa fa-check"></i><b>7.1</b> A brief review of continuous distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="normal-mean.html"><a href="normal-mean.html"><i class="fa fa-check"></i><b>7.2</b> Normal mean</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="jags.html"><a href="jags.html"><i class="fa fa-check"></i><b>8</b> Introduction to Posterior Simulation and JAGS</a><ul>
+<li class="chapter" data-level="8.1" data-path="implementing-mcmc-in-jags.html"><a href="implementing-mcmc-in-jags.html"><i class="fa fa-check"></i><b>8.1</b> Implementing MCMC in JAGS</a></li>
+<li class="chapter" data-level="8.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html"><i class="fa fa-check"></i><b>8.2</b> Example 17.1: Beta-Binomial Model — “Data is singular”</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#load-the-data"><i class="fa fa-check"></i><b>8.2.1</b> Load the data</a></li>
+<li class="chapter" data-level="8.2.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#specify-the-model-likelihood-and-prior"><i class="fa fa-check"></i><b>8.2.2</b> Specify the model: likelihood and prior</a></li>
+<li class="chapter" data-level="8.2.3" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#compile-in-jags"><i class="fa fa-check"></i><b>8.2.3</b> Compile in JAGS</a></li>
+<li class="chapter" data-level="8.2.4" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulate-values-from-the-posterior-distribution"><i class="fa fa-check"></i><b>8.2.4</b> Simulate values from the posterior distribution</a></li>
+<li class="chapter" data-level="8.2.5" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#summarizing-simulated-values-and-diagnostic-checking"><i class="fa fa-check"></i><b>8.2.5</b> Summarizing simulated values and diagnostic checking</a></li>
+<li class="chapter" data-level="8.2.6" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#posterior-prediction"><i class="fa fa-check"></i><b>8.2.6</b> Posterior prediction</a></li>
+<li class="chapter" data-level="8.2.7" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#loading-data-as-individual-values-rather-than-summary-statistics"><i class="fa fa-check"></i><b>8.2.7</b> Loading data as individual values rather than summary statistics</a></li>
+<li class="chapter" data-level="8.2.8" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulating-multiple-chains"><i class="fa fa-check"></i><b>8.2.8</b> Simulating multiple chains</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="prior.html"><a href="prior.html"><i class="fa fa-check"></i><b>9</b> Considering Prior Distributions</a></li>
+<li class="chapter" data-level="10" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>10</b> Introduction to Bayesian Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Introduction to Bayesian Reasoning and Methods</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="interpretations-of-statistics" class="section level2">
+<h2><span class="header-section-number">1.4</span> Interpretations of Statistics</h2>
+<p>In the previous sections we have seen two interpretations of statistics: relative frequency and subjective. These two interpretations provide the philosophical foundation for two schools of statistics: <em>frequentist</em> (hypothesis tests and confidence intervals that you’ve seen before) and <em>Bayesian</em>. This section provides a very brief introduction to some of the main ideas in Bayesian statistics. The examples in this section only motivate ideas. We will fill in lots more details throughout the course.</p>
+
+<div class="example">
+<p><span id="exm:instructor-age" class="example"><strong>Example 1.9  </strong></span>
+How old do you think your instructor (Professor Ross) currently is<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>? Consider age on a
+continuous scale, e.g., you might be 20.73 or 21.36 or 19.50.</p>
+<p>In this example, you will use probability to quantify your uncertainty about your instructor’s age. You only need to give ballpark estimates of your subjective probabilities, but you might consider what kinds of bets you would be willing to accept like in Example <a href="interpretations-of-probability.html#exm:subjective-bet">1.3</a>. (This exercise just motivates some ideas. We’ll fill in lots of details later.)</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>What is your subjective probability that your instructor is at most 30 years old? More than 30 years old? (What must be true about these two probabilities?)</li>
+<li>What is your subjective probability that your instructor is at most 60 years old? More than 60 years old?</li>
+<li>What is your subjective probability that your instructor is at most 40 years old? More than 40 years old?</li>
+<li>What is your subjective probability that your instructor is at most 50 years old? More than 50 years old?</li>
+<li>Fill in the blank: your subjective probability that your instructor is at most [blank] years old is equal to 50%.</li>
+<li>Fill in the blanks: your subjective probability that your instructor is between [blank] and [blank] years old is equal to 95%.</li>
+<li>Let <span class="math inline">\(\theta\)</span> represent your instructor’s age at midnight on Jan 4, 2021. Use your answers to the previous parts to sketch a
+continuous probability density function to represent your
+<em>subjective probability distribution</em> for <span class="math inline">\(\theta\)</span>.</li>
+<li>If you ascribe a probability distribution to <span class="math inline">\(\theta\)</span>, then are you treating <span class="math inline">\(\theta\)</span> as a constant or a random variable?</li>
+</ol>
+
+<div class="solution">
+<p> <span class="solution"><em>Solution. </em></span> 
+to Example <a href="interpretations-of-statistics.html#exm:instructor-age">1.9</a></p>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<p>Even though in reality your instructor’s current age is a fixed number, its value is unknown or uncertain to you, and you can use probability to quantify this uncertainty. You would probably be willing to bet any amount of money that your instructor is over 20 years old, so you would assign a probability of 100% to that event, and 0% to the event that he’s at most 20 years old. Let’s say you’re pretty sure that he’s over 30, but you don’t know that for a fact, so you assign a probability of 99% to that event (and 1% to the event that he’s at most 30). You think he’s over 40, but you’re even less sure about that, so maybe you assign the event that he’s over 40 a probability of 67% (say you’d accept a bet at 2 to 1 odds.) You think there’s a 50/50 chance that he’s over 50. You’re 95% sure that he’s between 35 and 60. And so on. Continuing in this way, you can start to determine a probability distribution to represent your beliefs about the instructor’s age. Your distribution should correspond to your subjective probabilities. For example, the distribution should assign a probability of 67% to values over 40.</p>
+<p>This is just one example. Different students will have different distributions depending upon (1) how much information you know about the instructor, and (2) how that information informs your beliefs about the instructor’s age. We’ll see some example plots in the next exercise.</p>
+<p>Regarding the last question, since we are using a probability distribution to quantify our uncertainty about <span class="math inline">\(\theta\)</span>, we are treating <span class="math inline">\(\theta\)</span> as a <em>random variable</em>.</p>
+</details>
+<p>Recall that a <strong>random variable</strong> is a numerical quantity whose value is determined by the outcome of a random or uncertain phenomenon.
+The random phenomenon might involve physically repeatable randomness, as in “flip a coin 10 times and count the number of heads.” But remember that “random” just means “uncertain” and there are lots of different kinds of uncertainty. For example, the total number of points scored in the 2021 Superbowl will be one and only one number, but since we don’t know what that number is we can treat it as a random variable. Treating the number of points as a random variable allows us to quantify our uncertainty about it through probability statements like “there is a 50% chance that fewer than 45 points will be scored in Superbowl 2021”.</p>
+<p>The <strong>(probability) distribution</strong> of a random variable specifies the possible values of the random variable and a way of determining corresponding probabilities. Like probabilities themselves, probability distributions of random variables can also be interpreted as:</p>
+<ul>
+<li><em>relative frequency distributions</em>, e.g., what pattern would emerge if I simulated many values of the random variable? or as</li>
+<li><em>subjective probability distributions</em>, e.g., which potential values of this uncertain quantity are relatively more plausible than others?</li>
+</ul>
+<p>As the name suggests, different individuals might have different subjective probability distributions for the same random variable.</p>
+
+<div class="example">
+<p><span id="exm:instructor-age2" class="example"><strong>Example 1.10  </strong></span>
+Continuing Example <a href="interpretations-of-statistics.html#exm:instructor-age">1.9</a>, the plot below displays the subjective probability distribution of the instructor’s age of four students.</p>
+</div>
+
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<ol style="list-style-type: decimal">
+<li>Since age is treated as a continuous random variable, each of the above plots is a probability “density”. Explain briefly what this means. How is probability represented in density plots like these?</li>
+<li>Rank the students in terms of their subjective probability that the instructor is at most 40 years old.</li>
+<li>Rank the students in terms of their answers to the question: your subjective probability that your instructor is at most [blank] years old is equal to 50%.</li>
+<li>Rank the students in terms of their uncertainty about the instructor’s age. Who is the most uncertain? The least?</li>
+</ol>
+
+<div class="solution">
+<p> <span class="solution"><em>Solution. </em></span> 
+to Example <a href="interpretations-of-statistics.html#exm:instructor-age2">1.10</a></p>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li>In a density plot, probability is represented by area under the curve. The total area under each curve is 1, corresponding to 100% probability. The density height at any particular value <span class="math inline">\(x\)</span> represents the relative likelihood that the random variable takes a value “close to” <span class="math inline">\(x\)</span>. (We’ll consider densities in more detail later.)</li>
+<li>Each student’s subjective probability that the instructor is at most 40 is equal to the area under her subjective probability density over the range of values less than 40. Billie has the smallest probability, then Dua, then Ariana, then Cardi has the largest probability.</li>
+<li>Now we want to find the “equal areas point” of each distribution. From smallest to largest: Cardi then Billie, and Ariana and Dua appear to be about the same. The equal areas point appears to be around 40 or so for Cardi. It’s definitely less than 45, which appears to the equal areas point for Billie. The equal areas point for Ariana is 50 (halfway between 25 and 75), and Dua’s appears to be about 50 also.</li>
+<li>Ariana is most uncertain, then Dua, then Cardi, then Billie is the least uncertain. Each distribution represents 100% probability, but Ariana stretches this probability over the largest range of possibe values, while Billie stretches this over the shortest. Ariana is basically saying the instructor can be any age between 25 and 75. Billie is fairly certain that the instructor is close to 45, and she’s basically 100% certain that the instructor is between 35 and 55.</li>
+</ol>
+</details>
+<p>The previous examples introduce how probability can be used to quantify uncertainty about unknown numbers. One key aspect of Bayesian analyses is applying a subjective probability distribution to a <em>parameter</em> in a statistical model.</p>
+
+<div class="example">
+<p><span id="exm:harry-potter" class="example"><strong>Example 1.11  </strong></span>
+Let <span class="math inline">\(\theta_b\)</span> represent the proportion of current Cal Poly students who have ever read any of the books in the <em>Harry Potter</em> series. Let <span class="math inline">\(\theta_m\)</span> represent the proportion of current Cal Poly students who have ever seen any of the movies in the <em>Harry Potter</em> series.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Are <span class="math inline">\(\theta_b\)</span> and <span class="math inline">\(\theta_m\)</span> parameters or statistics? Why?</li>
+<li>Are the values of <span class="math inline">\(\theta_b\)</span> and <span class="math inline">\(\theta_m\)</span> known or unknown, certain or uncertain?</li>
+<li>What are the possible values of <span class="math inline">\(\theta_b\)</span> and <span class="math inline">\(\theta_m\)</span>?</li>
+<li>Sketch a probability distribution representing what you think are more/less credible values of <span class="math inline">\(\theta_b\)</span>. Repeat for <span class="math inline">\(\theta_m\)</span>. Are you more certain about the value of <span class="math inline">\(\theta_b\)</span> or <span class="math inline">\(\theta_m\)</span>; how is this reflected in your distributions?</li>
+<li>Suppose that in a class of 35 Cal Poly students, 21 have read a Harry Potter book, and 30 have seen a Harry Potter movie. Now that we have observed some data, sketch a probability distribution representing what you think are more/less credible values of <span class="math inline">\(\theta_b\)</span>. Repeat for <span class="math inline">\(\theta_m\)</span>. How do your distributions after observing data compare to the distributions you sketched before?</li>
+</ol>
+
+<div class="solution">
+<p> <span class="solution"><em>Solution. </em></span> 
+to Example <a href="interpretations-of-statistics.html#exm:harry-potter">1.11</a></p>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li><p>The population of interest is current Cal Poly students, so <span class="math inline">\(\theta_b\)</span> and <span class="math inline">\(\theta_m\)</span> are <em>parameters</em>. We don’t have relevant data for the entire population, but we could collect data on a sample.</p></li>
+<li><p>Since we don’t have data on the entire population, the values of <span class="math inline">\(\theta_b\)</span> and <span class="math inline">\(\theta_m\)</span> are unknown, uncertain.</p></li>
+<li><p><span class="math inline">\(\theta_b\)</span> and <span class="math inline">\(\theta_m\)</span> are proportions so they take values between 0 and 1. Any value on the continuous scale between 0 and 1 is theoretically possible, though the values are not equally plausible.</p></li>
+<li><p>Results will vary, but here’s my thought process. I think that a strong majority of Cal Poly students have seen at least one Harry Potter movie, maybe 80% or so. I wouldn’t be that surprised if it were even close to 100%, but I would be pretty surprised if it were less than 60%.</p>
+<p>However, I’m less certain about <span class="math inline">\(\theta_b\)</span>. I suspect that fewer than 50% of students have read at least one Harry Potter book, but I’m not very sure and I wouldn’t be too surprised if it were actually more than 50%.</p>
+<p>See the figure on the left in <a href="interpretations-of-statistics.html#fig:plot-harry-potter">1.4</a> for what my subjective probability distributions might look like. Since I am more uncertain about <span class="math inline">\(\theta_b\)</span>, its density is “spread out” over a wider range of values.</p></li>
+<li><p>The values of <span class="math inline">\(\theta_b\)</span> and <span class="math inline">\(\theta_m\)</span> are still unknown, but I am less uncertain about their values now that I have observed some data. The sample proportion who have watched a Harry Potter movie is <span class="math inline">\(30/35 = 0.857\)</span>, which is pretty consistent with my initial beliefs. But now I update my subjective distribution to concentrate even more of my subjective probability on values in the 80 percent range.</p>
+<p>I had suspected that <span class="math inline">\(\theta_b\)</span> was less than 0.5, so the observed sample proportion of <span class="math inline">\(21/35 = 0.6\)</span> goes against my expectations. However, I was fairly uncertain about the value of <span class="math inline">\(\theta_m\)</span> prior to observing the data, so 0.6 is not too surprising to me. I update my subjective distribution so that it’s centered closer to 0.6, while still allowing for my suspicion that <span class="math inline">\(\theta_b\)</span> is less than 0.5.</p>
+<p>See the figure on the right in <a href="interpretations-of-statistics.html#fig:plot-harry-potter">1.4</a> for what my subjective probability distributions might look like after observing the sample data. Of course, the sample proportions are not necessarily equal to the population proportions. But if the samples are reasonably representative, I would hope that the observed sample proportions are close to the respective population proportions. Even after observing data, there is still uncertainty about the parameters <span class="math inline">\(\theta_b\)</span> and <span class="math inline">\(\theta_m\)</span>, and my subjective distributions quantify this uncertainty.</p></li>
+</ol>
+</details>
+
+<div class="figure"><span id="fig:plot-harry-potter"></span>
+<img src="bayesian-reasoning-and-methods_files/figure-html/plot-harry-potter-1.png" alt="Example subjective distributions in Example 1.11. Left: prior to observing sample data. Right: after observing sample data." width="50%" /><img src="bayesian-reasoning-and-methods_files/figure-html/plot-harry-potter-2.png" alt="Example subjective distributions in Example 1.11. Left: prior to observing sample data. Right: after observing sample data." width="50%" />
+<p class="caption">
+Figure 1.4: Example subjective distributions in Example <a href="interpretations-of-statistics.html#exm:harry-potter">1.11</a>. Left: prior to observing sample data. Right: after observing sample data.
+</p>
+</div>
+<p>Recall some statistical terminology.</p>
+<ul>
+<li><strong>Observational units</strong> (a.k.a., cases, individuals, subjects) are the people, places, things, etc we collect information on.</li>
+<li>A <strong>variable</strong> is any characteristic of an observational unit that we can measure.</li>
+<li><strong>Statistical inference</strong> involves using data collected on a <em>sample</em> to make conclusions about a <em>population</em>.<br />
+</li>
+<li>Inference often concerns specific numerical summaries, using values of <em>statistics</em> to make conclusions about <em>parameters</em>.</li>
+<li>A <strong>parameter</strong> is a number that describes the <strong>population</strong>, e.g., <em>population mean</em>, <em>population proportion</em>. The actual value of a parameter is almost always <em>unknown</em>.
+<ul>
+<li>Parameters are often denoted with Greek letters. We’ll often use the Greek letter <span class="math inline">\(\theta\)</span> (“theta”) to denote a generic parameter.</li>
+</ul></li>
+<li>A <strong>statistic</strong> is a number that describes the **sample<em>, e.g., </em>sample mean<em>, </em>sample proportion*.</li>
+</ul>
+<p>Parameters are unknown numbers. In “traditional”, <em>frequentist</em> statistical analysis, parameters are treated as <em>fixed — that is, not random — constants</em>. Any randomness in a frequentist analysis arises from how the data were collected, e.g., via random sampling or random assignment. In a frequentist analysis, statistics are random variables; parameters are fixed numbers.</p>
+<p>For example, a frequentist 95% confidence interval for <span class="math inline">\(\theta_b\)</span> in the previous example is [0.434, 0.766]. We estimate with 95% confidence that the proportion of Cal Poly students that have read any of the books in the Harry Potter series is between 0.434 and 0.766. Does this mean that there is a 95% probability that <span class="math inline">\(\theta_b\)</span> is between 0.434 and 0.766? No! In a frequentist analysis, the parameter <span class="math inline">\(\theta_b\)</span> is treated like a fixed constant. That constant is either between 0.434 and 0.766 or it’s not; we don’t know which it is, but there’s no probability to it. In a frequentist analysis, it doesn’t make sense to say “what is the probability that <span class="math inline">\(\theta_b\)</span> (a number) is between 0.434 and 0.766?” just like it doesn’t make sense to say “what is the probability that 0.5 is between 0.434 and 0.766?” Remember that 95% confidence derives from the fact that for 95% <em>of samples</em> the procedure that was used to produce the interval [0.434, 0.766] will produce intervals that contain the true parameter <span class="math inline">\(\theta_b\)</span>. It is the samples and the intervals that are changing from sample to sample; <span class="math inline">\(\theta_b\)</span> stays constant at its fixed but unknown value. In a frequentist analysis, probability quantifies the <em>randomness in the sampling procedure</em>.</p>
+<p>On the other hand, in a Bayesian statistical analysis, since a parameter <span class="math inline">\(\theta\)</span> is unknown — that is, it’s value is <em>uncertain</em> to the observer — <span class="math inline">\(\theta\)</span> is treated as a <em>random variable</em>. That is, <strong>in Bayesian statistical analyses unknown parameters are random variables that have probability distributions.</strong> The probability distribution of a parameter quantifies the degree of uncertainty about the value of the parameter. Therefore, the Bayesian perspective allows for probability statements about parameters. For example, a Bayesian analysis of the previous example might conclude that there is a 95% chance that <span class="math inline">\(\theta_b\)</span> is between 0.426 and 0.721. Such a statement is valid in the Bayesian context, but nonsensical in the frequentist context.</p>
+<p>In the previous example, we started with distributions that represented our uncertainty about <span class="math inline">\(\theta_b\)</span> and <span class="math inline">\(\theta_m\)</span> based on our “beliefs”, then we revised these distributions after observing some data. If we were to observe more data, we could revise again. In this course we will see (among other things) (1) how to quantify uncertainty about parameters using probability distributions, and (2) how to update those distributions to reflect new data.</p>
+<p>Throughout these notes we will focus on Bayesian statistical analyses. We will occasionally compare Bayesian and frequentist analyses and viewpoints. But we want to make clear from the start: Bayesian versus frequentist is NOT a question of right versus wrong. Both Bayesian and frequentist are valid approaches to statistical analyses, each with advantages and disadvantages. We’ll address some of the issues along the way. But at no point in your career do you need to make a definitive decision to be a Bayesian or a frequentist; a good modern statistician is probably a <a href="https://tenor.com/view/star-lord-bit-of-both-chris-pratt-guardians-of-the-galaxy-peter-quill-gif-11821953">bit of both</a>.</p>
+
+</div>
+<!-- </div> -->
+<div class="footnotes">
+<hr />
+<ol start="6">
+<li id="fn6"><p>You could probably get a pretty good idea by searching online, but don’t do that. Instead, answer the questions based on what you already know about me.<a href="interpretations-of-statistics.html#fnref6" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="consistency.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="bayes-rule.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"google": false,
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bayesian-reasoning-and-methods.pdf"],
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

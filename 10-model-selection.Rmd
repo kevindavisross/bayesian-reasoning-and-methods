@@ -1,0 +1,114 @@
+# Introduction to Bayesian Model Comparison {#model-comparison}
+
+
+A Bayesian model is composed of both a model for the data (likelihood) and a prior distribution on model parameters
+
+\emph{Model selection} usually refers to choosing between different models for the data (likelihoods)
+
+But it can also concern choosing between models with the same likelihood but different priors
+
+In Bayesian model comparison, prior probabilities are assigned to each of the models, and these probabilities are updated given the data according to Bayes rule
+
+Bayesian model comparison can be viewed as Bayesian estimation in a \emph{hierarchical} model with an extra level for ``model''
+
+
+Suppose I have some trick coins, some of which are biased in favor of landing on heads, and some of which are biased in favor of landing on tails. I will select a trick coin at random; let $\theta$ be the probability that the selected coin lands on heads in any  single flip.  I will flip the coin $n$ times and use the data to decide about the direction of its bias.  This can be viewed as a choice between two models
+
+- Model 1: the coin is biased in favor of landing on heads
+- Model 2: the coin is biased in favor of landing on tails
+
+
+Specify a Bayesian model for the framework of this problem.
+
+Assume that in model 1 the prior distribution for $\theta$ is Beta(7.5, 2.5).  Suppose in $n=10$ flips there are 6 heads.  Describe, how in principle, how could compute the probability
+of observing these data given that model 1 is correct.  Also, explain how you could use simulation to approximate this probability.  
+
+Assume that in model 2 the prior distribution for $\theta$ is Beta(2.5, 7.5).  Repeat the previous part for model 2.
+
+
+Compute and interpret the Bayes Factor in favor of model 1 given 6 heads in 10 flips.
+
+Suppose our prior probability for each model was 0.5.  Find the posterior probability of each model given 6 heads in 10 flips.
+
+Suppose I know I have a lot more tail biased coins, so my prior probability for model 1 was 0.1.  Find the posterior probability of each model given 6 heads in 10 flips.
+
+
+Now suppose I want to predict the number of heads in the next 10 flips of the selected coin.  Describe, how in principle, you could compute the posterior predictive distribution of the number of heads in the next 10 flips given 6 heads in the first 10 flips \emph{given that model 1 is the correct model}.  Also, explain how you could use simulation to approximate this distribution.
+
+Reconsider the previous problem.  How could you find the posterior predictive distribution of the number of heads in the next 10 flips given 6 heads in the first 10 flips without assuming that model 1 is the correct model?  (Assume that the prior probability for each model was 0.5 like in part (e).)
+
+
+The Bayesian model is the full hierarchical structure which spans all models being compared.
+
+Thus, the most complete posterior prediction takes into account all models, weighted by their posterior probabilities.
+
+That is, prediction is accomplished by taking a weighted average across the models, with weights equal to the posterior probabilities of the models.  This is called \textbf{model averaging}.
+
+Suppose again I select a coin, but now the decision is whether the coin is fair.  Suppose we consider the two models
+
+- "Must be fair" model: prior distribution for $\theta$ is Beta(500, 500)
+- "Anything is possible" model: prior distribution for $\theta$ is Beta(1, 1)
+
+
+Compute the Bayes factor in favor of the ``must be fair'' model given 15 heads in 20 flips.  Which model does the Bayes factor favor?
+
+
+Compute the Bayes factor in favor of the ``must be fair'' model given 11 heads in 20 flips.  Which model does the Bayes factor favor?
+
+The ``anything is possible'' model has any value available to it, including 0.5 and the sample proportion 0.55.  Why then is the ``must be fair'' option favored in the previous part?
+
+
+Complex models generally have an inherent advantage over simpler models because complex models have many more options available, and one of those options is likely to fit the data better than any of the fewer options in the simpler model.
+
+But we don't always want to just choose the more complex model.
+
+Bayesian model comparison naturally compensates for discrepancies in model complexity.
+
+In more complex models, prior probabilities are diluted over the many options available.
+
+Even if a complex model has some particular combination of parameters that fit the data well, the prior probability of that particular combination is likely to be small because the prior is spread more thinly than for a simpler model.
+
+Thus, in Bayesian model comparison, a simpler model can ``win'' if the data are consistent with it, even if the complex model fits well.
+
+Compute the Bayes factor in favor of the ``must be fair'' model given 65 heads in 100 flips.  Which model does the Bayes factor favor?
+
+
+We have discussed different notions of a ``non-informative/vague'' prior.  We typically think of Beta(1, 1) = Uniform(0, 1) as a non-informative prior, but there are other considerations.  In particular, a Beta(0.01, 0.01) is often used a non-informative prior in this context (think of Beta(0.01, 0.01) like an approximation to the improper Beta(0, 0) prior based on ``no prior successes or failures''.)
+
+Suppose the ``anything is possible'' model corresponds to a Beta(0.01, 0.01) prior distribution for $\theta$.  Compute the Bayes factor in favor of the ``must be fair'' model given 65 heads in 100 flips.  Which model does the Bayes factor favor?  Is the choice of model sensitive to the change of prior distribution within the ``anything is possible'' model?
+
+For each of the two ``anything is possible'' priors, find the posterior distribution of $\theta$ and a 95\% posterior credible interval for $\theta$ given 65 heads in 100 flips.  Is estimation of $\theta$ within the ``anything is possible'' model sensitive to the change in the prior distribution for $\theta$?  
+
+
+In Bayesian \emph{\textbf{estimation} of continuous parameters within a model}, the posterior distribution is typically not too sensitive to changes in prior (provided that there is a reasonable amount of data and the prior is not too strict)
+
+In contrast, in Bayesian \textbf{\emph{model comparison}}, the posterior probabilities of the models and the Bayes factors can be extremely sensitive to the choice of prior distribution within each model
+
+When comparing different models, prior distributions on parameters within each model should be equally informed.  One strategy is to use a small set of ``training data'' to inform the prior of each model before comparing.
+
+Suppose that in the first 10 flips there were 6 heads.  Repeat part d) but use the posterior after the first 10 flips as the prior distribution for each of the models.
+
+Suppose that in the first 10 flips there were 6 heads.  Repeat part e) but use the posterior after the first 10 flips as the prior distribution for each of the models.
+
+Consider a null hypothesis significance test  of $H_0:\theta=0.5$ versus $H_1:\theta\neq 0.5$.  How does this situation resemble the previous problem?
+
+
+A null hypothesis significance test can be viewed as a problem of Bayesian model selection in which one model has a prior distribution that places all its credibility on the null hypothesized value
+
+But is it really plausible that the parameter is exactly equal to the hypothesized value?
+
+However, this model-comparison (Bayes factor) approach to testing can be extremely sensitive to the choice of prior corresponding to the alternative hypothesis.
+
+An alternative Bayesian approach to testing involves choosing a \textbf{region of practical equivalence (ROPE)}
+
+A ROPE indicates a small range of parameter values that are considered to be practically equivalent to the null hypothesized value
+
+A hypothesized value is rejected --- i.e.\ declared to be not credible --- if its ROPE lies outside the 95\% posterior credible interval for the parameter
+
+A hypothesized value is accepted for practical purposes if its ROPE contains the 95\% posterior credible interval for the parameter
+
+But how do you choose the ROPE?
+
+In general, traditional testing of point null hypotheses (e.g.\ ``\emph{no} effect/difference'') is not a primary concern in Bayesian statistics.
+
+Rather, the \emph{posterior distribution} provides all relevant information to make decisions about theoretically meaningful issues.

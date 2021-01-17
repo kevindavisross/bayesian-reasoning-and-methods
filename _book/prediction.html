@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Introduction to Prediction | An Introduction to Bayesian Reasoning and Methods</title>
+  <meta name="description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="generator" content="bookdown 0.20.1 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Introduction to Prediction | An Introduction to Bayesian Reasoning and Methods" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="github-repo" content="rstudio/bayesian-reasoning-and-methods" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Introduction to Prediction | An Introduction to Bayesian Reasoning and Methods" />
+  
+  <meta name="twitter:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  
+
+<meta name="author" content="Kevin Ross" />
+
+
+<meta name="date" content="2021-01-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="inference.html"/>
+<link rel="next" href="continuous.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="interpretations.html"><a href="interpretations.html"><i class="fa fa-check"></i><b>1</b> Interpretations of Probability and Statistics</a><ul>
+<li class="chapter" data-level="1.1" data-path="randomness.html"><a href="randomness.html"><i class="fa fa-check"></i><b>1.1</b> Instances of randomness</a></li>
+<li class="chapter" data-level="1.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html"><i class="fa fa-check"></i><b>1.2</b> Interpretations of probability</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#rel-freq"><i class="fa fa-check"></i><b>1.2.1</b> Long run relative frequency</a></li>
+<li class="chapter" data-level="1.2.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#subjective-probability"><i class="fa fa-check"></i><b>1.2.2</b> Subjective probability</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="consistency.html"><a href="consistency.html"><i class="fa fa-check"></i><b>1.3</b> Working with probabilities</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="consistency.html"><a href="consistency.html#consistency-requirements"><i class="fa fa-check"></i><b>1.3.1</b> Consistency requirements</a></li>
+<li class="chapter" data-level="1.3.2" data-path="consistency.html"><a href="consistency.html#odds"><i class="fa fa-check"></i><b>1.3.2</b> Odds</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="interpretations-of-statistics.html"><a href="interpretations-of-statistics.html"><i class="fa fa-check"></i><b>1.4</b> Interpretations of Statistics</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bayes-rule.html"><a href="bayes-rule.html"><i class="fa fa-check"></i><b>2</b> Bayes’ Rule</a></li>
+<li class="chapter" data-level="3" data-path="bayes-factor.html"><a href="bayes-factor.html"><i class="fa fa-check"></i><b>3</b> Odds and Bayes Factors</a></li>
+<li class="chapter" data-level="4" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>4</b> Introduction to Estimation</a></li>
+<li class="chapter" data-level="5" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>5</b> Introduction to Inference</a></li>
+<li class="chapter" data-level="6" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>6</b> Introduction to Prediction</a></li>
+<li class="chapter" data-level="7" data-path="continuous.html"><a href="continuous.html"><i class="fa fa-check"></i><b>7</b> Introduction to Continuous Prior and Posterior Distributions</a><ul>
+<li class="chapter" data-level="7.1" data-path="a-brief-review-of-continuous-distributions.html"><a href="a-brief-review-of-continuous-distributions.html"><i class="fa fa-check"></i><b>7.1</b> A brief review of continuous distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="normal-mean.html"><a href="normal-mean.html"><i class="fa fa-check"></i><b>7.2</b> Normal mean</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="jags.html"><a href="jags.html"><i class="fa fa-check"></i><b>8</b> Introduction to Posterior Simulation and JAGS</a><ul>
+<li class="chapter" data-level="8.1" data-path="implementing-mcmc-in-jags.html"><a href="implementing-mcmc-in-jags.html"><i class="fa fa-check"></i><b>8.1</b> Implementing MCMC in JAGS</a></li>
+<li class="chapter" data-level="8.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html"><i class="fa fa-check"></i><b>8.2</b> Example 17.1: Beta-Binomial Model — “Data is singular”</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#load-the-data"><i class="fa fa-check"></i><b>8.2.1</b> Load the data</a></li>
+<li class="chapter" data-level="8.2.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#specify-the-model-likelihood-and-prior"><i class="fa fa-check"></i><b>8.2.2</b> Specify the model: likelihood and prior</a></li>
+<li class="chapter" data-level="8.2.3" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#compile-in-jags"><i class="fa fa-check"></i><b>8.2.3</b> Compile in JAGS</a></li>
+<li class="chapter" data-level="8.2.4" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulate-values-from-the-posterior-distribution"><i class="fa fa-check"></i><b>8.2.4</b> Simulate values from the posterior distribution</a></li>
+<li class="chapter" data-level="8.2.5" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#summarizing-simulated-values-and-diagnostic-checking"><i class="fa fa-check"></i><b>8.2.5</b> Summarizing simulated values and diagnostic checking</a></li>
+<li class="chapter" data-level="8.2.6" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#posterior-prediction"><i class="fa fa-check"></i><b>8.2.6</b> Posterior prediction</a></li>
+<li class="chapter" data-level="8.2.7" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#loading-data-as-individual-values-rather-than-summary-statistics"><i class="fa fa-check"></i><b>8.2.7</b> Loading data as individual values rather than summary statistics</a></li>
+<li class="chapter" data-level="8.2.8" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulating-multiple-chains"><i class="fa fa-check"></i><b>8.2.8</b> Simulating multiple chains</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="prior.html"><a href="prior.html"><i class="fa fa-check"></i><b>9</b> Considering Prior Distributions</a></li>
+<li class="chapter" data-level="10" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>10</b> Introduction to Bayesian Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Introduction to Bayesian Reasoning and Methods</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="prediction" class="section level1">
+<h1><span class="header-section-number">Chapter 6</span> Introduction to Prediction</h1>
+<p>A Bayesian analysis leads directly and naturally to making predictions about future observations from the random process that generated the data. Prediction is also useful for checking if model assumptions seem reasonable in light of observed data.</p>
+
+<div class="example">
+<p><span id="exm:data-singular" class="example"><strong>Example 6.1  </strong></span>
+Do people prefer to use the word “data” as singular or plural? Data journalists at <a href="https://fivethirtyeight.com/features/elitist-superfluous-or-popular-we-polled-americans-on-the-oxford-comma/">FiveThirtyEight conducted a poll</a> to address this question (and others). Rather than simply ask whether the respondent considered “data” to be singular or plural, they asked which of the following sentences they prefer:</p>
+<ol style="list-style-type: lower-alpha">
+<li>Some experts say it’s important to drink milk, but the data is inconclusive.</li>
+<li>Some experts say it’s important to drink milk, but the data are inconclusive.</li>
+</ol>
+<p>Suppose we wish to study the opinions of students in Cal Poly statistics classes regarding this issue. That is, let <span class="math inline">\(\theta\)</span> represent the population proportion of students in Cal Poly statistics classes who prefer to consider data as a <em>singular</em> noun, as in option a) above.</p>
+<p>To illustrate ideas, we’ll start with a prior distribution which places probability 0.01, 0.05, 0.15, 0.30, 0.49 on the values 0.1, 0.3, 0.5, 0.7, 0.9, respectively.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>Before observing any data, suppose we plan to randomly select a single Cal Poly statistics student. Consider the <em>unconditional</em> prior probability that the selected student prefers data as singular. (This is called a <em>prior predictive probability</em>.) Explain how you could use simulation to approximate this probability.</p></li>
+<li><p>Compute the prior predictive probability from the previous part.</p></li>
+<li><p>Before observing any data, suppose we plan to randomly select a sample of 35 Cal Poly statistics students. Consider the <em>unconditional</em> prior distribution of the number of students in the sample who prefer data as singular. (This is called a <em>prior predictive distribution</em>.) Explain how you could use simulation to approximate this distribution. In particular, how could you use simulation to approximate the prior predictive probability that at least 34 students in the sample prefer data as singular?</p></li>
+<li><p>Compute the prior predictive probability that at least 34 students in a sample of size 35 prefer data as singular.</p>
+<p>For the remaining parts, suppose that 31 students in a sample of 35 Cal Poly statistics students prefer data as singular.</p></li>
+<li><p>Find the posterior distribution of <span class="math inline">\(\theta\)</span>.</p></li>
+<li><p>Now suppose we plan to randomly select an additional Cal Poly statistics student. Consider the <em>posterior predictive probability</em> that this student prefers data as singular. Explain how you could use simulation to estimate this probability.</p></li>
+<li><p>Compute the posterior predictive probability from the previous part.</p></li>
+<li><p>Suppose we plan to collect data on another sample of <span class="math inline">\(35\)</span> Cal Poly statistics students. Consider the <em>posterior predictive distribution</em> of the number of students in the new sample who prefer data as singular. Explain how you could use simulation to approximate this distribution, and then code and run the simulation. In particular, how could you use simulation to approximate the prior predictive probability that at least 34 students in the sample prefer data as singular? (Of course, the sample size of the new sample does not have to be 35. However, I’m keeping it the same so we can compare the prior and posterior predictions.)</p></li>
+<li><p>Compute the posterior predictive probability that at least 34 students in a sample of size 35 prefer data as singular.</p></li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="prediction.html#exm:data-singular">6.1</a>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>If we knew what <span class="math inline">\(\theta\)</span> was, this probability would just be <span class="math inline">\(\theta\)</span>. For example, if <span class="math inline">\(\theta=0.9\)</span>, then there is a probability of 0.9 that a randomly selected student prefers data singular. If <span class="math inline">\(\theta\)</span> were 0.9, we could approximate the probability by constructing a spinner with 90% of the area marked as “success”, spinning it many times, and recording the proportion of spins that land on success, which should be roughly 90%. Since we don’t know what <span class="math inline">\(\theta\)</span> is, we need to first simulate a value of it from the prior distribution.</p>
+<ol style="list-style-type: decimal">
+<li>Simulate a value of <span class="math inline">\(\theta\)</span> from the prior distribution.</li>
+<li>Given the value of <span class="math inline">\(\theta\)</span>, construct a spinner that lands on success with probability <span class="math inline">\(\theta\)</span>. Spin the spinner once and record the result, success or not.</li>
+<li>Repeat steps 1 and 2 many times, and find the proportion of repetitions which result in success. This proportion approximates the unconditional probability of success.</li>
+</ol></li>
+<li><p>Use the law of total probability, where the weights are given by the prior probabilities.
+<span class="math display">\[
+ 0.1(0.01) + 0.3(0.05) + 0.5(0.15) + 0.7(0.30) + 0.9(0.49) = 0.742 
+ \]</span>
+(This calculation is equivalent to the expected value of <span class="math inline">\(\theta\)</span> according to its prior distributon, that is, the prior mean.)</p></li>
+<li><p>If we knew what <span class="math inline">\(\theta\)</span> was, we could construct a spinner than lands on success with probability <span class="math inline">\(\theta\)</span>, spin it 35 times, and count the number of successes. But we don’t know what <span class="math inline">\(\theta\)</span> is, so we have to simulate it first.</p>
+<ol style="list-style-type: decimal">
+<li>Simulate a value of <span class="math inline">\(\theta\)</span> from the prior distribution.</li>
+<li>Given the value of <span class="math inline">\(\theta\)</span>, construct a spinner that lands on success with probability <span class="math inline">\(\theta\)</span>. Spin the spinner 35 times and count the number of spins that land on success.</li>
+<li>Repeat steps 1 and 2 many times, and record the number of successes (out of 35) for each repetition. Summarize the simulated values to approximate the prior predictive distribution. To approximate the prior predictive probability that at least 34 students in a sample of size 35 prefer data as singular, count the number of simulated repetitions that result in at least 34 successes and divide by the total number of simulated repetitions.</li>
+</ol></li>
+<li><p>If we knew <span class="math inline">\(\theta\)</span>, the probability of at least 34 (out of 35) successes is, from a Binomial distribution,
+<span class="math display">\[
+35\theta^{34}(1-\theta) + \theta^{35}
+\]</span>
+Use the law of total probability again.
+<span class="math display">\[\begin{align*}
+ &amp; \left(35(0.1)^{34}(1-0.1) + 0.1^{35}\right)(0.01) + \left(35(0.3)^{34}(1-0.3) + 0.3^{35}\right)(0.05)\\
+ &amp; + \left(35(0.5)^{34}(1-0.5) + 0.5^{35}\right)(0.15) + \left(35(0.7)^{34}(1-0.7) + 0.7^{35}\right)(0.30)\\
+ &amp; + \left(35(0.9)^{34}(1-0.9) + 0.9^{35}\right)(0.49) = 0.06
+\end{align*}\]</span></p>
+<p>For the remaining parts, suppose that 31 students in a sample of 35 Cal Poly statistics students prefer data as singular.</p></li>
+<li><p>The likelihood is <span class="math inline">\(\binom{35}{31}\theta^{31}(1-\theta)^{4}\)</span>, a function of <span class="math inline">\(\theta\)</span>; <code>dbinom(31, 35, theta)</code>. The posterior places almost all probability on <span class="math inline">\(\theta = 0.9\)</span>.</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="prediction.html#cb70-1"></a><span class="co"># prior</span></span>
+<span id="cb70-2"><a href="prediction.html#cb70-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>, <span class="fl">0.2</span>)</span>
+<span id="cb70-3"><a href="prediction.html#cb70-3"></a>prior =<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.15</span>, <span class="fl">0.30</span>, <span class="fl">0.49</span>)</span>
+<span id="cb70-4"><a href="prediction.html#cb70-4"></a></span>
+<span id="cb70-5"><a href="prediction.html#cb70-5"></a><span class="co"># data</span></span>
+<span id="cb70-6"><a href="prediction.html#cb70-6"></a>n =<span class="st"> </span><span class="dv">35</span> <span class="co"># sample size</span></span>
+<span id="cb70-7"><a href="prediction.html#cb70-7"></a>y =<span class="st"> </span><span class="dv">31</span> <span class="co"># sample count of success</span></span>
+<span id="cb70-8"><a href="prediction.html#cb70-8"></a></span>
+<span id="cb70-9"><a href="prediction.html#cb70-9"></a><span class="co"># likelihood, using binomial</span></span>
+<span id="cb70-10"><a href="prediction.html#cb70-10"></a>likelihood =<span class="st"> </span><span class="kw">dbinom</span>(y, n, theta) <span class="co"># function of theta</span></span>
+<span id="cb70-11"><a href="prediction.html#cb70-11"></a></span>
+<span id="cb70-12"><a href="prediction.html#cb70-12"></a><span class="co"># posterior</span></span>
+<span id="cb70-13"><a href="prediction.html#cb70-13"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb70-14"><a href="prediction.html#cb70-14"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span>
+<span id="cb70-15"><a href="prediction.html#cb70-15"></a></span>
+<span id="cb70-16"><a href="prediction.html#cb70-16"></a><span class="co"># bayes table</span></span>
+<span id="cb70-17"><a href="prediction.html#cb70-17"></a>bayes_table =<span class="st"> </span><span class="kw">data.frame</span>(theta,</span>
+<span id="cb70-18"><a href="prediction.html#cb70-18"></a>                     prior,</span>
+<span id="cb70-19"><a href="prediction.html#cb70-19"></a>                     likelihood,</span>
+<span id="cb70-20"><a href="prediction.html#cb70-20"></a>                     product,</span>
+<span id="cb70-21"><a href="prediction.html#cb70-21"></a>                     posterior)</span>
+<span id="cb70-22"><a href="prediction.html#cb70-22"></a></span>
+<span id="cb70-23"><a href="prediction.html#cb70-23"></a><span class="kw">kable</span>(bayes_table, <span class="dt">digits =</span> <span class="dv">4</span>, <span class="dt">align =</span> <span class="st">&#39;r&#39;</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.1</td>
+<td align="right">0.01</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="right">0.3</td>
+<td align="right">0.05</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="odd">
+<td align="right">0.5</td>
+<td align="right">0.15</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="right">0.7</td>
+<td align="right">0.30</td>
+<td align="right">0.0067</td>
+<td align="right">0.0020</td>
+<td align="right">0.0201</td>
+</tr>
+<tr class="odd">
+<td align="right">0.9</td>
+<td align="right">0.49</td>
+<td align="right">0.1998</td>
+<td align="right">0.0979</td>
+<td align="right">0.9799</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>The simulation would be similar to the prior simulation, but now we simulate <span class="math inline">\(\theta\)</span> from its posterior distribution rather than the prior distribution.</p></li>
+<li><p>Use the law of total probability, where the weights are given by the posterior probabilities.
+<span class="math display">\[
+ 0.1(0.0000) + 0.3(0.0000) + 0.5(0.0000) + 0.7(0.0201) + 0.9(0.9799) = 0.8960 
+ \]</span>
+(This calculation is equivalent to the expected value of <span class="math inline">\(\theta\)</span> according to its posterior distributon, that is, the posterior mean.)</p></li>
+<li><p>The simulation would be similar to the prior simulation, but now we simulate <span class="math inline">\(\theta\)</span> from its posterior distribution rather than the prior distribution. Since <span class="math inline">\(\theta=0.9\)</span> with probability close to 1, the posterior distribution would be close to, but not quite, the Binomial(35, 0.9) distribution.</p></li>
+<li><p>Use the law of total probability again, but with the posterior probabilities rather than the prior probabilities as the weights.
+<span class="math display">\[\begin{align*}
+&amp; \left(35(0.1)^{34}(1-0.1) + 0.1^{35}\right)(0.0000) + \left(35(0.3)^{34}(1-0.3) + 0.3^{35}\right)(0.0000)\\
+&amp; + \left(35(0.5)^{34}(1-0.5) + 0.5^{35}\right)(0.0000) + \left(35(0.7)^{34}(1-0.7) + 0.7^{35}\right)(0.0201)\\
+&amp; + \left(35(0.9)^{34}(1-0.9) + 0.9^{35}\right)(0.9799) = 0.1199
+\end{align*}\]</span></p></li>
+</ol>
+<p>The <strong>predictive distribution</strong> of a random variable is the marginal distribution (of the
+unobserved values) after accounting for the uncertainty in the parameters. A <strong>prior predictive distribution</strong> is calculated using the prior distribution of the
+parameters. A <strong>posterior predictive distribution</strong> is calculated using the posterior distribution
+of the parameters, conditional on the observed data.</p>
+<p>Prior and posterior distributions are distributions on values of the <em>parameters</em>. These distributions quantify the degree of uncertainty about the unknown parameter <span class="math inline">\(\theta\)</span> (before and after observing data).</p>
+<p>On the other hand, prior and posterior <em>predictive</em> distributions are distribution on potential values of the <em>data</em>. Predictive distributions reflect sample-to-sample variability of the sample data, while accounting for the uncertainty in the parameters.</p>
+<p>Predictive probabilities can be computed via the law of total probability. However, even when conditional distributions of data given the parameters are well known, the marginal distributions of the data are often not. Simulation is an effective tool in approximating predictive distributions.</p>
+<ul>
+<li>Step 1: Generate a value of <span class="math inline">\(\theta\)</span> from its posterior distribution (or prior distribution).</li>
+<li>Step 2: Given this value of <span class="math inline">\(\theta\)</span> generate a value of <span class="math inline">\(y\)</span> from <span class="math inline">\(f(y|\theta)\)</span>, the data model conditional on <span class="math inline">\(\theta\)</span>.</li>
+<li>Repeat many times and summarize the values of <span class="math inline">\(y\)</span> to approximate the posterior predictive distribution (or prior predictive distribution).</li>
+</ul>
+
+<div class="example">
+<span id="exm:data-singular2" class="example"><strong>Example 6.2  </strong></span>Continuing the previous example. We’ll use a grid approximation and assume that any multiple of 0.0001 is a possible value of <span class="math inline">\(\theta\)</span>: <span class="math inline">\(0, 0.0001, 0.0002, \ldots, 0.9999, 1\)</span>.
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>Consider the context of this problem and sketch your prior distribution for <span class="math inline">\(\theta\)</span>. What are the main features of your prior?</p></li>
+<li><p>Assume the prior distribution for <span class="math inline">\(\theta\)</span> is proportional to <span class="math inline">\(\theta^2\)</span>. Plot this prior distribution and describe its main features. In particular, find and interpret a 95% central prior credible interval for <span class="math inline">\(\theta\)</span>.</p></li>
+<li><p>Before observing any data, suppose we plan to randomly select a sample of 35 Cal Poly statistics students. Let <span class="math inline">\(Y\)</span> represent the number of students in the selected sample who prefer data as singular. Use simulation to approximate the prior predictive distribution of <span class="math inline">\(Y\)</span> and plot it.</p></li>
+<li><p>Use software to compute the prior predictive distribution of <span class="math inline">\(Y\)</span>. Compare to the simulation results.</p></li>
+<li><p>Find a 95% prior <em>prediction</em> interval for <span class="math inline">\(Y\)</span>. Write a clearly worded sentence interpreting this interval in context.</p>
+<p>For the remaining parts, suppose that 31 students in a sample of 35 Cal Poly statistics students prefer data as singular.</p></li>
+<li><p>Use software to plot the prior distribution and the (scaled) likelihood, then find the posterior distribution of <span class="math inline">\(\theta\)</span> and plot it and describe its main features. In particular, find and interpret a 95% central posterior credible interval for <span class="math inline">\(\theta\)</span>.</p></li>
+<li><p>Suppose we plan to randomly select another sample of 35 Cal Poly statistics students. Let <span class="math inline">\(\tilde{Y}\)</span> represent the number of students in the selected sample who prefer data as singular. Use simulation to approximate the posterior predictive distribution of <span class="math inline">\(\tilde{Y}\)</span> and plot it.
+(Of course, the sample size of the new sample does not have to be 35. However, I’m keeping it the same so we can compare the prior and posterior predictions.)</p></li>
+<li><p>Use software to compute the posterior predictive distribution of <span class="math inline">\(\tilde{Y}\)</span>. Compare to the simulation results.</p></li>
+<li><p>Find a 95% posterior <em>prediction</em> interval for <span class="math inline">\(\tilde{Y}\)</span>. Write a clearly worded sentence interpreting this interval in context.</p></li>
+<li><p>Now suppose instead of using the Cal Poly sample data (31/35) to form the posterior distribution, we had used the <a href="https://github.com/fivethirtyeight/data/tree/master/comma-survey">data from the FiveThirtyEight study</a> in which 865 out of 1093 respondents preferred data as singular. Use software to plot the prior distribution and the (scaled) likelihood, then find the posterior distribution of <span class="math inline">\(\theta\)</span> and plot it and describe its main features. In particular, find and interpret a 95% central posterior credible interval for <span class="math inline">\(\theta\)</span>. How does the posterior based on the FiveThirtyEight data compare to the posterior distribution based on the Cal Poly sample data (31/35)? Why?</p></li>
+<li><p>Again, suppose we use the FiveThirtyEight data to form the posterior distribution of <span class="math inline">\(\theta\)</span>. Suppose we plan to randomly select a sample of 35 Cal Poly statistics students. Let <span class="math inline">\(\tilde{Y}\)</span> represent the number of students in the selected sample who prefer data as singular. Use simulation to approximate the posterior predictive distribution of <span class="math inline">\(\tilde{Y}\)</span> and plot it. In particular, find and interpret a 95% posterior <em>prediction</em> interval for <span class="math inline">\(\tilde{Y}\)</span>. How does the predictive distribution which uses the posterior distribution based on the FiveThirtyEight compare to the one based on the Cal Poly sample data (31/35)? Why?</p></li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="prediction.html#exm:data-singular2">6.2</a>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>Results will of course vary, but do consider what your prior would look like.</p></li>
+<li><p>We believe a majority of students will prefer data as singular. The prior mode is 1, the prior mean is 0.75, and the prior standard deviation is 0.19. There is a prior probability of 95% that between 29% and 99% of Cal Poly students prefer data as singular.</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="prediction.html#cb71-1"></a><span class="co"># prior</span></span>
+<span id="cb71-2"><a href="prediction.html#cb71-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb71-3"><a href="prediction.html#cb71-3"></a>prior =<span class="st"> </span>theta <span class="op">^</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb71-4"><a href="prediction.html#cb71-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb71-5"><a href="prediction.html#cb71-5"></a></span>
+<span id="cb71-6"><a href="prediction.html#cb71-6"></a>ylim =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(prior))</span>
+<span id="cb71-7"><a href="prediction.html#cb71-7"></a><span class="kw">plot</span>(theta, prior, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;theta&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-72-1.png" width="672" /></p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="prediction.html#cb72-1"></a><span class="co"># prior mean</span></span>
+<span id="cb72-2"><a href="prediction.html#cb72-2"></a>prior_ev =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">*</span><span class="st"> </span>prior)</span>
+<span id="cb72-3"><a href="prediction.html#cb72-3"></a>prior_ev</span></code></pre></div>
+<pre><code>## [1] 0.7500375</code></pre>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="prediction.html#cb74-1"></a><span class="co"># prior variance</span></span>
+<span id="cb74-2"><a href="prediction.html#cb74-2"></a>prior_var =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">^</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>prior) <span class="op">-</span><span class="st"> </span>prior_ev <span class="op">^</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb74-3"><a href="prediction.html#cb74-3"></a></span>
+<span id="cb74-4"><a href="prediction.html#cb74-4"></a><span class="co"># prior sd</span></span>
+<span id="cb74-5"><a href="prediction.html#cb74-5"></a><span class="kw">sqrt</span>(prior_var)</span></code></pre></div>
+<pre><code>## [1] 0.1936588</code></pre>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="prediction.html#cb76-1"></a><span class="co"># prior 95% credible interval</span></span>
+<span id="cb76-2"><a href="prediction.html#cb76-2"></a>prior_cdf =<span class="st"> </span><span class="kw">cumsum</span>(prior)</span>
+<span id="cb76-3"><a href="prediction.html#cb76-3"></a><span class="kw">c</span>(theta[<span class="kw">max</span>(<span class="kw">which</span>(prior_cdf <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.025</span>))], theta[<span class="kw">min</span>(<span class="kw">which</span>(prior_cdf <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.975</span>))])</span></code></pre></div>
+<pre><code>## [1] 0.2923 0.9916</code></pre></li>
+<li><p>We use the <code>sample</code> function with the <code>prob</code> argument to simulate a value of <span class="math inline">\(\theta\)</span> from its prior distribution, and then use <code>rbinom</code> to simulate a sample.</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="prediction.html#cb78-1"></a>n =<span class="st"> </span><span class="dv">35</span></span>
+<span id="cb78-2"><a href="prediction.html#cb78-2"></a></span>
+<span id="cb78-3"><a href="prediction.html#cb78-3"></a>n_sim =<span class="st"> </span><span class="dv">10000</span></span>
+<span id="cb78-4"><a href="prediction.html#cb78-4"></a></span>
+<span id="cb78-5"><a href="prediction.html#cb78-5"></a>theta_sim =<span class="st"> </span><span class="kw">sample</span>(theta, n_sim, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> prior)</span>
+<span id="cb78-6"><a href="prediction.html#cb78-6"></a></span>
+<span id="cb78-7"><a href="prediction.html#cb78-7"></a>y_sim =<span class="st"> </span><span class="kw">rbinom</span>(n_sim, n, theta_sim)</span></code></pre></div></li>
+<li><p>We program the law of total probability calculation for each possible value of <span class="math inline">\(y\)</span>. (There are better ways of doing this than a for loop, but it’s good enough.)</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="prediction.html#cb79-1"></a><span class="co"># Predictive distribution</span></span>
+<span id="cb79-2"><a href="prediction.html#cb79-2"></a>y_predict =<span class="st"> </span><span class="dv">0</span><span class="op">:</span>n</span>
+<span id="cb79-3"><a href="prediction.html#cb79-3"></a></span>
+<span id="cb79-4"><a href="prediction.html#cb79-4"></a>py_predict =<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, <span class="kw">length</span>(y_predict))</span>
+<span id="cb79-5"><a href="prediction.html#cb79-5"></a></span>
+<span id="cb79-6"><a href="prediction.html#cb79-6"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(y_predict)) {</span>
+<span id="cb79-7"><a href="prediction.html#cb79-7"></a>  py_predict[i] =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">dbinom</span>(y_predict[i], n, theta) <span class="op">*</span><span class="st"> </span>prior) <span class="co"># prior</span></span>
+<span id="cb79-8"><a href="prediction.html#cb79-8"></a>}</span>
+<span id="cb79-9"><a href="prediction.html#cb79-9"></a></span>
+<span id="cb79-10"><a href="prediction.html#cb79-10"></a><span class="kw">plot</span>(y_predict, py_predict, <span class="dt">type =</span> <span class="st">&quot;o&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;orange&quot;</span>,</span>
+<span id="cb79-11"><a href="prediction.html#cb79-11"></a>     <span class="dt">xlim =</span> <span class="kw">range</span>(y_predict), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(py_predict)),</span>
+<span id="cb79-12"><a href="prediction.html#cb79-12"></a>     <span class="dt">xlab =</span> <span class="st">&quot;y&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Probability&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;Prior Predictive Distribution&quot;</span>)</span>
+<span id="cb79-13"><a href="prediction.html#cb79-13"></a><span class="kw">par</span>(<span class="dt">new =</span> T)</span>
+<span id="cb79-14"><a href="prediction.html#cb79-14"></a><span class="kw">plot</span>(<span class="kw">table</span>(y_sim) <span class="op">/</span><span class="st"> </span>n_sim, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb79-15"><a href="prediction.html#cb79-15"></a>     <span class="dt">xlim =</span> <span class="kw">range</span>(y_predict), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(py_predict)),</span>
+<span id="cb79-16"><a href="prediction.html#cb79-16"></a>     <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb79-17"><a href="prediction.html#cb79-17"></a><span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Theoretical&quot;</span>, <span class="st">&quot;Simulation&quot;</span>),</span>
+<span id="cb79-18"><a href="prediction.html#cb79-18"></a>       <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orange&quot;</span>, <span class="st">&quot;black&quot;</span>), <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>))</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-74-1.png" width="672" /></p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="prediction.html#cb80-1"></a><span class="co"># Prediction interval</span></span>
+<span id="cb80-2"><a href="prediction.html#cb80-2"></a>py_predict_cdf =<span class="st"> </span><span class="kw">cumsum</span>(py_predict)</span>
+<span id="cb80-3"><a href="prediction.html#cb80-3"></a><span class="kw">c</span>(y_predict[<span class="kw">max</span>(<span class="kw">which</span>(py_predict_cdf <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.025</span>))], y_predict[<span class="kw">min</span>(<span class="kw">which</span>(py_predict_cdf <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.975</span>))])</span></code></pre></div>
+<pre><code>## [1]  8 35</code></pre></li>
+<li><p>There is prior predictive probability of 95% that between 8 and 35 students in a sample of 35 students will prefer data as singular.</p>
+<p>For the remaining parts, suppose that 31 students in a sample of 35 Cal Poly statistics students prefer data as singular.</p></li>
+<li><p>The observed sample proportion is 31/35=0.886. The posterior mean is 0.872, and the prior standard deviation is 0.053. There is a posterior probability of 95% that between 75% and 96% of Cal Poly students prefer data as singular.</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="prediction.html#cb82-1"></a><span class="co"># data</span></span>
+<span id="cb82-2"><a href="prediction.html#cb82-2"></a>n =<span class="st"> </span><span class="dv">35</span> <span class="co"># sample size</span></span>
+<span id="cb82-3"><a href="prediction.html#cb82-3"></a>y =<span class="st"> </span><span class="dv">31</span> <span class="co"># sample count of success</span></span>
+<span id="cb82-4"><a href="prediction.html#cb82-4"></a></span>
+<span id="cb82-5"><a href="prediction.html#cb82-5"></a><span class="co"># likelihood, using binomial</span></span>
+<span id="cb82-6"><a href="prediction.html#cb82-6"></a>likelihood =<span class="st"> </span><span class="kw">dbinom</span>(y, n, theta) <span class="co"># function of theta</span></span>
+<span id="cb82-7"><a href="prediction.html#cb82-7"></a></span>
+<span id="cb82-8"><a href="prediction.html#cb82-8"></a><span class="co"># posterior</span></span>
+<span id="cb82-9"><a href="prediction.html#cb82-9"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb82-10"><a href="prediction.html#cb82-10"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span>
+<span id="cb82-11"><a href="prediction.html#cb82-11"></a></span>
+<span id="cb82-12"><a href="prediction.html#cb82-12"></a><span class="co"># posterior mean</span></span>
+<span id="cb82-13"><a href="prediction.html#cb82-13"></a>posterior_ev =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">*</span><span class="st"> </span>posterior)</span>
+<span id="cb82-14"><a href="prediction.html#cb82-14"></a>posterior_ev</span></code></pre></div>
+<pre><code>## [1] 0.8717949</code></pre>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="prediction.html#cb84-1"></a><span class="co"># posterior variance</span></span>
+<span id="cb84-2"><a href="prediction.html#cb84-2"></a>posterior_var =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">^</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>posterior) <span class="op">-</span><span class="st"> </span>posterior_ev <span class="op">^</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb84-3"><a href="prediction.html#cb84-3"></a></span>
+<span id="cb84-4"><a href="prediction.html#cb84-4"></a><span class="co"># posterior sd</span></span>
+<span id="cb84-5"><a href="prediction.html#cb84-5"></a><span class="kw">sqrt</span>(posterior_var)</span></code></pre></div>
+<pre><code>## [1] 0.05286033</code></pre>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="prediction.html#cb86-1"></a><span class="co"># posterior 95% credible interval</span></span>
+<span id="cb86-2"><a href="prediction.html#cb86-2"></a>posterior_cdf =<span class="st"> </span><span class="kw">cumsum</span>(posterior)</span>
+<span id="cb86-3"><a href="prediction.html#cb86-3"></a><span class="kw">c</span>(theta[<span class="kw">max</span>(<span class="kw">which</span>(posterior_cdf <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.025</span>))], theta[<span class="kw">min</span>(<span class="kw">which</span>(posterior_cdf <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.975</span>))])</span></code></pre></div>
+<pre><code>## [1] 0.7519 0.9559</code></pre>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="prediction.html#cb88-1"></a><span class="co"># plots</span></span>
+<span id="cb88-2"><a href="prediction.html#cb88-2"></a>ylim =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(<span class="kw">c</span>(prior, posterior, likelihood <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(likelihood))))</span>
+<span id="cb88-3"><a href="prediction.html#cb88-3"></a><span class="kw">plot</span>(theta, prior, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;theta&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb88-4"><a href="prediction.html#cb88-4"></a><span class="kw">par</span>(<span class="dt">new=</span>T) </span>
+<span id="cb88-5"><a href="prediction.html#cb88-5"></a><span class="kw">plot</span>(theta, likelihood<span class="op">/</span><span class="kw">sum</span>(likelihood), <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;skyblue&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb88-6"><a href="prediction.html#cb88-6"></a><span class="kw">par</span>(<span class="dt">new=</span>T)</span>
+<span id="cb88-7"><a href="prediction.html#cb88-7"></a><span class="kw">plot</span>(theta, posterior, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;seagreen&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb88-8"><a href="prediction.html#cb88-8"></a><span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;prior&quot;</span>, <span class="st">&quot;scaled likelihood&quot;</span>, <span class="st">&quot;posterior&quot;</span>), <span class="dt">lty=</span><span class="dv">1</span>, <span class="dt">col=</span><span class="kw">c</span>(<span class="st">&quot;orange&quot;</span>, <span class="st">&quot;skyblue&quot;</span>, <span class="st">&quot;seagreen&quot;</span>))</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-75-1.png" width="672" /></p></li>
+<li><p>Similar to the prior simulation, but now we simulate <span class="math inline">\(\theta\)</span> based on its posterior distribution.</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="prediction.html#cb89-1"></a>theta_sim =<span class="st"> </span><span class="kw">sample</span>(theta, n_sim, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> posterior)</span>
+<span id="cb89-2"><a href="prediction.html#cb89-2"></a></span>
+<span id="cb89-3"><a href="prediction.html#cb89-3"></a>y_sim =<span class="st"> </span><span class="kw">rbinom</span>(n_sim, n, theta_sim)</span></code></pre></div></li>
+<li><p>Similar to the prior calculation, but now we use the posterior probabilities as the weights in the law of total probability calculation.</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="prediction.html#cb90-1"></a><span class="co"># Predictive distribution</span></span>
+<span id="cb90-2"><a href="prediction.html#cb90-2"></a>y_predict =<span class="st"> </span><span class="dv">0</span><span class="op">:</span>n</span>
+<span id="cb90-3"><a href="prediction.html#cb90-3"></a></span>
+<span id="cb90-4"><a href="prediction.html#cb90-4"></a>py_predict =<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, <span class="kw">length</span>(y_predict))</span>
+<span id="cb90-5"><a href="prediction.html#cb90-5"></a></span>
+<span id="cb90-6"><a href="prediction.html#cb90-6"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(y_predict)) {</span>
+<span id="cb90-7"><a href="prediction.html#cb90-7"></a>  py_predict[i] =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">dbinom</span>(y_predict[i], n, theta) <span class="op">*</span><span class="st"> </span>posterior) <span class="co"># posterior</span></span>
+<span id="cb90-8"><a href="prediction.html#cb90-8"></a>}</span>
+<span id="cb90-9"><a href="prediction.html#cb90-9"></a></span>
+<span id="cb90-10"><a href="prediction.html#cb90-10"></a><span class="kw">plot</span>(y_predict, py_predict, <span class="dt">type =</span> <span class="st">&quot;o&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;orange&quot;</span>,</span>
+<span id="cb90-11"><a href="prediction.html#cb90-11"></a>     <span class="dt">xlim =</span> <span class="kw">range</span>(y_predict), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(py_predict)),</span>
+<span id="cb90-12"><a href="prediction.html#cb90-12"></a>     <span class="dt">xlab =</span> <span class="st">&quot;y&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Probability&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;Posterior Predictive Distribution&quot;</span>)</span>
+<span id="cb90-13"><a href="prediction.html#cb90-13"></a><span class="kw">par</span>(<span class="dt">new =</span> T)</span>
+<span id="cb90-14"><a href="prediction.html#cb90-14"></a><span class="kw">plot</span>(<span class="kw">table</span>(y_sim) <span class="op">/</span><span class="st"> </span>n_sim, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb90-15"><a href="prediction.html#cb90-15"></a>     <span class="dt">xlim =</span> <span class="kw">range</span>(y_predict), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(py_predict)),</span>
+<span id="cb90-16"><a href="prediction.html#cb90-16"></a>     <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb90-17"><a href="prediction.html#cb90-17"></a><span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Theoretical&quot;</span>, <span class="st">&quot;Simulation&quot;</span>),</span>
+<span id="cb90-18"><a href="prediction.html#cb90-18"></a>       <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orange&quot;</span>, <span class="st">&quot;black&quot;</span>), <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>))</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-77-1.png" width="672" /></p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="prediction.html#cb91-1"></a><span class="co"># Prediction interval</span></span>
+<span id="cb91-2"><a href="prediction.html#cb91-2"></a>py_predict_cdf =<span class="st"> </span><span class="kw">cumsum</span>(py_predict)</span>
+<span id="cb91-3"><a href="prediction.html#cb91-3"></a><span class="kw">c</span>(y_predict[<span class="kw">max</span>(<span class="kw">which</span>(py_predict_cdf <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.025</span>))], y_predict[<span class="kw">min</span>(<span class="kw">which</span>(py_predict_cdf <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.975</span>))])</span></code></pre></div>
+<pre><code>## [1] 23 35</code></pre></li>
+<li><p>There is posterior predictive probability of 95% that between 23 and 35 students in a sample of 35 students will prefer data as singular.</p></li>
+<li><p>The observed sample proportion is 865/1093=0.791. The posterior mean is 0.791, and the prior standard deviation is 0.012. There is a posterior probability of 95% that between 76% and 81% of Cal Poly students prefer data as singular. The posterior SD is much smaller based on the FiveThirtyEight due to the much larger sample size. (The posterior means are also different due to the difference in sample proportions.)</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="prediction.html#cb93-1"></a><span class="co"># data</span></span>
+<span id="cb93-2"><a href="prediction.html#cb93-2"></a>n =<span class="st"> </span><span class="dv">1093</span> <span class="co"># sample size</span></span>
+<span id="cb93-3"><a href="prediction.html#cb93-3"></a>y =<span class="st"> </span><span class="dv">865</span> <span class="co"># sample count of success</span></span>
+<span id="cb93-4"><a href="prediction.html#cb93-4"></a></span>
+<span id="cb93-5"><a href="prediction.html#cb93-5"></a><span class="co"># likelihood, using binomial</span></span>
+<span id="cb93-6"><a href="prediction.html#cb93-6"></a>likelihood =<span class="st"> </span><span class="kw">dbinom</span>(y, n, theta) <span class="co"># function of theta</span></span>
+<span id="cb93-7"><a href="prediction.html#cb93-7"></a></span>
+<span id="cb93-8"><a href="prediction.html#cb93-8"></a><span class="co"># posterior</span></span>
+<span id="cb93-9"><a href="prediction.html#cb93-9"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb93-10"><a href="prediction.html#cb93-10"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span>
+<span id="cb93-11"><a href="prediction.html#cb93-11"></a></span>
+<span id="cb93-12"><a href="prediction.html#cb93-12"></a><span class="co"># posterior mean</span></span>
+<span id="cb93-13"><a href="prediction.html#cb93-13"></a>posterior_ev =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">*</span><span class="st"> </span>posterior)</span>
+<span id="cb93-14"><a href="prediction.html#cb93-14"></a>posterior_ev</span></code></pre></div>
+<pre><code>## [1] 0.7912489</code></pre>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="prediction.html#cb95-1"></a><span class="co"># posterior variance</span></span>
+<span id="cb95-2"><a href="prediction.html#cb95-2"></a>posterior_var =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">^</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>posterior) <span class="op">-</span><span class="st"> </span>posterior_ev <span class="op">^</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb95-3"><a href="prediction.html#cb95-3"></a></span>
+<span id="cb95-4"><a href="prediction.html#cb95-4"></a><span class="co"># posterior sd</span></span>
+<span id="cb95-5"><a href="prediction.html#cb95-5"></a><span class="kw">sqrt</span>(posterior_var)</span></code></pre></div>
+<pre><code>## [1] 0.01226506</code></pre>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="prediction.html#cb97-1"></a><span class="co"># posterior 95% credible interval</span></span>
+<span id="cb97-2"><a href="prediction.html#cb97-2"></a>posterior_cdf =<span class="st"> </span><span class="kw">cumsum</span>(posterior)</span>
+<span id="cb97-3"><a href="prediction.html#cb97-3"></a><span class="kw">c</span>(theta[<span class="kw">max</span>(<span class="kw">which</span>(posterior_cdf <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.025</span>))], theta[<span class="kw">min</span>(<span class="kw">which</span>(posterior_cdf <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.975</span>))])</span></code></pre></div>
+<pre><code>## [1] 0.7666 0.8148</code></pre>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="prediction.html#cb99-1"></a><span class="co"># plots</span></span>
+<span id="cb99-2"><a href="prediction.html#cb99-2"></a>ylim =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(<span class="kw">c</span>(prior, posterior, likelihood <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(likelihood))))</span>
+<span id="cb99-3"><a href="prediction.html#cb99-3"></a><span class="kw">plot</span>(theta, prior, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;theta&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb99-4"><a href="prediction.html#cb99-4"></a><span class="kw">par</span>(<span class="dt">new=</span>T) </span>
+<span id="cb99-5"><a href="prediction.html#cb99-5"></a><span class="kw">plot</span>(theta, likelihood<span class="op">/</span><span class="kw">sum</span>(likelihood), <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;skyblue&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb99-6"><a href="prediction.html#cb99-6"></a><span class="kw">par</span>(<span class="dt">new=</span>T)</span>
+<span id="cb99-7"><a href="prediction.html#cb99-7"></a><span class="kw">plot</span>(theta, posterior, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;seagreen&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb99-8"><a href="prediction.html#cb99-8"></a><span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;prior&quot;</span>, <span class="st">&quot;scaled likelihood&quot;</span>, <span class="st">&quot;posterior&quot;</span>), <span class="dt">lty=</span><span class="dv">1</span>, <span class="dt">col=</span><span class="kw">c</span>(<span class="st">&quot;orange&quot;</span>, <span class="st">&quot;skyblue&quot;</span>, <span class="st">&quot;seagreen&quot;</span>))</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-78-1.png" width="672" /></p></li>
+<li><p>There is posterior predictive probability of 95% that between 23 and 35 students in a sample of 35 students will prefer data as singular. Despite the fact that the posterior distributions of <span class="math inline">\(\theta\)</span> are different in the two scenarios, the posterior predictive distributions are fairly similar. Even though there is less uncertainty about <span class="math inline">\(\theta\)</span> in the FiveThirtyEight case, the predictive distribution reflects the sample-to-sample variability of the number of students who prefer data as singular, which is mainly impacted by the size of the sample being “predicted”.</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="prediction.html#cb100-1"></a>n =<span class="st"> </span><span class="dv">35</span></span>
+<span id="cb100-2"><a href="prediction.html#cb100-2"></a></span>
+<span id="cb100-3"><a href="prediction.html#cb100-3"></a><span class="co"># Predictive simulation</span></span>
+<span id="cb100-4"><a href="prediction.html#cb100-4"></a>theta_sim =<span class="st"> </span><span class="kw">sample</span>(theta, n_sim, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> posterior)</span>
+<span id="cb100-5"><a href="prediction.html#cb100-5"></a></span>
+<span id="cb100-6"><a href="prediction.html#cb100-6"></a>y_sim =<span class="st"> </span><span class="kw">rbinom</span>(n_sim, n, theta_sim)</span>
+<span id="cb100-7"><a href="prediction.html#cb100-7"></a></span>
+<span id="cb100-8"><a href="prediction.html#cb100-8"></a><span class="co"># Predictive distribution</span></span>
+<span id="cb100-9"><a href="prediction.html#cb100-9"></a>y_predict =<span class="st"> </span><span class="dv">0</span><span class="op">:</span>n</span>
+<span id="cb100-10"><a href="prediction.html#cb100-10"></a></span>
+<span id="cb100-11"><a href="prediction.html#cb100-11"></a>py_predict =<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, <span class="kw">length</span>(y_predict))</span>
+<span id="cb100-12"><a href="prediction.html#cb100-12"></a></span>
+<span id="cb100-13"><a href="prediction.html#cb100-13"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(y_predict)) {</span>
+<span id="cb100-14"><a href="prediction.html#cb100-14"></a>  py_predict[i] =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">dbinom</span>(y_predict[i], n, theta) <span class="op">*</span><span class="st"> </span>posterior) <span class="co"># posterior</span></span>
+<span id="cb100-15"><a href="prediction.html#cb100-15"></a>}</span>
+<span id="cb100-16"><a href="prediction.html#cb100-16"></a></span>
+<span id="cb100-17"><a href="prediction.html#cb100-17"></a><span class="kw">plot</span>(y_predict, py_predict, <span class="dt">type =</span> <span class="st">&quot;o&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;orange&quot;</span>,</span>
+<span id="cb100-18"><a href="prediction.html#cb100-18"></a>     <span class="dt">xlim =</span> <span class="kw">range</span>(y_predict), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(py_predict)),</span>
+<span id="cb100-19"><a href="prediction.html#cb100-19"></a>     <span class="dt">xlab =</span> <span class="st">&quot;y&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Probability&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;Posterior Predictive Distribution&quot;</span>)</span>
+<span id="cb100-20"><a href="prediction.html#cb100-20"></a><span class="kw">par</span>(<span class="dt">new =</span> T)</span>
+<span id="cb100-21"><a href="prediction.html#cb100-21"></a><span class="kw">plot</span>(<span class="kw">table</span>(y_sim) <span class="op">/</span><span class="st"> </span>n_sim, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb100-22"><a href="prediction.html#cb100-22"></a>     <span class="dt">xlim =</span> <span class="kw">range</span>(y_predict), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(py_predict)),</span>
+<span id="cb100-23"><a href="prediction.html#cb100-23"></a>     <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb100-24"><a href="prediction.html#cb100-24"></a><span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Theoretical&quot;</span>, <span class="st">&quot;Simulation&quot;</span>),</span>
+<span id="cb100-25"><a href="prediction.html#cb100-25"></a>       <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orange&quot;</span>, <span class="st">&quot;black&quot;</span>), <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>))</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-79-1.png" width="672" /></p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="prediction.html#cb101-1"></a><span class="co"># Prediction interval</span></span>
+<span id="cb101-2"><a href="prediction.html#cb101-2"></a>py_predict_cdf =<span class="st"> </span><span class="kw">cumsum</span>(py_predict)</span>
+<span id="cb101-3"><a href="prediction.html#cb101-3"></a><span class="kw">c</span>(y_predict[<span class="kw">max</span>(<span class="kw">which</span>(py_predict_cdf <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.025</span>))], y_predict[<span class="kw">min</span>(<span class="kw">which</span>(py_predict_cdf <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.975</span>))])</span></code></pre></div>
+<pre><code>## [1] 22 32</code></pre></li>
+</ol>
+<p>Be sure to distinguish between a prior/posterior <em>distribution</em> and a prior/posterior <em>predictive distribution</em>.</p>
+<ul>
+<li>A prior/posterior <em>distribution</em> is a distribution on potential values of the <em>parameters</em> <span class="math inline">\(\theta\)</span>. These distributions quantify the degree of uncertainty about the unknown parameter <span class="math inline">\(\theta\)</span> (before and after observing data).</li>
+<li>A prior/posterior <em>predictive distribution</em> is a distribution on potential values of the <em>data</em> <span class="math inline">\(y\)</span>. Predictive distributions reflect sample-to-sample variability of the sample data, while accounting for the uncertainty in the parameters.</li>
+</ul>
+<p>Even if parameters are essentially “known” — that is, even if the prior/posterior variance of parameters is small — there will still be sample-to-sample variability reflected in the predictive distribution of the data, mainly influenced by the size <span class="math inline">\(n\)</span> of the sample being “predicted”.</p>
+
+<div class="example">
+<span id="exm:data-singular3" class="example"><strong>Example 6.3  </strong></span>
+Continuing the previous example, suppose that before collecting data for our sample of Cal Poly students, we had based our prior distribution off the FiveThirtyEight data. Suppose we assume a prior distribution that is proportional to <span class="math inline">\(\theta^{864}(1-\theta)^{227}\)</span> for <span class="math inline">\(\theta\)</span> values in the grid. (We will see where such a distribution might come from later.)
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Plot the prior distribution. What does this say about our prior beliefs?</li>
+<li>Now suppose we randomly select a sample of 35 Cal Poly students and 21 students prefer data as singular. Plot the prior and likelihood, and find the posterior distribution and plot it. Have our beliefs about <span class="math inline">\(\theta\)</span> changed? Why?</li>
+<li>Find the posterior predictive distribution corresponding to samples of size 35. Compare the observed sample value of 21/35 with the posterior predictive distribution. What do you notice? Does this indicate problems with the model?</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="prediction.html#exm:data-singular3">6.3</a>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>We have a very strong prior belief that <span class="math inline">\(\theta\)</span> is close to 0.79. There is a prior probability of 95% that between 76% and 82% of Cal Poly students prefer data as singular.</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="prediction.html#cb103-1"></a><span class="co"># prior</span></span>
+<span id="cb103-2"><a href="prediction.html#cb103-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb103-3"><a href="prediction.html#cb103-3"></a>prior =<span class="st"> </span>theta <span class="op">^</span><span class="st"> </span><span class="dv">864</span> <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta) <span class="op">^</span><span class="st"> </span><span class="dv">227</span></span>
+<span id="cb103-4"><a href="prediction.html#cb103-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb103-5"><a href="prediction.html#cb103-5"></a></span>
+<span id="cb103-6"><a href="prediction.html#cb103-6"></a>ylim =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(prior))</span>
+<span id="cb103-7"><a href="prediction.html#cb103-7"></a><span class="kw">plot</span>(theta, prior, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;theta&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-81-1.png" width="672" /></p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="prediction.html#cb104-1"></a><span class="co"># prior mean</span></span>
+<span id="cb104-2"><a href="prediction.html#cb104-2"></a>prior_ev =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">*</span><span class="st"> </span>prior)</span>
+<span id="cb104-3"><a href="prediction.html#cb104-3"></a>prior_ev</span></code></pre></div>
+<pre><code>## [1] 0.7913998</code></pre>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="prediction.html#cb106-1"></a><span class="co"># prior variance</span></span>
+<span id="cb106-2"><a href="prediction.html#cb106-2"></a>prior_var =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">^</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>prior) <span class="op">-</span><span class="st"> </span>prior_ev <span class="op">^</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb106-3"><a href="prediction.html#cb106-3"></a></span>
+<span id="cb106-4"><a href="prediction.html#cb106-4"></a><span class="co"># prior sd</span></span>
+<span id="cb106-5"><a href="prediction.html#cb106-5"></a><span class="kw">sqrt</span>(prior_var)</span></code></pre></div>
+<pre><code>## [1] 0.01228419</code></pre>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="prediction.html#cb108-1"></a><span class="co"># prior 95% credible interval</span></span>
+<span id="cb108-2"><a href="prediction.html#cb108-2"></a>prior_cdf =<span class="st"> </span><span class="kw">cumsum</span>(prior)</span>
+<span id="cb108-3"><a href="prediction.html#cb108-3"></a><span class="kw">c</span>(theta[<span class="kw">max</span>(<span class="kw">which</span>(prior_cdf <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.025</span>))], theta[<span class="kw">min</span>(<span class="kw">which</span>(prior_cdf <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.975</span>))])</span></code></pre></div>
+<pre><code>## [1] 0.7667 0.8150</code></pre></li>
+<li><p>Our posterior distribution has barely changed from the prior. Even though the sample proportion is 21/35 = 0.61, our prior beliefs were so strong (represented by the small prior SD) that a sample of size 35 isn’t very convincing.</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="prediction.html#cb110-1"></a><span class="co"># data</span></span>
+<span id="cb110-2"><a href="prediction.html#cb110-2"></a>n =<span class="st"> </span><span class="dv">35</span> <span class="co"># sample size</span></span>
+<span id="cb110-3"><a href="prediction.html#cb110-3"></a>y =<span class="st"> </span><span class="dv">21</span> <span class="co"># sample count of success</span></span>
+<span id="cb110-4"><a href="prediction.html#cb110-4"></a></span>
+<span id="cb110-5"><a href="prediction.html#cb110-5"></a><span class="co"># likelihood, using binomial</span></span>
+<span id="cb110-6"><a href="prediction.html#cb110-6"></a>likelihood =<span class="st"> </span><span class="kw">dbinom</span>(y, n, theta) <span class="co"># function of theta</span></span>
+<span id="cb110-7"><a href="prediction.html#cb110-7"></a></span>
+<span id="cb110-8"><a href="prediction.html#cb110-8"></a><span class="co"># posterior</span></span>
+<span id="cb110-9"><a href="prediction.html#cb110-9"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb110-10"><a href="prediction.html#cb110-10"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span>
+<span id="cb110-11"><a href="prediction.html#cb110-11"></a></span>
+<span id="cb110-12"><a href="prediction.html#cb110-12"></a><span class="co"># posterior mean</span></span>
+<span id="cb110-13"><a href="prediction.html#cb110-13"></a>posterior_ev =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">*</span><span class="st"> </span>posterior)</span>
+<span id="cb110-14"><a href="prediction.html#cb110-14"></a>posterior_ev</span></code></pre></div>
+<pre><code>## [1] 0.785461</code></pre>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="prediction.html#cb112-1"></a><span class="co"># posterior variance</span></span>
+<span id="cb112-2"><a href="prediction.html#cb112-2"></a>posterior_var =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">^</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>posterior) <span class="op">-</span><span class="st"> </span>posterior_ev <span class="op">^</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb112-3"><a href="prediction.html#cb112-3"></a></span>
+<span id="cb112-4"><a href="prediction.html#cb112-4"></a><span class="co"># posterior sd</span></span>
+<span id="cb112-5"><a href="prediction.html#cb112-5"></a><span class="kw">sqrt</span>(posterior_var)</span></code></pre></div>
+<pre><code>## [1] 0.01221711</code></pre>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="prediction.html#cb114-1"></a><span class="co"># posterior 95% credible interval</span></span>
+<span id="cb114-2"><a href="prediction.html#cb114-2"></a>posterior_cdf =<span class="st"> </span><span class="kw">cumsum</span>(posterior)</span>
+<span id="cb114-3"><a href="prediction.html#cb114-3"></a><span class="kw">c</span>(theta[<span class="kw">max</span>(<span class="kw">which</span>(posterior_cdf <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.025</span>))], theta[<span class="kw">min</span>(<span class="kw">which</span>(posterior_cdf <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.975</span>))])</span></code></pre></div>
+<pre><code>## [1] 0.7609 0.8089</code></pre>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="prediction.html#cb116-1"></a><span class="co"># plots</span></span>
+<span id="cb116-2"><a href="prediction.html#cb116-2"></a>ylim =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(<span class="kw">c</span>(prior, posterior, likelihood <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(likelihood))))</span>
+<span id="cb116-3"><a href="prediction.html#cb116-3"></a><span class="kw">plot</span>(theta, prior, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;theta&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb116-4"><a href="prediction.html#cb116-4"></a><span class="kw">par</span>(<span class="dt">new=</span>T) </span>
+<span id="cb116-5"><a href="prediction.html#cb116-5"></a><span class="kw">plot</span>(theta, likelihood<span class="op">/</span><span class="kw">sum</span>(likelihood), <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;skyblue&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb116-6"><a href="prediction.html#cb116-6"></a><span class="kw">par</span>(<span class="dt">new=</span>T)</span>
+<span id="cb116-7"><a href="prediction.html#cb116-7"></a><span class="kw">plot</span>(theta, posterior, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;seagreen&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb116-8"><a href="prediction.html#cb116-8"></a><span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;prior&quot;</span>, <span class="st">&quot;scaled likelihood&quot;</span>, <span class="st">&quot;posterior&quot;</span>), <span class="dt">lty=</span><span class="dv">1</span>, <span class="dt">col=</span><span class="kw">c</span>(<span class="st">&quot;orange&quot;</span>, <span class="st">&quot;skyblue&quot;</span>, <span class="st">&quot;seagreen&quot;</span>))</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-82-1.png" width="672" /></p></li>
+<li><p>According to the posterior predictive distribution, it is very unlikely to observe a sample with only 21 students preferring data as singular; only about 1% of examples are this extreme. However, remember that the posterior predictive distribution is based on the observed data. So we’re saying that based on the fact that we observed 21 students in a sample of 35 preferring data as singular it would be unlikely to observe 21 students in a sample of 35 preferring data as singular????? Seems problematic. In this case, the problem is that the prior is way too strict, and it doesn’t give the data enough say.</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="prediction.html#cb117-1"></a>n =<span class="st"> </span><span class="dv">35</span></span>
+<span id="cb117-2"><a href="prediction.html#cb117-2"></a></span>
+<span id="cb117-3"><a href="prediction.html#cb117-3"></a><span class="co"># Predictive simulation</span></span>
+<span id="cb117-4"><a href="prediction.html#cb117-4"></a>theta_sim =<span class="st"> </span><span class="kw">sample</span>(theta, n_sim, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> posterior)</span>
+<span id="cb117-5"><a href="prediction.html#cb117-5"></a></span>
+<span id="cb117-6"><a href="prediction.html#cb117-6"></a>y_sim =<span class="st"> </span><span class="kw">rbinom</span>(n_sim, n, theta_sim)</span>
+<span id="cb117-7"><a href="prediction.html#cb117-7"></a></span>
+<span id="cb117-8"><a href="prediction.html#cb117-8"></a><span class="co"># Predictive distribution</span></span>
+<span id="cb117-9"><a href="prediction.html#cb117-9"></a>y_predict =<span class="st"> </span><span class="dv">0</span><span class="op">:</span>n</span>
+<span id="cb117-10"><a href="prediction.html#cb117-10"></a></span>
+<span id="cb117-11"><a href="prediction.html#cb117-11"></a>py_predict =<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, <span class="kw">length</span>(y_predict))</span>
+<span id="cb117-12"><a href="prediction.html#cb117-12"></a></span>
+<span id="cb117-13"><a href="prediction.html#cb117-13"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(y_predict)) {</span>
+<span id="cb117-14"><a href="prediction.html#cb117-14"></a>  py_predict[i] =<span class="st"> </span><span class="kw">sum</span>(<span class="kw">dbinom</span>(y_predict[i], n, theta) <span class="op">*</span><span class="st"> </span>posterior) <span class="co"># posterior</span></span>
+<span id="cb117-15"><a href="prediction.html#cb117-15"></a>}</span>
+<span id="cb117-16"><a href="prediction.html#cb117-16"></a></span>
+<span id="cb117-17"><a href="prediction.html#cb117-17"></a><span class="kw">plot</span>(y_predict, py_predict, <span class="dt">type =</span> <span class="st">&quot;o&quot;</span>, <span class="dt">col =</span> <span class="st">&quot;orange&quot;</span>,</span>
+<span id="cb117-18"><a href="prediction.html#cb117-18"></a>     <span class="dt">xlim =</span> <span class="kw">range</span>(y_predict), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(py_predict)),</span>
+<span id="cb117-19"><a href="prediction.html#cb117-19"></a>     <span class="dt">xlab =</span> <span class="st">&quot;y&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Probability&quot;</span>, <span class="dt">main =</span> <span class="st">&quot;Posterior Predictive Distribution&quot;</span>)</span>
+<span id="cb117-20"><a href="prediction.html#cb117-20"></a><span class="kw">par</span>(<span class="dt">new =</span> T)</span>
+<span id="cb117-21"><a href="prediction.html#cb117-21"></a><span class="kw">plot</span>(<span class="kw">table</span>(y_sim) <span class="op">/</span><span class="st"> </span>n_sim, <span class="dt">type =</span> <span class="st">&quot;h&quot;</span>,</span>
+<span id="cb117-22"><a href="prediction.html#cb117-22"></a>     <span class="dt">xlim =</span> <span class="kw">range</span>(y_predict), <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(py_predict)),</span>
+<span id="cb117-23"><a href="prediction.html#cb117-23"></a>     <span class="dt">xlab =</span> <span class="st">&quot;&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb117-24"><a href="prediction.html#cb117-24"></a><span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Theoretical&quot;</span>, <span class="st">&quot;Simulation&quot;</span>),</span>
+<span id="cb117-25"><a href="prediction.html#cb117-25"></a>       <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">&quot;orange&quot;</span>, <span class="st">&quot;black&quot;</span>), <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">1</span>))</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-83-1.png" width="672" /></p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="prediction.html#cb118-1"></a><span class="co"># Prediction interval</span></span>
+<span id="cb118-2"><a href="prediction.html#cb118-2"></a><span class="kw">sum</span>(py_predict[y_predict <span class="op">&lt;=</span><span class="st"> </span>y])</span></code></pre></div>
+<pre><code>## [1] 0.0110526</code></pre></li>
+</ol>
+<p>A Bayesian model is composed of both a model for the data (likelihood) and a prior distribution on model parameters.</p>
+<p>Predictive distributions can be used as tools in model checking.
+<strong>Posterior predictive checking</strong> involves comparing the observed data to simulated samples (or some summary statistics) generated from the posterior predictive distribution.
+We’ll focus on graphical checks: Compare plots for the observed data with those for simulated samples. Systematic differences between simulated samples and observed data indicate potential shortcomings of the model.</p>
+<p>If the model fits the data, then replicated data generated under the model should look similar to the observed data.
+If the observed data is not plausible under the posterior predictive distribution, then this could indicate that the model is not a good fit for the data. (“Based on the data we observed, we conclude that it would be unlikely to observe the data we observed???”)</p>
+<p>However, a problematic model isn’t necessarily due to the prior. Remember that a Bayesian model consists of both a prior and a likelihood, so model mis-specification can occur in the prior or likelihood or both. The form of the likelihood is also based on subjective assumptions about the variables being measured and how the data are collected. Posterior predictive checking can help assess whether these assumptions are reasonable in light of the observed data.</p>
+
+<div class="example">
+<p><span id="exm:independence-check" class="example"><strong>Example 6.4  </strong></span>
+A basketball player will attempt a sequence of 20 free throws.
+Our model assumes</p>
+<ul>
+<li>The probability that the player successfully makes any particular free throw attempt is <span class="math inline">\(\theta\)</span>.</li>
+<li>A uniform prior distribution for <span class="math inline">\(\theta\)</span> values in a grid from 0 to 1.</li>
+<li>Conditional on <span class="math inline">\(\theta\)</span>, the number of successfully made attempts has a Binomial(20, <span class="math inline">\(\theta\)</span>) distribution. (This determines the likelihood.)</li>
+</ul>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Suppose the player misses her first 10 attempts and makes her second 10 attempts. Does this data seem consistent with the model?</li>
+<li>Explain how you could use posterior predictive checking to check the fit of the model.</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="prediction.html#exm:independence-check">6.4</a>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>Remember that one condition of a Binomial model is independence of trials: the probability of success on a shot should not depend on the results of previous shots. However, independence seems to be violated here, since the shooter has a long hot streak followed by a long cold streak. So a Binomial model might not be appropriate.</p></li>
+<li><p>We’re particularly concerned about the independence assumption, so how could we check that? For example, the data seems consistent with a value of <span class="math inline">\(\theta=0.5\)</span>, but if the trials were independent, you would expect to see more alterations between makes and misses. So one way to measure degree of dependence is to count the number of “switches” between makes and misses. For the observed data there is only 1 switch. We can use simulation to approximate the posterior predictive distribution of the number of switches assuming the model is true, and then we can see if a value of 1 (the observed number of switches) would be consistent with the model.</p>
+<ol style="list-style-type: decimal">
+<li>Find the posterior distribution of <span class="math inline">\(\theta\)</span>. Simulate a value of <span class="math inline">\(\theta\)</span> from its posterior distribution.</li>
+<li>Given <span class="math inline">\(\theta\)</span>, simulate a sequence of 20 independent success/failure trials with probability of success <span class="math inline">\(\theta\)</span> on each trial. Compute the number of switches for the sequence. (Since we’re interested in the number of switches, we have to generate the individual success/failure results, and not just the total number of successes).</li>
+<li>Repeat many times, recording the total number of switches each time. Summarize the values to approximate the posterior predictive distribution of the number of switches.</li>
+</ol>
+<p>See the simulation results below. It would be very unlikely to observe only 1 switch in 20 independent trials. Therefore, the proposed model does not fit the observed data well. There is evidence that the assumption of independence is violated.</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="prediction.html#cb120-1"></a><span class="co"># prior</span></span>
+<span id="cb120-2"><a href="prediction.html#cb120-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb120-3"><a href="prediction.html#cb120-3"></a>prior =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(theta))</span>
+<span id="cb120-4"><a href="prediction.html#cb120-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb120-5"><a href="prediction.html#cb120-5"></a></span>
+<span id="cb120-6"><a href="prediction.html#cb120-6"></a><span class="co"># data</span></span>
+<span id="cb120-7"><a href="prediction.html#cb120-7"></a>n =<span class="st"> </span><span class="dv">20</span> <span class="co"># sample size</span></span>
+<span id="cb120-8"><a href="prediction.html#cb120-8"></a>y =<span class="st"> </span><span class="dv">10</span> <span class="co"># sample count of success</span></span>
+<span id="cb120-9"><a href="prediction.html#cb120-9"></a></span>
+<span id="cb120-10"><a href="prediction.html#cb120-10"></a><span class="co"># likelihood, using binomial</span></span>
+<span id="cb120-11"><a href="prediction.html#cb120-11"></a>likelihood =<span class="st"> </span><span class="kw">dbinom</span>(y, n, theta) <span class="co"># function of theta</span></span>
+<span id="cb120-12"><a href="prediction.html#cb120-12"></a></span>
+<span id="cb120-13"><a href="prediction.html#cb120-13"></a><span class="co"># posterior</span></span>
+<span id="cb120-14"><a href="prediction.html#cb120-14"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb120-15"><a href="prediction.html#cb120-15"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span>
+<span id="cb120-16"><a href="prediction.html#cb120-16"></a></span>
+<span id="cb120-17"><a href="prediction.html#cb120-17"></a><span class="co"># predictive simulation</span></span>
+<span id="cb120-18"><a href="prediction.html#cb120-18"></a></span>
+<span id="cb120-19"><a href="prediction.html#cb120-19"></a>n_sim =<span class="st"> </span><span class="dv">10000</span></span>
+<span id="cb120-20"><a href="prediction.html#cb120-20"></a></span>
+<span id="cb120-21"><a href="prediction.html#cb120-21"></a>thetas =<span class="st"> </span></span>
+<span id="cb120-22"><a href="prediction.html#cb120-22"></a>switches =<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, n_sim)</span>
+<span id="cb120-23"><a href="prediction.html#cb120-23"></a></span>
+<span id="cb120-24"><a href="prediction.html#cb120-24"></a><span class="cf">for</span> (r <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>n_sim){</span>
+<span id="cb120-25"><a href="prediction.html#cb120-25"></a>  theta_sim =<span class="st"> </span><span class="kw">sample</span>(theta, <span class="dv">1</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>, <span class="dt">prob =</span> posterior)</span>
+<span id="cb120-26"><a href="prediction.html#cb120-26"></a>  trials_sim =<span class="st"> </span><span class="kw">rbinom</span>(n, <span class="dv">1</span>, theta_sim)</span>
+<span id="cb120-27"><a href="prediction.html#cb120-27"></a>  switches[r] =<span class="st"> </span><span class="kw">length</span>(<span class="kw">rle</span>(trials_sim)<span class="op">$</span>lengths) <span class="op">-</span><span class="st"> </span><span class="dv">1</span> <span class="co"># built in function</span></span>
+<span id="cb120-28"><a href="prediction.html#cb120-28"></a>}</span>
+<span id="cb120-29"><a href="prediction.html#cb120-29"></a></span>
+<span id="cb120-30"><a href="prediction.html#cb120-30"></a><span class="kw">plot</span>(<span class="kw">table</span>(switches) <span class="op">/</span><span class="st"> </span>n_sim)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-85-1.png" width="672" /></p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="prediction.html#cb121-1"></a><span class="kw">sum</span>(switches <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span>n_sim</span></code></pre></div>
+<pre><code>## [1] 0.0006</code></pre></li>
+</ol>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="inference.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="continuous.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"google": false,
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bayesian-reasoning-and-methods.pdf"],
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

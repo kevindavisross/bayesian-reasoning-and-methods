@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1.2 Interpretations of probability | An Introduction to Bayesian Reasoning and Methods</title>
+  <meta name="description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="generator" content="bookdown 0.20.1 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1.2 Interpretations of probability | An Introduction to Bayesian Reasoning and Methods" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="github-repo" content="rstudio/bayesian-reasoning-and-methods" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1.2 Interpretations of probability | An Introduction to Bayesian Reasoning and Methods" />
+  
+  <meta name="twitter:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  
+
+<meta name="author" content="Kevin Ross" />
+
+
+<meta name="date" content="2021-01-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="randomness.html"/>
+<link rel="next" href="consistency.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="interpretations.html"><a href="interpretations.html"><i class="fa fa-check"></i><b>1</b> Interpretations of Probability and Statistics</a><ul>
+<li class="chapter" data-level="1.1" data-path="randomness.html"><a href="randomness.html"><i class="fa fa-check"></i><b>1.1</b> Instances of randomness</a></li>
+<li class="chapter" data-level="1.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html"><i class="fa fa-check"></i><b>1.2</b> Interpretations of probability</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#rel-freq"><i class="fa fa-check"></i><b>1.2.1</b> Long run relative frequency</a></li>
+<li class="chapter" data-level="1.2.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#subjective-probability"><i class="fa fa-check"></i><b>1.2.2</b> Subjective probability</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="consistency.html"><a href="consistency.html"><i class="fa fa-check"></i><b>1.3</b> Working with probabilities</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="consistency.html"><a href="consistency.html#consistency-requirements"><i class="fa fa-check"></i><b>1.3.1</b> Consistency requirements</a></li>
+<li class="chapter" data-level="1.3.2" data-path="consistency.html"><a href="consistency.html#odds"><i class="fa fa-check"></i><b>1.3.2</b> Odds</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="interpretations-of-statistics.html"><a href="interpretations-of-statistics.html"><i class="fa fa-check"></i><b>1.4</b> Interpretations of Statistics</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bayes-rule.html"><a href="bayes-rule.html"><i class="fa fa-check"></i><b>2</b> Bayes’ Rule</a></li>
+<li class="chapter" data-level="3" data-path="bayes-factor.html"><a href="bayes-factor.html"><i class="fa fa-check"></i><b>3</b> Odds and Bayes Factors</a></li>
+<li class="chapter" data-level="4" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>4</b> Introduction to Estimation</a></li>
+<li class="chapter" data-level="5" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>5</b> Introduction to Inference</a></li>
+<li class="chapter" data-level="6" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>6</b> Introduction to Prediction</a></li>
+<li class="chapter" data-level="7" data-path="continuous.html"><a href="continuous.html"><i class="fa fa-check"></i><b>7</b> Introduction to Continuous Prior and Posterior Distributions</a><ul>
+<li class="chapter" data-level="7.1" data-path="a-brief-review-of-continuous-distributions.html"><a href="a-brief-review-of-continuous-distributions.html"><i class="fa fa-check"></i><b>7.1</b> A brief review of continuous distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="normal-mean.html"><a href="normal-mean.html"><i class="fa fa-check"></i><b>7.2</b> Normal mean</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="jags.html"><a href="jags.html"><i class="fa fa-check"></i><b>8</b> Introduction to Posterior Simulation and JAGS</a><ul>
+<li class="chapter" data-level="8.1" data-path="implementing-mcmc-in-jags.html"><a href="implementing-mcmc-in-jags.html"><i class="fa fa-check"></i><b>8.1</b> Implementing MCMC in JAGS</a></li>
+<li class="chapter" data-level="8.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html"><i class="fa fa-check"></i><b>8.2</b> Example 17.1: Beta-Binomial Model — “Data is singular”</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#load-the-data"><i class="fa fa-check"></i><b>8.2.1</b> Load the data</a></li>
+<li class="chapter" data-level="8.2.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#specify-the-model-likelihood-and-prior"><i class="fa fa-check"></i><b>8.2.2</b> Specify the model: likelihood and prior</a></li>
+<li class="chapter" data-level="8.2.3" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#compile-in-jags"><i class="fa fa-check"></i><b>8.2.3</b> Compile in JAGS</a></li>
+<li class="chapter" data-level="8.2.4" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulate-values-from-the-posterior-distribution"><i class="fa fa-check"></i><b>8.2.4</b> Simulate values from the posterior distribution</a></li>
+<li class="chapter" data-level="8.2.5" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#summarizing-simulated-values-and-diagnostic-checking"><i class="fa fa-check"></i><b>8.2.5</b> Summarizing simulated values and diagnostic checking</a></li>
+<li class="chapter" data-level="8.2.6" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#posterior-prediction"><i class="fa fa-check"></i><b>8.2.6</b> Posterior prediction</a></li>
+<li class="chapter" data-level="8.2.7" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#loading-data-as-individual-values-rather-than-summary-statistics"><i class="fa fa-check"></i><b>8.2.7</b> Loading data as individual values rather than summary statistics</a></li>
+<li class="chapter" data-level="8.2.8" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulating-multiple-chains"><i class="fa fa-check"></i><b>8.2.8</b> Simulating multiple chains</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="prior.html"><a href="prior.html"><i class="fa fa-check"></i><b>9</b> Considering Prior Distributions</a></li>
+<li class="chapter" data-level="10" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>10</b> Introduction to Bayesian Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Introduction to Bayesian Reasoning and Methods</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="interpretations-of-probability" class="section level2">
+<h2><span class="header-section-number">1.2</span> Interpretations of probability</h2>
+<p>In the previous section we encountered a variety of scenarios which involved uncertainty, a.k.a. randomness. Just as there are a few “types” of randomness, there are a few ways of interpreting probability, namely, <em>long run relative frequency</em> and <em>subjective probability</em>.</p>
+<div id="rel-freq" class="section level3">
+<h3><span class="header-section-number">1.2.1</span> Long run relative frequency</h3>
+<p>We can all agree that the probability that a single flip of a fair coin lands on heads is 1/2, a.k.a., 0.5, a.k.a, 50%. After all, the notion of “fairness” implies that the two outcomes, heads and tails, should be equally likely, so we have a “50/50 chance” of heads. But how else can we interpret this 50%? One interpretation involves considering <em>what would happen if we flipped the coin main times</em>. Now, if we would flipped the coin twice, we wouldn’t expect to necessarily see one head and one tail. But in many flips, we might expect to see heads on something close to 50% of flips.</p>
+<p>Let’s try this out. Table <a href="interpretations-of-probability.html#tab:coin-flips">1.1</a> displays the results of 10 flips of a fair coin. The first column is the flip number and the second column is the result of the flip. The third column displays the <em>running proportion of flips that result in H</em>. For example, the first flip results in T so the running proportion of H after 1 flip is 0/1; the first two flips result in (T, T) so the running proportion of H after 2 flips is 0/2; and so on. Figure <a href="interpretations-of-probability.html#fig:coin-flips-plot">1.1</a> plots the running proportion of H by the number of flips. We see that with just a small number of flips, the proportion of H fluctuates considerably and is not guaranteed to be close to 0.5. Of course, the results depend on the particular sequence of coin flips. We encourage you to flip a coin 10 times and compare your results.</p>
+
+<table>
+<caption><span id="tab:coin-flips">Table 1.1: </span>Results and running proportion of H for 10 flips of a fair coin.</caption>
+<thead>
+<tr class="header">
+<th align="right">Flip</th>
+<th align="right">Result</th>
+<th align="right">Running proportion of H</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">T</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">T</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">H</td>
+<td align="right">0.333</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">H</td>
+<td align="right">0.500</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">H</td>
+<td align="right">0.600</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">H</td>
+<td align="right">0.667</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="right">T</td>
+<td align="right">0.571</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td align="right">H</td>
+<td align="right">0.625</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="right">H</td>
+<td align="right">0.667</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="right">T</td>
+<td align="right">0.600</td>
+</tr>
+</tbody>
+</table>
+
+<div class="figure"><span id="fig:coin-flips-plot"></span>
+<img src="bayesian-reasoning-and-methods_files/figure-html/coin-flips-plot-1.png" alt="Running proportion of H versus number of flips for the 10 coin flips in Table 1.1." width="672" />
+<p class="caption">
+Figure 1.1: Running proportion of H versus number of flips for the 10 coin flips in Table <a href="interpretations-of-probability.html#tab:coin-flips">1.1</a>.
+</p>
+</div>
+<p>Now we’ll flip the coin 90 more times for a total of 100 flips. The plot on the left in Figure <a href="interpretations-of-probability.html#fig:coin-flips-plot2">1.2</a> summarizes the results, while the plot on the right also displays the results for 3 additional sets of 100 flips. The running proportion fluctuates considerably in the early stages, but settles down and tends to get closer to 0.5 as the number of flips increases. However, even after 100 flips the proportion of flips that result in H isn’t guaranteed to be very close to 0.5.</p>
+
+<div class="figure"><span id="fig:coin-flips-plot2"></span>
+<img src="bayesian-reasoning-and-methods_files/figure-html/coin-flips-plot2-1.png" alt="Running proportion of H versus number of flips for four sets of 100 coin flips." width="50%" /><img src="bayesian-reasoning-and-methods_files/figure-html/coin-flips-plot2-2.png" alt="Running proportion of H versus number of flips for four sets of 100 coin flips." width="50%" />
+<p class="caption">
+Figure 1.2: Running proportion of H versus number of flips for four sets of 100 coin flips.
+</p>
+</div>
+<p>Now for each set of 100 flips, we’ll flip the coin 900 more times for a total of 1000 flips in each of the four sets. The plot on the left in Figure <a href="interpretations-of-probability.html#fig:coin-flips-plot3">1.3</a> summarizes the results for our original set, while the plot on the right also displays the results for the three additional sets from Figure <a href="interpretations-of-probability.html#fig:coin-flips-plot3">1.3</a>. Again, the running proportion fluctuates considerably in the early stages, but settles down and tends to get closer to 0.5 as the number of flips increases. There is less variability in the proportion of H after 1000 flips than after 100. Now, even after 1000 flips the proportion of flips that result in H isn’t guaranteed to be exactly 0.5, but we see a tendency for the proportion to get closer to 0.5 as the number of flips increases.</p>
+
+<div class="figure"><span id="fig:coin-flips-plot3"></span>
+<img src="bayesian-reasoning-and-methods_files/figure-html/coin-flips-plot3-1.png" alt="Running proportion of H versus number of flips for four sets of 1000 coin flips." width="50%" /><img src="bayesian-reasoning-and-methods_files/figure-html/coin-flips-plot3-2.png" alt="Running proportion of H versus number of flips for four sets of 1000 coin flips." width="50%" />
+<p class="caption">
+Figure 1.3: Running proportion of H versus number of flips for four sets of 1000 coin flips.
+</p>
+</div>
+<p>In summary, in a large number of flips of a fair coin we expect about 50% of flips to result in H. That is, the probability that a flip of a fair coin results in H can be interpreted as the <em>long run proportion of flips that result in H</em>, or in other words, the <em>long run relative frequency of H</em>.</p>
+<p>In general, the probability of an event associated with a random phenomenon can be interpreted as a <strong>long run proportion</strong> or <strong>long run relative frequency</strong>: the probability of the event is the proportion of times that the event would occur in a very large number of hypothetical repetitions of the random phenomenon.
+<!-- A natural question is: "how many repetitions are required to represent the long run?"  We'll return to this question and the idea of long run relative frequency in later chapters. --></p>
+<p>The long run relative frequency interpretation of probability can be applied when a situation can be repeated numerous times, at least conceptually, and the outcome can be observed each time. One benefit of the relative frequency interpretation is that the probability of an event can be <em>approximated</em> by simulating the random phenomenon a large number of times and determining the proportion of simulated repetitions on which the event occurred out of the total number of repetitions in the simulation. A <strong>simulation</strong> involves an artificial recreation of the random phenomenon, usually using a computer. After many repetitions the relative frequency of the event will settle down to a single constant value, and that value is the approximately the probability of that event.</p>
+<p>Of course, the accuracy of simulation-based approximations of probabilities depends on how well the simulation represents the actual random phenomenon. Conducting a simulation can involve many assumptions which influence the results. Simulating many flips of a fair coin is one thing; simulating an entire NFL season and the winner of the Superbowl is an entirely different story.</p>
+
+<div class="example">
+<p><span id="exm:interpret-rel-freq" class="example"><strong>Example 1.2  </strong></span>
+In each of the following, write a clearly worded sentence interpreting the numerical value of the probability as a long run relative frequency in context. (Just take the numerical values— 0.1, 0.25, and 0.73 — as given. We’ll see how to compute probabilities later.)</p>
+<ol style="list-style-type: decimal">
+<li>The probability that a roll of a fair ten-sided die lands on 1 is 0.1.</li>
+<li>The probability that two flips of a fair coin both land on H is 0.25.</li>
+<li>The probability that in 100 flips of a fair coin the proportion of flips that land on H is between 0.45 and 0.55 is 0.73.</li>
+</ol>
+</div>
+
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="interpretations-of-probability.html#exm:interpret-rel-freq">1.2</a>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li>About 10% of rolls of a fair ten-sided result in a roll of 1. The phenomenon is a roll of a far ten-sided die and the event of interest is whether or not the die lans on 1.</li>
+<li>In about 25% of sets of two fair coin flips, both flips in the set land on H. The phenomenon involves <em>two</em> flips of a coin, so we consider what would happen over many <em>sets</em> of two flips each.</li>
+<li>In about 73% of sets of 100 fair coin flips, the proportion of H for the set is between 0.45 and 0.55. The phenomenon involves 100 coin flips, so we consider many sets of 100 coin flips each, each set resulting in a proportion of H that is either between 0.45 and 0.55 or not. Imagine adding many more paths to the plot on the right in Figure <a href="interpretations-of-probability.html#fig:coin-flips-plot2">1.2</a>, each corresponding to a set of 100 flips, and seeing how many of the paths result in a value between 0.45 and 0.55 at flip 100.</li>
+</ol>
+</details>
+</div>
+<div id="subjective-probability" class="section level3">
+<h3><span class="header-section-number">1.2.2</span> Subjective probability</h3>
+<p>The long run relative frequency interpretation is natural in repeatable situations like flipping a coin, drawing Powerballs from a bin, or selecting a Cal Poly student at random.</p>
+<p>On the other hand, it is difficult to conceptualize some scenarios in the long run. Superbowl 2021 will only be played once, the 2021 Georgia run off election will only be conducted once, and there was only one April 17, 2009 on which you either did or did not eat an apple. But while these situations are not naturally repeatable they still involve randomness (uncertainty) and it is still reasonable to assign probabilities. At this point in time, the Kansas City Chiefs are more likely than the <a href="https://tenor.com/0JBf.gif">Jacksonville Jaguars</a> to win Superbowl 2021, each of the candidates in the Georgia Senate races are about equally likely to win, and if you’ve always been an apple-a-day person, there’s a good chance you ate one on April 17, 2009. So it still makes sense to talk about probability in uncertain, but not necessarily repeated, situations.</p>
+<p>However, the <em>meaning</em> of probability does seem different in a physically repeatable situations like coin flips than in single occurrences like the 2021 Superbowl. Let’s switch sports and consider the 2020 World Series of Major League Baseball<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. As of Sept 3,</p>
+<ul>
+<li>According to <a href="https://projects.fivethirtyeight.com/2020-mlb-predictions/1/34">FiveThirtyEight</a>, the Los Angeles Dodgers have a 31% chance of winning the 2020 World Series, the highest of any team, while the New York Yankees have a 10% chance.</li>
+<li>According to <a href="https://www.fangraphs.com/standings/playoff-odds/fg/mlb?date=2020-09-03&amp;dateDelta=">FanGraphs</a>, the Dodgers have a 18% chance of winning the 2020 World Series, while the Yankees have an 6% chance.</li>
+<li>According to gambling site <a href="https://www.oddsshark.com/mlb/world-series-odds">Odds Shark</a>, the Dodgers have a 22% chance of winning the 2020 World Series, while the Yankees have an 18% chance.</li>
+</ul>
+<p>Each website, as well as many others, assigns different probabilities to the Dodgers or Yankees winning. Which website, if any, is “correct”?</p>
+<p>When the situation involves a fair coin flip, we could perform a simulation to see that the long run proportion of flips that land on H is 0.5, and so the probability that a fair coin flip lands on H is 0.5. Even though the actual 2020 World Series will only happen once, we could still perform a simulation involving hypothetical repetitions. However, simulating the World Series involves first simulating the 2020 season to determine the playoff matchups, then simulating the playoffs to see which teams make the World Series, then simulating the World Series matchup itself. And simulating the 2020 season involves simulating all the individual games. Even just simulating a single game involves many assumptions; differences in opinions with regards to these assumptions can lead to different probabilities. For example, on Sept 3, according to FiveThirtyEight the Dodgers had a 68% chance of beating the Colorado Rockies in their game on Sept 4, but according to FanGraphs it was 67% and according to Odds Shark it was 72%. (The Dodgers won.) Even though these differences might seem small, many small differences over the course of the season could result in large differences in predictions for the World Series champion.</p>
+<p>Unlike physically repeatable situations such as flipping a coin, there is no single set of “rules” for conducting a simulation of a season of baseball games or the World Series champion. Therefore, there is no single relative frequency that determines the probability. Instead we consider <em>subjective probability</em>.</p>
+<p>A <strong>subjective (a.k.a. personal) probability</strong> describes the degree of likelihood a given individual assigns to a certain event. As the name suggests, different individuals (or probabilistic models) might have different subjective probabilities for the same event. In contrast, in the long run relative frequency interpretation the probability is agreed to be defined as the long run relative frequency, a single number.</p>
+<p><strong>Think of subjective probabilities as measuring <em>relative degrees of likelihood or uncertainty</em> </strong> rather than long run relative frequencies. For example, in the FiveThirtyEight forecast, the Dodgers are <em>3.1 times more likely</em> to win the World Series than the Yankees (3.1 = 0.31 / 0.10). Relative likelihoods can also be compared across different forecasts or scenarios. For example, FiveThirtyEight believes that the Dodgers are about 1.4 times more likely to win the World Series than Odds Shark does. Also, FiveThirtyEight believes that the likelihood that a fair coin lands on H is about 5 times larger than the likelihood that the Yankees win the 2020 World Series.</p>
+<p>The <a href="https://fivethirtyeight.com/features/how-our-mlb-predictions-work/">FiveThirtyEight MLB predictions</a> are the output of a probabilistic forecast. A <strong>probabilistic forecast</strong> combines observed data and statistical models to make predictions. Rather than providing a single prediction (such as “the Los Angeles Dodgers will win the 2020 World Series”), probabilistic forecasts provide a range of scenarios and their relative likelihoods. Such forecasts are subjective in nature, relying upon the data used and assumptions of the model. Changing the data or assumptions can result in different forecasts and probabilities. In particular, probabilistic forecasts are usually revised over time as more data becomes available.</p>
+<p>Simulations can also be based on subjective probabilities. If we were to conduct a simulation consistent with FiveThirtyEight’s model (as of Sept 3), then in about 31% of repetitions the Dodgers would win the World Series, and in about 10% of repetitions the Yankees would win. Of course, different sets of subjective probabilities correspond to different assumptions and different ways of conducting the simulation.</p>
+<p>Subjective probabilities can be calibrated by weighing the relative favorability of different bets, as in the following example.</p>
+
+<div class="example">
+<p><span id="exm:subjective-bet" class="example"><strong>Example 1.3  </strong></span>
+What is your subjective probability that Professor Ross has a TikTok account? Consider the following two bets, and suppse you can choose only one.</p>
+<ol style="list-style-type: upper-alpha">
+<li>You win $100 if Professor Ross has a TikTok account, and you win nothing otherwise.</li>
+<li>A box contains 40 green and 60 gold marbles that are otherwise identical. The marbles are thoroughly mixed and one marble is selected at random. You win $100 if the selected marble is green, and you win nothing otherwise.</li>
+</ol>
+<ol style="list-style-type: decimal">
+<li>Which of the above bets would you prefer? Or are you completely indifferent? What does this say about your subjective probability that Professor Ross has a Tik Tok account?</li>
+<li>If you preferred bet B to bet A, consider bet C which has a similar setup to B but now there are 20 green and 80 gold marbles. Do you prefer bet A or bet C? What does this say about your subjective probability that Professor Ross has a Tik Tok account?</li>
+<li>If you preferred bet A to bet B, consider bet D which has a similar setup to B but now there are 60 green and 40 gold marbles. Do you prefer bet A or bet D? What does this say about your subjective probability that Professor Ross has a Tik Tok account?</li>
+<li>Continue to consider different numbers of green and gold marbles. Can you zero in on your subjective probability?
+</div></li>
+</ol>
+
+<div class="solution">
+<p> <span class="solution"><em>Solution. </em></span> 
+to Example <a href="interpretations-of-probability.html#exm:subjective-bet">1.3</a></p>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li>Since the two bets have the same payouts, you should prefer the one that gives you a greater chance of winning! If you choose bet B you have a 40% chance of winning.
+<ul>
+<li>If you prefer bet B to bet A, then your subjective probability that Professor Ross has a TikTok account is less than 40%.</li>
+<li>If you prefer bet A to bet B, then your subjective probability that Professor Ross has a TikTok account is greater than 40%.</li>
+<li>If you’re indifferent between bets A and B, then your subjective probability that Professor Ross has a TikTok account is equal to 40%.<br />
+</li>
+</ul></li>
+<li>If you choose bet C you have a 20% chance of winning.
+<ul>
+<li>If you prefer bet C to bet A, then your subjective probability that Professor Ross has a TikTok account is less than 20%.</li>
+<li>If you prefer bet A to bet C, then your subjective probability that Professor Ross has a TikTok account is greater than 20%.</li>
+<li>If you’re indifferent between bets A and C, then your subjective probability that Professor Ross has a TikTok account is equal to 20%.<br />
+</li>
+</ul></li>
+<li>If you choose bet D you have a 60% chance of winning.
+<ul>
+<li>If you prefer bet D to bet A, then your subjective probability that Professor Ross has a TikTok account is less than 60%.</li>
+<li>If you prefer bet A to bet D, then your subjective probability that Professor Ross has a TikTok account is greater than 60%.</li>
+<li>If you’re indifferent between bets A and D, then your subjective probability that Professor Ross has a TikTok account is equal to 60%.<br />
+</li>
+</ul></li>
+<li>Continuing in this way you can narrow down your subjective probability. For example, if you prefer bet B to bet A and bet A to bet C, your subjective probability is between 20% and 40%. Then you might consider bet E corresponding to 30 gold marbles and 70 green to determine if you subjective probability is greater than or less than 30%. At some point it will be hard to choose, and you will be in the ballpark of your subjective probability. (Think of it like going to the eye doctor: “which is better: 1 or 2?” At some point you can’t really see a difference.)</li>
+</ol>
+</details>
+<p>Of course, the strategy in the above example isn’t an exact science, and there is a lot of behavioral psychology behind how people make choices in situations like this. But the example gives a very rough idea of how you might discern a subjective probability of an event.</p>
+<p>Disclaimer: we do not advocate gambling. We merely use gambling contexts to motivate probability concepts.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="3">
+<li id="fn3"><p>which already happened, but I’m too lazy to update the examples. Imagine that when you’re reading this it’s Sept 3, 2020.<a href="interpretations-of-probability.html#fnref3" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="randomness.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="consistency.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"google": false,
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bayesian-reasoning-and-methods.pdf"],
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

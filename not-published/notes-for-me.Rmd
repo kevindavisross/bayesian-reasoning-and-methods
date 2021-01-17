@@ -1,0 +1,21 @@
+General technology
+
+- how to show/hide R code and output and text all in one?
+
+General material
+
+- more examples, exercises
+
+
+
+Chapter 2
+
+- include mosaic plots?
+
+Chapter 3
+
+- add more base rate fallacy examples
+- include plot with comparison of Binomial distributions and ratio of likelihoods
+- review Binomial?
+- include how could you use simulation to approximate likelihood in Binomial?
+

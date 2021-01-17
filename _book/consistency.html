@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1.3 Working with probabilities | An Introduction to Bayesian Reasoning and Methods</title>
+  <meta name="description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="generator" content="bookdown 0.20.1 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1.3 Working with probabilities | An Introduction to Bayesian Reasoning and Methods" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="github-repo" content="rstudio/bayesian-reasoning-and-methods" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1.3 Working with probabilities | An Introduction to Bayesian Reasoning and Methods" />
+  
+  <meta name="twitter:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  
+
+<meta name="author" content="Kevin Ross" />
+
+
+<meta name="date" content="2021-01-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="interpretations-of-probability.html"/>
+<link rel="next" href="interpretations-of-statistics.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="interpretations.html"><a href="interpretations.html"><i class="fa fa-check"></i><b>1</b> Interpretations of Probability and Statistics</a><ul>
+<li class="chapter" data-level="1.1" data-path="randomness.html"><a href="randomness.html"><i class="fa fa-check"></i><b>1.1</b> Instances of randomness</a></li>
+<li class="chapter" data-level="1.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html"><i class="fa fa-check"></i><b>1.2</b> Interpretations of probability</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#rel-freq"><i class="fa fa-check"></i><b>1.2.1</b> Long run relative frequency</a></li>
+<li class="chapter" data-level="1.2.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#subjective-probability"><i class="fa fa-check"></i><b>1.2.2</b> Subjective probability</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="consistency.html"><a href="consistency.html"><i class="fa fa-check"></i><b>1.3</b> Working with probabilities</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="consistency.html"><a href="consistency.html#consistency-requirements"><i class="fa fa-check"></i><b>1.3.1</b> Consistency requirements</a></li>
+<li class="chapter" data-level="1.3.2" data-path="consistency.html"><a href="consistency.html#odds"><i class="fa fa-check"></i><b>1.3.2</b> Odds</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="interpretations-of-statistics.html"><a href="interpretations-of-statistics.html"><i class="fa fa-check"></i><b>1.4</b> Interpretations of Statistics</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bayes-rule.html"><a href="bayes-rule.html"><i class="fa fa-check"></i><b>2</b> Bayes’ Rule</a></li>
+<li class="chapter" data-level="3" data-path="bayes-factor.html"><a href="bayes-factor.html"><i class="fa fa-check"></i><b>3</b> Odds and Bayes Factors</a></li>
+<li class="chapter" data-level="4" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>4</b> Introduction to Estimation</a></li>
+<li class="chapter" data-level="5" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>5</b> Introduction to Inference</a></li>
+<li class="chapter" data-level="6" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>6</b> Introduction to Prediction</a></li>
+<li class="chapter" data-level="7" data-path="continuous.html"><a href="continuous.html"><i class="fa fa-check"></i><b>7</b> Introduction to Continuous Prior and Posterior Distributions</a><ul>
+<li class="chapter" data-level="7.1" data-path="a-brief-review-of-continuous-distributions.html"><a href="a-brief-review-of-continuous-distributions.html"><i class="fa fa-check"></i><b>7.1</b> A brief review of continuous distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="normal-mean.html"><a href="normal-mean.html"><i class="fa fa-check"></i><b>7.2</b> Normal mean</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="jags.html"><a href="jags.html"><i class="fa fa-check"></i><b>8</b> Introduction to Posterior Simulation and JAGS</a><ul>
+<li class="chapter" data-level="8.1" data-path="implementing-mcmc-in-jags.html"><a href="implementing-mcmc-in-jags.html"><i class="fa fa-check"></i><b>8.1</b> Implementing MCMC in JAGS</a></li>
+<li class="chapter" data-level="8.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html"><i class="fa fa-check"></i><b>8.2</b> Example 17.1: Beta-Binomial Model — “Data is singular”</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#load-the-data"><i class="fa fa-check"></i><b>8.2.1</b> Load the data</a></li>
+<li class="chapter" data-level="8.2.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#specify-the-model-likelihood-and-prior"><i class="fa fa-check"></i><b>8.2.2</b> Specify the model: likelihood and prior</a></li>
+<li class="chapter" data-level="8.2.3" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#compile-in-jags"><i class="fa fa-check"></i><b>8.2.3</b> Compile in JAGS</a></li>
+<li class="chapter" data-level="8.2.4" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulate-values-from-the-posterior-distribution"><i class="fa fa-check"></i><b>8.2.4</b> Simulate values from the posterior distribution</a></li>
+<li class="chapter" data-level="8.2.5" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#summarizing-simulated-values-and-diagnostic-checking"><i class="fa fa-check"></i><b>8.2.5</b> Summarizing simulated values and diagnostic checking</a></li>
+<li class="chapter" data-level="8.2.6" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#posterior-prediction"><i class="fa fa-check"></i><b>8.2.6</b> Posterior prediction</a></li>
+<li class="chapter" data-level="8.2.7" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#loading-data-as-individual-values-rather-than-summary-statistics"><i class="fa fa-check"></i><b>8.2.7</b> Loading data as individual values rather than summary statistics</a></li>
+<li class="chapter" data-level="8.2.8" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulating-multiple-chains"><i class="fa fa-check"></i><b>8.2.8</b> Simulating multiple chains</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="prior.html"><a href="prior.html"><i class="fa fa-check"></i><b>9</b> Considering Prior Distributions</a></li>
+<li class="chapter" data-level="10" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>10</b> Introduction to Bayesian Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Introduction to Bayesian Reasoning and Methods</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="consistency" class="section level2">
+<h2><span class="header-section-number">1.3</span> Working with probabilities</h2>
+<p>In the previous section we saw two different interpretations of probability: long run relative frequency and subjective. Fortunately, the mathematics of probability work the same way regardless of the interpretation. Furthermore, even with subjective probabilities it is helpful to consider what might happen in a simulation.</p>
+<div id="consistency-requirements" class="section level3">
+<h3><span class="header-section-number">1.3.1</span> Consistency requirements</h3>
+<p>With either the long run relative frequency or subjective probability interpretation there are some basic logical consistency requirements which probabilities need to satisfy. Put loosely, probabilities cannot be negative and the sum of probabilities over all possible outcomes must be 100%.</p>
+
+<div class="example">
+<p><span id="exm:worldseries" class="example"><strong>Example 1.4  </strong></span>
+As of Sept 3, <a href="https://projects.fivethirtyeight.com/2019mlb-predictions/">FiveThirtyEight</a> listed the following probabilities for who will
+win the 2020 World Series.</p>
+</div>
+
+<table>
+<thead>
+<tr class="header">
+<th>Team</th>
+<th align="right">Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Los Angeles Dodgers</td>
+<td align="right">31%</td>
+</tr>
+<tr class="even">
+<td>New York Yankees</td>
+<td align="right">10%</td>
+</tr>
+<tr class="odd">
+<td>Houston Astros</td>
+<td align="right">9%</td>
+</tr>
+<tr class="even">
+<td>Tampa Bay Rays</td>
+<td align="right">9%</td>
+</tr>
+<tr class="odd">
+<td>Other</td>
+<td align="right"></td>
+</tr>
+</tbody>
+</table>
+<p>According to FiveThirtyEight (as of Sept 3):</p>
+<ol style="list-style-type: decimal">
+<li>What would you expect the results of 10000 repetitions of a simulation of the World Series champion to look like? Construct a table summarizing what you expect. Is this necessarily what would happen?</li>
+<li>What must be the probability that the Dodgers do <em>not</em> win the 2020 World Series?</li>
+<li>What must be the probability that one of the above four teams is the World Series champion?</li>
+<li>What must be the probability that a team other than the above four teams is the World Series champion? That is, what value goes in the “Other” row in the table?</li>
+</ol>
+
+<div class="solution">
+<p> <span class="solution"><em>Solution. </em></span> 
+to Example <a href="consistency.html#exm:worldseries">1.4</a></p>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li><p>While these particular probabilities are subjective, imagining probabilities as relative frequencies often helps our intuition. If we think of this as a simulation, each repetition results in a World Series champion and in the long run we would expect the Dodgers would be the champion in 31%, or 3100, of the 10000 repetitions.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Team</th>
+<th align="right">Winner</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Los Angeles Dodgers</td>
+<td align="right">3100</td>
+</tr>
+<tr class="even">
+<td>New York Yankees</td>
+<td align="right">1000</td>
+</tr>
+<tr class="odd">
+<td>Houston Astros</td>
+<td align="right">900</td>
+</tr>
+<tr class="even">
+<td>Tampa Bay Rays</td>
+<td align="right">900</td>
+</tr>
+<tr class="odd">
+<td>Other</td>
+<td align="right">4100</td>
+</tr>
+<tr class="even">
+<td>Total</td>
+<td align="right">10000</td>
+</tr>
+</tbody>
+</table>
+<p>Of course, there would be some variability from simulation to simulation, just like in the sets of 1000 coin flips in Figure <a href="interpretations-of-probability.html#fig:coin-flips-plot3">1.3</a>. But the above counts represent about what we would expect.</p></li>
+<li><p>69%. Either the Dodgers win or they don’t; if there’s a 31% chance that the Dodgers win, there must be a 69% chance that they do not win. If we think of this as a simulation with 10000 repetitions, each repetition results in either the Dodgers winning or not, so if they win in 3100 of repetitions then they must not win in the other 6900.</p></li>
+<li><p>59%. There is only one World Series champion, so if say the Dodgers win then no other team can win. Thinking again of the simulation, the repetitions in which the Dodgers win are distinct from those in which the Yankees win. So if the Dodgers win in 3100 repetitions and the Yankees win in 1000 repetitions, then on a total of 4100 repetitions either the Dodgers or Yankees win. Adding the four probabilities, we see that the probability that one of the four teams above wins must be 59%.</p></li>
+<li><p>41%. Either one of the four teams above wins, or some other team wins. If one of the four teams above wins in 5900 repetitions, then in 4100 repetitions the winner is not one of these four teams.</p></li>
+</ol>
+</details>
+
+<div class="example">
+<p><span id="exm:worldseries-proportional" class="example"><strong>Example 1.5  </strong></span>
+Suppose your subjective probabilities for the 2020 World Series champion satisfy the following conditions.</p>
+<ul>
+<li>The Astros and Rays are equally likely to win</li>
+<li>The Yankees are 1.5 times more likely than the Astros to win</li>
+<li>The Dodgers are 2 times more likely than the Yankees to win</li>
+<li>The winner is as likely to be among these four teams — Dodgers, Yankees, Astros, Rays — as not</li>
+</ul>
+<p>Construct a table like in Example <a href="consistency.html#exm:worldseries">1.4</a> of your subjective probabilities.</p>
+</div>
+
+
+<div class="solution">
+<p> <span class="solution"><em>Solution. </em></span> 
+to Example <a href="consistency.html#exm:worldseries-proportional">1.5</a></p>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<p>Here, probabilities are specified indirectly via relative likelihoods. We need to find probabilities that are in the given ratios and add up to 100%. It helps to designate one outcome as the “baseline”. It doesn’t matter which one; we’ll choose the Astros.</p>
+<ul>
+<li>Suppose the Astros account for 1 “unit”. It doesn’t really matter what a unit is, but let’s say it corresponds to 1000 repetitions of the simulation. That is, the Astros win in 1000 repetitions. Careful: we haven’t yet specified how many total repetitions we have done, or how many units the entire simulation accounts for. We’re just starting with a baseline of what happens for the Astros.</li>
+<li>The Astro and Rays are equally like to win, so the Rays also account for 1 unit.</li>
+<li>The Yankees are 1.5 times more likely than the Astros to win, so the Yankees account for 1.5 units. If 1 unit is 1000 repetitions, then the Yankees win in 1500 repetitions, 1.5 times more often than the Astros.</li>
+<li>The Dodgers are 2 times more likely than the Yankees to win, so the Dodgers account for <span class="math inline">\(2\times 1.5=3\)</span> units. If 1 unit is 1000 repetitions, then the Dodgers win in 3000 repetitions.</li>
+<li>The four teams account for a total of <span class="math inline">\(1+1+1.5+3 = 6.5\)</span> units. Since the winner is as likely to among these four teams as not, then “Other” also accounts for 6.5 units.</li>
+<li>In total, there are 13 units which account for 100% of the probability. The Astros account for 1 unit, so their probability of winning is <span class="math inline">\(1/13\)</span> or about 7.7%. Likewise, the probability that the Dodgers win is <span class="math inline">\(3/13\)</span> or about 23.1%.</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th>Team</th>
+<th align="right">Units</th>
+<th align="right">Repetitions</th>
+<th align="right">Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Los Angeles Dodgers</td>
+<td align="right">3.0</td>
+<td align="right">3000</td>
+<td align="right">23.1%</td>
+</tr>
+<tr class="even">
+<td>New York Yankees</td>
+<td align="right">1.5</td>
+<td align="right">1500</td>
+<td align="right">11.5%</td>
+</tr>
+<tr class="odd">
+<td>Houston Astros</td>
+<td align="right">1.0</td>
+<td align="right">1000</td>
+<td align="right">7.7%</td>
+</tr>
+<tr class="even">
+<td>Tampa Bay Rays</td>
+<td align="right">1.0</td>
+<td align="right">1000</td>
+<td align="right">7.7%</td>
+</tr>
+<tr class="odd">
+<td>Other</td>
+<td align="right">6.5</td>
+<td align="right">6500</td>
+<td align="right">50.0%</td>
+</tr>
+<tr class="even">
+<td>Total</td>
+<td align="right">13.0</td>
+<td align="right">13000</td>
+<td align="right">100.0%</td>
+</tr>
+</tbody>
+</table>
+<p>You should verify that all of the probabilities are in the specified ratios. For example, the Dodgers are 2 times more likely (<span class="math inline">\(2 = 23.1 / 11.5\)</span>) than the Yankees to win, and the Yankees are 1.5 times more likely (<span class="math inline">\(1.5 \approx 11.5 / 7.7\)</span>) than the Astros to win.</p>
+<p>We could have also solved this problem using algebra. Let <span class="math inline">\(x\)</span> be the probability, as a decimal, that the Astros are the winner. Then <span class="math inline">\(x\)</span> is also the probability that the Rays are the winner, <span class="math inline">\(1.5x\)</span> for the Yankees, and <span class="math inline">\(3x\)</span> for the Dodgers. The probability that one of the four teams wins is <span class="math inline">\(x + x + 1.5x + 3x = 6.5x\)</span>, so the probability of Other is also <span class="math inline">\(6.5x\)</span>. The probabilities in decimal form must sum to 1 (that is, 100%), so <span class="math inline">\(1 = x + x + 1.5x + 3x + 6.5x = 13x\)</span>. Solve for <span class="math inline">\(x=1/13\)</span> and then plug in <span class="math inline">\(x=1/13\)</span> to find the other probabilities.</p>
+</details>
+<p>Example <a href="consistency.html#exm:worldseries-proportional">1.5</a> illustrates one way of formulating subjective probabilities. We start by specifying probabilities in relative terms, and then “normalize” these probabilities so that they add up to 100%. As in the problem, it helps to consider one outcome as a “baseline” and to specify all likelihoods relative to the baseline.</p>
+</div>
+<div id="odds" class="section level3">
+<h3><span class="header-section-number">1.3.2</span> Odds</h3>
+<p>The words “probability”, “chance”, “likelihood”, and “odds” are colloquially treated as synonyms. However, in the mathematical language of probability, <em>odds</em> provide a different way of reporting a probability. Rather than reporting probability on a 0% to 100% scale, odds report probabilities in terms of ratios.</p>
+
+<div class="example">
+<p><span id="exm:worldseries-odds" class="example"><strong>Example 1.6  </strong></span>
+In Example <a href="consistency.html#exm:worldseries">1.4</a> the odds that the Yankees win the World Series are 9 to 1 against.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>What do you think that “9 to 1 against” means?</li>
+<li>What are the odds of the Yankees <em>not</em> winning?</li>
+<li>What are the odds of the Dodgers winning?</li>
+<li>What are the odds of one of the Other teams winning?</li>
+<li>The Philadelphia Phillies have 50 to 1 odds against winning. What is the probability that the Phillies win the World Series?</li>
+</ol>
+
+<div class="solution">
+<p> <span class="solution"><em>Solution. </em></span> 
+to Example <a href="consistency.html#exm:worldseries-odds">1.6</a></p>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li><p>The probability that the Yankees win is 0.1, so the probability that they do not win is 0.9. These numbers are in a 9 to 1 ratio: the probability of not winning (0.9) is 9 times greater than the probability of winning (0.1). So the odds <em>against</em> the Yankees winning the World Series are 9 to 1; “against” because the Yankees are less likely to win than to not win.</p></li>
+<li><p>The probabilities are still in the 9 to 1 ratio, but we can say that the odds are 9 to 1 <em>in favor</em> of the Yankees <em>not</em> winning. We could also say the odds are 1 to 9 in favor of the Yankees winning, but odds are typically reported with the larger value first — 9 to 1 instead of 1 to 9.</p></li>
+<li><p>The probability that the Dodgers win is 0.31 and that they don’t win is 0.69, and <span class="math inline">\(0.69/0.31 \approx 2.2\)</span>. So the odds are 2.2 to 1 <em>against</em> the Yankees winning; “against” because the Yankees are less likely to win than to not win. Odds are often reported as whole numbers, so we could say the odds are 11 to 5 against the Dodgers winning.<br />
+</p></li>
+<li><p>The probability that an Other team wins is 0.41 and that an Other team doesn’t win is 0.59, and <span class="math inline">\(0.59/0.41 \approx 1.44\)</span>. So the odds are 1.44 to 1 against an Other team winning.</p></li>
+<li><p>The probability that the Phillies do not win is 50 times greater than the probability that they do win. Let the event that the Phillies win account for 1 “unit” so that the event that they do not win accounts for 50 units, for a total of 51 units. So the probability that the Phillies win is <span class="math inline">\(1/51\approx 0.02\)</span>. Note that the probability of not winning, 50/51, is 50 times greater than the probability of winning.</p>
+<p>You could also solve this with algebra. Let <span class="math inline">\(x\)</span> be the probability that the Phillies win, so <span class="math inline">\(50x\)</span> is the probability that they don’t win. The probabilities must sum to 1, so set <span class="math inline">\(x + 50x = 1\)</span> and solve for <span class="math inline">\(x\)</span>.</p></li>
+</ol>
+</details>
+<p>The <strong>odds</strong> of an event is a ratio involving the probability that the
+event occurs and the probability that the event does not occur. Odds can be expressed as either “in favor” of or “against” the event occurring.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{odds in favor} &amp; = \frac{\text{probability that the event occurs}}{\text{probability that the event does not occur}} \\
+&amp; \\
+\text{odds against} &amp; = \frac{\text{probability that the event does not occur}}{\text{probability that the event occurs}}\end{aligned}
+\]</span></p>
+<p>In some situations odds are typically reported as odds against. While the odds of an event is a just a single number, odds are often reported as a ratio of whole numbers, e.g., 11 to 1, 7 to 2. In Example <a href="consistency.html#exm:worldseries-odds">1.6</a> the odds against the Dodgers winning the World Series are 2.2, which can be reported as 11 to 5 odds (against).</p>
+<p>As discussed at the end of Section <a href="interpretations-of-probability.html#subjective-probability">1.2.2</a> bets can be used to discern probabilities or odds.</p>
+
+<div class="example">
+<p><span id="exm:bet-EV" class="example"><strong>Example 1.7  </strong></span>
+Ron and Leslie agree to the following bet. They’ll ask Professor Ross if he has a TikTok account. If he does, Leslie will pay
+Ron $200; if not, Ron will pay Leslie $100. (Neither has any prior information about whether or not Professor Ross has a TikTok account.)</p>
+<ol style="list-style-type: decimal">
+<li>Given this setup, which of the following is being judged as more likely: that Professor Ross has a TikTok account, or that he does not? Why?</li>
+<li>What are this bet’s odds?</li>
+<li>Ron and Leslie agree that this is a fair bet, and neither would accept worse odds. What is the subjective probability that Professor Ross has a TikTok account?</li>
+<li>Suppose they were to hypothetically repeat this bet many times, say 3000 times. Given the probability from the previous part, how many times would you expect Leslie to win? To lose? What would you expect Leslie’s net dollar winnings to be? In what sense is this bet “fair”? (Remember: Leslie’s winnings are Ron’s losses and vice versa.)</li>
+</ol>
+</div>
+
+<!-- 1. Leslie would not agree to the bet if her potential payout were less than $100 given her potential loss of $200. What can you say about Leslie's subjective probability that Professor Ross has a TikTok account? -->
+<!-- 1. Ron would not agree to the bet if his potential payout were less than $200 given his potential loss of $100. What can you say about Ron's subjective probability that Professor Ross has a TikTok account? -->
+
+<div class="solution">
+<p> <span class="solution"><em>Solution. </em></span> 
+to Example <a href="consistency.html#exm:bet-EV">1.7</a></p>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li>The larger potential payout corresponds to the <em>less</em> likely event. So Professor Ross is more likely to <em>not</em> have a TikTok account than to have one.</li>
+<li>The payouts are in a 2 to 1 ratio, so the odds that Professor Ross has a TikTok account are 2 to 1 against.</li>
+<li>The odds that Professor Ross has a TikTok account are 2 to 1 against, so Professor Ross is twice as likely to not have a TikTok account than to have one. This corresponds to a subjective probability<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> that Professor Ross has a TikTok account of 1/3 (and a probability that he does not have one of 2/3).</li>
+<li>The probability that Leslie wins is 1/3, so you would expect her to win in 1000 of the 3000 repetitions. She wins $200 each time she wins, so you would expect her to win a total of $200,000 on games she wins. The probability that she loses is 2/3, so you would expect her to lose in 2000 of the 3000 repetions. She loses $100 each time, so you would expect her to lose a total of $200,000 on the games she wins. So you would expect Leslie’s net winnings to be 0, and likewise for Ron. The bet is fair in the sense that neither party is expected to profit or lose in the long run.</li>
+</ol>
+</details>
+<p>The previous example illustrates that the odds of a fair bet on whether or not an event will occur imply a
+probability for the event.</p>
+<p><span class="math display">\[\begin{align*}
+\text{probability that event occurs} &amp; = \frac{\text{odds in favor of the event}}{1+\text{odds in favor of the event}}\\
+&amp; \\
+&amp; = \frac{1}{1+\text{odds against the event}}
+\end{align*}\]</span></p>
+<!-- ### Dutch book -->
+<p>Regardless of the interpretation — long run relative frequency or subjective — probabilities must follow basic logical consistency requirements. If these requirements are mistakenly not satisfied, bad things can happen.</p>
+
+<div class="example">
+<p><span id="exm:dutch" class="example"><strong>Example 1.8  </strong></span>
+Donny Don’t thinks the Dodgers have a pretty good chance to win the World Series. He thinks their only real competition is the Yankees. The following are Donny’s subjective probabilities for which team will win the World Series.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Team</th>
+<th align="right">Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Los Angeles Dodgers</td>
+<td align="right">50%</td>
+</tr>
+<tr class="even">
+<td>New York Yankees</td>
+<td align="right">25%</td>
+</tr>
+<tr class="odd">
+<td>Other</td>
+<td align="right">10%</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>What is wrong with Donny’s probabilities?</li>
+<li>What are Donny’s odds that the Dodgers win? (Consider only Donny’s probability that the Dodgers win.)</li>
+<li>Would Donny agree to a bet where he pays you $100 if the Dodgers win but you pay him $100 if the Dodgers do not win?</li>
+<li>What are Donny’s odds that the Yankees win? Would Donny agree to a bet where he pays you $150 if the Yankees win but you pay him $50 if the Yankees do not win?</li>
+<li>What are Donny’s odds that a team other than the Dodgers or Yankees wins? Would Donny agree to a bet where he pays you $180 if an other team wins but you pay him $20 if the winner is either the Yankees or Dodgers?</li>
+<li>Suppose you and Donny agree to make all of the bets in the three previous parts. Consider your net profit for each of the outcomes (Dodgers win, Yankees win, other wins). What do you notice?</li>
+</ol>
+
+<div class="solution">
+<p> <span class="solution"><em>Solution. </em></span> 
+to Example <a href="consistency.html#exm:dutch">1.8</a></p>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li><p>Donny’s probabilities do not add up to 100%.</p></li>
+<li><p>Donny’s odds that the Dodgers win are <span class="math inline">\(\frac{0.5}{0.5}=1\)</span>, or even odds</p></li>
+<li><p>Donny believes that the Dodgers are equally likely to win as to not win so, yes, he would agree to this bet.</p></li>
+<li><p>Donny’s odds that the Yankees do not win are <span class="math inline">\(\frac{0.75}{0.25}=3\)</span>, or 3 to 1 odds against the Yankees winning. Donny believes that the Yankees are 3 times more likely to not win than to win. Since the payouts are in a 3 to 1 ratio with the larger payout corresponding to the Yankees winning (the less likely event), then Donny would agree to this bet.</p></li>
+<li><p>Donny’s odds that an other team does not win are <span class="math inline">\(\frac{0.9}{0.1}=9\)</span>, or 9 to 1 odds against an other team winning. Donny believes that an other team is 9 times more likely to not win than to win. Since the payouts are in a 9 to 1 ratio with the larger payout corresponding to an other team winning (the less likely event), then Donny would agree to this bet.</p></li>
+<li><p>Given Donny’s odds for each outcome, he would agree to each of these bets.</p>
+<ul>
+<li>If the Dodgers win, you win the first bet but lose the other two, so your net profit is 100 - 50 - 20 = 30.</li>
+<li>If the Yankees win, you win the second bet but lose the other two, so your net profit is 150 - 100 - 20 = 30</li>
+<li>If an other team wins, you win the third bet but lose the other two, so your net profit is 180 - 100 - 50 = 30.</li>
+</ul>
+<p>Regardless of the outcome, you are guaranteed to earn a net profit of $30. That’s free money for you with no risk, and pretty bad business on Donny’s part.</p></li>
+</ol>
+</details>
+<p>The previous problem contained an example of a “Dutch book”. A <strong>Dutch book</strong><a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> is a set of probabilities and bets which guarantees a profit, regardless of the outcome of the gamble. Probabilities that fail to satisfy logical consistency requirements allow for the possibility of Dutch books. The fact that no one should ever want to get caught in a Dutch book, like Donny was in the previous problem, is used to justify why even subjective probabilities should satisfy logical consistency requirements.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="4">
+<li id="fn4"><p>Technically, Ron and Leslie could still have different subjective probabilities. Leslie would not agree to worse odds, but she would accept better if Ron offered them. For example, given a potential loss of $200, Leslie would also agree to a potential payout from Ron of $125 rather than $100. That is, Leslie would accept odds of 1.6 to 1 against (<span class="math inline">\(200/125 = 1.6\)</span>), corresponding to a subjective probability of 0.385 (<span class="math inline">\(1/(1 + 1.6)\)</span>) . So Leslie’s subjective probability that Professor Ross has a TikTok account is <em>at least</em> 1/3. Similarly, Ron’s subjective probability that Professor Ross has a TikTok account is <em>at most</em> 1/3.<a href="consistency.html#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p>“Book” in the sense of a bookie taking bets.<a href="consistency.html#fnref5" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="interpretations-of-probability.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="interpretations-of-statistics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"google": false,
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bayesian-reasoning-and-methods.pdf"],
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

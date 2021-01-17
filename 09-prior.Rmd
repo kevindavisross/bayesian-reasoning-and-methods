@@ -1,0 +1,105 @@
+# Considering Prior Distributions  {#prior}
+
+Macalaseter example about why a prior is ok.  Subjectivity - likelihood is also subjective
+
+The question isn't really "what is the prior?" but rather "is there a prior"?
+That is, are you choosing a Bayesian approach and treating parameters as random variables.
+
+There are advantages and disadvantages.  Do STAT 305 Binomial vs Negative Binomial p-value problem here.
+
+Tamika is a basketball player who has had a 0.7 probability of making any particular free throw throughout her career.  Tamika has been practicing and believes now that her probability of making a free throw is greater than 0.7. Her coach agrees to allow Tamika to make 50 free throw attempts in an effort to convince
+him that she has improved. Let the random variable $X$ represent the number of free throw attempts that Tamika successfully makes.  Assume that shot attempts are independent, and the probability of success is the same on each attempt.  
+
+Suppose that Tamika has actually not improved and her probability of success is still 0.7. Determine how many shots (out of 50) Tamika would have to make, in order for the
+probability of successfully making at least that many shots to be no greater than 0.025. (In statistical language, this determines the ``rejection region'' for a level 0.025
+``significance'' test.)  The coach decides that if Tamika makes at least this many attempts, then he has convincing evidence that she has improved (because the probability of making this many attempts just by luck if she has not improved is fairly small, less than 0.025.) Compute the probability that Tamika actually makes this many attempts if her true probability of success on any attempt is 0.7.
+
+
+If $X$ is the number of shots she makes, then $X$ has a Binomial(50, 0.7) distribution in this scenario.  We want the smallest value $x$ which satisfies $\IP(X \ge x) \le 0.025$.  In other words, we want the largest $x$ for which $\IP(X \le x - 1) \le 0.975$. Binomial(50, 0.7).quantile(1 - 0.025) returns 41; therefore $x-1 = 41$ so $x = 42$.  That is, she needs to make at least 42 shots.  $\IP(X \ge 42) = 0.018$ from 1-Binomial(50, 0.7).cdf(41).  (And $\IP(X \ge 41)>0.025$.)
+
+Now suppose that Tamika has genuinely improved and her probability of success on any attempt is 0.8. Determine
+the probability that she would successfully make enough shots (out of 50) to fall into the
+rejection region from the previous part and therefore convince the coach that she has improved. (In statistical language, this is the ``power'' of the level 0.025 ``significance'' test.) 
+
+Now $X$ has a Binomial(50, 0.8) distribution.  To emphasize that the distribution of $X$ has changed, but $X$ itself has not changed, we'll write $\textrm{Q}(X \ge 42)= 0.307$ from 1 - Binomial(50, 0.8).cdf(41)
+
+Redo parts a) and b) but now assuming that Tamika attempts 200 shots.  Compare the results to those when $n=50$.  (Hint: compare values for $X/n$  between the two scenarios rather than $X$ itself.)
+
+If she has not improved $X$ has a Binomial(200, 0.7) distribution and the rejection region is $X \ge 153$ with probability $\IP(X \ge 153) = 0.0249$ from 1 - Binomial(200, 0.7).cdf(152).
+
+If she has improved $X$ has a Binomial(200, 0.8) distribution and $\textrm{Q}(X \ge 153) = 0.905$ from 1 - Binomial(200, 0.8).cdf(152).
+
+We see that the probability of incorrectly concluding that she has improved when she hasn't is about the same, 0.025, in both cases.  But the probability of correctly concluding that she has improved when she really has is much larger when $n=200$ (the power is greater with the larger sample size).
+
+
+Throughout her career Tamika has had a probability of 0.5 of making any three point attempt.  However, her coach is afraid that Tamika has been focused so much on improving her free throw shooting that her three point shooting has gotten worse.  To check this, the coach has Tamika shoot a series of three pointers; she makes 7 out of 24.
+
+Suppose that Tamika has actually not gotten worse and her probability of success on any single attempt is still 0.5.  Compute the probability that Tamika makes 7 or fewer attempts out of 24 \emph{if her coach told her to make 24 attempts and then stop.}  (In statistical terms, this is called a ``$p$-value.'') 
+
+Let $X$ be the number of shots she makes.  if she has not improved $X$ has a Binomial(24, 0.5) distribution, so the p-value is $\IP(X \le 7) = 0.032$ from Binomial(24, 0.5).cdf(7).
+
+Suppose that Tamika has actually not gotten worse and her probability of success on any single attempt is still 0.5. Compute the probability that Tamika requires at least 24 attempts to make 7 three pointers \emph{if her coach told her to shoot until she makes 7 three pointers and then stop.} (In statistical terms, this is called a ``$p$-value.'') 
+
+Let $Y$ be the number of shots she makes.  if she has not improved $Y$ has a NegativeBinomial(7, 0.5) distribution, so the p-value is $\IP(Y \ge 24) = 0.017$ from 1 - 1 - NegativeBinomial(7, 0.5).cdf(23)
+
+Before Tamika makes her attempts, the coach decides that he has convincing evidence that Tamika has gotten worse if the $p$-value is less than 0.025.  (In statistical terms, 0.025 is called a ``significance level''.)  Does the fact that Tamika only made 7/24 attempts convince the coach that Tamika got worse?  Explain.  (The issue that you see here is one problem with using $p$-values and significance levels.  There are many, many more.)
+
+It depends.  If the coach had told her to attempt 24 attempts and she made 7, then the p-value of 0.03 is greater than the significance level of 0.025, so the coach does not have sufficient evidence that she got worse.  If the coach had told her to shoot until shes makes 7 and it took her 24 shots, then the p-value of 0.017 is less than the significance level of 0.025, so the coach does have sufficient evidence that she got worse.  But in either case she made 7/24 shots, so it seems undesirable that basically the same data could lead to two different conclusions.  This is one problem with using $p$-values and significance levels. 
+
+
+The prior distribution quantifies the researcher's uncertainty about the parameters *before* observing data.  Some issues to consider when choosing a prior include:
+
+- The researcher's prior beliefs! A prior distribution is part of a statistical model, and should be consistent with knowledge about the underlying scientific problem. 
+- Informative or weakly informative prior.  Prior is tuned to represent some subset of whatever actual prior knowledge is available, which might be expressed in terms of an ``equivalent prior sample size''.
+- Noninformative prior a.k.a.\ (reference, vague, flat prior).  A prior is sought that plays a minimal role in inference so that ``the data can speak for themselves''.
+- Mathematical convenience.  The prior is chosen so that computation of the posterior is simplified, as in the case of conjugate priors.
+- Prior based on past data.  Bayesian updating can be viewed as an iterative process.  The posterior distribution obtained from one round of data collection can inform the prior distribution for another round.
+
+
+
+
+
+
+This example illustrates some subtle issues that arise when attempting to choose a noninformative prior.  Suppose we want to estimate $\theta$, the population proportion of success for some binary variable.  Add context
+ 
+What are the possible values for $\theta$.  What prior distribution might you consider a noninformative prior distribution?
+
+
+Recall how we interpreted the parameters $\alpha$ and $\beta$.  Does the Beta(1, 1) distribution truly represent no prior information?  
+
+For a Beta(1, 1) prior, what is the posterior mean of $\theta$.  Does this let the data speak entirely for themselves?
+
+
+How could you change $\alpha$ and $\beta$ to represent no prior information?  Do you see any potential problems?
+
+
+An *improper* prior distribution is a prior distribution that does not integrate to 1, so is not a proper probability density.
+
+However, an improper proper often results in a proper posterior distribution.  Thus, improper prior distributions are sometimes used in practice.
+
+
+Assume a Beta(0, 0) prior for $\theta$.  In what cases is the posterior distribution a proper distribution?  What is the posterior mean in these cases?  The posterior mode?
+
+Suppose the parameter you want to estimate is the *odds* of success $\phi=\theta/(1-\theta)$.  What are the possible values of $\phi$?  What might a non-informative prior look like?
+
+
+Suppose that you assume a Beta(1, 1) prior for $\theta$.  What is the distribution of the odds $\phi$ under this prior?  Would you say this is a noninformative prior for $\phi$?
+
+
+Some that $\theta$ represents the probability that an individual has a rare disease.  Suppose that in $n=100$ suspected cases, none actually has the disease.  Discuss the disadvantages of using a Beta(1, 1) prior in this case.
+
+
+Just like the likelihood, the prior distribution is a part of a statistical model.
+Perform sensitivity analysis to test the assumptions of the model, both for the form of the likelihood function and for the prior.  For example, how does the inference change in response to changes in the prior distribution?
+In general, in Bayesian estimation the larger the sample size the smaller the role that the prior plays.  
+But it is often desirable for the prior to play some role.
+We should not feel constrained to noninformative priors when prior knowledge is available.
+Some subjectivity is OK!
+
+
+
+What not to do
+
+But choosing a prior based on current data --- i.e., using the same data to determine both the prior and the likelihood --- results in invalid inference.
+
+Don't assign 0 probability to possible values in prior - example

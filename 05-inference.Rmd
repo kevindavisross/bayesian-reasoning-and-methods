@@ -1,0 +1,507 @@
+# Introduction to Inference {#inference}
+
+In a Bayesian analysis, the posterior distribution contains all relevant information about parameters after observing sample data.  We often use certain summary characteristics of the posterior distribution to make inferences about parameters.
+
+```{example, kissing-summary}
+
+Continuing the kissing study in Example \@ref(exm:kissing-discrete1) where $\theta$ can only take values 0.1, 0.3, 0.5, 0.7, 0.9.
+Consider a prior distribution which places probability 1/9, 2/9, 3/9, 2/9, 1/9 on the values 0.1, 0.3, 0.5, 0.7, 0.9, respectively.
+
+```
+
+1. Find the mode of the prior distribution of $\theta$, a.k.a., the "prior mode".
+1. Find the median of the prior distribution of $\theta$, a.k.a., the "prior median".
+1. Find the expected value of the prior distribution of $\theta$, a.k.a., the "prior mean".
+1. Find the variance of the prior distribution $\theta$, a.k.a, the "prior variance".
+1. Find the standard deviation of the prior distribution of $\theta$, a.k.a, the "prior standard deviation".
+
+    Now suppose that $y=8$ couples in a sample of size $n=12$ lean right.  Recall the Bayes table.
+
+    ```{r, echo = FALSE}
+# prior
+theta = seq(0.1, 0.9, 0.2)
+prior = c(1, 2, 3, 2, 1)
+prior = prior / sum(prior)
+
+# data
+n = 12 # sample size
+y = 8 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+kable(bayes_table, digits = 4, align = 'r')
+
+
+
+    ```
+
+1. Find the mode of the posterior distribution of $\theta$, a.k.a., the "posterior mode".
+1. Find the median of the posterior distribution of $\theta$, a.k.a., the "posterior median".
+1. Find the expected value of the posterior distribution of $\theta$, a.k.a., the "posterior mean".
+1. Find the variance of the posterior distribution $\theta$, a.k.a, the "posterior variance".
+1. Find the standard deviation of the posterior distribution of $\theta$, a.k.a, the "posterior standard deviation".
+1. How have the posterior values changed from the respective prior values?
+
+
+
+```{solution, kissing-summary-sol}
+to Example \@ref(exm:kissing-summary)
+```
+
+```{asis, fold.chunk = TRUE}
+
+1. The prior mode is 0.5, the value of $\theta$ with the greatest prior probability.
+1. The prior median is 0.5.  (Add up the prior probabilities until they go from below 0.5 to above 0.5.  This happens when you add in the prior probability for $\theta=0.5$.)
+1. The prior mean is 0.5. Remember that an expected value is a probability-weighted average value
+\[
+0.1(1/9) + 0.3(2/9) + 0.5(3/9) + 0.7(2/9) + 0.9(1/9) = 0.5.
+\]
+1. The prior variance is 0.0533.  Remember that variance is the probability-weighted average squared deviation from the mean
+\[
+(0.1-0.5)^2(1/9) + (0.3 - 0.5)^2(2/9) + (0.5-0.5)^2(3/9) + (0.7-0.5)^2(2/9) + (0.9-0.5)^2(1/9) = 0.0533
+\]
+1. The prior standard deviation is 0.231. Remember that standard deviation is the square root of the variance: $\sqrt{0.0533} = 0.231$.
+1. The posterior mode is 0.7, the value of $\theta$ with the greatest posterior probability.
+1. The posterior median is 0.7.  (Add up the posterior probabilities until they go from below 0.5 to above 0.5.  This happens when you add in the posterior probability for $\theta=0.5$.)
+1. The posterior mean is 0.614. Now the posterior probabilities are used in the  probability-weighted average value
+\[
+0.1(0.000) + 0.3(0.018) + 0.5(0.421) + 0.7(0.536) + 0.9(0.025) = 0.614.
+\]
+1. The posterior variance is 0.013.  Now the posterior probabilities are used in the  probability-weighted average squared deviation from the posterior mean
+\[
+(0.1-0.614)^2(0.000) + (0.3 - 0.614)^2(0.018) + (0.5-0.614)^2(0.421) + (0.7-0.614)^2(0.536) + (0.9-0.614)^2(0.025) = 0.013
+\]
+1. The posterior standard deviation is $\sqrt{0.013} = 0.115$.
+1. The measures of center (mean, median, mode) shift from the prior value of 0.5 towards the observed sample proportion of 8/12.  However, the posterior distribution is not symmetric, and the posterior mean is less than the posterior median. In particular, note that the posterior mean (0.614) lies between the prior mean (0.5) and the sample propotion (0.667).
+
+    The measures of variability (SD, variance) are smaller for the posterior than for the prior.  After observing some data, there is less uncertainty about $\theta$.  The prior probability is "spread" over the five possible values of $\theta$, while almost all of the posterior probability is concentrated at 0.5 and 0.7. 
+
+```
+
+
+A *point estimate* of an unknown parameter is a single-number estimate of the parameter.
+Given a posterior distribution of a parameter $\theta$, three possible point estimates of $\theta$ are the posterior mean, the posterior median, and the posterior mode.  In particular, the **posterior mean** is the expected value of $\theta$ according to the posterior distribution.
+
+Recall that the expected value, a.k.a., mean, of a discrete random variable $U$ is its probability-weighted average value
+\[
+\text{E}(U) = \sum_u u\, P(U = u)
+\]
+In the calculation of a posterior mean, $\theta$ plays the role of the variable $U$ and the posterior distribution provides the probability-weights.
+
+Reducing the posterior distribution to a single-number point estimate loses a lot of the information the posterior distribution provides.  In particular, the posterior distribution quantifies the uncertainty about $\theta$ after observing sample data.
+The **posterior standard deviation** summarizes in a single number the degree of uncertainty about $\theta$ after observing sample data.
+
+Recall that the variance of a random variable $U$ is its probability-weighted average squared distance from its expected value
+\[
+\text{Var}(U) = \text{E}\left[\left(U - \text{E}(U)\right)^2\right] 
+\]
+The following is an equivalent formula for variance: "expected value of the square minus the square of the expected value."
+\[
+\text{Var}(U) = \text{E}(U^2) - \left(\text{E}(U)\right)^2
+\]
+The standard deviation of a random variable is the square root of its variance is $\text{SD}(U)=\sqrt{\text{Var}(U)}$.  Standard deviation is measured in the same measurement units as the variable itself.
+
+In the calculation of a posterior standard deviation, $\theta$ plays the role of the variable $U$ and the posterior distribution provides the probability-weights.
+
+```{example, kissing-summary2}
+
+Continuing the kissing study in Example \@ref(exm:kissing-discrete2). Now assume a prior distribution which is proportional to $1-2|\theta-0.5|$ for $\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1$.  Use software to answer the following.
+
+```
+
+1. Find the mode of the prior distribution of $\theta$, a.k.a., the "prior mode".
+1. Find the median of the prior distribution of $\theta$, a.k.a., the "prior median".
+1. Find the expected value of the prior distribution of $\theta$, a.k.a., the "prior mean".
+1. Find the variance of the prior distribution $\theta$, a.k.a, the "prior variance".
+1. Find the standard deviation of the prior distribution of $\theta$, a.k.a, the "prior standard deviation".
+1. For what range of values is the prior probability that $\theta$ lies in that range equal to 95%?
+1. Find the prior probability that $\theta$ is greater than 0.5.
+
+    Now suppose that $y=8$ couples in a sample of size $n=12$ lean right.  Recall the prior, likelihood, and posterior.
+
+    ```{r, echo = TRUE}
+# prior
+theta = seq(0, 1, 0.0001)
+prior = 1 - 2 * abs(theta - 0.5) # shape of prior
+prior = prior / sum(prior) # scales so that prior sums to 1
+
+# data
+n = 12 # sample size
+y = 8 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+    ```
+  
+    ```{r, echo = FALSE}
+  
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='theta', ylab='')
+par(new=T) 
+plot(theta, likelihood/sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("orange", "skyblue", "seagreen"))
+
+    ```
+
+1. Find the mode of the posterior distribution of $\theta$, a.k.a., the "posterior mode".
+1. Find the median of the posterior distribution of $\theta$, a.k.a., the "posterior median".
+1. Find the expected value of the posterior distribution of $\theta$, a.k.a., the "posterior mean".
+1. Find the variance of the posterior distribution $\theta$, a.k.a, the "posterior variance".
+1. Find the standard deviation of the posterior distribution of $\theta$, a.k.a, the "posterior standard deviation".
+1. For what range of values is the posterior probability that $\theta$ lies in that range equal to 95%?
+1. Find the posterior probability that $\theta$ is greater than 0.5.
+1. How have the posterior values changed from the respective prior values?
+
+
+```{solution, kissing-summary2-sol}
+to Example \@ref(exm:kissing-summary2)
+```
+
+```{r, fold.chunk = TRUE}
+## prior
+
+# prior mode
+theta[which.max(prior)]
+
+# prior median
+min(theta[which(cumsum(prior) >= 0.5)])
+
+# prior mean
+prior_ev = sum(theta * prior)
+prior_ev
+
+# prior variance
+prior_var = sum(theta ^ 2 * prior) - prior_ev ^ 2
+prior_var
+
+# prior sd
+sqrt(prior_var)
+
+# prior 95% credible interval
+prior_cdf = cumsum(prior)
+c(theta[max(which(prior_cdf <= 0.025))], theta[min(which(prior_cdf >= 0.975))])
+
+# prior prob(theta > 0.5)
+sum(prior[theta > 0.5])
+
+## posterior
+
+# posterior mode
+theta[which.max(posterior)]
+
+# posterior median
+min(theta[which(cumsum(posterior) >= 0.5)])
+
+# posterior mean
+post_ev = sum(theta * posterior)
+post_ev
+
+# posterior variance
+post_var = sum(theta ^ 2 * posterior) - post_ev ^ 2
+post_var
+
+# posterior sd
+sqrt(post_var)
+
+# posterior 95% credible interval
+posterior_cdf = cumsum(posterior)
+c(theta[max(which(posterior_cdf <= 0.025))], theta[min(which(posterior_cdf >= 0.975))])
+
+# prior prob(theta > 0.5)
+sum(posterior[theta > 0.5])
+```
+
+
+In the previous problem, the center of the posterior distribution is closer to the sample proportion than the center of the prior distribution.  There is less uncertainty about $\theta$ after observing some data, so the posterior standard deviation is less than the prior standard deviation.  The 95% posterior interval is narrower than the prior interval, and its centered is shifted towards the posterior mean. The posterior concentrates more probability above 0.5 than the prior does.
+
+Bayesian inference for a parameter is based on its posterior distribution.
+Since a Bayesian analysis treats parameters as random variables, it is possible to make posterior probability statements about a parameter.
+
+A Bayesian **credible interval** is an interval of values for the parameter that has at least the specified probability, e.g., 95%.  Credible intervals can be computed based on both the prior and the posterior distribution, though we are primarily interested in intervals based on the posterior distribution. The endpoints of a 95% ***central* posterior credible interval** correspond to the 2.5th and the 97.5th percentiles of the posterior distribution.
+
+Central credible intervals are easier to compute, but are not the only or most widely used credible intervals.  A 95% **highest posterior density interval** is the interval of values that contains 95% of the posterior probability and is such that the posterior density within the interval is never lower than the posterior density outside the interval. If the posterior distribution is relatively symmetric and unimodal, central posterior credible intervals and highest posterior density intervals are similar.
+
+ 
+
+```{example, kissing-summary3}
+
+Continuing the kissing study in Example \@ref(exm:kissing-discrete3), we'll now perform a Bayesian analysis on the actual study data in which 80 couples out of a sample of 124 leaned right. Assume a prior distribution which is proportional to $1-2|\theta-0.5|$ for $\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1$.  Use software to answer the following questions.
+Recall the prior, likelihood, and posterior.
+
+```
+
+```{r, echo = TRUE}
+# prior
+theta = seq(0, 1, 0.0001)
+prior = 1 - 2 * abs(theta - 0.5) # shape of prior
+prior = prior / sum(prior) # scales so that prior sums to 1
+
+# data
+n = 124 # sample size
+y = 80 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+```
+  
+```{r, echo = FALSE}
+  
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='theta', ylab='')
+par(new=T) 
+plot(theta, likelihood/sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("orange", "skyblue", "seagreen"))
+
+```
+
+1. Find a 95% central posterior credible interval for $\theta$.  How does the credible interval compare to the one from the previous example (with $n=12$)?
+1. Write a clearly worded sentence reporting the credible interval from the previous part in context.
+1. Given the shape of the posterior distribution, how could your approximate a posterior 95% central posterior credible interval?
+1. Find the posterior probability that $\theta$ is greater than 0.5. How does this probability compare to the one from the previous example (with $n=12$)?
+1. Write a clearly worded sentence reporting the probability from the previous part in context.
+1. Given the shape of the posterior distribution, how could your approximate the posterior probability that $\theta$ is greater than 0.5?
+1. Now consider the other two prior distributions from Example \@ref(exm:kissing-discrete3).
+Would any of the conclusions from this problem change substantially if we had chosen one of the other priors?
+
+
+```{solution, kissing-summary3-sol}
+to Example \@ref(exm:kissing-summary3)
+```
+
+```{r, fold.chunk = TRUE}
+## posterior
+
+# posterior mode
+theta[which.max(posterior)]
+
+# posterior median
+min(theta[which(cumsum(posterior) >= 0.5)])
+
+# posterior mean
+post_ev = sum(theta * posterior)
+post_ev
+
+# posterior variance
+post_var = sum(theta ^ 2 * posterior) - post_ev ^ 2
+post_var
+
+# posterior sd
+sqrt(post_var)
+
+# posterior 95% credible interval
+posterior_cdf = cumsum(posterior)
+c(theta[max(which(posterior_cdf <= 0.025))], theta[min(which(posterior_cdf >= 0.975))])
+
+# prior prob(theta > 0.5)
+sum(posterior[theta > 0.5])
+```
+
+```{asis, fold.chunk = TRUE}
+1. A 95% central posterior credible interval for $\theta$ is [0.552, 0.719].  This interval is narrower (more precise) than the one for $n=12$.  With a larger sample size, the likelihood is more "peaked" and so the posterior probability is concentrated over a narrower range of values.
+1. There is a posterior probability of 95% that the population proportion of kissing couples who lean heads to the right is between 0.552 and 0.719.
+1. The posterior distribution is approximately Normal, with posterior mean 0.638 and posterior standard deviation 0.042.  A Normal distribution places 95% of probability on values that fall within 2 standard deviations of the mean.  So an approximate 95% posterior credible interval has endpoints $0.638 \pm 2 \times 0.042$, yielding an interval of $[0.552, 0.723]$.
+1. The posterior probability that $\theta$ is greater than 0.5 is 0.9992. This probability compare to the one from the previous example since with the larger sample size, the posterior standard deviation is smaller and the posterior distribution is concentrated even more near the observed sample proportion of 0.645.
+1. There is a posterior probability of 99.92% that the population proportion of kissing couples who lean heads to the right is greater than 0.5.
+1. Use standardization ($z$-scores) and the empirical rule.  A value of 0.5 is 3.24 standard deviations below the posterior mean: $(0.5 - 0.638)/0.042 = -3.24$.  By the empirical rule for Normal distributions, 99.7% of the probability corresponds to values within 3 standard deviations of the mean. Therefore the posterior probability that $\theta$ is less than 0.5 is pretty small.
+1. We saw in Example \@ref(exm:kissing-discrete3) that with the sample size of $n=124$, the posterior distribution was basically the same for each of the three priors. Sothe conclusions from this problem would not change substantially if we had chosen one of the other priors.
+
+```
+
+
+In many situations, the posterior distribution of a single parameter is approximately Normal, so an approximate 95% credible interval has endpoints
+\[
+\text{posterior mean} \pm 2 \times \text{posterior SD}
+\]
+Also, posterior probabilities of hypotheses about a parameter can often be approximated with Normal distribution calculations --- [standardizing and using the empirical rule](https://bookdown.org/kevin_davisross/probsim-book/normal-distributions.html).
+
+
+```{example, kissing-freq}
+We'll now compare to the Bayesian analysis in the previous example to a frequentist analysis. Recall the actual study data in which 80 couples out of a sample of 124 leaned right.
+```
+
+1. Compute a 95% confidence interval for $\theta$.
+1. Write a clearly worded sentence reporting the confidence interval in context.
+1. Explain what "95% confidence" means?
+1. Conduct a (null) hypothesis (significance) test of whether the sample data provide strong evidence that more than half of all kissing couples lean their heads to the right.  Compute the corresponding p-value.
+1. Write a clearly worded sentence reporting the hypothesis test in context.
+1. Interpret the p-value.
+1. Compare the *numerical results* of the Bayesian and frequentist analysis.  How does the *interpretation* of these results differ between the two approaches?
+
+
+```{solution, kissing-freq-sol}
+to Example \@ref(exm:kissing-freq)
+```
+
+```{asis, fold.chunk = TRUE}
+
+1. The observed sample proportion is $\hat{p} = 80/124 = 0.645$ and its standard error is $\sqrt{\hat{p}(1-\hat{p})}/n$.  The usual formula for a 95% confidence interval for a population prportion is 
+\[
+  \hat{p} \pm 2\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\]
+Plugging in $n=124$ and $\hat{p} = 80/124$ yields the  interval $[0.559, 0.731]$.
+1. We estimate with 95% confidence that the population proportion of kissing couples who lean heads to the right is between 0.559 and 0.731.
+1. Confidence is in the estimation procedure.
+Over many samples, 95% of samples will yield confidence intervals, computed using the above formula, that contain the true parameter value (a fixed number)
+The intervals change from sample to sample; the parameter is fixed.
+1. The null hypothesis is $H_0:\theta = 0.5$.  The alternative hypothesis is $H_a:\theta>0.5$.  The standard deviation of the null distribution is $\sqrt{0.5(1-0.5)/124} = 0.045$.  The standardized statistic is $(0.645 - 0.5) / 0.045 = 3.23$. Assuming the null distribution is approximately Normal, the p-value is approximately 0.0006.
+1. With a p-value of 0.0006 we have strong evidence to reject the null hypothesis and conclude that the population proportion of kissing couples who lean heads to the right is greater than 0.5 
+1. Interpreting the p-value
+
+    - If the population proportion of kissing couples who lean heads to the right is equal to 0.5
+    - Then we would observe a sample proportion of 0.645 or more in about 0.06% of random samples of size 124
+    - Since we actually observed a sample proportion of 0.645, which would be unlikely if the population proportion were 0.5
+    - The data provide evidence that the population proportion is not 0.5
+
+1. The numerical results are similar: the 95% posterior credible interval is similar to the 95% confidence interval, and the p-value (0.0006) is similar to the posterior probability that $\theta$ is less than 0.5 (0.0008 = 1-0.9992). However, the *interpretation* of these results is very different between the two approaches.  The Bayesian approach provides probability statements about the parameter; the frequentist approach develops procedures based on the probability of what might happen over many samples.
+
+```
+
+Since a Bayesian analysis treats parameters as random variables, it is possible to make probability statements about parameters.  In contrast, a frequentist analysis treats unknown parameters  as fixed --- that is, not random --- so probability statements do not apply.  In a frequentist approach, probability statements (like "95% confidence") are based on how the sample data would behave over many hypothetical samples.
+
+
+In a Bayesian approach
+
+- Parameters are random variables and have distributions
+- Observed data are treated as fixed, not random
+- All inference is based on the posterior distribution of parameters which quantifies our uncertainty about the parameters.
+- The posterior distribution quantifies how our prior "beliefs" about the parameters have been updated to reflect the observed data.
+
+In a frequentist approach
+
+- Parameters are treated as fixed (not random), but unknown numbers
+- Data are treated as random
+- All inference is based on the sampling distribution of the data which quantifies how the data behaves over many hypothetical samples.
+
+
+```{example, body-temp-credible}
+
+Continuing Example \@ref(exm:body-temp-discrete3). Assume body temperatures (degrees Fahrenheit) of healthy adults follow a Normal distribution with unknown mean $\mu$ and known  standard deviation $\sigma=1$.
+Suppose we wish to estimate $\mu$, the population mean healthy human body temperature. 
+In a recent study^[[Source](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6258625/) and a [related article](https://www.scientificamerican.com/article/are-human-body-temperatures-cooling-down/).], the sample mean body temperature in a sample of 208 healthy adults was 97.7 degrees F.
+
+We'll again use a grid approximation and assume that any multiple of 0.0001 between 96.0 and 100.0 is a possible value of $\mu$: $96.0, 96.0001, 96.0002, \ldots, 99.9999, 100.0$. Assume a prior distribution which is proportional a Normal distribution with mean 98.6 and standard deviation 0.7 over $\mu$ values in the grid.  Recall the prior, likelihood, and posterior.
+
+```
+
+```{r}
+# prior
+theta = seq(96, 100, 0.0001)
+prior = dnorm(theta, 98.6, 0.7)
+prior = prior / sum(prior)
+
+# data
+n = 208 # sample size
+y = 97.7 # sample mean
+sigma = 1
+
+# likelihood
+likelihood = dnorm(y, theta, sigma / sqrt(n)) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+  
+```
+
+```{r, echo = FALSE}
+
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=range(theta), ylim=ylim, col="orange", xlab='theta', ylab='')
+par(new=T) 
+plot(theta, likelihood/sum(likelihood), type='l', xlim=range(theta), ylim=ylim, col="skyblue", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=range(theta), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("orange", "skyblue", "seagreen"))
+  
+```
+
+1. What does the prior standard deviation of 0.7 represent?
+1. What does the population standard deviation of 1 represent?
+1. Compute the posterior standard deviation.  What does it represent?
+1. Compute the posterior mean.
+1. Compute a 95% credible interval for $\mu$.
+1. Write a clearly worded sentence reporting the credible interval in context.
+1. Compute the posterior probability that $\mu$ is less than 98.6.
+1. Write a clearly worded sentence reporting the probability in the previous part in context.
+
+
+
+```{solution, body-temp-credible-sol}
+to Example \@ref(exm:body-temp-credible)
+```
+
+```{asis, fold.chunk = TRUE}
+
+1. The prior standard deviation of 0.7 quantifies, in a single number, our degree of prior uncertainty about the population mean human body temperature $\mu$.  We have a prior probability of 68% that $\mu$ is between 97.9 and 99.3, a prior probability of 95% that $\mu$ is between 97.2 and 100, etc (assuming a Normal prior).
+1. The population standard deviation of 1 represents the person-to-person variability in body temperatures.  If we were to measures body temperatures for many people, body temperatures would vary by about 1 degree F from person to person.  About 68% of body temperatures would be within 1 degree of $\mu$, about 95% would be within 2 degrees of $\mu$, etc (assuming that individual body temperatures follows a Normal distributions.)
+1. The posterior standard deviation of 0.069 (see code below) quantifies, in a single number, our degree of posterior uncertainty about the population mean human body temperature $\mu$ after observing the sample data.
+1. The posterior mean is 97.71, which is pretty close to the observed sample mean.
+1. Code gives [97.57, 97.85].  Since the posterior distribution is approximately Normal, we can approximate the endpoints of the confidence interval with $97.71 \pm 2 \times 0.069$.
+1. There is a posterior probability of 95% that the population mean human body temperature is between 97.57 and 97.85 degrees Fahrenheit.
+1. The posterior probability that $\mu$ is less than 98.6 is essentially 1.  The value 98.6 is 12.9 standard deviations above the posterior mean: $(98.6 - 97.71)/0.069=12.9$.
+1. There is a posterior probability of close to 100% that the population mean human body temperature is less than 98.6 degrees Fahrenheit.
+
+```
+
+```{r, fold.chunk = TRUE}
+# posterior mean
+post_ev = sum(theta * posterior)
+post_ev
+
+# posterior variance
+post_var = sum(theta ^ 2 * posterior) - post_ev ^ 2
+post_var
+
+# posterior sd
+sqrt(post_var)
+
+# posterior 95% credible interval
+posterior_cdf = cumsum(posterior)
+c(theta[max(which(posterior_cdf <= 0.025))], theta[min(which(posterior_cdf >= 0.975))])
+
+# prior prob(theta < 98.6)
+sum(posterior[theta < 98.6])
+```
+
+
+<!-- A **Bayes estimator** is one that *minimizes the expected value of a posterior loss*. -->
+
+<!-- A *loss function* $L(\theta, \hat{\theta})$ quantifies how bad it is for the estimate $\hat{\theta}$ (a function of the sample data $y$) of the parameter to differ from the actual value of the parameter $\theta$.  -->
+
+<!-- The expected value is calculated with respect to the posterior distribution: $\E(L(\theta, \hat{\theta})\vert y)$.  The parameter $\theta$ varies according to the posterior distribution, but given the observed data $y$, $\hat{\theta}$ is treated as a constant. -->
+
+
+<!-- The most commonly used loss function is *squared error loss*: $L(\theta-\hat{\theta}) = (\theta-\hat{\theta})^2$. -->
+<!-- The **posterior mean** $\hat{\theta} = \E(\theta\vert x)$ is the Bayes estimator for minimizing squared error loss $\E((\theta-\hat{\theta})^2\vert x)$. -->
+
+<!-- Another common loss function is *absolute error loss*: $L(\theta-\hat{\theta}) = |\theta-\hat{\theta}\vert $. -->
+<!-- \bei -->
+<!-- \item The **posterior median** (i.e., 50th percentile of the posterior distribution) is the Bayes estimator for minimizing squared error loss $\E(|\theta-\hat{\theta}||y)$. -->
+
+
+<!-- Less common is a *0-1 (right-or-wrong) loss* function. -->
+<!-- The **posterior mode** (i.e., value of $\theta$ for which the posterior density is maximized) is the Bayes estimator for minimizing 0-1 loss. -->

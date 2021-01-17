@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Odds and Bayes Factors | An Introduction to Bayesian Reasoning and Methods</title>
+  <meta name="description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="generator" content="bookdown 0.20.1 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Odds and Bayes Factors | An Introduction to Bayesian Reasoning and Methods" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="github-repo" content="rstudio/bayesian-reasoning-and-methods" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Odds and Bayes Factors | An Introduction to Bayesian Reasoning and Methods" />
+  
+  <meta name="twitter:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  
+
+<meta name="author" content="Kevin Ross" />
+
+
+<meta name="date" content="2021-01-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="bayes-rule.html"/>
+<link rel="next" href="estimation.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="interpretations.html"><a href="interpretations.html"><i class="fa fa-check"></i><b>1</b> Interpretations of Probability and Statistics</a><ul>
+<li class="chapter" data-level="1.1" data-path="randomness.html"><a href="randomness.html"><i class="fa fa-check"></i><b>1.1</b> Instances of randomness</a></li>
+<li class="chapter" data-level="1.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html"><i class="fa fa-check"></i><b>1.2</b> Interpretations of probability</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#rel-freq"><i class="fa fa-check"></i><b>1.2.1</b> Long run relative frequency</a></li>
+<li class="chapter" data-level="1.2.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#subjective-probability"><i class="fa fa-check"></i><b>1.2.2</b> Subjective probability</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="consistency.html"><a href="consistency.html"><i class="fa fa-check"></i><b>1.3</b> Working with probabilities</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="consistency.html"><a href="consistency.html#consistency-requirements"><i class="fa fa-check"></i><b>1.3.1</b> Consistency requirements</a></li>
+<li class="chapter" data-level="1.3.2" data-path="consistency.html"><a href="consistency.html#odds"><i class="fa fa-check"></i><b>1.3.2</b> Odds</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="interpretations-of-statistics.html"><a href="interpretations-of-statistics.html"><i class="fa fa-check"></i><b>1.4</b> Interpretations of Statistics</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bayes-rule.html"><a href="bayes-rule.html"><i class="fa fa-check"></i><b>2</b> Bayes’ Rule</a></li>
+<li class="chapter" data-level="3" data-path="bayes-factor.html"><a href="bayes-factor.html"><i class="fa fa-check"></i><b>3</b> Odds and Bayes Factors</a></li>
+<li class="chapter" data-level="4" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>4</b> Introduction to Estimation</a></li>
+<li class="chapter" data-level="5" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>5</b> Introduction to Inference</a></li>
+<li class="chapter" data-level="6" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>6</b> Introduction to Prediction</a></li>
+<li class="chapter" data-level="7" data-path="continuous.html"><a href="continuous.html"><i class="fa fa-check"></i><b>7</b> Introduction to Continuous Prior and Posterior Distributions</a><ul>
+<li class="chapter" data-level="7.1" data-path="a-brief-review-of-continuous-distributions.html"><a href="a-brief-review-of-continuous-distributions.html"><i class="fa fa-check"></i><b>7.1</b> A brief review of continuous distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="normal-mean.html"><a href="normal-mean.html"><i class="fa fa-check"></i><b>7.2</b> Normal mean</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="jags.html"><a href="jags.html"><i class="fa fa-check"></i><b>8</b> Introduction to Posterior Simulation and JAGS</a><ul>
+<li class="chapter" data-level="8.1" data-path="implementing-mcmc-in-jags.html"><a href="implementing-mcmc-in-jags.html"><i class="fa fa-check"></i><b>8.1</b> Implementing MCMC in JAGS</a></li>
+<li class="chapter" data-level="8.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html"><i class="fa fa-check"></i><b>8.2</b> Example 17.1: Beta-Binomial Model — “Data is singular”</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#load-the-data"><i class="fa fa-check"></i><b>8.2.1</b> Load the data</a></li>
+<li class="chapter" data-level="8.2.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#specify-the-model-likelihood-and-prior"><i class="fa fa-check"></i><b>8.2.2</b> Specify the model: likelihood and prior</a></li>
+<li class="chapter" data-level="8.2.3" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#compile-in-jags"><i class="fa fa-check"></i><b>8.2.3</b> Compile in JAGS</a></li>
+<li class="chapter" data-level="8.2.4" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulate-values-from-the-posterior-distribution"><i class="fa fa-check"></i><b>8.2.4</b> Simulate values from the posterior distribution</a></li>
+<li class="chapter" data-level="8.2.5" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#summarizing-simulated-values-and-diagnostic-checking"><i class="fa fa-check"></i><b>8.2.5</b> Summarizing simulated values and diagnostic checking</a></li>
+<li class="chapter" data-level="8.2.6" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#posterior-prediction"><i class="fa fa-check"></i><b>8.2.6</b> Posterior prediction</a></li>
+<li class="chapter" data-level="8.2.7" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#loading-data-as-individual-values-rather-than-summary-statistics"><i class="fa fa-check"></i><b>8.2.7</b> Loading data as individual values rather than summary statistics</a></li>
+<li class="chapter" data-level="8.2.8" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulating-multiple-chains"><i class="fa fa-check"></i><b>8.2.8</b> Simulating multiple chains</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="prior.html"><a href="prior.html"><i class="fa fa-check"></i><b>9</b> Considering Prior Distributions</a></li>
+<li class="chapter" data-level="10" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>10</b> Introduction to Bayesian Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Introduction to Bayesian Reasoning and Methods</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="bayes-factor" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> Odds and Bayes Factors</h1>
+
+<div class="example">
+<p><span id="exm:bayes-false-positive" class="example"><strong>Example 3.1  </strong></span>
+The ELISA test for HIV was widely used in the mid-1990s for screening blood donations. As with most medical diagnostic tests, the ELISA test is not perfect. If a person actually carries the HIV virus, experts estimate that this test gives a positive result 97.7% of the time. (This number is called the <em>sensitivity</em> of the test.) If a person does not carry the HIV virus, ELISA gives a negative (correct) result 92.6% of the time (the <em>specificity</em> of the test). Estimates at the time were that 0.5% of the American public carried the HIV virus (the <em>base rate</em>).</p>
+<p>Suppose that a randomly selected American tests positive; we are interested in the conditional probability that the person actually carries the virus.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Before proceeding, make a guess for the probability in question.
+<span class="math display">\[
+0-20\% \qquad 20-40\% \qquad 40-60\% \qquad 60-80\% \qquad 80-100\%
+\]</span></li>
+<li>Denote the probabilities provided in the setup using proper notation</li>
+<li>Construct an appropriate two-way table and use it to compute the probability of interest.</li>
+<li>Construct a Bayes table and use it to compute the probability of interest.</li>
+<li>Explain why this probability is small, compared to the sensitivity and specificity.</li>
+<li>By what factor has the probability of carrying HIV increased, given a positive test result, as compared to before the test?</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="bayes-factor.html#exm:bayes-false-positive">3.1</a>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li><p>We don’t know what you guessed, but from experience many people guess 80-100%. Afterall, the test is correct for most of people who carry HIV, and also correct for most people who don’t carry HIV, so it seems like the test is correct most of the time. But this argument ignores one important piece of information that has a huge impact on the results: most people do not carry HIV.</p></li>
+<li><p>Let <span class="math inline">\(H\)</span> denote the event that the person carries HIV (hypothesis), and let <span class="math inline">\(E\)</span> denote the event that the test is positive (evidence). Therefore, <span class="math inline">\(H^c\)</span> is the event that the person does not carry HIV, another hypothesis. We are given</p>
+<ul>
+<li>prior probability: <span class="math inline">\(P(H) = 0.005\)</span></li>
+<li>likelihood of testing positive, if the person carries HIV: <span class="math inline">\(P(E|H) = 0.977\)</span></li>
+<li><span class="math inline">\(P(E^c|H^c) = 0.926\)</span></li>
+<li>likelihood of testing positive, if the person does not carry HIV: <span class="math inline">\(P(E|H^c) = 1-P(E^c|H^c) = 1-0.926 = 0.074\)</span></li>
+<li>We want to find the posterior probability <span class="math inline">\(P(H|E)\)</span>.</li>
+</ul></li>
+<li><p>Considering a hypothetical population of Americans (at the time)</p>
+<ul>
+<li>0.5% <em>of Americans</em> carry HIV</li>
+<li>97.7% <em>of Americans who carry HIV</em> test positive</li>
+<li>92.6% <em>of Americans who do not carry HIV</em> test negative</li>
+<li>We want to find the percentage <em>of Americans who test positive</em> that carry HIV.<br />
+</li>
+</ul></li>
+<li><p>Assuming 1000000 Americans</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Tests positive</th>
+<th align="right">Does not test positive</th>
+<th align="right">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Carries HIV</td>
+<td align="right">4885</td>
+<td align="right">115</td>
+<td align="right">5000</td>
+</tr>
+<tr class="even">
+<td>Does not carry HIV</td>
+<td align="right">73630</td>
+<td align="right">921370</td>
+<td align="right">995000</td>
+</tr>
+<tr class="odd">
+<td>Total</td>
+<td align="right">78515</td>
+<td align="right">921485</td>
+<td align="right">1000000</td>
+</tr>
+</tbody>
+</table>
+<p>Among the 78515 who test positive, 4885 carry HIV, so the probability that an American who tests positive actually carries HIV is 4885/78515 = 0.062.</p></li>
+<li><p>See the Bayes table below.</p></li>
+<li><p>The result says that only 6.2% <em>of Americans who test positive</em> actually carry HIV. It is true that the test is correct for most Americans with HIV (4885 out of 5000) and incorrect only for a small proportion of Americans who do not carry HIV (73630 out of 995000). But since so few Americans carry HIV, the sheer <em>number</em> of false positives (73630) swamps the <em>number</em> of true positives (4885).</p></li>
+<li><p>Prior to observing the test result, the prior probability that an American carries HIV is <span class="math inline">\(P(H) = 0.005\)</span>. The posterior probability that an American carries HIV given a positive test result is <span class="math inline">\(P(H|E)=0.062\)</span>.
+<span class="math display">\[
+  \frac{P(H|E)}{P(H)} = \frac{0.062}{0.005} =  12.44
+\]</span>
+An American who tests positive is about 12.4 times more likely to carry HIV than an American whom the test result is not known. So while 0.067 is still small in absolute terms, the posterior probability is much larger relative to the prior probability.</p></li>
+</ol>
+</details>
+<table>
+<thead>
+<tr class="header">
+<th align="right">hypothesis</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">Carries HIV</td>
+<td align="right">0.005</td>
+<td align="right">0.977</td>
+<td align="right">0.0049</td>
+<td align="right">0.0622</td>
+</tr>
+<tr class="even">
+<td align="right">Does not carry HIV</td>
+<td align="right">0.995</td>
+<td align="right">0.074</td>
+<td align="right">0.0736</td>
+<td align="right">0.9378</td>
+</tr>
+<tr class="odd">
+<td align="right">sum</td>
+<td align="right">1.000</td>
+<td align="right">NA</td>
+<td align="right">0.0785</td>
+<td align="right">1.0000</td>
+</tr>
+</tbody>
+</table>
+<p>Remember, the conditional probability of <span class="math inline">\(H\)</span> given <span class="math inline">\(E\)</span>, <span class="math inline">\(P(E|H)\)</span>, is not the same as the conditional probability of <span class="math inline">\(E\)</span> given <span class="math inline">\(H\)</span>, <span class="math inline">\(P(E|H)\)</span>, and they can be vastly different. It is helpful to think of probabilities as percentages and ask “percent of what?” For example, the percentage of <em>people who carry HIV</em> that test positive is a very different quantity than the percentage of <em>people who test positive</em> that carry HIV. Make sure to properly identify the “denominator” or baseline group the percentages apply to.</p>
+<p>Posterior probabilities can be highly influenced by the original prior probabilities, sometimes called the <strong>base rates</strong>. . The example illustrates that when the base rate for a condition is very low and the test for the condition is less than perfect there will be a relatively high probability that a positive test is a <em>false positive.</em> Don’t <a href="https://en.wikipedia.org/wiki/Base_rate_fallacy">neglect the base rates</a> when evaluating posterior probabilities</p>
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-29" class="example"><strong>Example 3.2  </strong></span>
+True story: On a camping trip in 2003, my wife and I were driving in Vermont when, suddenly, a very large, hairy, black animal lumbered across the road in front of us and into the woods on the other side. It happened very quickly, and at first I said “It’s a gorilla!” But then after some thought, and much derision from my wife, I said “it was probably a bear.”</p>
+<p>I think this story provides an anecdote about Bayesian reasoning, albeit bad reasoning at first but then good. Put the story in a Bayesian context by identifying hypotheses, evidence, prior, and likelihood. What was the mistake I made initially?</p>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ul>
+<li>“Type of animal” is playing the role of the hypothesis: gorilla, bear, dog, squirrel, rabbit, etc.</li>
+<li>That the animal is very large, hairy, and black is the evidence.</li>
+<li>The likelihood value for the animal being very large, hairy, and black is close to 1 for both a bear and gorilla, maybe more middling for a dog, but close to 0 for a squirrel, rabbit, etc.</li>
+</ul>
+<p>The mistake I made initially was to neglect the base rates and not consider my prior probabilities. Let’s say the likelihood is 1 for both gorilla and bear and 0 for all other animals. Then based solely on the likelihoods, the posterior probability would be 50/50 for gorilla and bear, which maybe is why I guessed gorilla.</p>
+<p>After my initial reaction, I paused to formulate my prior probabilities, which considering I was in Vermont, gave much higher probability to a bear than a gorilla. (My prior probabilities should also have given even higher probability to animals such as dogs, squirrels, and rabbits.)</p>
+<p>By combining prior and likelihood in the appropriate way, the posterior probability is</p>
+<ul>
+<li>very high for a bear, due to high likelihood and not-too-small prior,</li>
+<li>close to 0 for a gorilla, due to the very small prior,</li>
+<li>and very low for a squirrel or rabbit or other small animals because of the close-to-zero likelihood, even if the prior is large.</li>
+</ul>
+</details>
+<p>Recall that the odds of an event is a ratio involving the probability that the event occurs and the probability that the event does not occur
+<span class="math display">\[
+\text{odds}(A)  = \frac{P(A)}{P(A^c)} = \frac{P(A)}{1-P(A)}
+\]</span>
+In many situations (e.g. gambling) odds are reported as odds  <span class="math inline">\(A\)</span>, that is, the odds of <span class="math inline">\(A^c\)</span>: <span class="math inline">\(P(A^c)/P(A)\)</span>.</p>
+<p>The probability of an even can be obtained from odds
+<span class="math display">\[
+P(A) = \frac{\text{odds}(A)}{1+\text{odds}(A)}
+\]</span></p>
+
+<div class="example">
+<p><span id="exm:bayes-false-positive-odds" class="example"><strong>Example 3.3  </strong></span>
+Continuing Example <a href="bayes-factor.html#exm:bayes-false-positive">3.1</a></p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>In symbols and words, what does one minus the answer to the probability in question in Example <a href="bayes-factor.html#exm:bayes-false-positive">3.1</a> represent?</li>
+<li>Calculate the <em>prior odds</em> of a randomly selected American having the HIV virus, before taking an ELISA test.</li>
+<li>Calculate the <em>posterior odds</em> of a randomly selected American having the HIV virus, given a positive test result.</li>
+<li>By what factor has the <em>odds</em> of carrying HIV increased, given a positive test result, as compared to before the test? This is called the <strong>Bayes factor</strong>.</li>
+<li>Suppose you were given the prior odds and the Bayes factor. How could you compute the posterior odds?</li>
+<li>Compute the ratio of the likelihoods of testing positive, for those who carry HIV and for those who do not carry HIV. What do you notice?</li>
+</ol>
+
+<div class="solution">
+<p> <span class="solution"><em>Solution. </em></span> 
+to Example <a href="bayes-factor.html#exm:bayes-false-positive-odds">3.3</a></p>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(1-P(H|E) = P(H^c|E)=0.938\)</span> is the posterior probability that an American who has a positive test does not carry HIV.</li>
+<li>The prior probability of carrying HIV is <span class="math inline">\(P(H)=0.005\)</span> and the prior probability of not carrying HIV is <span class="math inline">\(P(H^c) = 1-0.005 = 0.995\)</span>
+<span class="math display">\[
+\frac{P(H)}{P(H^c)} = \frac{0.005}{0.995} = \frac{1}{199} \approx 0.005025
+\]</span>
+These are the prior odds in favor of carrying HIV. The prior odds against carrying HIV are
+<span class="math display">\[
+\frac{P(H^c)}{P(H)} = \frac{0.995}{0.005} = 199
+\]</span>
+That is, prior to taking the test, an American is 199 times more likely to not carry HIV than to carry HIV.</li>
+<li>The posterior probability of carrying HIV given a positive test is <span class="math inline">\(P(H|E)=0.062\)</span> and the posterior probability of not carrying HIV given a positive test is <span class="math inline">\(P(H^c|E) = 1-0.062 = 0.938\)</span>.
+<span class="math display">\[
+\frac{P(H|E)}{P(H^c\E)} = \frac{0.062}{0.938} \approx 0.066
+\]</span>
+These are the posterior odds in favor of carrying HIV given a positive test. The posterior odds against carrying HIV given a positive test are
+<span class="math display">\[
+\frac{P(H^c|E)}{P(H|E)} = \frac{0.938}{0.062} \approx 15.1
+\]</span>
+That is, given a positive test, an American is 15.1 times more likely to not carry HIV than to carry HIV.</li>
+<li>Comparing the prior and posterior odds in favor of carrying HIV,
+<span class="math display">\[
+BF = \frac{\text{posterior odds}}{\text{prior odds}} = \frac{0.066}{0.005025} = 13.2
+\]</span>
+The <em>odds</em> of carrying HIV are 13.2 times greater given a positive test result than prior to taking the test. The Bayes Factor is <span class="math inline">\(BF = 13.2\)</span>.</li>
+<li>By definition
+<span class="math display">\[
+BF = \frac{\text{posterior odds}}{\text{prior odds}}
+\]</span>
+Rearranging yields
+<span class="math display">\[
+\text{posterior odds} = \text{prior odds}\times BF
+\]</span></li>
+<li>The likelihood of testing positive given HIV is <span class="math inline">\(P(E|H) = 0.977\)</span> and the likelihood of testing positive given no HIV is <span class="math inline">\(P(E|H^c) = 1-0.926 = 0.074\)</span>.
+<span class="math display">\[
+ \frac{P(E|H)}{P(E|H^c)} = \frac{0.977}{0.074} = 13.2
+\]</span>
+This value is the Bayes factor! So we could have computed the Bayes factor without first computing the posterior probabilities or odds.</li>
+</ol>
+</details>
+<ul>
+<li>If <span class="math inline">\(P(H)\)</span> is the prior probability of <span class="math inline">\(H\)</span>, the prior odds (in favor) of <span class="math inline">\(H\)</span> are <span class="math inline">\(P(H)/P(H^c)\)</span></li>
+<li>If <span class="math inline">\(P(H|E)\)</span> is the posterior probability of <span class="math inline">\(H\)</span> given <span class="math inline">\(E\)</span>, the posterior odds (in favor) of <span class="math inline">\(H\)</span> given <span class="math inline">\(E\)</span> are <span class="math inline">\(P(H|E)/P(H^c|E)\)</span></li>
+<li>The <strong>Bayes factor (BF)</strong> is defined to be the ratio of the posterior odds to the prior odds
+<span class="math display">\[
+BF = \frac{\text{posterior odds}}{\text{prior odds}} = \frac{P(H|E)/P(H^c|E)}{P(H)/P(H^c)}
+\]</span></li>
+<li>The odds form of Bayes rule says
+<span class="math display">\[\begin{align*}
+\text{posterior odds} &amp; = \text{prior odds} \times \text{Bayes factor}\\
+\frac{P(H|E)}{P(H^c|E)} &amp; = \frac{P(H)}{P(H^c)} \times BF
+\end{align*}\]</span></li>
+<li>Apply Bayes rule to <span class="math inline">\(P(H|E)\)</span> and <span class="math inline">\(P(H^c|E)\)</span>
+<span class="math display">\[\begin{align*}
+\frac{P(H|E)}{P(H^c|E)} &amp; = \frac{P(E|H)P(H)/P(E)}{P(E|H^c)P(H^c)/P(E)}\\
+&amp; =  \frac{P(H)}{P(H^c)} \times \frac{P(E|H)}{P(E|H^c)}\\
+\text{posterior odds} &amp; = \text{prior odds} \times \frac{P(E|H)}{P(E|H^c)}
+\end{align*}\]</span></li>
+<li>Therefore, the Bayes factor for hypothesis <span class="math inline">\(H\)</span> given evidence <span class="math inline">\(E\)</span> can be calculated as the <em>ratio of the likelihoods</em>
+<span class="math display">\[
+BF = \frac{P(E|H)}{P(E|H^c)}
+\]</span></li>
+<li>That is, the Bayes factor can be computed without first computing posterior probabilities or odds.</li>
+<li><strong>Odds form of Bayes rule</strong>
+<span class="math display">\[\begin{align*}
+\frac{P(H|E)}{P(H^c|E)} &amp; =  \frac{P(H)}{P(H^c)} \times \frac{P(E|H)}{P(E|H^c)}
+\\
+\text{posterior odds} &amp; = \text{prior odds} \times \text{Bayes factor}
+\end{align*}\]</span></li>
+</ul>
+
+<div class="example">
+<p><span id="exm:bayes-false-positive-odds2" class="example"><strong>Example 3.4  </strong></span>
+Continuing Example <a href="bayes-factor.html#exm:bayes-false-positive">3.1</a>. Now suppose that 5% of individuals in a high-risk group carry the HIV virus. Consider a randomly selectd person from this group who takes the test. Suppose the sensitivity and specificity of the test are the same as in Example <a href="bayes-factor.html#exm:bayes-false-positive">3.1</a>.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Compute and interpret the prior odds that a person carries HIV.</li>
+<li>Use the odds form of Bayes rule to compute the posterior odds that the person carries HIV given a positive test, and interpret the posterior odds.</li>
+<li>Use the posterior odds to compute the posterior probability that the person carries HIV given a positive test.</li>
+</ol>
+
+<div class="solution">
+<p> <span class="solution"><em>Solution. </em></span> 
+to Example <a href="bayes-factor.html#exm:bayes-false-positive-odds2">3.4</a></p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><span class="math inline">\(P(H)/P(H^c) = 0.05/0.95 = 1/19 \approx 0.0526\)</span>. A person in this group is 19 times more likely to not carry HIV than to carry HIV.</li>
+<li>The posterior odds are the product of the prior odds and the Bayes factor. The Bayes factor is the ration of the likelihoods. Since the sensitivity and specificity are the same as in the previous example, the likelihoods are the same, and the Bayes factor is the same.
+<span class="math display">\[
+ \frac{P(E|H)}{P(E|H^c)} = \frac{0.977}{0.074} = 13.2
+\]</span>
+Therefore
+<span class="math display">\[
+\text{posterior odds} = \text{prior odds} \times \text{Bayes factor} = \frac{1}{19} \times 13.2 \approx \frac{1}{1.44} \approx 0.695
+\]</span>
+Given a positive test, a person in this group is 1.44 times more likely to not carry HIV than to carry HIV.</li>
+<li>The odds is the ratios of the posterior probabilities, and we basically just rescale so they add to 1. The posterior probability is
+<span class="math display">\[
+P(H|E) = \frac{0.695}{1 + 0.695} = \frac{1}{1 + 1.44} \approx 0.410
+\]</span>
+The Bayes table is below; we have added a row for the ratios to illustrate the odds calculations.</li>
+</ol>
+<table>
+<thead>
+<tr class="header">
+<th align="right">hypothesis</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">Carries HIV</td>
+<td align="right">0.0500</td>
+<td align="right">0.9770</td>
+<td align="right">0.0489</td>
+<td align="right">0.4100</td>
+</tr>
+<tr class="even">
+<td align="right">Does not carry HIV</td>
+<td align="right">0.9500</td>
+<td align="right">0.0740</td>
+<td align="right">0.0703</td>
+<td align="right">0.5900</td>
+</tr>
+<tr class="odd">
+<td align="right">sum</td>
+<td align="right">1.0000</td>
+<td align="right">NA</td>
+<td align="right">0.1191</td>
+<td align="right">1.0000</td>
+</tr>
+<tr class="even">
+<td align="right">ratio</td>
+<td align="right">0.0526</td>
+<td align="right">13.2027</td>
+<td align="right">0.6949</td>
+<td align="right">0.6949</td>
+</tr>
+</tbody>
+</table>
+
+<div class="example">
+<p><span id="exm:kissing-intro" class="example"><strong>Example 3.5  </strong></span>
+Most people are right-handed, and even the right eye is dominant for most people.
+In a <a href="http://www.nature.com/news/2003/030213/full/news030210-7.html">2003 study reported in <em>Nature</em></a>, a German bio-psychologist conjectured that this preference for the right side manifests itself in other ways as well.
+In particular, he investigated if people have a tendency to lean their heads to the right when kissing.
+The researcher observed kissing couples in public places and recorded whether the couple leaned their heads to the right or left.
+(We’ll assume this represents a randomly representative selected sample of kissing couples.)</p>
+The parameter of interest in this study is the population proportion of kissing couples who lean their heads to the right. Denote this unknown parameter <span class="math inline">\(\theta\)</span>. For now we’ll only consider two potential values for <span class="math inline">\(\theta\)</span>: 1/2 or 2/3. We could write this as a pair of competing hypotheses.
+<span class="math display">\[\begin{align*}
+  H_1 &amp; = \{\theta = 1/2\}\\
+  H_2 &amp; = \{\theta = 2/3\}
+\end{align*}\]</span>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Let <span class="math inline">\(Y\)</span> be the number of couples in a random sample of <span class="math inline">\(n\)</span> kissing couples that lean their heads to the right. What is the distribution of <span class="math inline">\(Y\)</span>? Identify it by name and its relevant parameters.</li>
+<li>Suppose that the researcher observed 12 kissing couples, 8 of whom leaned their heads to the right (a proportion of 8/12=0.667). Compute the relevant likelihoods and the corresponding Bayes factor.</li>
+<li>Suppose that our prior belief is that the two hypotheses are equally likely. Determine the posterior probabilities for the two hypotheses.</li>
+<li>Repeat the previous part but with a prior probability of 0.9 for <span class="math inline">\(H_1\)</span>.</li>
+<li>The full study actually used a sample of 124 kissing couples, of which 80 leaned their heads to the right (a proportion of 80/124 = 0.645). Compute the relevant likelihoods and the corresponding Bayes factor.</li>
+<li>Suppose that our prior belief is that the two hypotheses are equally likely. Determine the posterior probabilities for the two hypotheses given the data from the sample of 124 couples.</li>
+<li>Repeat the previous part but with a prior probability of 0.9 for <span class="math inline">\(H_1\)</span>.</li>
+<li>Compare the results of the two samples (<span class="math inline">\(n=12\)</span> versus <span class="math inline">\(n=124\)</span>). What do you observe about the influence of the prior?</li>
+</ol>
+
+<div class="solution">
+<p> <span class="solution"><em>Solution. </em></span> 
+to Example <a href="bayes-factor.html#exm:kissing-intro">3.5</a></p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p><span class="math inline">\(Y\)</span>, the number of couples in a random sample of <span class="math inline">\(n\)</span> kissing couples that lean their heads to the right, has a Binomial distribution with parameters <span class="math inline">\(n\)</span> and <span class="math inline">\(\theta\)</span>. The probability that <span class="math inline">\(y\)</span> couples in the sample lean right is
+<span class="math display">\[
+P(Y = y) = \binom{n}{y}\theta^y(1-\theta)^{n-y}, \quad y = 0, 1, 2, \ldots, n
+\]</span>
+which can be computed with <code>dbinom(y, n, theta)</code> in R.</p></li>
+<li><p>The evidence is the event of observing 8 couples leaning to the right in a sample of 12, that is, <span class="math inline">\(E=\{Y=8\}\)</span> where <span class="math inline">\(Y\)</span> has a Binomial(12, <span class="math inline">\(\theta\)</span>) distribution. If <span class="math inline">\(H_1\)</span> is true, <span class="math inline">\(Y\)</span> has a Binomial(12, 1/2), so the likelihood is
+<span class="math display">\[
+P(E|H_1) = P(Y = 8|\theta = 1/2) = \binom{12}{8}(1/2)^8(1-1/2)^{12-8} = 0.121,
+\]</span>
+which is <code>dbinom(8, 12, 1/2)</code> in R. If <span class="math inline">\(H_2\)</span> is true, <span class="math inline">\(Y\)</span> has a Binomial(12, 2/3) distribution, so the likelihood is
+<span class="math display">\[
+P(E|H_2) = P(Y = 8|\theta = 2/3) = \binom{12}{8}(2/3)^8(1-2/3)^{12-8} = 0.238,
+\]</span>
+which is <code>dbinom(8, 12, 2/3)</code> in R. The Bayes factor is
+<span class="math display">\[
+BF = \frac{P(E|H_1)}{P(E|H_2)} = \frac{0.121}{0.238} = 0.506
+\]</span>
+Observing 8 couples leaning right in a sample of 12 kissing couples is about 2 times more likely if <span class="math inline">\(\theta=2/3\)</span> (<span class="math inline">\(H_2\)</span>) than if <span class="math inline">\(\theta = 1/2\)</span> (<span class="math inline">\(H_1\)</span>).</p></li>
+<li><p>If the prior probabilities are equal, then the posterior probabilities will be in proportion to the likelihoods. So the posterior probability of <span class="math inline">\(H_2\)</span> will be about 2 times greater than the posterior probability of <span class="math inline">\(H_1\)</span>. In terms of odds: the prior odds of <span class="math inline">\(H_1\)</span> are 0.5/0.5 = 1, so the posterior odds of <span class="math inline">\(H_1\)</span> given <span class="math inline">\(E\)</span> are <span class="math inline">\(1\times 0.506\)</span>. The Bayes table with the posterior probabilities is below.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.5</td>
+<td align="right">0.5</td>
+<td align="right">0.1208</td>
+<td align="right">0.0604</td>
+<td align="right">0.3364</td>
+</tr>
+<tr class="even">
+<td align="right">0.667</td>
+<td align="right">0.5</td>
+<td align="right">0.2384</td>
+<td align="right">0.1192</td>
+<td align="right">0.6636</td>
+</tr>
+<tr class="odd">
+<td align="right">sum</td>
+<td align="right">1.0</td>
+<td align="right">NA</td>
+<td align="right">0.1796</td>
+<td align="right">1.0000</td>
+</tr>
+<tr class="even">
+<td align="right">ratio</td>
+<td align="right">1.0</td>
+<td align="right">0.5068</td>
+<td align="right">0.5068</td>
+<td align="right">0.5068</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Now the prior odds of <span class="math inline">\(H_1\)</span> are 0.9/0.1 = 9; the prior probability of <span class="math inline">\(H_1\)</span> is 9 times greater than the prior probability of <span class="math inline">\(H_2\)</span>. The posterior odds given <span class="math inline">\(E\)</span> are <span class="math inline">\(9\times 0.506 = 4.56\)</span>; the posterior probability of <span class="math inline">\(H_1\)</span> is 4.56 times greater than the posterior probability of <span class="math inline">\(H_2\)</span>. Even though observing 8 out of 12 couples leaning right is more likely if <span class="math inline">\(\theta=2/3\)</span> (<span class="math inline">\(H_1\)</span>) than if <span class="math inline">\(\theta = 1/2\)</span> (<span class="math inline">\(H_2\)</span>), the posterior probability of <span class="math inline">\(H_1\)</span> is greater than the posterior probability of <span class="math inline">\(H_2\)</span> because of the large discrepancy in the prior probabilities.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.5</td>
+<td align="right">0.9</td>
+<td align="right">0.1208</td>
+<td align="right">0.1088</td>
+<td align="right">0.8202</td>
+</tr>
+<tr class="even">
+<td align="right">0.667</td>
+<td align="right">0.1</td>
+<td align="right">0.2384</td>
+<td align="right">0.0238</td>
+<td align="right">0.1798</td>
+</tr>
+<tr class="odd">
+<td align="right">sum</td>
+<td align="right">1.0</td>
+<td align="right">NA</td>
+<td align="right">0.1326</td>
+<td align="right">1.0000</td>
+</tr>
+<tr class="even">
+<td align="right">ratio</td>
+<td align="right">9.0</td>
+<td align="right">0.5068</td>
+<td align="right">4.5614</td>
+<td align="right">4.5614</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Now the evidence is the event of observing 80 couples leaning to the right in a sample of 124, that is, <span class="math inline">\(E=\{Y=80\}\)</span> where <span class="math inline">\(Y\)</span> has a Binomial(124, <span class="math inline">\(\theta\)</span>) distribution. If <span class="math inline">\(H_1\)</span> is true, <span class="math inline">\(Y\)</span> has a Binomial(124, 1/2) distribution, so the likelihood is
+<span class="math display">\[
+P(E|H_1) = P(Y = 80|\theta = 1/2) = \binom{124}{80}(1/2)^{80}(1-1/2)^{124-80} = 0.00037,
+\]</span>
+which is <code>dbinom(80, 124, 1/2)</code> in R. If <span class="math inline">\(H_2\)</span> is true, <span class="math inline">\(Y\)</span> has a Binomial(124, 2/3) distribution, so the likelihood is
+<span class="math display">\[
+P(E|H_2) = P(Y = 80|\theta = 2/3) = \binom{124}{80}(2/3)^{80}(1-2/3)^{124-80} = 0.0658,
+\]</span>
+which is <code>dbinom(8, 12, 2/3)</code> in R. The Bayes factor is
+<span class="math display">\[
+BF = \frac{P(E|H_1)}{P(E|H_2)} = \frac{0.00037}{0.0657} \approx 0.00566 \approx \frac{1}{176.64}
+\]</span>
+Observing 80 couples leaning right in a sample of 124 kissing couples is about 177 times more likely if <span class="math inline">\(\theta=2/3\)</span> (<span class="math inline">\(H_2\)</span>) than if <span class="math inline">\(\theta = 1/2\)</span> (<span class="math inline">\(H_1\)</span>).</p></li>
+<li><p>If the prior probabilities are equal, then the posterior probabilities will be in proportion to the likelihoods. So the posterior probability of <span class="math inline">\(H_2\)</span> will be about 177 times greater than the posterior probability of <span class="math inline">\(H_1\)</span>. In terms of odds: the prior odds of <span class="math inline">\(H_1\)</span> are 0.5/0.5 = 1, so the posterior odds of <span class="math inline">\(H_1\)</span> given <span class="math inline">\(E\)</span> are <span class="math inline">\(1\times 176.64\)</span>. The Bayes table with the posterior probabilities is below.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.5</td>
+<td align="right">0.5</td>
+<td align="right">0.0004</td>
+<td align="right">0.0002</td>
+<td align="right">0.0056</td>
+</tr>
+<tr class="even">
+<td align="right">0.667</td>
+<td align="right">0.5</td>
+<td align="right">0.0658</td>
+<td align="right">0.0329</td>
+<td align="right">0.9944</td>
+</tr>
+<tr class="odd">
+<td align="right">sum</td>
+<td align="right">1.0</td>
+<td align="right">NA</td>
+<td align="right">0.0331</td>
+<td align="right">1.0000</td>
+</tr>
+<tr class="even">
+<td align="right">ratio</td>
+<td align="right">1.0</td>
+<td align="right">0.0057</td>
+<td align="right">0.0057</td>
+<td align="right">0.0057</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Now the prior odds of <span class="math inline">\(H_1\)</span> are 09/0.1 = 9; the prior probability of <span class="math inline">\(H_1\)</span> is 9 times greater than the prior probability of <span class="math inline">\(H_2\)</span>. The posterior odds given <span class="math inline">\(E\)</span> are <span class="math inline">\(9\times (1/176.64) = 1/19.63\)</span>; the posterior probability of <span class="math inline">\(H_2\)</span> is 19.63 times greater than the posterior probability of <span class="math inline">\(H_1\)</span>. Even though our prior probability for <span class="math inline">\(H_1\)</span> was very large, the likelihood of the data is so small under <span class="math inline">\(H_1\)</span> compared with <span class="math inline">\(H_2\)</span> that the posterior probability for <span class="math inline">\(H_1\)</span> is small.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.5</td>
+<td align="right">0.9</td>
+<td align="right">0.0004</td>
+<td align="right">0.0003</td>
+<td align="right">0.0485</td>
+</tr>
+<tr class="even">
+<td align="right">0.667</td>
+<td align="right">0.1</td>
+<td align="right">0.0658</td>
+<td align="right">0.0066</td>
+<td align="right">0.9515</td>
+</tr>
+<tr class="odd">
+<td align="right">sum</td>
+<td align="right">1.0</td>
+<td align="right">NA</td>
+<td align="right">0.0069</td>
+<td align="right">1.0000</td>
+</tr>
+<tr class="even">
+<td align="right">ratio</td>
+<td align="right">9.0</td>
+<td align="right">0.0057</td>
+<td align="right">0.0510</td>
+<td align="right">0.0510</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>The prior had much more influence with the smaller sample size. When the sample size was large, the data, represented by the likelihoods, had much more weight in determining the posterior probabilities.</p></li>
+</ol>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="bayes-rule.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="estimation.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"google": false,
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bayesian-reasoning-and-methods.pdf"],
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

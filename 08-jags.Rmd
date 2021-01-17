@@ -1,0 +1,243 @@
+# Introduction to Posterior Simulation and JAGS  {#jags}
+
+Could specify prior mean and prior SD and a Normal prior.
+Try Binomial with Normal prior (truncated). Write expression for posterior; not a recognizable distribution. Could try grid approximation, but explain why grid approximation breaks down.
+
+In the Beta-Binomial model there is a simple expression from the posterior distribution.
+However, in many problems it is not possible to find the posterior distribution analytically.
+Instead, we usually use simulation to approximate the posterior distribution.  The inputs to the simulation are
+
+- Model for the data, $f(y|theta)$ which depends on parameters $\theta$. (This model determines the likelihood function)
+- Prior distribution for parameters $\pi(\theta)$
+- Observed data $y$
+
+We then employ some simulation algorithm to approximate the posterior distribution of $\theta$ given the observed data $y$, $\pi(\theta|y), *without computing the posterior distribution.*
+
+Exercise - explain how to do this in a Beta-Binomial example. Include what if sampel size of data is large so probability of the observed sample is small (e.g. Binomial(1000, 0.5)) Explain why inefficient.
+
+
+
+
+JAGS ("Just Another Gibbs Sampler") is a stand alone program for performing MCMC simulations.  JAGS takes as input a Bayesian model description --- prior plus likelihood --- and data and returns an MCMC sample from the posterior distribution.  JAGS uses a combination of Metropolis sampling, Gibbs sampling, and other MCMC algorithms.  Using the `rjags` package, one can interact with JAGS entirely within R.  (If you've ever heard of BUGS (or WinBUGS) JAGS is very similar but with a few nicer features.)
+
+A few JAGS resources:
+
+- [JAGS User Manual](https://sourceforge.net/projects/mcmc-jags/files/Manuals/4.x/jags_user_manual.pdf/download)
+- [JAGS documentation](https://cran.r-project.org/web/packages/rjags/rjags.pdf)
+- [Some notes about JAGS error messages](https://www4.stat.ncsu.edu/~bjreich/BSMdata/errors.html)
+- [*Doing Bayesian Data Analysis* textbook website](https://sites.google.com/site/doingbayesiandataanalysis/)
+
+
+```{r}
+library(rjags)
+```
+
+## Implementing MCMC  in JAGS
+
+The basic steps of a JAGS program are:
+
+1. Load the data
+1. Define the model: likelihood and prior
+1. Compile the model in JAGS
+1. Simulate values from the posterior distribution
+1. Summarize simulated values and check diagnostics
+
+This handout introduces some JAGS code and output.  Most of the examples are ones that we've seen already for easier comparisons.
+
+## Example 17.1: Beta-Binomial Model --- "Data is singular"
+
+### Load the data
+
+The data could be loaded from a file, or specified via sufficient summary statistics.  Here we'll just load the summary statistics and in later examples we'll show how to load individual values.
+
+```{r}
+n = 25 # sample size
+y = 22 # number of successes
+```
+
+
+### Specify the model: likelihood and prior
+
+A JAGS model specification starts with `model`.  The model provides a *textual* description of likelihood and prior.  This text string will then be passed to JAGS for translation.
+
+Recall that for the Beta-Binomial model, the prior distribution is $\theta\sim\text{Beta}(\alpha, \beta)$ and the likelihood for the total number of successes $Y$ in a sample of size $n$ corresponds to $(Y|\theta)\sim \text{Binom}(n, \theta)$.  Notice how the following text reflects the model (prior & likelihood).
+
+**Note:** JAGS syntax is similar to, but not the same, as R syntax.  For example, compare `dbinom(y, n, theta)` in R versus `y ~ dbinom(theta, n)` in JAGS. See the JAGS user manual for more details. You can use comments with # in JAGS models, similar to R.
+
+```{r}
+
+model_string <- "model{
+
+  # Likelihood
+  y ~ dbinom(theta, n)
+
+  # Prior
+  theta ~ dbeta(alpha, beta)
+  alpha <- 13 # prior successes
+  beta <- 4 # prior failures
+
+}"
+
+```
+
+### Compile in JAGS
+
+We pass the model (which is just a text string) and the data to JAGS to be compiled via `jags.model`.  The model is defined by the text string via the `textConnection` function. The model can also be saved in a separate file, with the file name being passed to JAGS. The data is passed to JAGS in a list.  In `dataList` below `y=y, n=n` maps the data defined by `y=22, n=25` to the terms `y, n` specified in the `model_string`.
+
+```{r}
+
+dataList = list(y=y, n=n)
+
+model <- jags.model(file=textConnection(model_string), 
+                    data=dataList)
+
+```
+ 
+### Simulate values from the posterior distribution
+
+Simulating values in JAGS is completed in essentially two steps.  The `update` command runs the simulation for a "burn-in" period.  The `update` function merely "warms-up" the chains, and the values sampled during the update phase are not recorded. (We will discuss "burn-in" in slightly more detail next week.)
+
+```{r}
+update(model, n.iter=1000)
+```
+
+After the update phase, we simulate values from the posterior distribution that we'll actually keep using `coda.samples`.  Using `coda.samples` arranges the output in a format conducive to using `coda`, a package which contains helpful functions for summarizing and diagnosing MCMC simulations.  The variables to record simulated values for are specified with the `variable.names` argument.  Here there is only a single parameter theta, but a later example illustrates a multi-parameter example.
+
+```{r}
+
+Nrep = 10000 # number of values to simulate
+
+posterior_sample <- coda.samples(model,
+                       variable.names=c("theta"),
+                       n.iter=Nrep)
+
+```
+
+
+### Summarizing simulated values and diagnostic checking
+
+Standard R functions like `summary` and `plot` can be used to summarize results from `coda.samples`.  We can summarize the simulated values of theta to approximate the posterior distribution.
+
+```{r}
+summary(posterior_sample)
+plot(posterior_sample)
+```
+
+The **Doing Bayesian Data Analysis (DBDA2E)** textbook package also has some nice functions built in, in particular in the `DBD2AE-utilities.R` file.
+
+For example, the `plotPost` functions creates an annotated plot of the posterior distribution along with some summary statistics. (See the DBDA2E documentation for additional arguments.)
+
+```{r}
+source("DBDA2E-utilities.R")
+plotPost(posterior_sample)
+```
+
+The [`bayesplot`](https://mc-stan.org/bayesplot/index.html) package also provides lots of nice plotting functionality.
+
+
+```{r}
+library(bayesplot)
+mcmc_hist(posterior_sample)
+```
+
+```{r}
+mcmc_dens(posterior_sample)
+```
+
+
+```{r}
+mcmc_trace(posterior_sample)
+```
+
+
+
+
+### Posterior prediction
+
+The output from `coda.samples` is stored as an mcmc.list format. The simulated values of the variables identified in the `variable.names` argument can be extracted as a matrix (or array) and then manipulated as usual R objects.
+
+```{r}
+thetas = as.matrix(posterior_sample)
+hist(thetas)
+```
+
+
+The matrix would have one column for each variable named in `variable.names`; in this case, there is only one column corresponding to the simulated values of theta.
+
+We can now use the simulated values of theta to simulate replicated samples to approximate the posterior predictive distribution.  To be clear, the code below is running R commands within R (not JAGS). 
+
+(There is a way to simulate predictive values within JAGS itself, but I think it's more straightforward in R.  Just use JAGS to get a simulated sample from the posterior distribution. On the other hand, if you're using Stan there are functions for simulating and summarizing posterior predicted values.)
+
+```{r}
+
+ynew = rbinom(Nrep, n, thetas)
+
+plot(table(ynew),
+     main = "Posterior Predictive Distribution for samples of size 25",
+     xlab = "y")
+
+```
+
+
+### Loading data as individual values rather than summary statistics
+
+Instead of the total count (modeled by a Binomial likelihood), the individual data values (1/0 = S/F) can be provided, which could be modeled by a Bernoulli (i.e. Binomial(trials=1)) likelihood.  That is, $(Y_1, \ldots, Y_n|\theta)\sim$ i.i.d. Bernoulli($\theta$), rather than $(Y|\theta)\sim\text{Binom}(n, \theta)$.  The vector y below represents the data in this format.  Notice how the likelihood in the model specification changes in response; the n observations are specified via a `for` loop.
+
+```{r}
+# Load the data
+y = c(rep(1, 22), rep(0, 25 - 22)) # vector of 22 1s and 3 0s
+n = length(y)
+
+model_string <- "model{
+
+  # Likelihood
+  for (i in 1:n){
+    y[i] ~ dbern(theta)
+  }
+
+  # Prior
+  theta ~ dbeta(alpha, beta)
+  alpha <- 13 
+  beta <- 4
+
+}"
+```
+
+### Simulating multiple chains
+
+The Bernoulli model can be passed to JAGS similar to the Binomial model above.  Below, we have also introduced the `n.chains` argument, which simulates multiple chains and allows for some additional diagnostic checks.  Simulating multiple chains helps assess convergence of the MC to the target distribution.  (We'll discuss a few more details next week.) Initial values for the chains can be provided in a list with the `inits` argument; otherwise initial values are generated automatically.
+
+```{r}
+# Compile the model
+dataList = list(y=y, n=n)
+
+model <- jags.model(textConnection(model_string), 
+                    data=dataList,
+                    n.chains=5)
+
+# Simulate
+update(model, 1000, progress.bar="none")
+
+Nrep = 10000
+
+posterior_sample <- coda.samples(model, 
+                                 variable.names=c("theta"), 
+                                 n.iter=Nrep, progress.bar="none")
+
+# Summarize and check diagnostics
+summary(posterior_sample)
+plot(posterior_sample)
+```
+
+
+If multiple chains are simulated, the DBDA2E function `diagMCMC` can be used for diagnostics.
+
+**Note:** Some of the DBDA2E output, in particular from `diagMCMC`, isn't always displayed when the RMarkdown file is knit.  You might need to manually run these cells within RStudio. I'm not sure why; please let me know if you figure it out.
+
+```{r}
+plotPost(posterior_sample)
+```
+
+```{r}
+diagMCMC(posterior_sample)
+```

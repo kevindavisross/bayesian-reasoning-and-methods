@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Bayes’ Rule | An Introduction to Bayesian Reasoning and Methods</title>
+  <meta name="description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="generator" content="bookdown 0.20.1 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Bayes’ Rule | An Introduction to Bayesian Reasoning and Methods" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="github-repo" content="rstudio/bayesian-reasoning-and-methods" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Bayes’ Rule | An Introduction to Bayesian Reasoning and Methods" />
+  
+  <meta name="twitter:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  
+
+<meta name="author" content="Kevin Ross" />
+
+
+<meta name="date" content="2021-01-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="interpretations-of-statistics.html"/>
+<link rel="next" href="bayes-factor.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="interpretations.html"><a href="interpretations.html"><i class="fa fa-check"></i><b>1</b> Interpretations of Probability and Statistics</a><ul>
+<li class="chapter" data-level="1.1" data-path="randomness.html"><a href="randomness.html"><i class="fa fa-check"></i><b>1.1</b> Instances of randomness</a></li>
+<li class="chapter" data-level="1.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html"><i class="fa fa-check"></i><b>1.2</b> Interpretations of probability</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#rel-freq"><i class="fa fa-check"></i><b>1.2.1</b> Long run relative frequency</a></li>
+<li class="chapter" data-level="1.2.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#subjective-probability"><i class="fa fa-check"></i><b>1.2.2</b> Subjective probability</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="consistency.html"><a href="consistency.html"><i class="fa fa-check"></i><b>1.3</b> Working with probabilities</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="consistency.html"><a href="consistency.html#consistency-requirements"><i class="fa fa-check"></i><b>1.3.1</b> Consistency requirements</a></li>
+<li class="chapter" data-level="1.3.2" data-path="consistency.html"><a href="consistency.html#odds"><i class="fa fa-check"></i><b>1.3.2</b> Odds</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="interpretations-of-statistics.html"><a href="interpretations-of-statistics.html"><i class="fa fa-check"></i><b>1.4</b> Interpretations of Statistics</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bayes-rule.html"><a href="bayes-rule.html"><i class="fa fa-check"></i><b>2</b> Bayes’ Rule</a></li>
+<li class="chapter" data-level="3" data-path="bayes-factor.html"><a href="bayes-factor.html"><i class="fa fa-check"></i><b>3</b> Odds and Bayes Factors</a></li>
+<li class="chapter" data-level="4" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>4</b> Introduction to Estimation</a></li>
+<li class="chapter" data-level="5" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>5</b> Introduction to Inference</a></li>
+<li class="chapter" data-level="6" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>6</b> Introduction to Prediction</a></li>
+<li class="chapter" data-level="7" data-path="continuous.html"><a href="continuous.html"><i class="fa fa-check"></i><b>7</b> Introduction to Continuous Prior and Posterior Distributions</a><ul>
+<li class="chapter" data-level="7.1" data-path="a-brief-review-of-continuous-distributions.html"><a href="a-brief-review-of-continuous-distributions.html"><i class="fa fa-check"></i><b>7.1</b> A brief review of continuous distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="normal-mean.html"><a href="normal-mean.html"><i class="fa fa-check"></i><b>7.2</b> Normal mean</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="jags.html"><a href="jags.html"><i class="fa fa-check"></i><b>8</b> Introduction to Posterior Simulation and JAGS</a><ul>
+<li class="chapter" data-level="8.1" data-path="implementing-mcmc-in-jags.html"><a href="implementing-mcmc-in-jags.html"><i class="fa fa-check"></i><b>8.1</b> Implementing MCMC in JAGS</a></li>
+<li class="chapter" data-level="8.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html"><i class="fa fa-check"></i><b>8.2</b> Example 17.1: Beta-Binomial Model — “Data is singular”</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#load-the-data"><i class="fa fa-check"></i><b>8.2.1</b> Load the data</a></li>
+<li class="chapter" data-level="8.2.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#specify-the-model-likelihood-and-prior"><i class="fa fa-check"></i><b>8.2.2</b> Specify the model: likelihood and prior</a></li>
+<li class="chapter" data-level="8.2.3" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#compile-in-jags"><i class="fa fa-check"></i><b>8.2.3</b> Compile in JAGS</a></li>
+<li class="chapter" data-level="8.2.4" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulate-values-from-the-posterior-distribution"><i class="fa fa-check"></i><b>8.2.4</b> Simulate values from the posterior distribution</a></li>
+<li class="chapter" data-level="8.2.5" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#summarizing-simulated-values-and-diagnostic-checking"><i class="fa fa-check"></i><b>8.2.5</b> Summarizing simulated values and diagnostic checking</a></li>
+<li class="chapter" data-level="8.2.6" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#posterior-prediction"><i class="fa fa-check"></i><b>8.2.6</b> Posterior prediction</a></li>
+<li class="chapter" data-level="8.2.7" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#loading-data-as-individual-values-rather-than-summary-statistics"><i class="fa fa-check"></i><b>8.2.7</b> Loading data as individual values rather than summary statistics</a></li>
+<li class="chapter" data-level="8.2.8" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulating-multiple-chains"><i class="fa fa-check"></i><b>8.2.8</b> Simulating multiple chains</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="prior.html"><a href="prior.html"><i class="fa fa-check"></i><b>9</b> Considering Prior Distributions</a></li>
+<li class="chapter" data-level="10" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>10</b> Introduction to Bayesian Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Introduction to Bayesian Reasoning and Methods</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="bayes-rule" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Bayes’ Rule</h1>
+<p>The mechanism that underpins all of Bayesian statistical analysis is <em>Bayes’ rule</em><a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>, which describes how to update uncertainty in light of new information, evidence, or data.</p>
+
+<div class="example">
+<p><span id="exm:bayes-rule1" class="example"><strong>Example 2.1  </strong></span>
+A <a href="https://www.pewresearch.org/science/2019/03/28/what-americans-know-about-science/">recent survey</a> of American adults asked:
+“Based on what you have heard or read, which of the following two statements best describes
+the scientific method?”</p>
+<ul>
+<li>70% selected “The scientific method produces findings meant to be continually tested
+and updated over time” (“iterative”).</li>
+<li>14% selected “The scientific method identifies unchanging core principles and truths” (unchanging).</li>
+<li>16% were not sure which of the two statements was best.</li>
+</ul>
+<p>How does the response to this question change based on education level? Suppose education level is classified as: high school or less (HS), some college but no Bachelor’s degree (college), Bachelor’s degree (Bachelor’s), or postgraduate degree (postgraduate). The education breakdown is</p>
+<ul>
+<li>Among those who agree with “iterative”: 31.3% HS, 27.6% college, 22.9% Bachelor’s, and 18.2% postgraduate.</li>
+<li>Among those who agree with “unchanging”: 38.6% HS, 31.4% college, 19.7% Bachelor’s, and 10.3% postgraduate.</li>
+<li>Among those “not sure”: 57.3% HS, 27.2% college, 9.7% Bachelor’s, and 5.8% postgraduate</li>
+</ul>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Use the information to construct an appropriate two-way table.</li>
+<li>Overall, what percentage of adults have a postgraduate degree? How is this related to the values 18.2%, 10.3%, and 5.8%?</li>
+<li>What percent of those with a postgraduate degree agree that the scientific method is “iterative”? How is this related to the values provided?</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="bayes-rule.html#exm:bayes-rule1">2.1</a>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li>Suppose there are 100000 hypothetical American adults. Of these 100000, <span class="math inline">\(100000\times 0.7 = 70000\)</span> agree with the “iterative” statement.
+Of the 70000 who agree with the “iterative” statement, <span class="math inline">\(70000\times 0.182 = 12740\)</span> also have a postgraduate degree.
+Continue in this way to complete the table below.</li>
+<li>Overall 15.11% of adults have a postgraduate degree (15110/100000 in the table).
+The overall percentage is a weighted average of the three percentages; 18.2% gets the most weight in the average because the “iterative” statement has the highest percentage of people that agree with it compared to “unchanging” and “not sure”.
+<span class="math display">\[
+ 0.1511 = (0.70)(0.182) + (0.14)(0.103) + (0.16)(0.058)  
+ \]</span></li>
+<li>Of the 15110 who have a postgraduate degree 12740 agree with the “iterative” statement, and <span class="math inline">\(12740/15110 = 0.843\)</span>. 84.3% of those with a graduate degree agree that the scientific method is “iterative”. The value 0.843 is equal to the product of (1) 0.70, the overall proportion who agree with the “iterative” statement, and (2) 0.182, the proportion of those who agree with the “iterative” statement that have a postgraduate degree; divided by 0.1511, the overall proportion who have a postgraduate degree.
+<span class="math display">\[
+  0.843 = \frac{0.182 \times 0.70}{0.1511} 
+ \]</span></li>
+</ol>
+</details>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">HS</th>
+<th align="right">college</th>
+<th align="right">Bachelors</th>
+<th align="right">postgrad</th>
+<th align="right">total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">iterative</td>
+<td align="right">21910</td>
+<td align="right">19320</td>
+<td align="right">16030</td>
+<td align="right">12740</td>
+<td align="right">70000</td>
+</tr>
+<tr class="even">
+<td align="left">unchanging</td>
+<td align="right">5404</td>
+<td align="right">4396</td>
+<td align="right">2758</td>
+<td align="right">1442</td>
+<td align="right">14000</td>
+</tr>
+<tr class="odd">
+<td align="left">not sure</td>
+<td align="right">9168</td>
+<td align="right">4352</td>
+<td align="right">1552</td>
+<td align="right">928</td>
+<td align="right">16000</td>
+</tr>
+<tr class="even">
+<td align="left">total</td>
+<td align="right">36482</td>
+<td align="right">28068</td>
+<td align="right">20340</td>
+<td align="right">15110</td>
+<td align="right">100000</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Bayes’ rule for events</strong> specifies how a prior probability <span class="math inline">\(P(H)\)</span> of event <span class="math inline">\(H\)</span> is updated in response to the evidence <span class="math inline">\(E\)</span> to obtain the posterior probability <span class="math inline">\(P(H|E)\)</span>.
+<span class="math display">\[
+P(H|E) = \frac{P(E|H)P(H)}{P(E)}
+\]</span></p>
+<ul>
+<li>Event <span class="math inline">\(H\)</span> represents a particular hypothesis<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> (or model or case)</li>
+<li>Event <span class="math inline">\(E\)</span> represents observed evidence (or data or information)</li>
+<li><span class="math inline">\(P(H)\)</span> is the unconditional or <strong>prior probability</strong> of <span class="math inline">\(H\)</span> (prior to observing <span class="math inline">\(E\)</span>)</li>
+<li><span class="math inline">\(P(H|E)\)</span> is the conditional or <strong>posterior probability</strong> of <span class="math inline">\(H\)</span> after observing evidence <span class="math inline">\(E\)</span>.</li>
+<li><span class="math inline">\(P(E|H)\)</span> is the <strong>likelihood</strong> of evidence <span class="math inline">\(E\)</span> given hypothesis (or model or case) <span class="math inline">\(H\)</span></li>
+</ul>
+
+<div class="example">
+<p><span id="exm:bayes-rule2" class="example"><strong>Example 2.2  </strong></span>
+Continuing the previous example. Randomly select an American adult.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Consider the conditional probability that a randomly selected American adult agrees that the scientific method is “iterative” given that they have a postgraduate degree. Identify the prior probability, hypothesis, evidence, likelihood, and posterior probability, and use Bayes’ rule to compute the posterior probability.</li>
+<li>Find the conditional probability that a randomly selected American adult with a postgraduate degree agrees that the scientific method is “unchanging”.</li>
+<li>Find the conditional probability that a randomly selected American adult with a postgraduate degree is not sure about which statement is best.</li>
+<li>How many times more likely is it for an <em>American adult</em> to have a postgraduate degree and agree with the “iterative” statement than to have a postgraduate degree and agree with the “unchanging” statement?</li>
+<li>How many times more likely is it for an <em>American adult with a postgraduate degree</em> to agree with the “iterative” statement than to agree with the “unchanging” statement?</li>
+<li>What do you notice about the answers to the two previous parts?</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="bayes-rule.html#exm:bayes-rule2">2.2</a>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li>This is essentially the same question as the last part of the previous problem, just with different terminology.
+<ul>
+<li>The hypothesis is <span class="math inline">\(H_1\)</span>, the event that the randomly selected adult agrees with the “iterative” statement.</li>
+<li>The prior probability is <span class="math inline">\(P(H_1) = 0.70\)</span>, the overall or unconditional probability that a randomly selected American adult agrees with the “iterative” statement.</li>
+<li>The given “evidence” <span class="math inline">\(E\)</span> is the event that the randomly selected adult has a postgraduate degree. The marginal probability of the evidence is <span class="math inline">\(P(E)=0.1511\)</span>, which can be obtained by the law of total probability as in the previous problem.</li>
+<li>The likelihood is <span class="math inline">\(P(E | H_1) = 0.182\)</span>, the conditional probability that the adult has a postgraduate degree (the evidence) given that the adult agrees with the “iterative” statement (the hypothesis).</li>
+<li>The posterior probability is <span class="math inline">\(P(H_1 |E)=0.843\)</span>, the conditional probability that a randomly selected American adult agrees that the scientific method is “iterative” given that they have a postgraduate degree. By Bayes rule
+<span class="math display">\[
+ P(H_1 | E) = \frac{P(E | H_1) P(H_1)}{P(E)} = \frac{0.182 \times 0.70}{0.1511} = 0.843
+ \]</span></li>
+</ul></li>
+<li>Let <span class="math inline">\(H_2\)</span> be the event that the randomly selected adult agrees with the “unchanging” statement; the prior probability is <span class="math inline">\(P(H_2) = 0.14\)</span>. The evidence <span class="math inline">\(E\)</span> is still “postgraduate degree” but now the likelihood of this evidence is <span class="math inline">\(P(E | H_2) = 0.103\)</span> under the “unchanging” hypothesis. The conditional probability that a randomly selected adult with a postgraduate degree agrees that the scientific method is “unchanging” is
+<span class="math display">\[
+ P(H_2 | E) = \frac{P(E | H_2) P(H_2)}{P(E)} = \frac{0.103 \times 0.14}{0.1511} = 0.095
+ \]</span></li>
+<li>Let <span class="math inline">\(H_3\)</span> be the event that the randomly selected adult is “not sure”; the prior probability is <span class="math inline">\(P(H_3) = 0.16\)</span>. The evidence <span class="math inline">\(E\)</span> is still “postgraduate degree” but now the likelihood of this evidence is <span class="math inline">\(P(E | H_3) = 0.058\)</span> under the “not sure” hypothesis. The conditional probability that a randomly selected adult with a postgraduate degree is “not sure” is
+<span class="math display">\[
+ P(H_3 | E) = \frac{P(E | H_3) P(H_3)}{P(E)} = \frac{0.058 \times 0.16}{0.1511} = 0.061
+ \]</span></li>
+<li>The probability that an <em>American adult</em> has a postgraduate degree and agrees with the “iterative” statement is <span class="math inline">\(P(E \cap H_1) = P(E|H_1)P(H_1) = 0.182\times 0.70 = 0.1274\)</span>. The probability that an <em>American adult</em> has a postgraduate degree and agrees with the “unchanging” statement is <span class="math inline">\(P(E \cap H_2) = P(E|H_2)P(H_2) = 0.103\times 0.14 = 0.01442\)</span>. Since
+<span class="math display">\[
+   \frac{P(E \cap H_1)}{P(E \cap H_2)} = \frac{0.182\times 0.70}{0.103\times 0.14} = \frac{0.1274}{0.01442} = 8.835
+ \]</span>
+an <em>American adult</em> is 8.835 times more likely to have a postgraduate degree and agree with the “iterative” statement than to have a postgraduate degree and agree with the “unchanging” statement.</li>
+<li>The conditional probability that an <em>American adult with a postgraduate degree</em> agrees with the “iterative” statement is <span class="math inline">\(P(H_1 | E) = P(E|H_1)P(H_1)/P(E) = 0.182\times 0.70/0.1511 = 0.843\)</span>. The conditional probability that an <em>American adult with a postgraduate degree</em> agrees with the “unchanging” statement is <span class="math inline">\(P(H_2|E) = P(E|H_2)P(H_2)/P(E) = 0.103\times 0.14/0.1511 = 0.09543\)</span>. Since
+<span class="math display">\[
+   \frac{P(H_1 | E)}{P(H_2 | E)} = \frac{0.182\times 0.70/0.1511}{0.103\times 0.14/0.1511} = \frac{0.84315}{0.09543} = 8.835
+ \]</span>
+An <em>American adult with a postgraduate degree</em> is 8.835 times more likely to agree with the “iterative” statement than to agree with the “unchanging” statement.</li>
+<li>The ratios are the same! Conditioning on having a postgraduate degree just “slices” out the Americans who have a postgraduate degree. The ratios are determined by the overall probabilities for Americans. The conditional probabilities, given postgraduate, simply rescale the probabilities for Americans who have a postgraduate degree to add up to 1 (by dividing by 0.1511.)</li>
+</ol>
+</details>
+<p>Bayes rule is often used when there are multiple hypotheses or cases. Suppose <span class="math inline">\(H_1,\ldots, H_k\)</span> is a series of distinct hypotheses which together account for all possibilities<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a>, and <span class="math inline">\(E\)</span> is any event (evidence). Then Bayes’ rule implies that the posterior probability of any particular hypothesis <span class="math inline">\(H_j\)</span> satisfies
+<span class="math display">\[\begin{align*}
+P(H_j |E) &amp; = \frac{P(E|H_j)P(H_j)}{P(E)}
+\end{align*}\]</span></p>
+<p>The marginal probability of the evidence, <span class="math inline">\(P(E)\)</span>, in the denominator can be calculated using the <em>law of total probability</em>
+<span class="math display">\[
+P(E) = \sum_{i=1}^k P(E|H_i) P(H_i)
+\]</span>
+The law of total probability says that we can interpret the unconditional probability <span class="math inline">\(P(E)\)</span> as a probability-weighted average of the case-by-case conditional probabilities <span class="math inline">\(P(E|H_i)\)</span> where the weights <span class="math inline">\(P(H_i)\)</span> represent the probability of encountering each case.</p>
+<p>Combining Bayes’ rule with the law of total probability,
+<span class="math display">\[\begin{align*}
+P(H_j |E) &amp; = \frac{P(E|H_j)P(H_j)}{P(E)}\\
+&amp; = \frac{P(E|H_j)P(H_j)}{\sum_{i=1}^k P(E|H_i) P(H_i)}\\
+&amp; \\
+P(H_j |E) &amp; \propto P(E|H_j)P(H_j)
+\end{align*}\]</span></p>
+<p>The symbol <span class="math inline">\(\propto\)</span> is read “is proportional to”. The relative <em>ratios</em> of the posterior probabilities of different hypotheses are determined by the product of the prior probabilities and the likelihoods, <span class="math inline">\(P(E|H_j)P(H_j)\)</span>. The marginal probability of the evidence, <span class="math inline">\(P(E)\)</span>, in the denominator simply normalizes the numerators to ensure that the updated probabilities sum to 1 over all the distinct hypotheses.</p>
+<p><strong>In short, Bayes’ rule says</strong><a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a>
+<span class="math display">\[
+\textbf{posterior} \propto \textbf{likelihood} \times \textbf{prior}
+\]</span></p>
+<p>In the previous examples, the prior probabilities for an American adult’s perception of the scientific method are 0.70 for “iterative”, 0.14 for “unchanging”, and 0.16 for “not sure”. After observing that the American has a postgraduate degree, the posterior probabilities for an American adult’s perception of the scientific method become 0.8432 for “iterative”, 0.0954 for “unchanging”, and 0.0614 for “not sure”. The following organizes the calculations in a <strong>Bayes’ table</strong> which illustrates “posterior is proportional to likelihood times prior”.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">hypothesis</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">iterative</td>
+<td align="right">0.70</td>
+<td align="right">0.182</td>
+<td align="right">0.1274</td>
+<td align="right">0.8432</td>
+</tr>
+<tr class="even">
+<td align="right">unchanging</td>
+<td align="right">0.14</td>
+<td align="right">0.103</td>
+<td align="right">0.0144</td>
+<td align="right">0.0954</td>
+</tr>
+<tr class="odd">
+<td align="right">not sure</td>
+<td align="right">0.16</td>
+<td align="right">0.058</td>
+<td align="right">0.0093</td>
+<td align="right">0.0614</td>
+</tr>
+<tr class="even">
+<td align="right">sum</td>
+<td align="right">1.00</td>
+<td align="right">NA</td>
+<td align="right">0.1511</td>
+<td align="right">1.0000</td>
+</tr>
+</tbody>
+</table>
+<p>The likelihood column depends on the evidence, in this case, observing that the American has a postgraduate degree. This column contains the probability of the same event, <span class="math inline">\(E\)</span> = “the American has a postgraduate degree”, under each of the distinct hypotheses:</p>
+<ul>
+<li><span class="math inline">\(P(E |H_1) = 0.182\)</span>, given the American agrees with the “iterative” statement</li>
+<li><span class="math inline">\(P(E |H_2) = 0.103\)</span>, given the American agrees with the “unchanging” statement</li>
+<li><span class="math inline">\(P(E |H_3) = 0.058\)</span>, given the American is “not sure”</li>
+</ul>
+<p>Since each of these probabilities is computed under a different case, these values do not need to add up to anything in particular. The sum of the likelihoods is meaningless, which is why we have listed a sum of “NA” for the likelihood column.</p>
+<p>The “product” column contains the product of the values in the prior and likelihood columns. The product of prior and likelihood for “iterative” (0.1274) is 8.835 (0.1274/0.0144) times higher than the product of prior and likelihood for “unchanging” (0.0144).
+Therefore, Bayes rule implies that the conditional probability that an American with a postgraduate degree agrees with “iterative” should be 8.835 times higher than the conditional probability that an American with a postgraduate degree agrees with “unchanging”.
+Similarly, the conditional probability that an American with a postgraduate degree agrees with “iterative” should be <span class="math inline">\(0.1274 / 0.0093 = 13.73\)</span> times higher than the conditional probability that an American with a postgraduate degree is “not sure”,
+and the conditional probability that an American with a postgraduate degree agrees with “unchanging” should be <span class="math inline">\(0.0144 / 0.0093 = 1.55\)</span> times higher than the conditional probability that an American with a postgraduate degree is “not sure”.
+The last column just translates these relative relationships into probabilities that sum to 1.</p>
+<p>The sum of the “product” column is <span class="math inline">\(P(E)\)</span>, the marginal probability of the evidence. The sum of the product column represents the result of the law of total probability calculation. However, for the purposes of determining the posterior probabilities, it isn’t really important what <span class="math inline">\(P(E)\)</span> is. Rather, it is the <em>ratio</em> of the values in the “product” column that determine the posterior probabilities. <span class="math inline">\(P(E)\)</span> is whatever it needs to be to ensure that the posterior probabilities sum to 1 while maintaining the proper ratios.</p>
+<p>The process of conditioning can be thought of as <strong>“slicing and renormalizing”.</strong></p>
+<ul>
+<li>Extract the “slice” corresponding to the event being conditioned on (and discard the rest). For example, a slice might correspond to a particular row or column of a two-way table.<br />
+</li>
+<li>“Renormalize” the values in the slice so that corresponding probabilities add up to 1.</li>
+</ul>
+<p>We will see that the “slicing and renormalizing” interpretation also applies when dealing with conditional distributions of random variables, and corresponding plots. Slicing determines the <em>shape</em>; renormalizing determines the <em>scale</em>. Slicing determines relative probabilities; renormalizing just makes sure they “add up” to 1 while maintaining the proper ratios.</p>
+
+<div class="example">
+<p><span id="exm:unnamed-chunk-21" class="example"><strong>Example 2.3  </strong></span>Now suppose we want to compute the posterior probabilities for an American adult’s perception of the scientific method given that the randomly selected American adult has a Bachelor’s degree (instead of a postgraduate degree).</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Before computing, make an educated guess for the posterior probabilities. In particular, will the changes from prior to posterior be more or less extreme given the American has a Bachelor’s degree than when given the American has a postgraduate degree? Why?</li>
+<li>Construct a Bayes table and compute the posterior probabilities. Compare to the posterior probabilities given postgraduate degree from the previous examples.</li>
+</ol>
+<p>Like the scientific method, Bayesian analysis is often an iterative process.</p>
+
+<div class="example">
+<p><span id="exm:bayes-marbles" class="example"><strong>Example 2.4  </strong></span>
+Suppose that you are presented with six boxes, labeled 0, 1, 2, <span class="math inline">\(\ldots\)</span>, 5, each containing five marbles.
+Box 0 contains 0 green and 5 gold marbles, box 1 contains 1 green and 4 gold, and so on with box <span class="math inline">\(i\)</span> containing <span class="math inline">\(i\)</span> green and <span class="math inline">\(5-i\)</span> gold.
+One of the boxes is chosen uniformly at random (perhaps by rolling a fair six-sided die), and then you will randomly select marbles from that box, without replacement.
+Based on the colors of the marbles selected, you will update the probabilities of which box had been chosen.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Suppose that a single marble is selected and it is green. Which box do you think is the most likely to have been chosen? Make a guess for the posterior probabilities for each box. Then construct a Bayes table to compute the posterior probabilities.<br />
+</li>
+<li>Now suppose a second marble is selected from the same box, without replacement, and its color is gold. Which box do you think is the most likely to have been chosen given these two marbles? Make a guess for the posterior probabilities for each box. Then construct a Bayes table to compute the posterior probabilities, <em>using the posterior probabilities after the selection of the green marble as the new prior probabilities before seeing the gold marble.</em></li>
+<li>Now construct a Bayes table corresponding to the original prior probabilities (1/6 each) and the evidence that the first ball selected was green and the second was gold. How do the posterior probabilities compare to the previous part?</li>
+<li>In the previous part, the first ball selected was green and the second was gold. Suppose you only knew that in a sample of two marbles, 1 was green and 1 was gold. That is, you didn’t know which was first or second. How would the previous part change? Should knowing the order matter? Does it?</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="bayes-rule.html#exm:bayes-marbles">2.4</a>
+</div>
+
+<p>Since the prior probability is the same for each box, the posterior probability will be greatest for the box for which the likelihood of selecting a green marble (the evidence) is greatest, i.e., box 5 which has a likelihood of drawing a green marble of 1.
+The likelihood of drawing a green marble is 0 for box 0, so box 0 will have a posterior probability of 0.
+The Bayes table is below, along with a plot of the posterior probabilities.
+The likelihood column provides the probability of drawing a green marble from each of the boxes, which is <span class="math inline">\(i/5\)</span> for box <span class="math inline">\(i\)</span>. Since the prior is “flat” the posterior probabilities are proportional to the likelihoods.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Green</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">0.1667</td>
+<td align="right">0.0</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">0.1667</td>
+<td align="right">0.2</td>
+<td align="right">0.0333</td>
+<td align="right">0.0667</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td align="right">0.1667</td>
+<td align="right">0.4</td>
+<td align="right">0.0667</td>
+<td align="right">0.1333</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="right">0.1667</td>
+<td align="right">0.6</td>
+<td align="right">0.1000</td>
+<td align="right">0.2000</td>
+</tr>
+<tr class="odd">
+<td align="right">4</td>
+<td align="right">0.1667</td>
+<td align="right">0.8</td>
+<td align="right">0.1333</td>
+<td align="right">0.2667</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="right">0.1667</td>
+<td align="right">1.0</td>
+<td align="right">0.1667</td>
+<td align="right">0.3333</td>
+</tr>
+<tr class="odd">
+<td align="right">sum</td>
+<td align="right">1.0000</td>
+<td align="right">NA</td>
+<td align="right">0.5000</td>
+<td align="right">1.0000</td>
+</tr>
+</tbody>
+</table>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p>The posterior probabilities above quantify our uncertainty about the box after observing a single randomly selected marble is green. These probabilities serve as the prior probabilities before drawing any additional marbles. After drawing a green marble without replacement, each box has 4 marbles and 1 less green marble than before, and the likelihood of observing a second marble which is gold is computed for each of the 4-marble boxes.
+For example, after drawing a green marble, box 2 now contains 1 green marble and 3 gold marbles, so the likelihood of drawing a gold marble from box 2 is 3/4.
+(The likelihood for box 0 is technically undefined because the probability of drawing a green marble first from box 0 is 0. But since the prior probability for box 0 is 0, the posterior probability for box 0 will be 0 regardless of the likelihood.)
+The Bayes table is below. Since we have observed green and gold in equal proportion in our sample, the posterior probabilities are highest for the boxes with closest to equal proportions of green and gold (box 2 and box 3).</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Green</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">0.0000</td>
+<td align="right">1.00</td>
+<td align="right">0.0000</td>
+<td align="right">0.0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">0.0667</td>
+<td align="right">1.00</td>
+<td align="right">0.0667</td>
+<td align="right">0.2</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td align="right">0.1333</td>
+<td align="right">0.75</td>
+<td align="right">0.1000</td>
+<td align="right">0.3</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="right">0.2000</td>
+<td align="right">0.50</td>
+<td align="right">0.1000</td>
+<td align="right">0.3</td>
+</tr>
+<tr class="odd">
+<td align="right">4</td>
+<td align="right">0.2667</td>
+<td align="right">0.25</td>
+<td align="right">0.0667</td>
+<td align="right">0.2</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="right">0.3333</td>
+<td align="right">0.00</td>
+<td align="right">0.0000</td>
+<td align="right">0.0</td>
+</tr>
+<tr class="odd">
+<td align="right">sum</td>
+<td align="right">1.0000</td>
+<td align="right">NA</td>
+<td align="right">0.3333</td>
+<td align="right">1.0</td>
+</tr>
+</tbody>
+</table>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>Above we updated the posterior probabilities after the first marble and again after selecting the second. What if we start with equally likely prior probabilities and only update the posterior probabilities after selecting both marbles? The likelihood now represents the probability of drawing a green and then a gold marble, without replacement, from each of the boxes. For example, for box 2, the probability of drawing a green marble first is 2/5 and the conditional probability of then drawing a gold marble is 3/4, so the probability of drawing green and then gold is (2/5)(3/4) = 0.3.</p>
+<p>The Bayes table is below. Notice that the posterior probabilities are the same as in the previous part! It doesn’t matter if we sequentially update our probabilities after each draw as in the previous part, or only once after the entire sample is drawn. The posterior probabilities are the same either way.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Green</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">0.1667</td>
+<td align="right">0.0</td>
+<td align="right">0.0000</td>
+<td align="right">0.0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">0.1667</td>
+<td align="right">0.2</td>
+<td align="right">0.0333</td>
+<td align="right">0.2</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td align="right">0.1667</td>
+<td align="right">0.3</td>
+<td align="right">0.0500</td>
+<td align="right">0.3</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="right">0.1667</td>
+<td align="right">0.3</td>
+<td align="right">0.0500</td>
+<td align="right">0.3</td>
+</tr>
+<tr class="odd">
+<td align="right">4</td>
+<td align="right">0.1667</td>
+<td align="right">0.2</td>
+<td align="right">0.0333</td>
+<td align="right">0.2</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="right">0.1667</td>
+<td align="right">0.0</td>
+<td align="right">0.0000</td>
+<td align="right">0.0</td>
+</tr>
+<tr class="odd">
+<td align="right">sum</td>
+<td align="right">1.0000</td>
+<td align="right">NA</td>
+<td align="right">0.1667</td>
+<td align="right">1.0</td>
+</tr>
+</tbody>
+</table>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p>What if we know the sample contains 1 green and 1 gold marble, but we don’t know which was drawn first? It seems that knowing the order shouldn’t matter in terms of our posterior probabilities. Technically, the likelihood does change since there are two ways to get a sample with 1 green and 1 gold: green followed by gold or gold followed by green. Therefore, each likelihood will be two times larger than in the previous part. For example, for box 2, the probability of green then gold is (2/5)(3/4) and the probability of gold then green is (3/5)(2/4), so the probability of 1 green and 1 gold is (2/5)(3/4) + (3/4)(2/5) = 2(0.3).
+However, the <em>ratios</em> of the likelihoods have not changed; since each likelihood is twice as large as it was in the previous part, the likelihood from this part is proportional to the likelihood from the previous part. Therefore, since the prior probabilities are the same as in the previous part and the likelihoods are <em>proportionally</em> the same as in the previous part, the posterior probabilities will also be the same as in the previous part.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Green</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0</td>
+<td align="right">0.1667</td>
+<td align="right">0.0</td>
+<td align="right">0.0000</td>
+<td align="right">0.0</td>
+</tr>
+<tr class="even">
+<td align="right">1</td>
+<td align="right">0.1667</td>
+<td align="right">0.4</td>
+<td align="right">0.0667</td>
+<td align="right">0.2</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td align="right">0.1667</td>
+<td align="right">0.6</td>
+<td align="right">0.1000</td>
+<td align="right">0.3</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="right">0.1667</td>
+<td align="right">0.6</td>
+<td align="right">0.1000</td>
+<td align="right">0.3</td>
+</tr>
+<tr class="odd">
+<td align="right">4</td>
+<td align="right">0.1667</td>
+<td align="right">0.4</td>
+<td align="right">0.0667</td>
+<td align="right">0.2</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="right">0.1667</td>
+<td align="right">0.0</td>
+<td align="right">0.0000</td>
+<td align="right">0.0</td>
+</tr>
+<tr class="odd">
+<td align="right">sum</td>
+<td align="right">1.0000</td>
+<td align="right">NA</td>
+<td align="right">0.3333</td>
+<td align="right">1.0</td>
+</tr>
+</tbody>
+</table>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p>Bayesian analyses are often performed sequentially.
+Posterior probabilities are updated after observing some information or data.
+These probabilities can then be used as prior probabilities before observing new data.
+Posterior probabilities can be sequentially updated as new data becomes available, with the posterior probabilities after the previous stage serving as the prior probabilities for the next stage.
+The final posterior probabilities only depend upon the cumulative data. It doesn’t matter if we sequentially update the posterior after each new piece of data or only once after all the data is available; the final posterior probabilities will be the same either way.
+Also, the final posterior probabilities are not impacted by the order in which the data are observed.</p>
+
+</div>
+<div class="footnotes">
+<hr />
+<ol start="7">
+<li id="fn7"><p>This section only covers Bayes’ rule for events. We’ll see Bayes’ rule for distributions of random variables later. But the ideas are analogous.<a href="bayes-rule.html#fnref7" class="footnote-back">↩︎</a></p></li>
+<li id="fn8"><p>We’re using “hypothesis” in the sense of a general scientific hypothesis, not necessarily a statistical null or alternative hypothesis.<a href="bayes-rule.html#fnref8" class="footnote-back">↩︎</a></p></li>
+<li id="fn9"><p>More formally, <span class="math inline">\(H_1,\ldots, H_k\)</span> is a <em>partition</em> which satisfies <span class="math inline">\(P\left(\cup_{i=1}^k H_i\right)=1\)</span> and <span class="math inline">\(H_1, \ldots, H_k\)</span> are disjoint — <span class="math inline">\(H_i\cap H_j=\emptyset , i\neq j\)</span>.<a href="bayes-rule.html#fnref9" class="footnote-back">↩︎</a></p></li>
+<li id="fn10"><p>“Posterior is proportional to likelihood times prior” summarizes the whole course in a single sentence.<a href="bayes-rule.html#fnref10" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="interpretations-of-statistics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="bayes-factor.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"google": false,
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bayesian-reasoning-and-methods.pdf"],
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

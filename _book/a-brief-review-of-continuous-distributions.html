@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>7.1 A brief review of continuous distributions | An Introduction to Bayesian Reasoning and Methods</title>
+  <meta name="description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="generator" content="bookdown 0.20.1 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="7.1 A brief review of continuous distributions | An Introduction to Bayesian Reasoning and Methods" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="github-repo" content="rstudio/bayesian-reasoning-and-methods" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="7.1 A brief review of continuous distributions | An Introduction to Bayesian Reasoning and Methods" />
+  
+  <meta name="twitter:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  
+
+<meta name="author" content="Kevin Ross" />
+
+
+<meta name="date" content="2021-01-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="continuous.html"/>
+<link rel="next" href="normal-mean.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="interpretations.html"><a href="interpretations.html"><i class="fa fa-check"></i><b>1</b> Interpretations of Probability and Statistics</a><ul>
+<li class="chapter" data-level="1.1" data-path="randomness.html"><a href="randomness.html"><i class="fa fa-check"></i><b>1.1</b> Instances of randomness</a></li>
+<li class="chapter" data-level="1.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html"><i class="fa fa-check"></i><b>1.2</b> Interpretations of probability</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#rel-freq"><i class="fa fa-check"></i><b>1.2.1</b> Long run relative frequency</a></li>
+<li class="chapter" data-level="1.2.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#subjective-probability"><i class="fa fa-check"></i><b>1.2.2</b> Subjective probability</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="consistency.html"><a href="consistency.html"><i class="fa fa-check"></i><b>1.3</b> Working with probabilities</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="consistency.html"><a href="consistency.html#consistency-requirements"><i class="fa fa-check"></i><b>1.3.1</b> Consistency requirements</a></li>
+<li class="chapter" data-level="1.3.2" data-path="consistency.html"><a href="consistency.html#odds"><i class="fa fa-check"></i><b>1.3.2</b> Odds</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="interpretations-of-statistics.html"><a href="interpretations-of-statistics.html"><i class="fa fa-check"></i><b>1.4</b> Interpretations of Statistics</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bayes-rule.html"><a href="bayes-rule.html"><i class="fa fa-check"></i><b>2</b> Bayes’ Rule</a></li>
+<li class="chapter" data-level="3" data-path="bayes-factor.html"><a href="bayes-factor.html"><i class="fa fa-check"></i><b>3</b> Odds and Bayes Factors</a></li>
+<li class="chapter" data-level="4" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>4</b> Introduction to Estimation</a></li>
+<li class="chapter" data-level="5" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>5</b> Introduction to Inference</a></li>
+<li class="chapter" data-level="6" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>6</b> Introduction to Prediction</a></li>
+<li class="chapter" data-level="7" data-path="continuous.html"><a href="continuous.html"><i class="fa fa-check"></i><b>7</b> Introduction to Continuous Prior and Posterior Distributions</a><ul>
+<li class="chapter" data-level="7.1" data-path="a-brief-review-of-continuous-distributions.html"><a href="a-brief-review-of-continuous-distributions.html"><i class="fa fa-check"></i><b>7.1</b> A brief review of continuous distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="normal-mean.html"><a href="normal-mean.html"><i class="fa fa-check"></i><b>7.2</b> Normal mean</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="jags.html"><a href="jags.html"><i class="fa fa-check"></i><b>8</b> Introduction to Posterior Simulation and JAGS</a><ul>
+<li class="chapter" data-level="8.1" data-path="implementing-mcmc-in-jags.html"><a href="implementing-mcmc-in-jags.html"><i class="fa fa-check"></i><b>8.1</b> Implementing MCMC in JAGS</a></li>
+<li class="chapter" data-level="8.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html"><i class="fa fa-check"></i><b>8.2</b> Example 17.1: Beta-Binomial Model — “Data is singular”</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#load-the-data"><i class="fa fa-check"></i><b>8.2.1</b> Load the data</a></li>
+<li class="chapter" data-level="8.2.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#specify-the-model-likelihood-and-prior"><i class="fa fa-check"></i><b>8.2.2</b> Specify the model: likelihood and prior</a></li>
+<li class="chapter" data-level="8.2.3" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#compile-in-jags"><i class="fa fa-check"></i><b>8.2.3</b> Compile in JAGS</a></li>
+<li class="chapter" data-level="8.2.4" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulate-values-from-the-posterior-distribution"><i class="fa fa-check"></i><b>8.2.4</b> Simulate values from the posterior distribution</a></li>
+<li class="chapter" data-level="8.2.5" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#summarizing-simulated-values-and-diagnostic-checking"><i class="fa fa-check"></i><b>8.2.5</b> Summarizing simulated values and diagnostic checking</a></li>
+<li class="chapter" data-level="8.2.6" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#posterior-prediction"><i class="fa fa-check"></i><b>8.2.6</b> Posterior prediction</a></li>
+<li class="chapter" data-level="8.2.7" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#loading-data-as-individual-values-rather-than-summary-statistics"><i class="fa fa-check"></i><b>8.2.7</b> Loading data as individual values rather than summary statistics</a></li>
+<li class="chapter" data-level="8.2.8" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulating-multiple-chains"><i class="fa fa-check"></i><b>8.2.8</b> Simulating multiple chains</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="prior.html"><a href="prior.html"><i class="fa fa-check"></i><b>9</b> Considering Prior Distributions</a></li>
+<li class="chapter" data-level="10" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>10</b> Introduction to Bayesian Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Introduction to Bayesian Reasoning and Methods</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="a-brief-review-of-continuous-distributions" class="section level2">
+<h2><span class="header-section-number">7.1</span> A brief review of continuous distributions</h2>
+<p>This section provides a brief review of continuous probability distributions.
+Throughout, <span class="math inline">\(U\)</span> represents a continuous random variable that takes values denoted <span class="math inline">\(u\)</span>.
+In a Bayesian framework, <span class="math inline">\(u\)</span> can represent either values of parameters <span class="math inline">\(\theta\)</span> or values of data <span class="math inline">\(y\)</span>.</p>
+<p>The probability distribution of a <em>continuous</em> random variable is (usually) specified by its
+<strong>probability density function (pdf)</strong> (a.k.a., density), usually denoted <span class="math inline">\(f\)</span> or <span class="math inline">\(f_U\)</span>.
+A pdf <span class="math inline">\(f\)</span> must satisfy:
+<span class="math display">\[\begin{align*}
+f(u) &amp;\ge 0 \qquad \text{for all } u\\
+\int_{-\infty}^\infty f(u) du &amp; = 1
+\end{align*}\]</span>
+For a continuous random variable <span class="math inline">\(U\)</span> with pdf <span class="math inline">\(f\)</span> the probability that the random variable falls between any two values <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> is given by the
+<em>area</em> under the density between those two values.
+<span class="math display">\[
+\P(a \le U \le b) =\int_a^b f(u) du
+\]</span>
+A pdf will assign zero probability to intervals where the density is 0. A pdf is usually defined for all real values, but is often nonzero only for some subset of values, the possible values of the random variable. Given a specific pdf, the generic bounds <span class="math inline">\((-\infty, \infty)\)</span>
+should be replaced by the range of possible values, that is, those values <span class="math inline">\(u\)</span> for which <span class="math inline">\(f(u)&gt;0\)</span>.</p>
+<p>For example, if <span class="math inline">\(U\)</span> can only take positive values we can write its pdf as
+<span class="math display">\[
+f(u) =
+\begin{cases}
+\text{some function of $u$}, &amp; u&gt;0,\\
+0, &amp; \text{otherwise}
+\end{cases}
+\]</span>
+The “0 otherwise” part is often omitted, but be sure to specify the range of values where <span class="math inline">\(f\)</span> is positive.</p>
+<p>The expected value of a continuous random variable <span class="math inline">\(U\)</span> with pdf <span class="math inline">\(f\)</span> is
+<span class="math display">\[
+E(U) = \int_{-\infty}^\infty u\, f(u)\, du
+\]</span></p>
+<p><strong>The probability that a continuous random variable <span class="math inline">\(U\)</span> equals any particular value is 0</strong>: <span class="math inline">\(P(U=u)=0\)</span> for all <span class="math inline">\(u\)</span>.
+A continuous random variable can take uncountably many distinct values, e.g. <span class="math inline">\(0.500000000\ldots\)</span> is different than <span class="math inline">\(0.50000000010\ldots\)</span> is different than <span class="math inline">\(0.500000000000001\ldots\)</span>, etc.
+Simulating values of a continuous random variable corresponds to an idealized spinner with an infinitely precise needle which can land on any value in a continuous scale.</p>
+<p>A density is an idealized mathematical model for the entire population distribution of infinitely many distinct values of the random variable.
+In practical applications, there is some acceptable degree of precision, and events like “X, rounded to 4 decimal places, equals 0.5” correspond to intervals that do have positive probability.
+For continuous random variables, it doesn’t really make sense to talk about the probability that the random value equals a particular value.
+However, we can consider the probability that a random variable is <em>close to</em> a particular value.</p>
+<p>The density <span class="math inline">\(f(u)\)</span> at value <span class="math inline">\(u\)</span> is <em>not</em> a probability
+But the density <span class="math inline">\(f(u)\)</span> at value <span class="math inline">\(u\)</span> is related to the probability that the random variable <span class="math inline">\(U\)</span> takes a value
+“close to <span class="math inline">\(u\)</span>” in the following sense
+<span class="math display">\[
+P\left(u-\frac{\epsilon}{2} \le U \le u+\frac{\epsilon}{2}\right) \approx f(u)\epsilon, \qquad \text{for small $\epsilon$}
+\]</span>
+So a random variable <span class="math inline">\(U\)</span> is more likely to take values close to those with greater density.</p>
+<p>In general, a pdf is often defined only up to some multiplicative constant <span class="math inline">\(c\)</span>, for example
+<span class="math display">\[\begin{align*}
+f(u) &amp; = c\times\text{some function of $u$}, \quad \text{or}\\
+f(u) &amp; \propto \text{some function of $u$}
+\end{align*}\]</span></p>
+<p>The constant <span class="math inline">\(c\)</span> does not affect the shape of the density as a function of <span class="math inline">\(u\)</span>, only the scale on the density (vertical) axis. The absolute scaling on the density axis is somewhat irrelevant; it is whatever it needs to be to provide the proper area. In particular, the total area under the pdf must be 1. The scaling constant is determined by the requirement that <span class="math inline">\(\int_{-\infty}^\infty f(u)du = 1\)</span>. (Remember to replace the generic <span class="math inline">\((-\infty, \infty)\)</span> bounds with the range of possible values.)</p>
+<p>What is important about the pdf is <em>relative</em> height. For example, if two values <span class="math inline">\(u\)</span> and <span class="math inline">\(\tilde{u}\)</span> satisfy <span class="math inline">\(f(\tilde{u}) = 2f(u)\)</span> then <span class="math inline">\(U\)</span> is roughly “twice as likely to be near <span class="math inline">\(\tilde{u}\)</span> than <span class="math inline">\(u\)</span>”
+<span class="math display">\[
+2 = \frac{f(\tilde{u})}{f(u)} = \frac{f(\tilde{u})\epsilon}{f(u)\epsilon} \approx  \frac{P\left(\tilde{u}-\frac{\epsilon}{2} \le U \le \tilde{u}+\frac{\epsilon}{2}\right)}{P\left(u-\frac{\epsilon}{2} \le U \le u+\frac{\epsilon}{2}\right)}
+\]</span></p>
+
+<div class="figure"><span id="fig:exponential-pdf-area"></span>
+<img src="bayesian-reasoning-and-methods_files/figure-html/exponential-pdf-area-1.png" alt="Illustration of \(\IP(1&lt;X&lt;2.5)\) (left) and \(P(0.995&lt;U&lt;1.005)\) (right) for \(X\) with an Exponential(1) distribution, with pdf \(f_U(u) = e^{-u}, u&gt;0\). The plot on the left displays the true area under the curve over (1, 2.5). The plot on the right illustrates how the probability that \(U\) is “close to” \(u\) can be approximated by the area of a rectangle with height equal to the density at \(u\), \(f_U(u)\). The density height at \(u=1\) is twice as large at \(u=1.7\), so the probability that \(U\) is “close to” 1 is twice as large as the probability that \(U\) is “close to” 1.7." width="50%" /><img src="bayesian-reasoning-and-methods_files/figure-html/exponential-pdf-area-2.png" alt="Illustration of \(\IP(1&lt;X&lt;2.5)\) (left) and \(P(0.995&lt;U&lt;1.005)\) (right) for \(X\) with an Exponential(1) distribution, with pdf \(f_U(u) = e^{-u}, u&gt;0\). The plot on the left displays the true area under the curve over (1, 2.5). The plot on the right illustrates how the probability that \(U\) is “close to” \(u\) can be approximated by the area of a rectangle with height equal to the density at \(u\), \(f_U(u)\). The density height at \(u=1\) is twice as large at \(u=1.7\), so the probability that \(U\) is “close to” 1 is twice as large as the probability that \(U\) is “close to” 1.7." width="50%" />
+<p class="caption">
+Figure 7.1: Illustration of <span class="math inline">\(\IP(1&lt;X&lt;2.5)\)</span> (left) and <span class="math inline">\(P(0.995&lt;U&lt;1.005)\)</span> (right) for <span class="math inline">\(X\)</span> with an Exponential(1) distribution, with pdf <span class="math inline">\(f_U(u) = e^{-u}, u&gt;0\)</span>. The plot on the left displays the true area under the curve over (1, 2.5). The plot on the right illustrates how the probability that <span class="math inline">\(U\)</span> is “close to” <span class="math inline">\(u\)</span> can be approximated by the area of a rectangle with height equal to the density at <span class="math inline">\(u\)</span>, <span class="math inline">\(f_U(u)\)</span>. The density height at <span class="math inline">\(u=1\)</span> is twice as large at <span class="math inline">\(u=1.7\)</span>, so the probability that <span class="math inline">\(U\)</span> is “close to” 1 is twice as large as the probability that <span class="math inline">\(U\)</span> is “close to” 1.7.
+</p>
+</div>
+<p>Values of a continuous random variable are often displayed in a <strong>histogram</strong> which displays the frequencies of values falling in interval “bins”. By default, the vertical axis of the histogram is on the density scale, so that <em>areas</em> of the bars correspond to relative frequencies.</p>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-86-1.png" width="672" /></p>
+<p>Start with Beta(2, 1), triangle</p>
+<ul>
+<li>how would you find constant?</li>
+<li>find prior probability</li>
+<li>find prior mean</li>
+</ul>
+<p>Beta</p>
+<p>Bayes rule for continuous RVs? Can I get away without this and just use posterior propto …</p>
+<p>Continuous LOTP?</p>
+<p>Beta-Binomial</p>
+<p>Include link to applet like this one <a href="https://shiny.stat.ncsu.edu/bjreich/BetaBinom/" class="uri">https://shiny.stat.ncsu.edu/bjreich/BetaBinom/</a></p>
+<p>Posterior prediction</p>
+<p>Odds</p>
+<p>A continuous random variable <span class="math inline">\(U\)</span> has a  with shape parameters <span class="math inline">\(\alpha&gt;0\)</span> and <span class="math inline">\(\beta&gt;0\)</span> if its density satisfies footnote:The expression defines the shape of the Beta density. All that’s missing is the scaling constant which ensures that the total area under the density is 1. The actual Beta density formula, including the normalizing constant, is
+<span class="math display">\[
+	f(u) =\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\; u^{\alpha-1}(1-u)^{\beta-1}, \quad 0&lt;u&lt;1,
+	\]</span>
+where
+<span class="math inline">\(\Gamma(\alpha) = \int_0^\infty e^{-v}v^{\alpha-1} dv\)</span> is the . For a positive integer <span class="math inline">\(k\)</span>,
+<span class="math inline">\(\Gamma(k) = (k-1)!\)</span>. Also, <span class="math inline">\(\Gamma(1/2)=\sqrt{\pi}\)</span>.</p>
+<p><span class="math display">\[
+f(u) \propto u^{\alpha-1}(1-u)^{\beta-1}, \quad 0&lt;u&lt;1,
+\]</span>
+and <span class="math inline">\(f(u)=0\)</span> otherwise.</p>
+<p>Properties of a Beta density
+<span class="math display">\[\begin{align*}
+\text{Mean (EV)} &amp; = \frac{\alpha}{\alpha+\beta}\\
+\text{Variance} &amp; = \frac{\left(\frac{\alpha}{\alpha+\beta}\right)\left(1-\frac{\alpha}{\alpha+\beta}\right)}{\alpha+\beta+1}
+\\
+\text{mode} &amp; = \frac{\alpha -1}{\alpha+\beta-2}, \qquad \text{(if $\alpha&gt;1$, $\beta\ge1$ \text{or} $\alpha\ge1$, $\beta&gt;1$)}
+\end{align*}\]</span></p>
+<p>The plot contains a few different Beta densities. Match each density to its pair of parameter values.
+Also, what is another name for the Beta(1,1) distribution?
+<span class="math display">\[
+\text{Beta(1, 1)}\qquad \quad 
+\text{Beta(3, 3)}\qquad \quad 
+\text{Beta(5, 1)}\qquad \quad 
+\text{Beta(5, 3)}\qquad \quad
+\text{Beta(0.5, 0.5)}
+\]</span></p>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-87-1.png" width="672" /></p>
+<p>Set up an integral you could solve to find the prior predictive probability that <span class="math inline">\(Y=20\)</span>.</p>
+<p>If <span class="math inline">\(\theta\sim \text{Beta}(\alpha, \beta)\)</span> and <span class="math inline">\((Y|\theta)\sim\text{Binomial}(n, \theta)\)</span> then the marginal distribution of <span class="math inline">\(Y\)</span> is the <a href="https://en.wikipedia.org/wiki/Beta-binomial_distribution">Beta-Binomial</a> distribution with
+<span class="math display">\[
+\IP(Y = y) = \binom{n}{y}\frac{B(\alpha+y,\beta+n-y)}{B(\alpha, \beta)}, \qquad x = 0, 1, \ldots, n,
+\]</span>
+<span class="math inline">\(B(\alpha, \beta)\)</span> is the , for which <span class="math inline">\(B(\alpha,\beta)=\frac{(\alpha-1)!(\beta-1)!}{(\alpha+\beta-1)!}\)</span> if <span class="math inline">\(\alpha,\beta\)</span> are positive integers.
+Mean: <span class="math inline">\(n\left(\frac{\alpha}{\alpha+\beta}\right)\)</span></p>
+<p>R: <code>dbbinom, rbbinom, pbbinom</code> in <code>extraDistr</code> package</p>
+<p>Bayes rule for a continuous parameter <span class="math inline">\(\theta\)</span>, given data <span class="math inline">\(y\)</span>
+<span class="math display">\[\begin{align*}
+\pi(\theta|y) &amp; = \frac{f(y|\theta)\pi(\theta)}{f_Y(y)}\\ &amp; = \frac{f(y|\theta)\pi(\theta)}{\int_{-\infty}^{\infty}f(y|\theta)\pi(\theta) d\theta}\\
+\pmb{\pi(\theta|y)}  &amp; \pmb{\propto f(y|\theta)\pi(\theta)}\\
+\text{posterior} &amp; \propto \text{likelihood}\times \text{prior}
+\end{align*}\]</span></p>
+<p><span class="math inline">\(\pi(\theta)\)</span> denotes the (marginal) prior density of <span class="math inline">\(\theta\)</span><br />
+<span class="math inline">\(f(y|\theta)\)</span> denotes the likelihood function for data <span class="math inline">\(y\)</span></p>
+<p>This is the conditional probability (for discrete <span class="math inline">\(y\)</span>) or density (for continuous <span class="math inline">\(y\)</span>) of data <span class="math inline">\(y\)</span> given <span class="math inline">\(\theta\)</span></p>
+<p>But viewed as a function of <span class="math inline">\(\theta\)</span>, with <span class="math inline">\(y\)</span> fixed</p>
+<p>Remember, the likelihood function — as a function of <span class="math inline">\(\theta\)</span> — is not a probability density</p>
+<p>And that even if the data are discrete, the likelihood <span class="math inline">\(f(y|\theta)\)</span> is a function of the  <span class="math inline">\(\theta\)</span></p>
+<p><span class="math inline">\(\pi(\theta|y)\)</span> denotes the (conditional) posterior density of <span class="math inline">\(\theta\)</span> given data <span class="math inline">\(y\)</span></p>
+<p>Notation: <span class="math inline">\(\theta\)</span> is used to represent both: (1) the actual parameter (i.e. random variable) <span class="math inline">\(\theta\)</span> itself, and (2) possible values of <span class="math inline">\(\theta\)</span></p>
+<p>Replace this with a contextual example and then give the general formulas.
+Consider the general situation of estimating <span class="math inline">\(\theta\)</span>, a population proportion of ``success’’ for some binary variable. Suppose the data consist of a simple random sample of size <span class="math inline">\(n\)</span> selected from the population, where <span class="math inline">\(Y\)</span> is the observed number of successes in the sample, with <span class="math inline">\(\hat{p}=Y/n\)</span> denoting the sample proportion of successes.</p>
+<p>Suppose the prior distribution for <span class="math inline">\(\theta\)</span> is a Beta distribution with parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. Write this density (without worrying about the scaling constant). Be sure to identify possible values of <span class="math inline">\(\theta\)</span>.</p>
+<p>What is the conditional distribution of <span class="math inline">\(Y\)</span> given <span class="math inline">\(\theta\)</span>?</p>
+<p>Identify the likelihood function.</p>
+<p>Identify the posterior density of <span class="math inline">\(\theta\)</span> given <span class="math inline">\(Y=y\)</span>. (Again, you can ignore any constants that don’t involve <span class="math inline">\(\theta\)</span>.) Be sure to identify possible values of <span class="math inline">\(\theta\)</span>.</p>
+<p>Does the posterior density have the form of a particular named probability distribution? If so, what are the parameter values?</p>
+<p></p>
+<p>If <span class="math inline">\(\theta\sim\text{Beta}(\alpha, \beta)\)</span>, that is
+<span class="math display">\[
+\text{prior} \propto \theta^{\alpha-1}(1-\theta)^{\beta-1}, \quad 0&lt;\theta&lt;1,
+\]</span></p>
+<p>And <span class="math inline">\((Y | \theta) \sim\text{Binomial}(n, \theta)\)</span>, that is
+<span class="math display">\[
+\text{likelihood} \propto \theta^y (1-\theta)^{n-y}, \quad 0 &lt; \theta &lt; 1
+\]</span></p>
+<p>Then <span class="math inline">\((\theta | y)\sim\text{Beta}(\alpha+y, \beta+n-y)\)</span>, that is
+<span class="math display">\[
+\text{posterior} \propto \theta^{\alpha+y-1}(1-\theta)^{\beta+n-y-1}, \quad 0&lt;\theta&lt;1,
+\]</span></p>
+<p>In a sense, you can interpret <span class="math inline">\(\alpha\)</span> as <code>prior successes'' and $\beta$ as</code>prior failures’’</p>
+
+<p>When the prior and posterior distribution belong to the same family, that family is called a  prior distribution for the likelihood.</p>
+<p>So, the Beta distributions form a conjugate prior family for the Binomial distribution.</p>
+<p>Consider again the kissing study. Let <span class="math inline">\(\theta\)</span> denote the probability that a kissing couple leans their heads to the right.</p>
+<p>Assume a continuous Uniform (i.e. Beta(1, 1)) prior distribution for <span class="math inline">\(\theta\)</span>. Find the prior mean and SD, and the prior probability that <span class="math inline">\(\theta &gt; 0.5\)</span>.</p>
+<p>Suppose again that 8 couples in a sample of 12 lean right. Identify the posterior distribution, and sketch the prior distribution, the likelihood function, and the posterior distribution.</p>
+<p>Determine the posterior mean, median, and mode.</p>
+<p>Where does the posterior mean fall in comparison to the prior mean and sample proportion? Explain why this makes sense.</p>
+<p>Express the posterior mean as a weighted average of the prior mean and sample proportion. Describe what the weights are, and explain why they make sense.</p>
+<p>Determine the posterior SD of <span class="math inline">\(\theta\)</span>. How does it compare to the prior SD? Explain why this makes sense.</p>
+<p>Determine the posterior probability that <span class="math inline">\(\theta&gt;0.5\)</span>.</p>
+<p>Find and interpret a 95% central credible interval for <span class="math inline">\(\theta\)</span>.</p>
+<p>Now recall that the study data consisted of a sample of 124 kissing couples, 80 of whom leaned their heads to the right. Assume again a Uniform prior distribution. Identify the posterior distribution, and sketch the prior distribution, the likelihood function, and the posterior distribution.</p>
+<p>Determine the posterior mean, median, and mode.</p>
+<p>Express the posterior mean as a weighted average of the prior mean and sample proportion. Describe what the weights are, and explain why they make sense.</p>
+<p>Determine the posterior SD of <span class="math inline">\(\theta\)</span>. How does it compare to the posterior SD for the sample of size 12? Explain why this makes sense.</p>
+<p>Determine the posterior probability that <span class="math inline">\(\theta&gt;0.5\)</span>.</p>
+<p>Find and interpret a 95% central credible interval for <span class="math inline">\(\theta\)</span>.</p>
+<p>In the Beta-Binomial model, the posterior mean <span class="math inline">\(\E(\theta|y)\)</span> can be expressed as a  of the prior mean <span class="math inline">\(\E(\theta)\)</span> and the sample proportion <span class="math inline">\(\hat{p}=y/n\)</span>.
+<span class="math display">\[
+\E(\theta|x) = \frac{\alpha+\beta}{\alpha+\beta+n}\E(\theta) + \frac{n}{\alpha+\beta+n}\hat{p}
+\]</span></p>
+<p>As more data are collected, more weight is given to the sample proportion (and less weight to the prior mean)</p>
+<p>The prior <code>weight'' is detemined by $\alpha+\beta$, which is called the \emph{concentration} and measured in</code>pseudo-observations’’</p>
+<p>Larger values of <span class="math inline">\(\alpha+\beta\)</span> indicate stronger prior beliefs, due to smaller prior variance, and give more weight to the prior mean</p>
+<p>The posterior variance generally gets smaller as more data are collected
+<span class="math display">\[
+\Var(\theta |x) = \frac{\E(\theta|x)(1-\E(\theta|x))}{\alpha+\beta+n+1}
+\]</span></p>
+<p>You can select <span class="math inline">\(\alpha\)</span> (like <code>prior successes'') and $\beta$ (like</code>prior failures’’) for a prior Beta distribution indirectly by specifying the prior mean or mode, and the prior concentration or prior standard deviation</p>
+<p>If prior mean <span class="math inline">\(\mu\)</span> and prior concentration <span class="math inline">\(\kappa\)</span> are specified then
+<span class="math display">\[\begin{align*}
+\alpha &amp;= \mu \kappa\\
+\beta &amp; =(1-\mu)\kappa
+\end{align*}\]</span></p>
+<p>If prior mode <span class="math inline">\(\omega\)</span> and prior concentration <span class="math inline">\(\kappa\)</span> (with <span class="math inline">\(\kappa&gt;2\)</span>) are specified then
+<span class="math display">\[\begin{align*}
+\alpha &amp;= \omega (\kappa-2) + 1\\
+\beta &amp; = (1-\omega) (\kappa-2) + 1
+\end{align*}\]</span></p>
+<p>If prior mean <span class="math inline">\(\mu\)</span> and prior sd <span class="math inline">\(\sigma\)</span> are specified then
+<span class="math display">\[\begin{align*}
+\alpha &amp;= \mu\left(\frac{\mu(1-\mu)}{\sigma^2} -1\right)\\
+\beta &amp; = \left(1-\mu\right)\left(\frac{\mu(1-\mu)}{\sigma^2} -1\right)
+%\beta &amp; = \alpha\left(\frac{1}{\mu} - 1\right)\\
+\end{align*}\]</span></p>
+<p>Suppose we want to estimate <span class="math inline">\(\theta\)</span>, the proportion of Cal Poly students that are left-handed.</p>
+<p>Sketch your Beta prior distribution for <span class="math inline">\(\theta\)</span>. Then translate your prior into a Beta distribution; specify <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\omega\)</span>, <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\kappa\)</span>, and the prior variance.</p>
+<p>After collecting some data, find the posterior distribution and its mean and variance. Express the posterior mean as an appropriate weighted average.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="continuous.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="normal-mean.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"google": false,
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bayesian-reasoning-and-methods.pdf"],
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

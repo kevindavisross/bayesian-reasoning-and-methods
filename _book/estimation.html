@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Introduction to Estimation | An Introduction to Bayesian Reasoning and Methods</title>
+  <meta name="description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="generator" content="bookdown 0.20.1 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Introduction to Estimation | An Introduction to Bayesian Reasoning and Methods" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="github-repo" content="rstudio/bayesian-reasoning-and-methods" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Introduction to Estimation | An Introduction to Bayesian Reasoning and Methods" />
+  
+  <meta name="twitter:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  
+
+<meta name="author" content="Kevin Ross" />
+
+
+<meta name="date" content="2021-01-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="bayes-factor.html"/>
+<link rel="next" href="inference.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="interpretations.html"><a href="interpretations.html"><i class="fa fa-check"></i><b>1</b> Interpretations of Probability and Statistics</a><ul>
+<li class="chapter" data-level="1.1" data-path="randomness.html"><a href="randomness.html"><i class="fa fa-check"></i><b>1.1</b> Instances of randomness</a></li>
+<li class="chapter" data-level="1.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html"><i class="fa fa-check"></i><b>1.2</b> Interpretations of probability</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#rel-freq"><i class="fa fa-check"></i><b>1.2.1</b> Long run relative frequency</a></li>
+<li class="chapter" data-level="1.2.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#subjective-probability"><i class="fa fa-check"></i><b>1.2.2</b> Subjective probability</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="consistency.html"><a href="consistency.html"><i class="fa fa-check"></i><b>1.3</b> Working with probabilities</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="consistency.html"><a href="consistency.html#consistency-requirements"><i class="fa fa-check"></i><b>1.3.1</b> Consistency requirements</a></li>
+<li class="chapter" data-level="1.3.2" data-path="consistency.html"><a href="consistency.html#odds"><i class="fa fa-check"></i><b>1.3.2</b> Odds</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="interpretations-of-statistics.html"><a href="interpretations-of-statistics.html"><i class="fa fa-check"></i><b>1.4</b> Interpretations of Statistics</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bayes-rule.html"><a href="bayes-rule.html"><i class="fa fa-check"></i><b>2</b> Bayes’ Rule</a></li>
+<li class="chapter" data-level="3" data-path="bayes-factor.html"><a href="bayes-factor.html"><i class="fa fa-check"></i><b>3</b> Odds and Bayes Factors</a></li>
+<li class="chapter" data-level="4" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>4</b> Introduction to Estimation</a></li>
+<li class="chapter" data-level="5" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>5</b> Introduction to Inference</a></li>
+<li class="chapter" data-level="6" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>6</b> Introduction to Prediction</a></li>
+<li class="chapter" data-level="7" data-path="continuous.html"><a href="continuous.html"><i class="fa fa-check"></i><b>7</b> Introduction to Continuous Prior and Posterior Distributions</a><ul>
+<li class="chapter" data-level="7.1" data-path="a-brief-review-of-continuous-distributions.html"><a href="a-brief-review-of-continuous-distributions.html"><i class="fa fa-check"></i><b>7.1</b> A brief review of continuous distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="normal-mean.html"><a href="normal-mean.html"><i class="fa fa-check"></i><b>7.2</b> Normal mean</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="jags.html"><a href="jags.html"><i class="fa fa-check"></i><b>8</b> Introduction to Posterior Simulation and JAGS</a><ul>
+<li class="chapter" data-level="8.1" data-path="implementing-mcmc-in-jags.html"><a href="implementing-mcmc-in-jags.html"><i class="fa fa-check"></i><b>8.1</b> Implementing MCMC in JAGS</a></li>
+<li class="chapter" data-level="8.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html"><i class="fa fa-check"></i><b>8.2</b> Example 17.1: Beta-Binomial Model — “Data is singular”</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#load-the-data"><i class="fa fa-check"></i><b>8.2.1</b> Load the data</a></li>
+<li class="chapter" data-level="8.2.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#specify-the-model-likelihood-and-prior"><i class="fa fa-check"></i><b>8.2.2</b> Specify the model: likelihood and prior</a></li>
+<li class="chapter" data-level="8.2.3" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#compile-in-jags"><i class="fa fa-check"></i><b>8.2.3</b> Compile in JAGS</a></li>
+<li class="chapter" data-level="8.2.4" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulate-values-from-the-posterior-distribution"><i class="fa fa-check"></i><b>8.2.4</b> Simulate values from the posterior distribution</a></li>
+<li class="chapter" data-level="8.2.5" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#summarizing-simulated-values-and-diagnostic-checking"><i class="fa fa-check"></i><b>8.2.5</b> Summarizing simulated values and diagnostic checking</a></li>
+<li class="chapter" data-level="8.2.6" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#posterior-prediction"><i class="fa fa-check"></i><b>8.2.6</b> Posterior prediction</a></li>
+<li class="chapter" data-level="8.2.7" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#loading-data-as-individual-values-rather-than-summary-statistics"><i class="fa fa-check"></i><b>8.2.7</b> Loading data as individual values rather than summary statistics</a></li>
+<li class="chapter" data-level="8.2.8" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulating-multiple-chains"><i class="fa fa-check"></i><b>8.2.8</b> Simulating multiple chains</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="prior.html"><a href="prior.html"><i class="fa fa-check"></i><b>9</b> Considering Prior Distributions</a></li>
+<li class="chapter" data-level="10" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>10</b> Introduction to Bayesian Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Introduction to Bayesian Reasoning and Methods</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="estimation" class="section level1">
+<h1><span class="header-section-number">Chapter 4</span> Introduction to Estimation</h1>
+
+<div class="example">
+<p><span id="exm:kissing-mle" class="example"><strong>Example 4.1  </strong></span>
+Most people are right-handed, and even the right eye is dominant for most people.
+In a <a href="http://www.nature.com/news/2003/030213/full/news030210-7.html">2003 study reported in <em>Nature</em></a>, a German bio-psychologist conjectured that this preference for the right side manifests itself in other ways as well.
+In particular, he investigated if people have a tendency to lean their heads to the right when kissing.
+The researcher observed kissing couples in public places and recorded whether the couple leaned their heads to the right or left.
+(We’ll assume this represents a randomly representative selected sample of kissing couples.)</p>
+<p>The parameter of interest in this study is the population proportion of kissing couples who lean their heads to the right. Denote this unknown parameter <span class="math inline">\(\theta\)</span>.</p>
+<p>Let <span class="math inline">\(Y\)</span> be the number of couples in a random sample of <span class="math inline">\(n\)</span> kissing couples that lean to right. Then <span class="math inline">\(Y\)</span> has a Binomial(<span class="math inline">\(n\)</span>, <span class="math inline">\(\theta\)</span>) distribution. Suppose that in a sample of <span class="math inline">\(n=12\)</span> couples <span class="math inline">\(y=8\)</span> leaned to the right.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>If you were to estimate <span class="math inline">\(\theta\)</span> with a single number based on this sample data alone, intuitively what number would you pick?</li>
+<li>For the next few parts suppose <span class="math inline">\(n=12\)</span>. For now we’ll only consider these potential values for <span class="math inline">\(\theta\)</span>: <span class="math inline">\(0.1, 0.3, 0.5, 0.7, 0.9\)</span>. If <span class="math inline">\(\theta=0.1\)</span> what is the distribution of <span class="math inline">\(Y\)</span>? Compute and interpret the probability that <span class="math inline">\(Y=8\)</span> if <span class="math inline">\(\theta = 0.1\)</span></li>
+<li>If <span class="math inline">\(\theta=0.3\)</span> what is the distribution of <span class="math inline">\(Y\)</span>? Compute and interpret the probability that <span class="math inline">\(Y=8\)</span> if <span class="math inline">\(\theta = 0.3\)</span></li>
+<li>If <span class="math inline">\(\theta=0.5\)</span> what is the distribution of <span class="math inline">\(Y\)</span>? Compute and interpret the probability that <span class="math inline">\(Y=8\)</span> if <span class="math inline">\(\theta = 0.5\)</span>.</li>
+<li>If <span class="math inline">\(\theta=0.7\)</span> what is the distribution of <span class="math inline">\(Y\)</span>? Compute and interpret the probability that <span class="math inline">\(Y=8\)</span> if <span class="math inline">\(\theta = 0.7\)</span>.</li>
+<li>If <span class="math inline">\(\theta=0.9\)</span> what is the distribution of <span class="math inline">\(Y\)</span>? Compute and interpret the probability that <span class="math inline">\(Y=8\)</span> if <span class="math inline">\(\theta = 0.9\)</span>.</li>
+<li>Now remember that <span class="math inline">\(\theta\)</span> is unknown. If you had to choose your estimate of <span class="math inline">\(\theta\)</span> from the values <span class="math inline">\(0.1, 0.3, 0.5, 0.7, 0.9\)</span>, which one of these values would you choose based on of observing <span class="math inline">\(y=8\)</span> couples leaning to the right in a sample of 12 kissing couples? Why?</li>
+<li>Obviously our choice is not restricted to those five values of <span class="math inline">\(\theta\)</span>. Describe in principle the process you would follow to find the estimate of <span class="math inline">\(\theta\)</span> based on of observing <span class="math inline">\(y=8\)</span> couples leaning to the right in a sample of 12 kissing couples.</li>
+<li>Let <span class="math inline">\(f(y|\theta)\)</span> denote the probability of observing <span class="math inline">\(y\)</span> couples leaning to the right in a sample of 12 kissing couples. Determine <span class="math inline">\(f(y=8|\theta)\)</span> and sketch a graph of it. What is this a function of? What is an appropriate name for this function?</li>
+<li>What is our estimate of <span class="math inline">\(\theta\)</span> based solely on the data of observing <span class="math inline">\(y=8\)</span> couples leaning to the right in a sample of 12 kissing couples?</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="estimation.html#exm:kissing-mle">4.1</a>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li>Seems reasonable to use the sample proportion 8/12 = 0.667.</li>
+<li>If <span class="math inline">\(\theta=0.1\)</span> then <span class="math inline">\(Y\)</span> has a Binomial(12, 0.1) distribution and <span class="math inline">\(P(Y = 8|\theta = 0.1) = \binom{12}{8}0.1^8(1-0.1)^{12-8}\approx 0.000\)</span>; <code>dbinom(8, 12, 0.1)</code>.</li>
+<li>If <span class="math inline">\(\theta=0.3\)</span> then <span class="math inline">\(Y\)</span> has a Binomial(12, 0.3) distribution and <span class="math inline">\(P(Y = 8|\theta = 0.3) = \binom{12}{8}0.3^8(1-0.3)^{12-8}\approx 0.008\)</span>; <code>dbinom(8, 12, 0.3)</code>.</li>
+<li>If <span class="math inline">\(\theta=0.5\)</span> then <span class="math inline">\(Y\)</span> has a Binomial(12, 0.5) distribution and <span class="math inline">\(P(Y = 8|\theta = 0.5) = \binom{12}{8}0.5^8(1-0.5)^{12-8}\approx 0.121\)</span>; <code>dbinom(8, 12, 0.5)</code>.</li>
+<li>If <span class="math inline">\(\theta=0.7\)</span> then <span class="math inline">\(Y\)</span> has a Binomial(12, 0.7) distribution and <span class="math inline">\(P(Y = 8|\theta = 0.7) = \binom{12}{8}0.7^8(1-0.7)^{12-8}\approx 0.231\)</span>; <code>dbinom(8, 12, 0.7)</code>.</li>
+<li>If <span class="math inline">\(\theta=0.9\)</span> then <span class="math inline">\(Y\)</span> has a Binomial(12, 0.9) distribution and <span class="math inline">\(P(Y = 8|\theta = 0.9) = \binom{12}{8}0.9^8(1-0.9)^{12-8}\approx 0.021\)</span>; <code>dbinom(8, 12, 0.9)</code>.</li>
+<li>Comparing the above, the probability of observing <span class="math inline">\(y=8\)</span> is greatest when <span class="math inline">\(\theta=0.7\)</span>, so in some sense, the data seems most “consistent” with <span class="math inline">\(\theta=0.7\)</span>.</li>
+<li>For each value of <span class="math inline">\(\theta\)</span> between 0 and 1 compute the probability of observing <span class="math inline">\(y=8\)</span>, <span class="math inline">\(P(Y = 8|theta)\)</span>, and find which value of <span class="math inline">\(\theta\)</span> maximizes this probability.<br />
+</li>
+<li><span class="math inline">\(f(y|\theta)=P(Y=8|theta) = \binom{12}{8}\theta^8(1\theta)^{12-8}\)</span>. This is a function of <span class="math inline">\(\theta\)</span>, with the data <span class="math inline">\(y=8\)</span> fixed. Since this function computes the likelihood of observing the data (evidence) under different values of <span class="math inline">\(\theta\)</span>, “likelihood function” seems like an appropriate name. See the plot below.</li>
+<li>The value which maximizes the likelihood of <span class="math inline">\(y=8\)</span> is <span class="math inline">\(8/12\)</span>. So the maximum likelihood estimate of <span class="math inline">\(\theta\)</span> is <span class="math inline">\(8/12\)</span>.</li>
+</ol>
+</details>
+<p><img src="_graphics/likelihood1.PNG" width="50%" /><img src="_graphics/likelihood2.PNG" width="50%" /></p>
+<ul>
+<li>For given data <span class="math inline">\(y\)</span>, the <strong>likelihood function</strong> <span class="math inline">\(f(y|\theta)\)</span> is the probability (or density for continuous data) of observing the sample data <span class="math inline">\(y\)</span> viewed as a <em>function of the parameter</em> <span class="math inline">\(\theta\)</span>.</li>
+<li>In the likelihood function, the observed value of the data <span class="math inline">\(y\)</span> is treated as a fixed constant.</li>
+<li>The value of a parameter that maximizes the likelihood function is called a <strong>maximum likelihood estimate</strong> (MLE).</li>
+<li>The MLE depends on the data <span class="math inline">\(y\)</span>. For given data <span class="math inline">\(y\)</span>, the MLE is the value of <span class="math inline">\(\theta\)</span> which gives the largest probability of having produced the observed data <span class="math inline">\(y\)</span>.</li>
+<li>Maximum likelihood estimation is a common <em>frequentist</em> technique for estimating the value of a parameter based on data from a sample.</li>
+</ul>
+
+<div class="example">
+<p><span id="exm:kissing-discrete1" class="example"><strong>Example 4.2  </strong></span>
+We’ll now take a Bayesian approach to estimating <span class="math inline">\(\theta\)</span> in Example <a href="estimation.html#exm:kissing-mle">4.1</a>.
+We treat the unknown parameter <span class="math inline">\(\theta\)</span> as a <em>random variable</em> and wish to find its posterior distribution after observing <span class="math inline">\(y=8\)</span> couples leaning to the right in a sample of 12 kissing couples.</p>
+<p>We will start with a very simplified, unrealistic prior distribution that assumes only five possible, equally likely values for <span class="math inline">\(\theta\)</span>: 0.1, 0.3, 0.5, 0.7, 0.9.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Sketch a plot of the prior distribution and fill in the prior column of the Bayes table.</li>
+<li>Now suppose that <span class="math inline">\(y=8\)</span> couples in a sample of size <span class="math inline">\(n=12\)</span> lean right. Sketch a plot of the likelihood function and fill in the likelihood column in the Bayes table.</li>
+<li>Complete the Bayes table and sketch a plot of the posterior distribution. What does the posterior distribution say about <span class="math inline">\(\theta\)</span>? How does it compare to the prior and the likelihood?</li>
+<li>Now consider a prior distribution which places probability 1/9, 2/9, 3/9, 2/9, 1/9 on the values 0.1, 0.3, 0.5, 0.7, 0.9, respectively. What does this prior distribution say about <span class="math inline">\(\theta\)</span>? Redo the previous parts. How does the posterior distribution change?</li>
+<li>Now consider a prior distribution which places probability 5/15, 4/15, 3/15, 2/15, 1/15 on the values 0.1, 0.3, 0.5, 0.7, 0.9, respectively. What does this prior distribution say about <span class="math inline">\(\theta\)</span>? Redo the previous parts. How does the posterior distribution change?</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="estimation.html#exm:kissing-discrete1">4.2</a>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>See plot below; the prior is “flat”.</p></li>
+<li><p>The likelihood is computed as in Example <a href="estimation.html#exm:kissing-mle">4.1</a>.</p></li>
+<li><p>See the Bayes table below. Since the prior is flat, the posterior is proportional to the likelihood.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="estimation.html#cb1-1"></a><span class="co"># prior</span></span>
+<span id="cb1-2"><a href="estimation.html#cb1-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.1</span>, <span class="fl">0.9</span>, <span class="fl">0.2</span>)</span>
+<span id="cb1-3"><a href="estimation.html#cb1-3"></a>prior =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(theta))</span>
+<span id="cb1-4"><a href="estimation.html#cb1-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb1-5"><a href="estimation.html#cb1-5"></a></span>
+<span id="cb1-6"><a href="estimation.html#cb1-6"></a><span class="co"># data</span></span>
+<span id="cb1-7"><a href="estimation.html#cb1-7"></a>n =<span class="st"> </span><span class="dv">12</span> <span class="co"># sample size</span></span>
+<span id="cb1-8"><a href="estimation.html#cb1-8"></a>y =<span class="st"> </span><span class="dv">8</span> <span class="co"># sample count of success</span></span>
+<span id="cb1-9"><a href="estimation.html#cb1-9"></a></span>
+<span id="cb1-10"><a href="estimation.html#cb1-10"></a><span class="co"># likelihood, using binomial</span></span>
+<span id="cb1-11"><a href="estimation.html#cb1-11"></a>likelihood =<span class="st"> </span><span class="kw">dbinom</span>(y, n, theta) <span class="co"># function of theta</span></span>
+<span id="cb1-12"><a href="estimation.html#cb1-12"></a></span>
+<span id="cb1-13"><a href="estimation.html#cb1-13"></a><span class="co"># posterior</span></span>
+<span id="cb1-14"><a href="estimation.html#cb1-14"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb1-15"><a href="estimation.html#cb1-15"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span>
+<span id="cb1-16"><a href="estimation.html#cb1-16"></a></span>
+<span id="cb1-17"><a href="estimation.html#cb1-17"></a><span class="co"># bayes table</span></span>
+<span id="cb1-18"><a href="estimation.html#cb1-18"></a>bayes_table =<span class="st"> </span><span class="kw">data.frame</span>(theta,</span>
+<span id="cb1-19"><a href="estimation.html#cb1-19"></a>                     prior,</span>
+<span id="cb1-20"><a href="estimation.html#cb1-20"></a>                     likelihood,</span>
+<span id="cb1-21"><a href="estimation.html#cb1-21"></a>                     product,</span>
+<span id="cb1-22"><a href="estimation.html#cb1-22"></a>                     posterior)</span>
+<span id="cb1-23"><a href="estimation.html#cb1-23"></a></span>
+<span id="cb1-24"><a href="estimation.html#cb1-24"></a><span class="kw">kable</span>(bayes_table, <span class="dt">digits =</span> <span class="dv">4</span>, <span class="dt">align =</span> <span class="st">&#39;r&#39;</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.1</td>
+<td align="right">0.2</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="right">0.3</td>
+<td align="right">0.2</td>
+<td align="right">0.0078</td>
+<td align="right">0.0016</td>
+<td align="right">0.0205</td>
+</tr>
+<tr class="odd">
+<td align="right">0.5</td>
+<td align="right">0.2</td>
+<td align="right">0.1208</td>
+<td align="right">0.0242</td>
+<td align="right">0.3171</td>
+</tr>
+<tr class="even">
+<td align="right">0.7</td>
+<td align="right">0.2</td>
+<td align="right">0.2311</td>
+<td align="right">0.0462</td>
+<td align="right">0.6065</td>
+</tr>
+<tr class="odd">
+<td align="right">0.9</td>
+<td align="right">0.2</td>
+<td align="right">0.0213</td>
+<td align="right">0.0043</td>
+<td align="right">0.0559</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="estimation.html#cb2-1"></a><span class="co"># plots</span></span>
+<span id="cb2-2"><a href="estimation.html#cb2-2"></a><span class="kw">plot</span>(theta<span class="fl">-0.01</span>, prior, <span class="dt">type=</span><span class="st">&#39;h&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">col=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;theta&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb2-3"><a href="estimation.html#cb2-3"></a><span class="kw">par</span>(<span class="dt">new=</span>T) </span>
+<span id="cb2-4"><a href="estimation.html#cb2-4"></a><span class="kw">plot</span>(theta<span class="fl">+0.01</span>, likelihood<span class="op">/</span><span class="kw">sum</span>(likelihood), <span class="dt">type=</span><span class="st">&#39;h&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">col=</span><span class="st">&quot;skyblue&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb2-5"><a href="estimation.html#cb2-5"></a><span class="kw">par</span>(<span class="dt">new=</span>T)</span>
+<span id="cb2-6"><a href="estimation.html#cb2-6"></a><span class="kw">plot</span>(theta, posterior, <span class="dt">type=</span><span class="st">&#39;h&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">col=</span><span class="st">&quot;seagreen&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb2-7"><a href="estimation.html#cb2-7"></a><span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;prior&quot;</span>, <span class="st">&quot;scaled likelihood&quot;</span>, <span class="st">&quot;posterior&quot;</span>), <span class="dt">lty=</span><span class="dv">1</span>, <span class="dt">col=</span><span class="kw">c</span>(<span class="st">&quot;orange&quot;</span>, <span class="st">&quot;skyblue&quot;</span>, <span class="st">&quot;seagreen&quot;</span>))</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p></li>
+<li><p>See table and plot below. Because the posterior probability is greater for 0.5 than for 0.7, the posterior probability of <span class="math inline">\(\theta=0.5\)</span> is greater than in the previous part, and the posterior probability of <span class="math inline">\(\theta=0.7\)</span> is less.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.1</td>
+<td align="right">0.1111</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="right">0.3</td>
+<td align="right">0.2222</td>
+<td align="right">0.0078</td>
+<td align="right">0.0017</td>
+<td align="right">0.0181</td>
+</tr>
+<tr class="odd">
+<td align="right">0.5</td>
+<td align="right">0.3333</td>
+<td align="right">0.1208</td>
+<td align="right">0.0403</td>
+<td align="right">0.4207</td>
+</tr>
+<tr class="even">
+<td align="right">0.7</td>
+<td align="right">0.2222</td>
+<td align="right">0.2311</td>
+<td align="right">0.0514</td>
+<td align="right">0.5365</td>
+</tr>
+<tr class="odd">
+<td align="right">0.9</td>
+<td align="right">0.1111</td>
+<td align="right">0.0213</td>
+<td align="right">0.0024</td>
+<td align="right">0.0247</td>
+</tr>
+</tbody>
+</table>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p></li>
+<li><p>See the table and plot below. The prior probability is large for 0.1 and 0.3, but since the likelihood corresponding to these values is so small, the posterior probabilities are small. This posterior distribution is similar to the one from the previous part.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.1</td>
+<td align="right">0.3333</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="right">0.3</td>
+<td align="right">0.2667</td>
+<td align="right">0.0078</td>
+<td align="right">0.0021</td>
+<td align="right">0.0356</td>
+</tr>
+<tr class="odd">
+<td align="right">0.5</td>
+<td align="right">0.2000</td>
+<td align="right">0.1208</td>
+<td align="right">0.0242</td>
+<td align="right">0.4132</td>
+</tr>
+<tr class="even">
+<td align="right">0.7</td>
+<td align="right">0.1333</td>
+<td align="right">0.2311</td>
+<td align="right">0.0308</td>
+<td align="right">0.5269</td>
+</tr>
+<tr class="odd">
+<td align="right">0.9</td>
+<td align="right">0.0667</td>
+<td align="right">0.0213</td>
+<td align="right">0.0014</td>
+<td align="right">0.0243</td>
+</tr>
+</tbody>
+</table>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p></li>
+</ol>
+<p><strong>Bayesian estimation</strong></p>
+<ul>
+<li>Regards parameters as <em>random variables</em> with probability distributions</li>
+<li>Assigns a subjective <strong>prior distribution</strong> to parameters</li>
+<li>Conditions on the observed data</li>
+<li>Applies Bayes’ rule to produce a <strong>posterior distribution</strong> for parameters
+<span class="math display">\[
+\text{posterior} \propto \text{likelihood} \times \text{prior}
+\]</span></li>
+<li>Determines parameter estimates from the posterior distribution</li>
+</ul>
+<p>In a Bayesian analysis, the <em>posterior distribution</em> contains all relevant information about parameters. That is, all Bayesian inference is based on the posterior distribution. The posterior distribution is a compromise between</p>
+<ul>
+<li>prior “beliefs”, as represented by the prior distribution</li>
+<li>data, as represented by the likelihood function</li>
+</ul>
+<p>In contrast, a frequentist approach regards parameters as unknown but fixed (not random) quantities. Frequentist estimates are commonly determined by the likelihood function.</p>
+<p>It is helpful to plot prior, likelihood, and posterior on the same plot. Since prior and likelihood are probability distributions, they are on the same scale. However, remember that the likelihood does not add up to anything in particular. To put the likelihood on the same scale as prior and posterior, it is helpful to rescale the likelihood so that it adds up to 1. Such a rescaling does not change the shape of the likelihood, it merely allows for easier comparison with prior and posterior.</p>
+
+<div class="example">
+<p><span id="exm:kissing-discrete2" class="example"><strong>Example 4.3  </strong></span>
+Continuing Example <a href="estimation.html#exm:kissing-discrete1">4.2</a>. While the previous exercise introduced the main ideas, it was unrealistic to consider only five possible values of <span class="math inline">\(\theta\)</span>.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>What are the <em>possible</em> values of <span class="math inline">\(\theta\)</span>?
+Does the <em>parameter</em> <span class="math inline">\(\theta\)</span> take values on a continuous or discrete scale?
+(Careful: we’re talking about the parameter and not the data.)</li>
+<li>Let’s assume that any multiple of 0.0001 is a possible value of <span class="math inline">\(\theta\)</span>: <span class="math inline">\(0, 0.0001, 0.0002, \ldots, 0.9999, 1\)</span>.
+Assume a discrete uniform prior distribution on these values.
+Suppose again that <span class="math inline">\(y=8\)</span> couples in a sample of <span class="math inline">\(n=12\)</span> kissing couples lean right.
+Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it. Describe the posterior distribution.
+What does it say about <span class="math inline">\(\theta\)</span>?</li>
+<li>Now assume a prior distribution which is proportional to <span class="math inline">\(1-2|\theta-0.5|\)</span> for <span class="math inline">\(\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1\)</span>.
+Use software to plot this prior; what does it say about <span class="math inline">\(\theta\)</span>?
+Then suppose again that <span class="math inline">\(y=8\)</span> couples in a sample of <span class="math inline">\(n=12\)</span> kissing couples lean right.
+Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it.
+What does the posterior distribution say about <span class="math inline">\(\theta\)</span>?</li>
+<li>Now assume a prior distribution which is proportional to <span class="math inline">\(1-\theta\)</span> for <span class="math inline">\(\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1\)</span>.
+Use software to plot this prior; what does it say about <span class="math inline">\(\theta\)</span>?
+Then suppose again that <span class="math inline">\(y=8\)</span> couples in a sample of <span class="math inline">\(n=12\)</span> kissing couples lean right.
+Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it.
+What does the posterior distribution say about <span class="math inline">\(\theta\)</span>?</li>
+<li>Compare the posterior distributions corresponding to the three different priors. How does each posterior distribution compare to the prior and the likelihood? Does the prior distribution influence the posterior distribution?</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="estimation.html#exm:kissing-discrete2">4.3</a>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>The <em>parameter</em> <span class="math inline">\(\theta\)</span> is a proportion, so it can possibly take any value in the continuous scale from 0 to 1.</p></li>
+<li><p>See plot below. Since the prior is flat, the posterior is proportional to the likelihood. So the posterior distribution places highest posterior probability on values near the sample proportion 8/12.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="estimation.html#cb3-1"></a><span class="co"># prior</span></span>
+<span id="cb3-2"><a href="estimation.html#cb3-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb3-3"><a href="estimation.html#cb3-3"></a>prior =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(theta))</span>
+<span id="cb3-4"><a href="estimation.html#cb3-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb3-5"><a href="estimation.html#cb3-5"></a></span>
+<span id="cb3-6"><a href="estimation.html#cb3-6"></a><span class="co"># data</span></span>
+<span id="cb3-7"><a href="estimation.html#cb3-7"></a>n =<span class="st"> </span><span class="dv">12</span> <span class="co"># sample size</span></span>
+<span id="cb3-8"><a href="estimation.html#cb3-8"></a>y =<span class="st"> </span><span class="dv">8</span> <span class="co"># sample count of success</span></span>
+<span id="cb3-9"><a href="estimation.html#cb3-9"></a></span>
+<span id="cb3-10"><a href="estimation.html#cb3-10"></a><span class="co"># likelihood, using binomial</span></span>
+<span id="cb3-11"><a href="estimation.html#cb3-11"></a>likelihood =<span class="st"> </span><span class="kw">dbinom</span>(y, n, theta) <span class="co"># function of theta</span></span>
+<span id="cb3-12"><a href="estimation.html#cb3-12"></a></span>
+<span id="cb3-13"><a href="estimation.html#cb3-13"></a></span>
+<span id="cb3-14"><a href="estimation.html#cb3-14"></a><span class="co"># plots</span></span>
+<span id="cb3-15"><a href="estimation.html#cb3-15"></a>plot_posterior &lt;-<span class="st"> </span><span class="cf">function</span>(theta, prior, likelihood){</span>
+<span id="cb3-16"><a href="estimation.html#cb3-16"></a></span>
+<span id="cb3-17"><a href="estimation.html#cb3-17"></a>  <span class="co"># posterior</span></span>
+<span id="cb3-18"><a href="estimation.html#cb3-18"></a>  product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb3-19"><a href="estimation.html#cb3-19"></a>  posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span>
+<span id="cb3-20"><a href="estimation.html#cb3-20"></a></span>
+<span id="cb3-21"><a href="estimation.html#cb3-21"></a>  ylim =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(<span class="kw">c</span>(prior, posterior, likelihood <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(likelihood))))</span>
+<span id="cb3-22"><a href="estimation.html#cb3-22"></a>  <span class="kw">plot</span>(theta, prior, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;theta&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb3-23"><a href="estimation.html#cb3-23"></a>  <span class="kw">par</span>(<span class="dt">new=</span>T) </span>
+<span id="cb3-24"><a href="estimation.html#cb3-24"></a>  <span class="kw">plot</span>(theta, likelihood<span class="op">/</span><span class="kw">sum</span>(likelihood), <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;skyblue&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb3-25"><a href="estimation.html#cb3-25"></a>  <span class="kw">par</span>(<span class="dt">new=</span>T)</span>
+<span id="cb3-26"><a href="estimation.html#cb3-26"></a>  <span class="kw">plot</span>(theta, posterior, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;seagreen&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb3-27"><a href="estimation.html#cb3-27"></a>  <span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;prior&quot;</span>, <span class="st">&quot;scaled likelihood&quot;</span>, <span class="st">&quot;posterior&quot;</span>), <span class="dt">lty=</span><span class="dv">1</span>, <span class="dt">col=</span><span class="kw">c</span>(<span class="st">&quot;orange&quot;</span>, <span class="st">&quot;skyblue&quot;</span>, <span class="st">&quot;seagreen&quot;</span>))</span>
+<span id="cb3-28"><a href="estimation.html#cb3-28"></a>}</span>
+<span id="cb3-29"><a href="estimation.html#cb3-29"></a></span>
+<span id="cb3-30"><a href="estimation.html#cb3-30"></a><span class="kw">plot_posterior</span>(theta, prior, likelihood)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-41-1.png" width="672" /></p></li>
+<li><p>See plot below. The posterior is a compromise between the “triangular” prior which places highest prior probability near 0.5, and the likelihood. For this posterior, the posterior probability is greater near 0.5 than for the one in the previous part.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="estimation.html#cb4-1"></a><span class="co"># prior</span></span>
+<span id="cb4-2"><a href="estimation.html#cb4-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb4-3"><a href="estimation.html#cb4-3"></a>prior =<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">abs</span>(theta <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>)</span>
+<span id="cb4-4"><a href="estimation.html#cb4-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb4-5"><a href="estimation.html#cb4-5"></a></span>
+<span id="cb4-6"><a href="estimation.html#cb4-6"></a><span class="co"># data</span></span>
+<span id="cb4-7"><a href="estimation.html#cb4-7"></a>n =<span class="st"> </span><span class="dv">12</span> <span class="co"># sample size</span></span>
+<span id="cb4-8"><a href="estimation.html#cb4-8"></a>y =<span class="st"> </span><span class="dv">8</span> <span class="co"># sample count of success</span></span>
+<span id="cb4-9"><a href="estimation.html#cb4-9"></a></span>
+<span id="cb4-10"><a href="estimation.html#cb4-10"></a><span class="co"># likelihood, using binomial</span></span>
+<span id="cb4-11"><a href="estimation.html#cb4-11"></a>likelihood =<span class="st"> </span><span class="kw">dbinom</span>(y, n, theta) <span class="co"># function of theta</span></span>
+<span id="cb4-12"><a href="estimation.html#cb4-12"></a></span>
+<span id="cb4-13"><a href="estimation.html#cb4-13"></a></span>
+<span id="cb4-14"><a href="estimation.html#cb4-14"></a><span class="co"># plots</span></span>
+<span id="cb4-15"><a href="estimation.html#cb4-15"></a><span class="kw">plot_posterior</span>(theta, prior, likelihood)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p></li>
+<li><p>Again the posterior is a compromise between prior and likelihood. The prior probabilities are greatest for values of <span class="math inline">\(\theta\)</span> near 0; however, the likelihood corresponding to these values is small, so the posterior probabilities are close to 0. As in the previous part, some of the posterior probability is shifted towards part 0.5, as opposed to what happens with the uniform prior.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="estimation.html#cb5-1"></a><span class="co"># prior</span></span>
+<span id="cb5-2"><a href="estimation.html#cb5-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb5-3"><a href="estimation.html#cb5-3"></a>prior =<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>theta</span>
+<span id="cb5-4"><a href="estimation.html#cb5-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb5-5"><a href="estimation.html#cb5-5"></a></span>
+<span id="cb5-6"><a href="estimation.html#cb5-6"></a><span class="co"># data</span></span>
+<span id="cb5-7"><a href="estimation.html#cb5-7"></a>n =<span class="st"> </span><span class="dv">12</span> <span class="co"># sample size</span></span>
+<span id="cb5-8"><a href="estimation.html#cb5-8"></a>y =<span class="st"> </span><span class="dv">8</span> <span class="co"># sample count of success</span></span>
+<span id="cb5-9"><a href="estimation.html#cb5-9"></a></span>
+<span id="cb5-10"><a href="estimation.html#cb5-10"></a><span class="co"># likelihood, using binomial</span></span>
+<span id="cb5-11"><a href="estimation.html#cb5-11"></a>likelihood =<span class="st"> </span><span class="kw">dbinom</span>(y, n, theta) <span class="co"># function of theta</span></span>
+<span id="cb5-12"><a href="estimation.html#cb5-12"></a></span>
+<span id="cb5-13"><a href="estimation.html#cb5-13"></a><span class="co"># plots</span></span>
+<span id="cb5-14"><a href="estimation.html#cb5-14"></a><span class="kw">plot_posterior</span>(theta, prior, likelihood)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p></li>
+<li><p>For the “flat” prior, the posterior is proportional to the likelihood. For the other priors, the posterior is a compromise between prior and likelihood. The prior does have some influence. We do see three somewhat different posterior distributions corresponding to these three prior distributions.</p></li>
+</ol>
+<ul>
+<li>Even in situations where the data are discrete (e.g., binary success/failure data, count data), most statistical <em>parameters</em> take values on a <em>continuous</em> scale.</li>
+<li>Thus in a Bayesian analysis, parameters are usually <em>continuous random variables</em>, and have <em>continuous probability distributions</em>, a.k.a., <em>densities</em>.</li>
+<li>An alternative to dealing with continuous distributions is to use <strong>grid approximation</strong>: Treat the parameter as discrete, on a sufficiently fine grid of values, and use discrete distributions.</li>
+</ul>
+
+<div class="example">
+<p><span id="exm:kissing-discrete3" class="example"><strong>Example 4.4  </strong></span>
+Continuing Example <a href="estimation.html#exm:kissing-mle">4.1</a>.
+Now we’ll perform a Bayesian analysis on the actual study data in which 80 couples out of a sample of 124 leaned right.
+We’ll again use a grid approximation and assume that any multiple of 0.0001 between 0 and 1 is a possible value of <span class="math inline">\(\theta\)</span>: <span class="math inline">\(0, 0.0001, 0.0002, \ldots, 0.9999, 1\)</span>.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Before performing the Bayesian analysis, use software to plot the likelihood when <span class="math inline">\(y=80\)</span> couples in a sample of <span class="math inline">\(n=124\)</span> kissing couples lean right, and compute the maximum likelihood estimate of <span class="math inline">\(\theta\)</span> based on this data.</li>
+<li>Now back to Bayesian analysis. Assume a discrete uniform prior distribution for <span class="math inline">\(\theta\)</span>.
+Suppose that <span class="math inline">\(y=80\)</span> couples in a sample of <span class="math inline">\(n=124\)</span> kissing couples lean right.
+Use software to plot the prior distribution, the likelihood function, and then find the posterior and plot it. Describe the posterior distribution.
+What does it say about <span class="math inline">\(\theta\)</span>?</li>
+<li>Now assume a prior distribution which is proportional to <span class="math inline">\(1-2|\theta-0.5|\)</span> for <span class="math inline">\(\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1\)</span>.
+Then suppose again that <span class="math inline">\(y=80\)</span> couples in a sample of <span class="math inline">\(n=124\)</span> kissing couples lean right.
+Use software to plot the prior distribution, the likelihood function, and then find the posterior and plot it.
+What does the posterior distribution say about <span class="math inline">\(\theta\)</span>?</li>
+<li>Now assume a prior distribution which is proportional to <span class="math inline">\(1-\theta\)</span> for <span class="math inline">\(\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1\)</span>.
+Then suppose again that <span class="math inline">\(y=80\)</span> couples in a sample of <span class="math inline">\(n=124\)</span> kissing couples lean right.
+Use software to plot the prior distribution, the likelihood function, and then find the posterior and plot it.
+What does the posterior distribution say about <span class="math inline">\(\theta\)</span>?</li>
+<li>Compare the posterior distributions corresponding to the three different priors. How does each posterior distribution compare to the prior and the likelihood? Comment on the influence that the prior distribution has. Does the Bayesian inference for these data appear to be highly sensitive to the choice of prior? How does this compare to the <span class="math inline">\(n=12\)</span> situation?</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="estimation.html#exm:kissing-discrete3">4.4</a>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>See plot below. The likelihood function is <span class="math inline">\(f(y=80|\theta) = \binom{124}{80}\theta^{80}(1-\theta)^{124-80}, 0 \le\theta\le1\)</span>, the likelihood of observing a value of <span class="math inline">\(y=80\)</span> from a Binomial(124, <span class="math inline">\(\theta\)</span>) distribution (<code>dbinom(80, 124, theta)</code>). The maximum likelihood estimate of <span class="math inline">\(\theta\)</span> is the sample proportion <span class="math inline">\(80/124=0.645\)</span>.</p></li>
+<li><p>See plot below. Since the prior is flat, the posterior is proportional to the likelihood. The posterior places almost all of its probability on <span class="math inline">\(\theta\)</span> values between about 0.55 and 0.75, with the highest probability near the observed sample proportion of 0.645.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="estimation.html#cb6-1"></a><span class="co"># prior</span></span>
+<span id="cb6-2"><a href="estimation.html#cb6-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb6-3"><a href="estimation.html#cb6-3"></a>prior =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(theta))</span>
+<span id="cb6-4"><a href="estimation.html#cb6-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb6-5"><a href="estimation.html#cb6-5"></a></span>
+<span id="cb6-6"><a href="estimation.html#cb6-6"></a><span class="co"># data</span></span>
+<span id="cb6-7"><a href="estimation.html#cb6-7"></a>n =<span class="st"> </span><span class="dv">124</span> <span class="co"># sample size</span></span>
+<span id="cb6-8"><a href="estimation.html#cb6-8"></a>y =<span class="st"> </span><span class="dv">80</span> <span class="co"># sample count of success</span></span>
+<span id="cb6-9"><a href="estimation.html#cb6-9"></a></span>
+<span id="cb6-10"><a href="estimation.html#cb6-10"></a><span class="co"># likelihood, using binomial</span></span>
+<span id="cb6-11"><a href="estimation.html#cb6-11"></a>likelihood =<span class="st"> </span><span class="kw">dbinom</span>(y, n, theta) <span class="co"># function of theta</span></span>
+<span id="cb6-12"><a href="estimation.html#cb6-12"></a></span>
+<span id="cb6-13"><a href="estimation.html#cb6-13"></a><span class="co"># plots</span></span>
+<span id="cb6-14"><a href="estimation.html#cb6-14"></a><span class="kw">plot_posterior</span>(theta, prior, likelihood)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p></li>
+<li><p>See the plot below. The posterior is very similar to the one from the previous part.</p>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p></li>
+<li><p>See the plot below. The posterior is very similar to the one from the previous part.</p>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p></li>
+<li><p>Even though the priors are different, they are all similar to each other and all similar to the shape of the likelihood. Comparing these priors it does not appear that the posterior is highly sensitive to choice of prior. The data carry more weight when <span class="math inline">\(n=124\)</span> than it did when <span class="math inline">\(n=12\)</span>. In other words, the prior has less influence when the sample size is larger. When the sample size is larger, the likelihood is more “peaked” and so the likelihood, and hence posterior, is small outside a narrower range of values than when the sample size is small.</p></li>
+</ol>
+<p>Recall that the likelihood function is the probability (or density for continuous data) of observing the sample data <span class="math inline">\(y\)</span> viewed as a <em>function of the parameter</em> <span class="math inline">\(\theta\)</span>.
+When the data <span class="math inline">\(y\)</span> takes values on a continuous scale, the likelihood is determined by the <em>probability density function</em> of <span class="math inline">\(Y\)</span> given <span class="math inline">\(\theta\)</span>, <span class="math inline">\(f(y|\theta)\)</span>.
+In the likelihood function, the observed value of the data <span class="math inline">\(y\)</span> is treated as a fixed constant, and the likelihood of observing that <span class="math inline">\(y\)</span> is evaluated for all potential values of <span class="math inline">\(\theta\)</span>.</p>
+<p>Recall that a continuous random variable<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a> <span class="math inline">\(U\)</span> follows a <strong>Normal (a.k.a., Gaussian) distribution</strong> with mean <span class="math inline">\(\mu\)</span> and standard deviation <span class="math inline">\(\sigma&gt;0\)</span> if its probability density function is<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a>
+<span class="math display">\[\begin{align*}
+f_U(u) &amp; = \frac{1}{\sigma\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{u-\mu}{\sigma}\right)^2\right), \quad -\infty&lt;u&lt;\infty.\\
+&amp; \propto \frac{1}{\sigma}\,\exp\left(-\frac{1}{2}\left(\frac{u-\mu}{\sigma}\right)^2\right), \quad -\infty&lt;u&lt;\infty.
+\end{align*}\]</span>
+The constant <span class="math inline">\(1/\sqrt{2\pi}\)</span> ensures that the total area under the density is 1, but it doesn’t effect the shape of the density.</p>
+<p>In R, <code>dnorm(u, mu, sigma)</code>.</p>
+
+<div class="example">
+<p><span id="exm:body-temp-discrete" class="example"><strong>Example 4.5  </strong></span>
+Assume body temperatures (degrees Fahrenheit) of healthy adults follow a Normal distribution with unknown mean <span class="math inline">\(\mu\)</span> and known<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a> standard deviation <span class="math inline">\(\sigma=1\)</span>.
+Suppose we wish to estimate <span class="math inline">\(\mu\)</span>, the population mean healthy human body temperature.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Assume first the following discrete prior distribution for <span class="math inline">\(\mu\)</span> which places probability 0.10, 0.25, 0.30, 0.25, 0.10 on the values 97.6, 98.1, 98.6, 99.1, 99.6, respectively. Suppose a single temperature value of 97.9 is observed. Construct a Bayes table and find the posterior distribution of <span class="math inline">\(\mu\)</span>. In particular, how do you determine the likelihood?</li>
+<li>Now suppose a second temperature value, 97.5, is observed, independently of the first. Construct a Bayes table and find the posterior distribution of <span class="math inline">\(\mu\)</span> after observing these two measurements, using the posterior distribution from the previous part as the prior distribution in this part.</li>
+<li>Now consider the original prior again.
+Determine the likelihood of observing temperatures of 97.9 and 97.5 in a sample of size 2. Then construct a Bayes table and find the posterior distribution of <span class="math inline">\(\mu\)</span> after observing these two measurements. Compare to the previous part.</li>
+<li>Consider the original prior again. Suppose that we take a random sample of two temperature measurements, but instead of observing the two individual values, we only observe that the sample mean is 97.7. Determine the likelihood of observing a sample mean of 97.7 in a sample of size 2. (Hint: if <span class="math inline">\(\bar{Y}\)</span> is the sample mean of <span class="math inline">\(n\)</span> values from a <span class="math inline">\(N(\mu, \sigma)\)</span> distribution, what is the distribution of <span class="math inline">\(\bar{Y}\)</span>?) Then construct a Bayes table and find the posterior distribution of <span class="math inline">\(\mu\)</span> after observing this sample mean. Compare to the previous part.</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="estimation.html#exm:body-temp-discrete">4.5</a>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>The likelihood is determined by evaluating the Normal(<span class="math inline">\(\mu\)</span>, 1) density at <span class="math inline">\(y=97.9\)</span> for different values of <span class="math inline">\(\mu\)</span>: <code>dnorm(97.9, mu, 1)</code> or
+<span class="math display">\[
+f(97.9|\mu)  = \frac{1}{\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{97.9-\mu}{1}\right)^2\right)
+\]</span>
+See the table below. Posterior probability is shifted towards the smaller values of <span class="math inline">\(\mu\)</span> since those give the higher likelihood of the observed value <span class="math inline">\(y=97.9\)</span>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="estimation.html#cb7-1"></a><span class="co"># prior</span></span>
+<span id="cb7-2"><a href="estimation.html#cb7-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="fl">97.6</span>, <span class="fl">99.6</span>, <span class="fl">0.5</span>)</span>
+<span id="cb7-3"><a href="estimation.html#cb7-3"></a>prior =<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.10</span>, <span class="fl">0.25</span>, <span class="fl">0.30</span>, <span class="fl">0.25</span>, <span class="fl">0.10</span>)</span>
+<span id="cb7-4"><a href="estimation.html#cb7-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb7-5"><a href="estimation.html#cb7-5"></a></span>
+<span id="cb7-6"><a href="estimation.html#cb7-6"></a><span class="co"># data</span></span>
+<span id="cb7-7"><a href="estimation.html#cb7-7"></a>y =<span class="st"> </span><span class="fl">97.9</span> <span class="co"># single observed value</span></span>
+<span id="cb7-8"><a href="estimation.html#cb7-8"></a>sigma =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb7-9"><a href="estimation.html#cb7-9"></a></span>
+<span id="cb7-10"><a href="estimation.html#cb7-10"></a></span>
+<span id="cb7-11"><a href="estimation.html#cb7-11"></a><span class="co"># likelihood</span></span>
+<span id="cb7-12"><a href="estimation.html#cb7-12"></a>likelihood =<span class="st"> </span><span class="kw">dnorm</span>(y, theta, sigma) <span class="co"># function of theta</span></span>
+<span id="cb7-13"><a href="estimation.html#cb7-13"></a></span>
+<span id="cb7-14"><a href="estimation.html#cb7-14"></a><span class="co"># posterior</span></span>
+<span id="cb7-15"><a href="estimation.html#cb7-15"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb7-16"><a href="estimation.html#cb7-16"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span>
+<span id="cb7-17"><a href="estimation.html#cb7-17"></a></span>
+<span id="cb7-18"><a href="estimation.html#cb7-18"></a><span class="co"># bayes table</span></span>
+<span id="cb7-19"><a href="estimation.html#cb7-19"></a>bayes_table =<span class="st"> </span><span class="kw">data.frame</span>(theta,</span>
+<span id="cb7-20"><a href="estimation.html#cb7-20"></a>                     prior,</span>
+<span id="cb7-21"><a href="estimation.html#cb7-21"></a>                     likelihood,</span>
+<span id="cb7-22"><a href="estimation.html#cb7-22"></a>                     product,</span>
+<span id="cb7-23"><a href="estimation.html#cb7-23"></a>                     posterior)</span>
+<span id="cb7-24"><a href="estimation.html#cb7-24"></a></span>
+<span id="cb7-25"><a href="estimation.html#cb7-25"></a><span class="kw">kable</span>(bayes_table, <span class="dt">digits =</span> <span class="dv">4</span>, <span class="dt">align =</span> <span class="st">&#39;r&#39;</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">97.6</td>
+<td align="right">0.10</td>
+<td align="right">0.3814</td>
+<td align="right">0.0381</td>
+<td align="right">0.1326</td>
+</tr>
+<tr class="even">
+<td align="right">98.1</td>
+<td align="right">0.25</td>
+<td align="right">0.3910</td>
+<td align="right">0.0978</td>
+<td align="right">0.3400</td>
+</tr>
+<tr class="odd">
+<td align="right">98.6</td>
+<td align="right">0.30</td>
+<td align="right">0.3123</td>
+<td align="right">0.0937</td>
+<td align="right">0.3258</td>
+</tr>
+<tr class="even">
+<td align="right">99.1</td>
+<td align="right">0.25</td>
+<td align="right">0.1942</td>
+<td align="right">0.0485</td>
+<td align="right">0.1688</td>
+</tr>
+<tr class="odd">
+<td align="right">99.6</td>
+<td align="right">0.10</td>
+<td align="right">0.0940</td>
+<td align="right">0.0094</td>
+<td align="right">0.0327</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>See the table below. More posterior probability is shifted towards the smaller values of <span class="math inline">\(\mu\)</span>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="estimation.html#cb8-1"></a><span class="co"># prior</span></span>
+<span id="cb8-2"><a href="estimation.html#cb8-2"></a>prior =<span class="st"> </span>posterior</span>
+<span id="cb8-3"><a href="estimation.html#cb8-3"></a></span>
+<span id="cb8-4"><a href="estimation.html#cb8-4"></a><span class="co"># data</span></span>
+<span id="cb8-5"><a href="estimation.html#cb8-5"></a>y =<span class="st"> </span><span class="fl">97.5</span> <span class="co"># single observed value</span></span>
+<span id="cb8-6"><a href="estimation.html#cb8-6"></a>sigma =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb8-7"><a href="estimation.html#cb8-7"></a></span>
+<span id="cb8-8"><a href="estimation.html#cb8-8"></a></span>
+<span id="cb8-9"><a href="estimation.html#cb8-9"></a><span class="co"># likelihood</span></span>
+<span id="cb8-10"><a href="estimation.html#cb8-10"></a>likelihood =<span class="st"> </span><span class="kw">dnorm</span>(y, theta, sigma) <span class="co"># function of theta</span></span>
+<span id="cb8-11"><a href="estimation.html#cb8-11"></a></span>
+<span id="cb8-12"><a href="estimation.html#cb8-12"></a><span class="co"># posterior</span></span>
+<span id="cb8-13"><a href="estimation.html#cb8-13"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb8-14"><a href="estimation.html#cb8-14"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span>
+<span id="cb8-15"><a href="estimation.html#cb8-15"></a></span>
+<span id="cb8-16"><a href="estimation.html#cb8-16"></a><span class="co"># bayes table</span></span>
+<span id="cb8-17"><a href="estimation.html#cb8-17"></a>bayes_table =<span class="st"> </span><span class="kw">data.frame</span>(theta,</span>
+<span id="cb8-18"><a href="estimation.html#cb8-18"></a>                     prior,</span>
+<span id="cb8-19"><a href="estimation.html#cb8-19"></a>                     likelihood,</span>
+<span id="cb8-20"><a href="estimation.html#cb8-20"></a>                     product,</span>
+<span id="cb8-21"><a href="estimation.html#cb8-21"></a>                     posterior)</span>
+<span id="cb8-22"><a href="estimation.html#cb8-22"></a></span>
+<span id="cb8-23"><a href="estimation.html#cb8-23"></a><span class="kw">kable</span>(bayes_table, <span class="dt">digits =</span> <span class="dv">4</span>, <span class="dt">align =</span> <span class="st">&#39;r&#39;</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">97.6</td>
+<td align="right">0.1326</td>
+<td align="right">0.3970</td>
+<td align="right">0.0527</td>
+<td align="right">0.2048</td>
+</tr>
+<tr class="even">
+<td align="right">98.1</td>
+<td align="right">0.3400</td>
+<td align="right">0.3332</td>
+<td align="right">0.1133</td>
+<td align="right">0.4407</td>
+</tr>
+<tr class="odd">
+<td align="right">98.6</td>
+<td align="right">0.3258</td>
+<td align="right">0.2179</td>
+<td align="right">0.0710</td>
+<td align="right">0.2761</td>
+</tr>
+<tr class="even">
+<td align="right">99.1</td>
+<td align="right">0.1688</td>
+<td align="right">0.1109</td>
+<td align="right">0.0187</td>
+<td align="right">0.0728</td>
+</tr>
+<tr class="odd">
+<td align="right">99.6</td>
+<td align="right">0.0327</td>
+<td align="right">0.0440</td>
+<td align="right">0.0014</td>
+<td align="right">0.0056</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>See the table below.
+Since the two measurements are independent, the likelihood is the product of the likelihoods for <span class="math inline">\(y=97.9\)</span> and <span class="math inline">\(y=97.5\)</span>.
+The posterior is the same in the previous part. It doesn’t matter if we update the posterior after each observations, or all at once.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="estimation.html#cb9-1"></a><span class="co"># prior</span></span>
+<span id="cb9-2"><a href="estimation.html#cb9-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="fl">97.6</span>, <span class="fl">99.6</span>, <span class="fl">0.5</span>)</span>
+<span id="cb9-3"><a href="estimation.html#cb9-3"></a>prior =<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.10</span>, <span class="fl">0.25</span>, <span class="fl">0.30</span>, <span class="fl">0.25</span>, <span class="fl">0.10</span>)</span>
+<span id="cb9-4"><a href="estimation.html#cb9-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb9-5"><a href="estimation.html#cb9-5"></a></span>
+<span id="cb9-6"><a href="estimation.html#cb9-6"></a><span class="co"># data</span></span>
+<span id="cb9-7"><a href="estimation.html#cb9-7"></a>y =<span class="st"> </span><span class="kw">c</span>(<span class="fl">97.9</span>, <span class="fl">97.5</span>) <span class="co"># two observed values</span></span>
+<span id="cb9-8"><a href="estimation.html#cb9-8"></a>sigma =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb9-9"><a href="estimation.html#cb9-9"></a></span>
+<span id="cb9-10"><a href="estimation.html#cb9-10"></a></span>
+<span id="cb9-11"><a href="estimation.html#cb9-11"></a><span class="co"># likelihood</span></span>
+<span id="cb9-12"><a href="estimation.html#cb9-12"></a>likelihood =<span class="st"> </span><span class="kw">dnorm</span>(y[<span class="dv">1</span>], theta, sigma) <span class="op">*</span><span class="st"> </span><span class="kw">dnorm</span>(y[<span class="dv">2</span>], theta, sigma)  <span class="co"># function of theta</span></span>
+<span id="cb9-13"><a href="estimation.html#cb9-13"></a></span>
+<span id="cb9-14"><a href="estimation.html#cb9-14"></a><span class="co"># posterior</span></span>
+<span id="cb9-15"><a href="estimation.html#cb9-15"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb9-16"><a href="estimation.html#cb9-16"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span>
+<span id="cb9-17"><a href="estimation.html#cb9-17"></a></span>
+<span id="cb9-18"><a href="estimation.html#cb9-18"></a><span class="co"># bayes table</span></span>
+<span id="cb9-19"><a href="estimation.html#cb9-19"></a>bayes_table =<span class="st"> </span><span class="kw">data.frame</span>(theta,</span>
+<span id="cb9-20"><a href="estimation.html#cb9-20"></a>                     prior,</span>
+<span id="cb9-21"><a href="estimation.html#cb9-21"></a>                     likelihood,</span>
+<span id="cb9-22"><a href="estimation.html#cb9-22"></a>                     product,</span>
+<span id="cb9-23"><a href="estimation.html#cb9-23"></a>                     posterior)</span>
+<span id="cb9-24"><a href="estimation.html#cb9-24"></a></span>
+<span id="cb9-25"><a href="estimation.html#cb9-25"></a><span class="kw">kable</span>(bayes_table, <span class="dt">digits =</span> <span class="dv">4</span>, <span class="dt">align =</span> <span class="st">&#39;r&#39;</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">97.6</td>
+<td align="right">0.10</td>
+<td align="right">0.1514</td>
+<td align="right">0.0151</td>
+<td align="right">0.2048</td>
+</tr>
+<tr class="even">
+<td align="right">98.1</td>
+<td align="right">0.25</td>
+<td align="right">0.1303</td>
+<td align="right">0.0326</td>
+<td align="right">0.4407</td>
+</tr>
+<tr class="odd">
+<td align="right">98.6</td>
+<td align="right">0.30</td>
+<td align="right">0.0680</td>
+<td align="right">0.0204</td>
+<td align="right">0.2761</td>
+</tr>
+<tr class="even">
+<td align="right">99.1</td>
+<td align="right">0.25</td>
+<td align="right">0.0215</td>
+<td align="right">0.0054</td>
+<td align="right">0.0728</td>
+</tr>
+<tr class="odd">
+<td align="right">99.6</td>
+<td align="right">0.10</td>
+<td align="right">0.0041</td>
+<td align="right">0.0004</td>
+<td align="right">0.0056</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>For a sample of size <span class="math inline">\(n\)</span> from a <span class="math inline">\(N(\mu,\sigma)\)</span> distribution, the sample mean follows a <span class="math inline">\(N\left(\mu, \frac{\sigma}{\sqrt{n}}\right)\)</span> distribution. The likelihood is determined by evaluating the Normal(<span class="math inline">\(\mu\)</span>, <span class="math inline">\(\frac{1}{\sqrt{2}}\)</span>) density at <span class="math inline">\(y=97.7\)</span> for different values of <span class="math inline">\(\mu\)</span>: <code>dnorm(97.7, mu, 1 / sqrt(2))</code> or
+<span class="math display">\[
+f_{\bar{Y}}(97.7|\mu)  \propto \exp\left(-\frac{1}{2}\left(\frac{97.7-\mu}{1/\sqrt{2}}\right)^2\right)
+\]</span>
+See the table below. While the likelihood is not the same as in the previous part, it is <em>proportionally</em> the same; that is, the likelihood in this part has the same <em>shape</em> as the likelihood in the previous part. Therefore, the posterior distributions are the same.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="estimation.html#cb10-1"></a><span class="co"># prior</span></span>
+<span id="cb10-2"><a href="estimation.html#cb10-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="fl">97.6</span>, <span class="fl">99.6</span>, <span class="fl">0.5</span>)</span>
+<span id="cb10-3"><a href="estimation.html#cb10-3"></a>prior =<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.10</span>, <span class="fl">0.25</span>, <span class="fl">0.30</span>, <span class="fl">0.25</span>, <span class="fl">0.10</span>)</span>
+<span id="cb10-4"><a href="estimation.html#cb10-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb10-5"><a href="estimation.html#cb10-5"></a></span>
+<span id="cb10-6"><a href="estimation.html#cb10-6"></a><span class="co"># data</span></span>
+<span id="cb10-7"><a href="estimation.html#cb10-7"></a>n =<span class="st"> </span><span class="dv">2</span></span>
+<span id="cb10-8"><a href="estimation.html#cb10-8"></a>y =<span class="st"> </span><span class="fl">97.7</span> <span class="co"># sample mean</span></span>
+<span id="cb10-9"><a href="estimation.html#cb10-9"></a>sigma =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb10-10"><a href="estimation.html#cb10-10"></a></span>
+<span id="cb10-11"><a href="estimation.html#cb10-11"></a></span>
+<span id="cb10-12"><a href="estimation.html#cb10-12"></a><span class="co"># likelihood</span></span>
+<span id="cb10-13"><a href="estimation.html#cb10-13"></a>likelihood =<span class="st"> </span><span class="kw">dnorm</span>(y, theta, sigma <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)) <span class="co"># function of theta</span></span>
+<span id="cb10-14"><a href="estimation.html#cb10-14"></a></span>
+<span id="cb10-15"><a href="estimation.html#cb10-15"></a><span class="co"># posterior</span></span>
+<span id="cb10-16"><a href="estimation.html#cb10-16"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb10-17"><a href="estimation.html#cb10-17"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span>
+<span id="cb10-18"><a href="estimation.html#cb10-18"></a></span>
+<span id="cb10-19"><a href="estimation.html#cb10-19"></a><span class="co"># bayes table</span></span>
+<span id="cb10-20"><a href="estimation.html#cb10-20"></a>bayes_table =<span class="st"> </span><span class="kw">data.frame</span>(theta,</span>
+<span id="cb10-21"><a href="estimation.html#cb10-21"></a>                     prior,</span>
+<span id="cb10-22"><a href="estimation.html#cb10-22"></a>                     likelihood,</span>
+<span id="cb10-23"><a href="estimation.html#cb10-23"></a>                     product,</span>
+<span id="cb10-24"><a href="estimation.html#cb10-24"></a>                     posterior)</span>
+<span id="cb10-25"><a href="estimation.html#cb10-25"></a></span>
+<span id="cb10-26"><a href="estimation.html#cb10-26"></a><span class="kw">kable</span>(bayes_table, <span class="dt">digits =</span> <span class="dv">4</span>, <span class="dt">align =</span> <span class="st">&#39;r&#39;</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">97.6</td>
+<td align="right">0.10</td>
+<td align="right">0.5586</td>
+<td align="right">0.0559</td>
+<td align="right">0.2048</td>
+</tr>
+<tr class="even">
+<td align="right">98.1</td>
+<td align="right">0.25</td>
+<td align="right">0.4808</td>
+<td align="right">0.1202</td>
+<td align="right">0.4407</td>
+</tr>
+<tr class="odd">
+<td align="right">98.6</td>
+<td align="right">0.30</td>
+<td align="right">0.2510</td>
+<td align="right">0.0753</td>
+<td align="right">0.2761</td>
+</tr>
+<tr class="even">
+<td align="right">99.1</td>
+<td align="right">0.25</td>
+<td align="right">0.0795</td>
+<td align="right">0.0199</td>
+<td align="right">0.0728</td>
+</tr>
+<tr class="odd">
+<td align="right">99.6</td>
+<td align="right">0.10</td>
+<td align="right">0.0153</td>
+<td align="right">0.0015</td>
+<td align="right">0.0056</td>
+</tr>
+</tbody>
+</table></li>
+</ol>
+<p>It is often not necessary to know all the individual data values to evaluate the <em>shape</em> of the likelihood as a function of the parameter <span class="math inline">\(\theta\)</span>, but rather simply the values of a few summary statistics.<br />
+For example, when estimating the population mean of a Normal distribution with known standard deviation <span class="math inline">\(\sigma\)</span>, it is sufficient to know the sample mean for the purposes of evaluating the shape of the likelihood of the observed data under different potential values of the population mean.</p>
+<p>If <span class="math inline">\(Y_1, \ldots, Y_n\)</span> is a random sample from a <span class="math inline">\(N(\mu, \sigma)\)</span> distribution, then <span class="math inline">\(\bar{Y}\)</span> has a <span class="math inline">\(N\left(\mu, \frac{\sigma}{\sqrt{n}}\right)\)</span> distribution</p>
+<ul>
+<li><span class="math inline">\(\sigma\)</span> measures the unit-to-unit variability of individual values of the variable over all possible units in the population. For example, how much do body temperatures vary from person-to-person over many people?</li>
+<li><span class="math inline">\(\frac{\sigma}{\sqrt{n}}\)</span> measures the sample-to-sample variability of sample means over all possible samples of size <span class="math inline">\(n\)</span> from the population. For example, how much do sample mean body temperatures from sample to sample over many samples of <span class="math inline">\(n\)</span> people?</li>
+</ul>
+
+<div class="example">
+<p><span id="exm:body-temp-discrete2" class="example"><strong>Example 4.6  </strong></span>
+Continuing the previous example. We’ll now use a grid approximation and assume that any multiple of 0.0001 between 96.0 and 100.0 is a possible value of <span class="math inline">\(\mu\)</span>: <span class="math inline">\(96.0, 96.0001, 96.0002, \ldots, 99.9999, 100.0\)</span>.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Assume a discrete uniform prior distribution over <span class="math inline">\(\mu\)</span> values in the grid.
+Suppose that the sample mean temperature is <span class="math inline">\(\bar{y}=97.7\)</span> in a sample of <span class="math inline">\(n=2\)</span> temperature measurements.
+Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it. Describe the posterior distribution.
+What does it say about <span class="math inline">\(\mu\)</span>?</li>
+<li>Now assume a prior distribution which is proportional to a Normal distribution with mean 98.6 and standard deviation 0.7 over <span class="math inline">\(\mu\)</span> values in the grid.
+Suppose that the sample mean temperature is <span class="math inline">\(\bar{y}=97.7\)</span> in a sample of <span class="math inline">\(n=2\)</span> temperature measurements.
+Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it. Describe the posterior distribution.
+What does it say about <span class="math inline">\(\mu\)</span>?</li>
+<li>Compare the posterior distributions corresponding to the two different priors. How does each posterior distribution compare to the prior and the likelihood? Comment on the influence that the prior distribution has.</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="estimation.html#exm:body-temp-discrete2">4.6</a>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>Since the prior is flat, the posterior has the same shape as the likelihood. The highest posterior probability is near the observed sample mean of 97.7.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="estimation.html#cb11-1"></a><span class="co"># prior</span></span>
+<span id="cb11-2"><a href="estimation.html#cb11-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">96</span>, <span class="dv">100</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb11-3"><a href="estimation.html#cb11-3"></a>prior =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(theta))</span>
+<span id="cb11-4"><a href="estimation.html#cb11-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb11-5"><a href="estimation.html#cb11-5"></a></span>
+<span id="cb11-6"><a href="estimation.html#cb11-6"></a><span class="co"># data</span></span>
+<span id="cb11-7"><a href="estimation.html#cb11-7"></a>n =<span class="st"> </span><span class="dv">2</span> <span class="co"># sample size</span></span>
+<span id="cb11-8"><a href="estimation.html#cb11-8"></a>y =<span class="st"> </span><span class="fl">97.7</span> <span class="co"># sample mean</span></span>
+<span id="cb11-9"><a href="estimation.html#cb11-9"></a>sigma =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb11-10"><a href="estimation.html#cb11-10"></a></span>
+<span id="cb11-11"><a href="estimation.html#cb11-11"></a><span class="co"># likelihood</span></span>
+<span id="cb11-12"><a href="estimation.html#cb11-12"></a>likelihood =<span class="st"> </span><span class="kw">dnorm</span>(y, theta, sigma <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)) <span class="co"># function of theta</span></span>
+<span id="cb11-13"><a href="estimation.html#cb11-13"></a></span>
+<span id="cb11-14"><a href="estimation.html#cb11-14"></a><span class="co"># plots</span></span>
+<span id="cb11-15"><a href="estimation.html#cb11-15"></a>plot_posterior &lt;-<span class="st"> </span><span class="cf">function</span>(theta, prior, likelihood){</span>
+<span id="cb11-16"><a href="estimation.html#cb11-16"></a></span>
+<span id="cb11-17"><a href="estimation.html#cb11-17"></a>  <span class="co"># posterior</span></span>
+<span id="cb11-18"><a href="estimation.html#cb11-18"></a>  product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb11-19"><a href="estimation.html#cb11-19"></a>  posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span>
+<span id="cb11-20"><a href="estimation.html#cb11-20"></a></span>
+<span id="cb11-21"><a href="estimation.html#cb11-21"></a>  ylim =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">max</span>(<span class="kw">c</span>(prior, posterior, likelihood <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(likelihood))))</span>
+<span id="cb11-22"><a href="estimation.html#cb11-22"></a>  <span class="kw">plot</span>(theta, prior, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">range</span>(theta), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;theta&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb11-23"><a href="estimation.html#cb11-23"></a>  <span class="kw">par</span>(<span class="dt">new=</span>T) </span>
+<span id="cb11-24"><a href="estimation.html#cb11-24"></a>  <span class="kw">plot</span>(theta, likelihood<span class="op">/</span><span class="kw">sum</span>(likelihood), <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">range</span>(theta), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;skyblue&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb11-25"><a href="estimation.html#cb11-25"></a>  <span class="kw">par</span>(<span class="dt">new=</span>T)</span>
+<span id="cb11-26"><a href="estimation.html#cb11-26"></a>  <span class="kw">plot</span>(theta, posterior, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>, <span class="dt">xlim=</span><span class="kw">range</span>(theta), <span class="dt">ylim=</span>ylim, <span class="dt">col=</span><span class="st">&quot;seagreen&quot;</span>, <span class="dt">xlab=</span><span class="st">&#39;&#39;</span>, <span class="dt">ylab=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb11-27"><a href="estimation.html#cb11-27"></a>  <span class="kw">legend</span>(<span class="st">&quot;topleft&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;prior&quot;</span>, <span class="st">&quot;scaled likelihood&quot;</span>, <span class="st">&quot;posterior&quot;</span>), <span class="dt">lty=</span><span class="dv">1</span>, <span class="dt">col=</span><span class="kw">c</span>(<span class="st">&quot;orange&quot;</span>, <span class="st">&quot;skyblue&quot;</span>, <span class="st">&quot;seagreen&quot;</span>))</span>
+<span id="cb11-28"><a href="estimation.html#cb11-28"></a>}</span>
+<span id="cb11-29"><a href="estimation.html#cb11-29"></a></span>
+<span id="cb11-30"><a href="estimation.html#cb11-30"></a><span class="kw">plot_posterior</span>(theta, prior, likelihood)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-51-1.png" width="672" /></p></li>
+<li><p>Be sure to distinguish between the Normal distribution in the prior, which quantifies our prior uncertainty about <span class="math inline">\(\mu\)</span>, and the Normal distribution used to determine the likelihood which models variability of temperatures in the population. The poster is a compromise between likelihood and prior.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="estimation.html#cb12-1"></a><span class="co"># prior</span></span>
+<span id="cb12-2"><a href="estimation.html#cb12-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">96</span>, <span class="dv">100</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb12-3"><a href="estimation.html#cb12-3"></a>prior =<span class="st"> </span><span class="kw">dnorm</span>(theta, <span class="fl">98.6</span>, <span class="fl">0.7</span>)</span>
+<span id="cb12-4"><a href="estimation.html#cb12-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb12-5"><a href="estimation.html#cb12-5"></a></span>
+<span id="cb12-6"><a href="estimation.html#cb12-6"></a><span class="co"># data</span></span>
+<span id="cb12-7"><a href="estimation.html#cb12-7"></a>n =<span class="st"> </span><span class="dv">2</span> <span class="co"># sample size</span></span>
+<span id="cb12-8"><a href="estimation.html#cb12-8"></a>y =<span class="st"> </span><span class="fl">97.7</span> <span class="co"># sample mean</span></span>
+<span id="cb12-9"><a href="estimation.html#cb12-9"></a>sigma =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb12-10"><a href="estimation.html#cb12-10"></a></span>
+<span id="cb12-11"><a href="estimation.html#cb12-11"></a><span class="co"># likelihood</span></span>
+<span id="cb12-12"><a href="estimation.html#cb12-12"></a>likelihood =<span class="st"> </span><span class="kw">dnorm</span>(y, theta, sigma <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)) <span class="co"># function of theta</span></span>
+<span id="cb12-13"><a href="estimation.html#cb12-13"></a></span>
+<span id="cb12-14"><a href="estimation.html#cb12-14"></a><span class="kw">plot_posterior</span>(theta, prior, likelihood)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-52-1.png" width="672" /></p></li>
+<li><p>When the prior is flat, the posterior has the shape of the likelihood. Otherwise, the posterior is a compromise between prior and likelihood. When the sample size is so small, the prior will have a lot of influence on the posterior.</p></li>
+</ol>
+
+<div class="example">
+<p><span id="exm:body-temp-discrete3" class="example"><strong>Example 4.7  </strong></span>
+Continuing the previous example.
+In a recent study<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a>, the sample mean body temperature in a sample of 208 healthy adults was 97.7 degrees F.</p>
+<p>We’ll again use a grid approximation and assume that any multiple of 0.0001 between 96.0 and 100.0 is a possible value of <span class="math inline">\(\mu\)</span>: <span class="math inline">\(96.0, 96.0001, 96.0002, \ldots, 99.9999, 100.0\)</span>.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Before performing a Bayesian analysis, use software to plot the likelihood, and compute the maximum likelihood estimate of <span class="math inline">\(\mu\)</span> based on this data.</li>
+<li>Assume a discrete uniform prior distribution over <span class="math inline">\(\mu\)</span> values in the grid.
+Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it. Describe the posterior distribution.
+What does it say about <span class="math inline">\(\mu\)</span>?</li>
+<li>Now assume a prior distribution which is proportional a Normal distribution with mean 98.6 and standard deviation 0.7 over <span class="math inline">\(\mu\)</span> values in the grid.
+Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it. Describe the posterior distribution.
+What does it say about <span class="math inline">\(\mu\)</span>?</li>
+<li>Compare the posterior distributions corresponding to the two different priors. How does each posterior distribution compare to the prior and the likelihood? Comment on the influence that the prior distribution has. How does this compare to the <span class="math inline">\(n=2\)</span> situation?</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="estimation.html#exm:body-temp-discrete3">4.7</a>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>The likelihood is determined by evaluating the Normal(<span class="math inline">\(\mu\)</span>, <span class="math inline">\(\frac{1}{\sqrt{208}}\)</span>) density at <span class="math inline">\(y=97.7\)</span> for different values of <span class="math inline">\(\mu\)</span>: <code>dnorm(97.7, mu, 1 / sqrt(208))</code> or
+<span class="math display">\[
+f_{\bar{Y}}(97.7|\mu)  \propto \exp\left(-\frac{1}{2}\left(\frac{97.7-\mu}{1/\sqrt{208}}\right)^2\right)
+\]</span> See a plot of the likelihood below. The MLE of <span class="math inline">\(\mu\)</span> is the observed sample mean of 97.7.</p></li>
+<li><p>Since the prior is flat, the posterior has the same shape as the likelihood.
+With such a large sample size, the likelihood is pretty peaked.
+So the posterior probability is concentrated in a fairly narrow range of values around 97.7.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="estimation.html#cb13-1"></a><span class="co"># prior</span></span>
+<span id="cb13-2"><a href="estimation.html#cb13-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">96</span>, <span class="dv">100</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb13-3"><a href="estimation.html#cb13-3"></a>prior =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>, <span class="kw">length</span>(theta))</span>
+<span id="cb13-4"><a href="estimation.html#cb13-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb13-5"><a href="estimation.html#cb13-5"></a></span>
+<span id="cb13-6"><a href="estimation.html#cb13-6"></a><span class="co"># data</span></span>
+<span id="cb13-7"><a href="estimation.html#cb13-7"></a>n =<span class="st"> </span><span class="dv">208</span> <span class="co"># sample size</span></span>
+<span id="cb13-8"><a href="estimation.html#cb13-8"></a>y =<span class="st"> </span><span class="fl">97.7</span> <span class="co"># sample mean</span></span>
+<span id="cb13-9"><a href="estimation.html#cb13-9"></a>sigma =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb13-10"><a href="estimation.html#cb13-10"></a></span>
+<span id="cb13-11"><a href="estimation.html#cb13-11"></a><span class="co"># likelihood</span></span>
+<span id="cb13-12"><a href="estimation.html#cb13-12"></a>likelihood =<span class="st"> </span><span class="kw">dnorm</span>(y, theta, sigma <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)) <span class="co"># function of theta</span></span>
+<span id="cb13-13"><a href="estimation.html#cb13-13"></a></span>
+<span id="cb13-14"><a href="estimation.html#cb13-14"></a><span class="kw">plot_posterior</span>(theta, prior, likelihood)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-53-1.png" width="672" /></p></li>
+<li><p>Even though the prior probability is highest near 98.6, the likelihood at these values is so small that they have small posterior probability. The posterior distribution is about the same as in the previous part.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="estimation.html#cb14-1"></a><span class="co"># prior</span></span>
+<span id="cb14-2"><a href="estimation.html#cb14-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">96</span>, <span class="dv">100</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb14-3"><a href="estimation.html#cb14-3"></a>prior =<span class="st"> </span><span class="kw">dnorm</span>(theta, <span class="fl">98.6</span>, <span class="fl">0.7</span>)</span>
+<span id="cb14-4"><a href="estimation.html#cb14-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb14-5"><a href="estimation.html#cb14-5"></a></span>
+<span id="cb14-6"><a href="estimation.html#cb14-6"></a><span class="co"># data</span></span>
+<span id="cb14-7"><a href="estimation.html#cb14-7"></a>n =<span class="st"> </span><span class="dv">208</span> <span class="co"># sample size</span></span>
+<span id="cb14-8"><a href="estimation.html#cb14-8"></a>y =<span class="st"> </span><span class="fl">97.7</span> <span class="co"># sample mean</span></span>
+<span id="cb14-9"><a href="estimation.html#cb14-9"></a>sigma =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb14-10"><a href="estimation.html#cb14-10"></a></span>
+<span id="cb14-11"><a href="estimation.html#cb14-11"></a><span class="co"># likelihood</span></span>
+<span id="cb14-12"><a href="estimation.html#cb14-12"></a>likelihood =<span class="st"> </span><span class="kw">dnorm</span>(y, theta, sigma <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)) <span class="co"># function of theta</span></span>
+<span id="cb14-13"><a href="estimation.html#cb14-13"></a></span>
+<span id="cb14-14"><a href="estimation.html#cb14-14"></a><span class="kw">plot_posterior</span>(theta, prior, likelihood)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-54-1.png" width="672" /></p></li>
+<li><p>The posterior distributions are about the same in each case. With a large sample size, the likelihood is fairly peaked, and so the likelihood is close to 0 outside of a narrow range of values around the observed sample mean of 97.7. Therefore, the posterior probability is concentrated in this range, regardless of the prior.</p></li>
+</ol>
+
+</div>
+<div class="footnotes">
+<hr />
+<ol start="11">
+<li id="fn11"><p>Why <span class="math inline">\(U\)</span> and not <span class="math inline">\(X\)</span> or <span class="math inline">\(Y\)</span>? In a Bayesian analysis, we might assume the data follows a Normal distribution, but we might also use a Normal distribution to quantify the uncertainty about a parameter. We generally associate <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> with data. <span class="math inline">\(U\)</span> is supposed to represent a more general variable, which could be either data or a parameter.<a href="estimation.html#fnref11" class="footnote-back">↩︎</a></p></li>
+<li id="fn12"><p><span class="math inline">\(\exp\)</span> is just another way of writing the exponential function, <span class="math inline">\(\exp(u)=e^u\)</span>.<a href="estimation.html#fnref12" class="footnote-back">↩︎</a></p></li>
+<li id="fn13"><p>It’s unrealistic to assume the population standard deviation is known. We’ll consider the case of unknown standard deviation later.<a href="estimation.html#fnref13" class="footnote-back">↩︎</a></p></li>
+<li id="fn14"><p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6258625/">Source</a> and a <a href="https://www.scientificamerican.com/article/are-human-body-temperatures-cooling-down/">related article</a>.<a href="estimation.html#fnref14" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="bayes-factor.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="inference.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"google": false,
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bayesian-reasoning-and-methods.pdf"],
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

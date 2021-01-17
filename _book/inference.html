@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Introduction to Inference | An Introduction to Bayesian Reasoning and Methods</title>
+  <meta name="description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="generator" content="bookdown 0.20.1 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Introduction to Inference | An Introduction to Bayesian Reasoning and Methods" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="github-repo" content="rstudio/bayesian-reasoning-and-methods" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Introduction to Inference | An Introduction to Bayesian Reasoning and Methods" />
+  
+  <meta name="twitter:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  
+
+<meta name="author" content="Kevin Ross" />
+
+
+<meta name="date" content="2021-01-16" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="estimation.html"/>
+<link rel="next" href="prediction.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="interpretations.html"><a href="interpretations.html"><i class="fa fa-check"></i><b>1</b> Interpretations of Probability and Statistics</a><ul>
+<li class="chapter" data-level="1.1" data-path="randomness.html"><a href="randomness.html"><i class="fa fa-check"></i><b>1.1</b> Instances of randomness</a></li>
+<li class="chapter" data-level="1.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html"><i class="fa fa-check"></i><b>1.2</b> Interpretations of probability</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#rel-freq"><i class="fa fa-check"></i><b>1.2.1</b> Long run relative frequency</a></li>
+<li class="chapter" data-level="1.2.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#subjective-probability"><i class="fa fa-check"></i><b>1.2.2</b> Subjective probability</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="consistency.html"><a href="consistency.html"><i class="fa fa-check"></i><b>1.3</b> Working with probabilities</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="consistency.html"><a href="consistency.html#consistency-requirements"><i class="fa fa-check"></i><b>1.3.1</b> Consistency requirements</a></li>
+<li class="chapter" data-level="1.3.2" data-path="consistency.html"><a href="consistency.html#odds"><i class="fa fa-check"></i><b>1.3.2</b> Odds</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="interpretations-of-statistics.html"><a href="interpretations-of-statistics.html"><i class="fa fa-check"></i><b>1.4</b> Interpretations of Statistics</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bayes-rule.html"><a href="bayes-rule.html"><i class="fa fa-check"></i><b>2</b> Bayes’ Rule</a></li>
+<li class="chapter" data-level="3" data-path="bayes-factor.html"><a href="bayes-factor.html"><i class="fa fa-check"></i><b>3</b> Odds and Bayes Factors</a></li>
+<li class="chapter" data-level="4" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>4</b> Introduction to Estimation</a></li>
+<li class="chapter" data-level="5" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>5</b> Introduction to Inference</a></li>
+<li class="chapter" data-level="6" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>6</b> Introduction to Prediction</a></li>
+<li class="chapter" data-level="7" data-path="continuous.html"><a href="continuous.html"><i class="fa fa-check"></i><b>7</b> Introduction to Continuous Prior and Posterior Distributions</a><ul>
+<li class="chapter" data-level="7.1" data-path="a-brief-review-of-continuous-distributions.html"><a href="a-brief-review-of-continuous-distributions.html"><i class="fa fa-check"></i><b>7.1</b> A brief review of continuous distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="normal-mean.html"><a href="normal-mean.html"><i class="fa fa-check"></i><b>7.2</b> Normal mean</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="jags.html"><a href="jags.html"><i class="fa fa-check"></i><b>8</b> Introduction to Posterior Simulation and JAGS</a><ul>
+<li class="chapter" data-level="8.1" data-path="implementing-mcmc-in-jags.html"><a href="implementing-mcmc-in-jags.html"><i class="fa fa-check"></i><b>8.1</b> Implementing MCMC in JAGS</a></li>
+<li class="chapter" data-level="8.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html"><i class="fa fa-check"></i><b>8.2</b> Example 17.1: Beta-Binomial Model — “Data is singular”</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#load-the-data"><i class="fa fa-check"></i><b>8.2.1</b> Load the data</a></li>
+<li class="chapter" data-level="8.2.2" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#specify-the-model-likelihood-and-prior"><i class="fa fa-check"></i><b>8.2.2</b> Specify the model: likelihood and prior</a></li>
+<li class="chapter" data-level="8.2.3" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#compile-in-jags"><i class="fa fa-check"></i><b>8.2.3</b> Compile in JAGS</a></li>
+<li class="chapter" data-level="8.2.4" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulate-values-from-the-posterior-distribution"><i class="fa fa-check"></i><b>8.2.4</b> Simulate values from the posterior distribution</a></li>
+<li class="chapter" data-level="8.2.5" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#summarizing-simulated-values-and-diagnostic-checking"><i class="fa fa-check"></i><b>8.2.5</b> Summarizing simulated values and diagnostic checking</a></li>
+<li class="chapter" data-level="8.2.6" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#posterior-prediction"><i class="fa fa-check"></i><b>8.2.6</b> Posterior prediction</a></li>
+<li class="chapter" data-level="8.2.7" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#loading-data-as-individual-values-rather-than-summary-statistics"><i class="fa fa-check"></i><b>8.2.7</b> Loading data as individual values rather than summary statistics</a></li>
+<li class="chapter" data-level="8.2.8" data-path="example-17-1-beta-binomial-model-data-is-singular.html"><a href="example-17-1-beta-binomial-model-data-is-singular.html#simulating-multiple-chains"><i class="fa fa-check"></i><b>8.2.8</b> Simulating multiple chains</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="prior.html"><a href="prior.html"><i class="fa fa-check"></i><b>9</b> Considering Prior Distributions</a></li>
+<li class="chapter" data-level="10" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>10</b> Introduction to Bayesian Model Comparison</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Introduction to Bayesian Reasoning and Methods</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="inference" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> Introduction to Inference</h1>
+<p>In a Bayesian analysis, the posterior distribution contains all relevant information about parameters after observing sample data. We often use certain summary characteristics of the posterior distribution to make inferences about parameters.</p>
+
+<div class="example">
+<p><span id="exm:kissing-summary" class="example"><strong>Example 5.1  </strong></span>
+Continuing the kissing study in Example <a href="estimation.html#exm:kissing-discrete1">4.2</a> where <span class="math inline">\(\theta\)</span> can only take values 0.1, 0.3, 0.5, 0.7, 0.9.
+Consider a prior distribution which places probability 1/9, 2/9, 3/9, 2/9, 1/9 on the values 0.1, 0.3, 0.5, 0.7, 0.9, respectively.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>Find the mode of the prior distribution of <span class="math inline">\(\theta\)</span>, a.k.a., the “prior mode”.</p></li>
+<li><p>Find the median of the prior distribution of <span class="math inline">\(\theta\)</span>, a.k.a., the “prior median”.</p></li>
+<li><p>Find the expected value of the prior distribution of <span class="math inline">\(\theta\)</span>, a.k.a., the “prior mean”.</p></li>
+<li><p>Find the variance of the prior distribution <span class="math inline">\(\theta\)</span>, a.k.a, the “prior variance”.</p></li>
+<li><p>Find the standard deviation of the prior distribution of <span class="math inline">\(\theta\)</span>, a.k.a, the “prior standard deviation”.</p>
+<p>Now suppose that <span class="math inline">\(y=8\)</span> couples in a sample of size <span class="math inline">\(n=12\)</span> lean right. Recall the Bayes table.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">theta</th>
+<th align="right">prior</th>
+<th align="right">likelihood</th>
+<th align="right">product</th>
+<th align="right">posterior</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.1</td>
+<td align="right">0.1111</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+<td align="right">0.0000</td>
+</tr>
+<tr class="even">
+<td align="right">0.3</td>
+<td align="right">0.2222</td>
+<td align="right">0.0078</td>
+<td align="right">0.0017</td>
+<td align="right">0.0181</td>
+</tr>
+<tr class="odd">
+<td align="right">0.5</td>
+<td align="right">0.3333</td>
+<td align="right">0.1208</td>
+<td align="right">0.0403</td>
+<td align="right">0.4207</td>
+</tr>
+<tr class="even">
+<td align="right">0.7</td>
+<td align="right">0.2222</td>
+<td align="right">0.2311</td>
+<td align="right">0.0514</td>
+<td align="right">0.5365</td>
+</tr>
+<tr class="odd">
+<td align="right">0.9</td>
+<td align="right">0.1111</td>
+<td align="right">0.0213</td>
+<td align="right">0.0024</td>
+<td align="right">0.0247</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Find the mode of the posterior distribution of <span class="math inline">\(\theta\)</span>, a.k.a., the “posterior mode”.</p></li>
+<li><p>Find the median of the posterior distribution of <span class="math inline">\(\theta\)</span>, a.k.a., the “posterior median”.</p></li>
+<li><p>Find the expected value of the posterior distribution of <span class="math inline">\(\theta\)</span>, a.k.a., the “posterior mean”.</p></li>
+<li><p>Find the variance of the posterior distribution <span class="math inline">\(\theta\)</span>, a.k.a, the “posterior variance”.</p></li>
+<li><p>Find the standard deviation of the posterior distribution of <span class="math inline">\(\theta\)</span>, a.k.a, the “posterior standard deviation”.</p></li>
+<li><p>How have the posterior values changed from the respective prior values?</p></li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="inference.html#exm:kissing-summary">5.1</a>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li><p>The prior mode is 0.5, the value of <span class="math inline">\(\theta\)</span> with the greatest prior probability.</p></li>
+<li><p>The prior median is 0.5. (Add up the prior probabilities until they go from below 0.5 to above 0.5. This happens when you add in the prior probability for <span class="math inline">\(\theta=0.5\)</span>.)</p></li>
+<li><p>The prior mean is 0.5. Remember that an expected value is a probability-weighted average value
+<span class="math display">\[
+0.1(1/9) + 0.3(2/9) + 0.5(3/9) + 0.7(2/9) + 0.9(1/9) = 0.5.
+\]</span></p></li>
+<li><p>The prior variance is 0.0533. Remember that variance is the probability-weighted average squared deviation from the mean
+<span class="math display">\[
+(0.1-0.5)^2(1/9) + (0.3 - 0.5)^2(2/9) + (0.5-0.5)^2(3/9) + (0.7-0.5)^2(2/9) + (0.9-0.5)^2(1/9) = 0.0533
+\]</span></p></li>
+<li><p>The prior standard deviation is 0.231. Remember that standard deviation is the square root of the variance: <span class="math inline">\(\sqrt{0.0533} = 0.231\)</span>.</p></li>
+<li><p>The posterior mode is 0.7, the value of <span class="math inline">\(\theta\)</span> with the greatest posterior probability.</p></li>
+<li><p>The posterior median is 0.7. (Add up the posterior probabilities until they go from below 0.5 to above 0.5. This happens when you add in the posterior probability for <span class="math inline">\(\theta=0.5\)</span>.)</p></li>
+<li><p>The posterior mean is 0.614. Now the posterior probabilities are used in the probability-weighted average value
+<span class="math display">\[
+0.1(0.000) + 0.3(0.018) + 0.5(0.421) + 0.7(0.536) + 0.9(0.025) = 0.614.
+\]</span></p></li>
+<li><p>The posterior variance is 0.013. Now the posterior probabilities are used in the probability-weighted average squared deviation from the posterior mean
+<span class="math display">\[
+(0.1-0.614)^2(0.000) + (0.3 - 0.614)^2(0.018) + (0.5-0.614)^2(0.421) + (0.7-0.614)^2(0.536) + (0.9-0.614)^2(0.025) = 0.013
+\]</span></p></li>
+<li><p>The posterior standard deviation is <span class="math inline">\(\sqrt{0.013} = 0.115\)</span>.</p></li>
+<li><p>The measures of center (mean, median, mode) shift from the prior value of 0.5 towards the observed sample proportion of 8/12. However, the posterior distribution is not symmetric, and the posterior mean is less than the posterior median. In particular, note that the posterior mean (0.614) lies between the prior mean (0.5) and the sample propotion (0.667).</p>
+<p>The measures of variability (SD, variance) are smaller for the posterior than for the prior. After observing some data, there is less uncertainty about <span class="math inline">\(\theta\)</span>. The prior probability is “spread” over the five possible values of <span class="math inline">\(\theta\)</span>, while almost all of the posterior probability is concentrated at 0.5 and 0.7.</p></li>
+</ol>
+</details>
+<p>A <em>point estimate</em> of an unknown parameter is a single-number estimate of the parameter.
+Given a posterior distribution of a parameter <span class="math inline">\(\theta\)</span>, three possible point estimates of <span class="math inline">\(\theta\)</span> are the posterior mean, the posterior median, and the posterior mode. In particular, the <strong>posterior mean</strong> is the expected value of <span class="math inline">\(\theta\)</span> according to the posterior distribution.</p>
+<p>Recall that the expected value, a.k.a., mean, of a discrete random variable <span class="math inline">\(U\)</span> is its probability-weighted average value
+<span class="math display">\[
+\text{E}(U) = \sum_u u\, P(U = u)
+\]</span>
+In the calculation of a posterior mean, <span class="math inline">\(\theta\)</span> plays the role of the variable <span class="math inline">\(U\)</span> and the posterior distribution provides the probability-weights.</p>
+<p>Reducing the posterior distribution to a single-number point estimate loses a lot of the information the posterior distribution provides. In particular, the posterior distribution quantifies the uncertainty about <span class="math inline">\(\theta\)</span> after observing sample data.
+The <strong>posterior standard deviation</strong> summarizes in a single number the degree of uncertainty about <span class="math inline">\(\theta\)</span> after observing sample data.</p>
+<p>Recall that the variance of a random variable <span class="math inline">\(U\)</span> is its probability-weighted average squared distance from its expected value
+<span class="math display">\[
+\text{Var}(U) = \text{E}\left[\left(U - \text{E}(U)\right)^2\right] 
+\]</span>
+The following is an equivalent formula for variance: “expected value of the square minus the square of the expected value.”
+<span class="math display">\[
+\text{Var}(U) = \text{E}(U^2) - \left(\text{E}(U)\right)^2
+\]</span>
+The standard deviation of a random variable is the square root of its variance is <span class="math inline">\(\text{SD}(U)=\sqrt{\text{Var}(U)}\)</span>. Standard deviation is measured in the same measurement units as the variable itself.</p>
+<p>In the calculation of a posterior standard deviation, <span class="math inline">\(\theta\)</span> plays the role of the variable <span class="math inline">\(U\)</span> and the posterior distribution provides the probability-weights.</p>
+
+<div class="example">
+<p><span id="exm:kissing-summary2" class="example"><strong>Example 5.2  </strong></span>
+Continuing the kissing study in Example <a href="estimation.html#exm:kissing-discrete2">4.3</a>. Now assume a prior distribution which is proportional to <span class="math inline">\(1-2|\theta-0.5|\)</span> for <span class="math inline">\(\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1\)</span>. Use software to answer the following.</p>
+</div>
+
+<ol style="list-style-type: decimal">
+<li><p>Find the mode of the prior distribution of <span class="math inline">\(\theta\)</span>, a.k.a., the “prior mode”.</p></li>
+<li><p>Find the median of the prior distribution of <span class="math inline">\(\theta\)</span>, a.k.a., the “prior median”.</p></li>
+<li><p>Find the expected value of the prior distribution of <span class="math inline">\(\theta\)</span>, a.k.a., the “prior mean”.</p></li>
+<li><p>Find the variance of the prior distribution <span class="math inline">\(\theta\)</span>, a.k.a, the “prior variance”.</p></li>
+<li><p>Find the standard deviation of the prior distribution of <span class="math inline">\(\theta\)</span>, a.k.a, the “prior standard deviation”.</p></li>
+<li><p>For what range of values is the prior probability that <span class="math inline">\(\theta\)</span> lies in that range equal to 95%?</p></li>
+<li><p>Find the prior probability that <span class="math inline">\(\theta\)</span> is greater than 0.5.</p>
+<p>Now suppose that <span class="math inline">\(y=8\)</span> couples in a sample of size <span class="math inline">\(n=12\)</span> lean right. Recall the prior, likelihood, and posterior.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="inference.html#cb15-1"></a><span class="co"># prior</span></span>
+<span id="cb15-2"><a href="inference.html#cb15-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb15-3"><a href="inference.html#cb15-3"></a>prior =<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">abs</span>(theta <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>) <span class="co"># shape of prior</span></span>
+<span id="cb15-4"><a href="inference.html#cb15-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior) <span class="co"># scales so that prior sums to 1</span></span>
+<span id="cb15-5"><a href="inference.html#cb15-5"></a></span>
+<span id="cb15-6"><a href="inference.html#cb15-6"></a><span class="co"># data</span></span>
+<span id="cb15-7"><a href="inference.html#cb15-7"></a>n =<span class="st"> </span><span class="dv">12</span> <span class="co"># sample size</span></span>
+<span id="cb15-8"><a href="inference.html#cb15-8"></a>y =<span class="st"> </span><span class="dv">8</span> <span class="co"># sample count of success</span></span>
+<span id="cb15-9"><a href="inference.html#cb15-9"></a></span>
+<span id="cb15-10"><a href="inference.html#cb15-10"></a><span class="co"># likelihood, using binomial</span></span>
+<span id="cb15-11"><a href="inference.html#cb15-11"></a>likelihood =<span class="st"> </span><span class="kw">dbinom</span>(y, n, theta) <span class="co"># function of theta</span></span>
+<span id="cb15-12"><a href="inference.html#cb15-12"></a></span>
+<span id="cb15-13"><a href="inference.html#cb15-13"></a><span class="co"># posterior</span></span>
+<span id="cb15-14"><a href="inference.html#cb15-14"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb15-15"><a href="inference.html#cb15-15"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p></li>
+<li><p>Find the mode of the posterior distribution of <span class="math inline">\(\theta\)</span>, a.k.a., the “posterior mode”.</p></li>
+<li><p>Find the median of the posterior distribution of <span class="math inline">\(\theta\)</span>, a.k.a., the “posterior median”.</p></li>
+<li><p>Find the expected value of the posterior distribution of <span class="math inline">\(\theta\)</span>, a.k.a., the “posterior mean”.</p></li>
+<li><p>Find the variance of the posterior distribution <span class="math inline">\(\theta\)</span>, a.k.a, the “posterior variance”.</p></li>
+<li><p>Find the standard deviation of the posterior distribution of <span class="math inline">\(\theta\)</span>, a.k.a, the “posterior standard deviation”.</p></li>
+<li><p>For what range of values is the posterior probability that <span class="math inline">\(\theta\)</span> lies in that range equal to 95%?</p></li>
+<li><p>Find the posterior probability that <span class="math inline">\(\theta\)</span> is greater than 0.5.</p></li>
+<li><p>How have the posterior values changed from the respective prior values?</p></li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="inference.html#exm:kissing-summary2">5.2</a>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="inference.html#cb16-1"></a><span class="co">## prior</span></span>
+<span id="cb16-2"><a href="inference.html#cb16-2"></a></span>
+<span id="cb16-3"><a href="inference.html#cb16-3"></a><span class="co"># prior mode</span></span>
+<span id="cb16-4"><a href="inference.html#cb16-4"></a>theta[<span class="kw">which.max</span>(prior)]</span></code></pre></div>
+<pre><code>## [1] 0.5</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="inference.html#cb18-1"></a><span class="co"># prior median</span></span>
+<span id="cb18-2"><a href="inference.html#cb18-2"></a><span class="kw">min</span>(theta[<span class="kw">which</span>(<span class="kw">cumsum</span>(prior) <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.5</span>)])</span></code></pre></div>
+<pre><code>## [1] 0.5</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="inference.html#cb20-1"></a><span class="co"># prior mean</span></span>
+<span id="cb20-2"><a href="inference.html#cb20-2"></a>prior_ev =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">*</span><span class="st"> </span>prior)</span>
+<span id="cb20-3"><a href="inference.html#cb20-3"></a>prior_ev</span></code></pre></div>
+<pre><code>## [1] 0.5</code></pre>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="inference.html#cb22-1"></a><span class="co"># prior variance</span></span>
+<span id="cb22-2"><a href="inference.html#cb22-2"></a>prior_var =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">^</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>prior) <span class="op">-</span><span class="st"> </span>prior_ev <span class="op">^</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb22-3"><a href="inference.html#cb22-3"></a>prior_var</span></code></pre></div>
+<pre><code>## [1] 0.04166666</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="inference.html#cb24-1"></a><span class="co"># prior sd</span></span>
+<span id="cb24-2"><a href="inference.html#cb24-2"></a><span class="kw">sqrt</span>(prior_var)</span></code></pre></div>
+<pre><code>## [1] 0.2041241</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="inference.html#cb26-1"></a><span class="co"># prior 95% credible interval</span></span>
+<span id="cb26-2"><a href="inference.html#cb26-2"></a>prior_cdf =<span class="st"> </span><span class="kw">cumsum</span>(prior)</span>
+<span id="cb26-3"><a href="inference.html#cb26-3"></a><span class="kw">c</span>(theta[<span class="kw">max</span>(<span class="kw">which</span>(prior_cdf <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.025</span>))], theta[<span class="kw">min</span>(<span class="kw">which</span>(prior_cdf <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.975</span>))])</span></code></pre></div>
+<pre><code>## [1] 0.1117 0.8882</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="inference.html#cb28-1"></a><span class="co"># prior prob(theta &gt; 0.5)</span></span>
+<span id="cb28-2"><a href="inference.html#cb28-2"></a><span class="kw">sum</span>(prior[theta <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>])</span></code></pre></div>
+<pre><code>## [1] 0.4999</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="inference.html#cb30-1"></a><span class="co">## posterior</span></span>
+<span id="cb30-2"><a href="inference.html#cb30-2"></a></span>
+<span id="cb30-3"><a href="inference.html#cb30-3"></a><span class="co"># posterior mode</span></span>
+<span id="cb30-4"><a href="inference.html#cb30-4"></a>theta[<span class="kw">which.max</span>(posterior)]</span></code></pre></div>
+<pre><code>## [1] 0.6154</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="inference.html#cb32-1"></a><span class="co"># posterior median</span></span>
+<span id="cb32-2"><a href="inference.html#cb32-2"></a><span class="kw">min</span>(theta[<span class="kw">which</span>(<span class="kw">cumsum</span>(posterior) <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.5</span>)])</span></code></pre></div>
+<pre><code>## [1] 0.6126</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="inference.html#cb34-1"></a><span class="co"># posterior mean</span></span>
+<span id="cb34-2"><a href="inference.html#cb34-2"></a>post_ev =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">*</span><span class="st"> </span>posterior)</span>
+<span id="cb34-3"><a href="inference.html#cb34-3"></a>post_ev</span></code></pre></div>
+<pre><code>## [1] 0.6113453</code></pre>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="inference.html#cb36-1"></a><span class="co"># posterior variance</span></span>
+<span id="cb36-2"><a href="inference.html#cb36-2"></a>post_var =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">^</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>posterior) <span class="op">-</span><span class="st"> </span>post_ev <span class="op">^</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb36-3"><a href="inference.html#cb36-3"></a>post_var</span></code></pre></div>
+<pre><code>## [1] 0.01302593</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="inference.html#cb38-1"></a><span class="co"># posterior sd</span></span>
+<span id="cb38-2"><a href="inference.html#cb38-2"></a><span class="kw">sqrt</span>(post_var)</span></code></pre></div>
+<pre><code>## [1] 0.1141312</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="inference.html#cb40-1"></a><span class="co"># posterior 95% credible interval</span></span>
+<span id="cb40-2"><a href="inference.html#cb40-2"></a>posterior_cdf =<span class="st"> </span><span class="kw">cumsum</span>(posterior)</span>
+<span id="cb40-3"><a href="inference.html#cb40-3"></a><span class="kw">c</span>(theta[<span class="kw">max</span>(<span class="kw">which</span>(posterior_cdf <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.025</span>))], theta[<span class="kw">min</span>(<span class="kw">which</span>(posterior_cdf <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.975</span>))])</span></code></pre></div>
+<pre><code>## [1] 0.3857 0.8253</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="inference.html#cb42-1"></a><span class="co"># prior prob(theta &gt; 0.5)</span></span>
+<span id="cb42-2"><a href="inference.html#cb42-2"></a><span class="kw">sum</span>(posterior[theta <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>])</span></code></pre></div>
+<pre><code>## [1] 0.829704</code></pre>
+</details>
+<p>In the previous problem, the center of the posterior distribution is closer to the sample proportion than the center of the prior distribution. There is less uncertainty about <span class="math inline">\(\theta\)</span> after observing some data, so the posterior standard deviation is less than the prior standard deviation. The 95% posterior interval is narrower than the prior interval, and its centered is shifted towards the posterior mean. The posterior concentrates more probability above 0.5 than the prior does.</p>
+<p>Bayesian inference for a parameter is based on its posterior distribution.
+Since a Bayesian analysis treats parameters as random variables, it is possible to make posterior probability statements about a parameter.</p>
+<p>A Bayesian <strong>credible interval</strong> is an interval of values for the parameter that has at least the specified probability, e.g., 95%. Credible intervals can be computed based on both the prior and the posterior distribution, though we are primarily interested in intervals based on the posterior distribution. The endpoints of a 95% <strong><em>central</em> posterior credible interval</strong> correspond to the 2.5th and the 97.5th percentiles of the posterior distribution.</p>
+<p>Central credible intervals are easier to compute, but are not the only or most widely used credible intervals. A 95% <strong>highest posterior density interval</strong> is the interval of values that contains 95% of the posterior probability and is such that the posterior density within the interval is never lower than the posterior density outside the interval. If the posterior distribution is relatively symmetric and unimodal, central posterior credible intervals and highest posterior density intervals are similar.</p>
+
+<div class="example">
+<p><span id="exm:kissing-summary3" class="example"><strong>Example 5.3  </strong></span>
+Continuing the kissing study in Example <a href="estimation.html#exm:kissing-discrete3">4.4</a>, we’ll now perform a Bayesian analysis on the actual study data in which 80 couples out of a sample of 124 leaned right. Assume a prior distribution which is proportional to <span class="math inline">\(1-2|\theta-0.5|\)</span> for <span class="math inline">\(\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1\)</span>. Use software to answer the following questions.
+Recall the prior, likelihood, and posterior.</p>
+</div>
+
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="inference.html#cb44-1"></a><span class="co"># prior</span></span>
+<span id="cb44-2"><a href="inference.html#cb44-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb44-3"><a href="inference.html#cb44-3"></a>prior =<span class="st"> </span><span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">abs</span>(theta <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>) <span class="co"># shape of prior</span></span>
+<span id="cb44-4"><a href="inference.html#cb44-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior) <span class="co"># scales so that prior sums to 1</span></span>
+<span id="cb44-5"><a href="inference.html#cb44-5"></a></span>
+<span id="cb44-6"><a href="inference.html#cb44-6"></a><span class="co"># data</span></span>
+<span id="cb44-7"><a href="inference.html#cb44-7"></a>n =<span class="st"> </span><span class="dv">124</span> <span class="co"># sample size</span></span>
+<span id="cb44-8"><a href="inference.html#cb44-8"></a>y =<span class="st"> </span><span class="dv">80</span> <span class="co"># sample count of success</span></span>
+<span id="cb44-9"><a href="inference.html#cb44-9"></a></span>
+<span id="cb44-10"><a href="inference.html#cb44-10"></a><span class="co"># likelihood, using binomial</span></span>
+<span id="cb44-11"><a href="inference.html#cb44-11"></a>likelihood =<span class="st"> </span><span class="kw">dbinom</span>(y, n, theta) <span class="co"># function of theta</span></span>
+<span id="cb44-12"><a href="inference.html#cb44-12"></a></span>
+<span id="cb44-13"><a href="inference.html#cb44-13"></a><span class="co"># posterior</span></span>
+<span id="cb44-14"><a href="inference.html#cb44-14"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb44-15"><a href="inference.html#cb44-15"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-61-1.png" width="672" /></p>
+<ol style="list-style-type: decimal">
+<li>Find a 95% central posterior credible interval for <span class="math inline">\(\theta\)</span>. How does the credible interval compare to the one from the previous example (with <span class="math inline">\(n=12\)</span>)?</li>
+<li>Write a clearly worded sentence reporting the credible interval from the previous part in context.</li>
+<li>Given the shape of the posterior distribution, how could your approximate a posterior 95% central posterior credible interval?</li>
+<li>Find the posterior probability that <span class="math inline">\(\theta\)</span> is greater than 0.5. How does this probability compare to the one from the previous example (with <span class="math inline">\(n=12\)</span>)?</li>
+<li>Write a clearly worded sentence reporting the probability from the previous part in context.</li>
+<li>Given the shape of the posterior distribution, how could your approximate the posterior probability that <span class="math inline">\(\theta\)</span> is greater than 0.5?</li>
+<li>Now consider the other two prior distributions from Example <a href="estimation.html#exm:kissing-discrete3">4.4</a>.
+Would any of the conclusions from this problem change substantially if we had chosen one of the other priors?</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="inference.html#exm:kissing-summary3">5.3</a>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="inference.html#cb45-1"></a><span class="co">## posterior</span></span>
+<span id="cb45-2"><a href="inference.html#cb45-2"></a></span>
+<span id="cb45-3"><a href="inference.html#cb45-3"></a><span class="co"># posterior mode</span></span>
+<span id="cb45-4"><a href="inference.html#cb45-4"></a>theta[<span class="kw">which.max</span>(posterior)]</span></code></pre></div>
+<pre><code>## [1] 0.64</code></pre>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="inference.html#cb47-1"></a><span class="co"># posterior median</span></span>
+<span id="cb47-2"><a href="inference.html#cb47-2"></a><span class="kw">min</span>(theta[<span class="kw">which</span>(<span class="kw">cumsum</span>(posterior) <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.5</span>)])</span></code></pre></div>
+<pre><code>## [1] 0.6385</code></pre>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="inference.html#cb49-1"></a><span class="co"># posterior mean</span></span>
+<span id="cb49-2"><a href="inference.html#cb49-2"></a>post_ev =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">*</span><span class="st"> </span>posterior)</span>
+<span id="cb49-3"><a href="inference.html#cb49-3"></a>post_ev</span></code></pre></div>
+<pre><code>## [1] 0.6378017</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="inference.html#cb51-1"></a><span class="co"># posterior variance</span></span>
+<span id="cb51-2"><a href="inference.html#cb51-2"></a>post_var =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">^</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>posterior) <span class="op">-</span><span class="st"> </span>post_ev <span class="op">^</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb51-3"><a href="inference.html#cb51-3"></a>post_var</span></code></pre></div>
+<pre><code>## [1] 0.001803819</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="inference.html#cb53-1"></a><span class="co"># posterior sd</span></span>
+<span id="cb53-2"><a href="inference.html#cb53-2"></a><span class="kw">sqrt</span>(post_var)</span></code></pre></div>
+<pre><code>## [1] 0.04247139</code></pre>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="inference.html#cb55-1"></a><span class="co"># posterior 95% credible interval</span></span>
+<span id="cb55-2"><a href="inference.html#cb55-2"></a>posterior_cdf =<span class="st"> </span><span class="kw">cumsum</span>(posterior)</span>
+<span id="cb55-3"><a href="inference.html#cb55-3"></a><span class="kw">c</span>(theta[<span class="kw">max</span>(<span class="kw">which</span>(posterior_cdf <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.025</span>))], theta[<span class="kw">min</span>(<span class="kw">which</span>(posterior_cdf <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.975</span>))])</span></code></pre></div>
+<pre><code>## [1] 0.5526 0.7188</code></pre>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="inference.html#cb57-1"></a><span class="co"># prior prob(theta &gt; 0.5)</span></span>
+<span id="cb57-2"><a href="inference.html#cb57-2"></a><span class="kw">sum</span>(posterior[theta <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>])</span></code></pre></div>
+<pre><code>## [1] 0.999182</code></pre>
+</details>
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li>A 95% central posterior credible interval for <span class="math inline">\(\theta\)</span> is [0.552, 0.719]. This interval is narrower (more precise) than the one for <span class="math inline">\(n=12\)</span>. With a larger sample size, the likelihood is more “peaked” and so the posterior probability is concentrated over a narrower range of values.</li>
+<li>There is a posterior probability of 95% that the population proportion of kissing couples who lean heads to the right is between 0.552 and 0.719.</li>
+<li>The posterior distribution is approximately Normal, with posterior mean 0.638 and posterior standard deviation 0.042. A Normal distribution places 95% of probability on values that fall within 2 standard deviations of the mean. So an approximate 95% posterior credible interval has endpoints <span class="math inline">\(0.638 \pm 2 \times 0.042\)</span>, yielding an interval of <span class="math inline">\([0.552, 0.723]\)</span>.</li>
+<li>The posterior probability that <span class="math inline">\(\theta\)</span> is greater than 0.5 is 0.9992. This probability compare to the one from the previous example since with the larger sample size, the posterior standard deviation is smaller and the posterior distribution is concentrated even more near the observed sample proportion of 0.645.</li>
+<li>There is a posterior probability of 99.92% that the population proportion of kissing couples who lean heads to the right is greater than 0.5.</li>
+<li>Use standardization (<span class="math inline">\(z\)</span>-scores) and the empirical rule. A value of 0.5 is 3.24 standard deviations below the posterior mean: <span class="math inline">\((0.5 - 0.638)/0.042 = -3.24\)</span>. By the empirical rule for Normal distributions, 99.7% of the probability corresponds to values within 3 standard deviations of the mean. Therefore the posterior probability that <span class="math inline">\(\theta\)</span> is less than 0.5 is pretty small.</li>
+<li>We saw in Example <a href="estimation.html#exm:kissing-discrete3">4.4</a> that with the sample size of <span class="math inline">\(n=124\)</span>, the posterior distribution was basically the same for each of the three priors. Sothe conclusions from this problem would not change substantially if we had chosen one of the other priors.</li>
+</ol>
+</details>
+<p>In many situations, the posterior distribution of a single parameter is approximately Normal, so an approximate 95% credible interval has endpoints
+<span class="math display">\[
+\text{posterior mean} \pm 2 \times \text{posterior SD}
+\]</span>
+Also, posterior probabilities of hypotheses about a parameter can often be approximated with Normal distribution calculations — <a href="https://bookdown.org/kevin_davisross/probsim-book/normal-distributions.html">standardizing and using the empirical rule</a>.</p>
+
+<div class="example">
+<span id="exm:kissing-freq" class="example"><strong>Example 5.4  </strong></span>We’ll now compare to the Bayesian analysis in the previous example to a frequentist analysis. Recall the actual study data in which 80 couples out of a sample of 124 leaned right.
+</div>
+
+<ol style="list-style-type: decimal">
+<li>Compute a 95% confidence interval for <span class="math inline">\(\theta\)</span>.</li>
+<li>Write a clearly worded sentence reporting the confidence interval in context.</li>
+<li>Explain what “95% confidence” means?</li>
+<li>Conduct a (null) hypothesis (significance) test of whether the sample data provide strong evidence that more than half of all kissing couples lean their heads to the right. Compute the corresponding p-value.</li>
+<li>Write a clearly worded sentence reporting the hypothesis test in context.</li>
+<li>Interpret the p-value.</li>
+<li>Compare the <em>numerical results</em> of the Bayesian and frequentist analysis. How does the <em>interpretation</em> of these results differ between the two approaches?</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="inference.html#exm:kissing-freq">5.4</a>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li><p>The observed sample proportion is <span class="math inline">\(\hat{p} = 80/124 = 0.645\)</span> and its standard error is <span class="math inline">\(\sqrt{\hat{p}(1-\hat{p})}/n\)</span>. The usual formula for a 95% confidence interval for a population prportion is
+<span class="math display">\[
+  \hat{p} \pm 2\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\]</span>
+Plugging in <span class="math inline">\(n=124\)</span> and <span class="math inline">\(\hat{p} = 80/124\)</span> yields the interval <span class="math inline">\([0.559, 0.731]\)</span>.</p></li>
+<li><p>We estimate with 95% confidence that the population proportion of kissing couples who lean heads to the right is between 0.559 and 0.731.</p></li>
+<li><p>Confidence is in the estimation procedure.
+Over many samples, 95% of samples will yield confidence intervals, computed using the above formula, that contain the true parameter value (a fixed number)
+The intervals change from sample to sample; the parameter is fixed.</p></li>
+<li><p>The null hypothesis is <span class="math inline">\(H_0:\theta = 0.5\)</span>. The alternative hypothesis is <span class="math inline">\(H_a:\theta&gt;0.5\)</span>. The standard deviation of the null distribution is <span class="math inline">\(\sqrt{0.5(1-0.5)/124} = 0.045\)</span>. The standardized statistic is <span class="math inline">\((0.645 - 0.5) / 0.045 = 3.23\)</span>. Assuming the null distribution is approximately Normal, the p-value is approximately 0.0006.</p></li>
+<li><p>With a p-value of 0.0006 we have strong evidence to reject the null hypothesis and conclude that the population proportion of kissing couples who lean heads to the right is greater than 0.5</p></li>
+<li><p>Interpreting the p-value</p>
+<ul>
+<li>If the population proportion of kissing couples who lean heads to the right is equal to 0.5</li>
+<li>Then we would observe a sample proportion of 0.645 or more in about 0.06% of random samples of size 124</li>
+<li>Since we actually observed a sample proportion of 0.645, which would be unlikely if the population proportion were 0.5</li>
+<li>The data provide evidence that the population proportion is not 0.5</li>
+</ul></li>
+<li><p>The numerical results are similar: the 95% posterior credible interval is similar to the 95% confidence interval, and the p-value (0.0006) is similar to the posterior probability that <span class="math inline">\(\theta\)</span> is less than 0.5 (0.0008 = 1-0.9992). However, the <em>interpretation</em> of these results is very different between the two approaches. The Bayesian approach provides probability statements about the parameter; the frequentist approach develops procedures based on the probability of what might happen over many samples.</p></li>
+</ol>
+</details>
+<p>Since a Bayesian analysis treats parameters as random variables, it is possible to make probability statements about parameters. In contrast, a frequentist analysis treats unknown parameters as fixed — that is, not random — so probability statements do not apply. In a frequentist approach, probability statements (like “95% confidence”) are based on how the sample data would behave over many hypothetical samples.</p>
+<p>In a Bayesian approach</p>
+<ul>
+<li>Parameters are random variables and have distributions</li>
+<li>Observed data are treated as fixed, not random</li>
+<li>All inference is based on the posterior distribution of parameters which quantifies our uncertainty about the parameters.</li>
+<li>The posterior distribution quantifies how our prior “beliefs” about the parameters have been updated to reflect the observed data.</li>
+</ul>
+<p>In a frequentist approach</p>
+<ul>
+<li>Parameters are treated as fixed (not random), but unknown numbers</li>
+<li>Data are treated as random</li>
+<li>All inference is based on the sampling distribution of the data which quantifies how the data behaves over many hypothetical samples.</li>
+</ul>
+
+<div class="example">
+<p><span id="exm:body-temp-credible" class="example"><strong>Example 5.5  </strong></span>
+Continuing Example <a href="estimation.html#exm:body-temp-discrete3">4.7</a>. Assume body temperatures (degrees Fahrenheit) of healthy adults follow a Normal distribution with unknown mean <span class="math inline">\(\mu\)</span> and known standard deviation <span class="math inline">\(\sigma=1\)</span>.
+Suppose we wish to estimate <span class="math inline">\(\mu\)</span>, the population mean healthy human body temperature.
+In a recent study<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a>, the sample mean body temperature in a sample of 208 healthy adults was 97.7 degrees F.</p>
+<p>We’ll again use a grid approximation and assume that any multiple of 0.0001 between 96.0 and 100.0 is a possible value of <span class="math inline">\(\mu\)</span>: <span class="math inline">\(96.0, 96.0001, 96.0002, \ldots, 99.9999, 100.0\)</span>. Assume a prior distribution which is proportional a Normal distribution with mean 98.6 and standard deviation 0.7 over <span class="math inline">\(\mu\)</span> values in the grid. Recall the prior, likelihood, and posterior.</p>
+</div>
+
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="inference.html#cb59-1"></a><span class="co"># prior</span></span>
+<span id="cb59-2"><a href="inference.html#cb59-2"></a>theta =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">96</span>, <span class="dv">100</span>, <span class="fl">0.0001</span>)</span>
+<span id="cb59-3"><a href="inference.html#cb59-3"></a>prior =<span class="st"> </span><span class="kw">dnorm</span>(theta, <span class="fl">98.6</span>, <span class="fl">0.7</span>)</span>
+<span id="cb59-4"><a href="inference.html#cb59-4"></a>prior =<span class="st"> </span>prior <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(prior)</span>
+<span id="cb59-5"><a href="inference.html#cb59-5"></a></span>
+<span id="cb59-6"><a href="inference.html#cb59-6"></a><span class="co"># data</span></span>
+<span id="cb59-7"><a href="inference.html#cb59-7"></a>n =<span class="st"> </span><span class="dv">208</span> <span class="co"># sample size</span></span>
+<span id="cb59-8"><a href="inference.html#cb59-8"></a>y =<span class="st"> </span><span class="fl">97.7</span> <span class="co"># sample mean</span></span>
+<span id="cb59-9"><a href="inference.html#cb59-9"></a>sigma =<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb59-10"><a href="inference.html#cb59-10"></a></span>
+<span id="cb59-11"><a href="inference.html#cb59-11"></a><span class="co"># likelihood</span></span>
+<span id="cb59-12"><a href="inference.html#cb59-12"></a>likelihood =<span class="st"> </span><span class="kw">dnorm</span>(y, theta, sigma <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n)) <span class="co"># function of theta</span></span>
+<span id="cb59-13"><a href="inference.html#cb59-13"></a></span>
+<span id="cb59-14"><a href="inference.html#cb59-14"></a><span class="co"># posterior</span></span>
+<span id="cb59-15"><a href="inference.html#cb59-15"></a>product =<span class="st"> </span>likelihood <span class="op">*</span><span class="st"> </span>prior</span>
+<span id="cb59-16"><a href="inference.html#cb59-16"></a>posterior =<span class="st"> </span>product <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(product)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-66-1.png" width="672" /></p>
+<ol style="list-style-type: decimal">
+<li>What does the prior standard deviation of 0.7 represent?</li>
+<li>What does the population standard deviation of 1 represent?</li>
+<li>Compute the posterior standard deviation. What does it represent?</li>
+<li>Compute the posterior mean.</li>
+<li>Compute a 95% credible interval for <span class="math inline">\(\mu\)</span>.</li>
+<li>Write a clearly worded sentence reporting the credible interval in context.</li>
+<li>Compute the posterior probability that <span class="math inline">\(\mu\)</span> is less than 98.6.</li>
+<li>Write a clearly worded sentence reporting the probability in the previous part in context.</li>
+</ol>
+
+<div class="solution">
+ <span class="solution"><em>Solution. </em></span> to Example <a href="inference.html#exm:body-temp-credible">5.5</a>
+</div>
+
+<details>
+<p><summary>Show/hide solution </summary></p>
+<ol style="list-style-type: decimal">
+<li>The prior standard deviation of 0.7 quantifies, in a single number, our degree of prior uncertainty about the population mean human body temperature <span class="math inline">\(\mu\)</span>. We have a prior probability of 68% that <span class="math inline">\(\mu\)</span> is between 97.9 and 99.3, a prior probability of 95% that <span class="math inline">\(\mu\)</span> is between 97.2 and 100, etc (assuming a Normal prior).</li>
+<li>The population standard deviation of 1 represents the person-to-person variability in body temperatures. If we were to measures body temperatures for many people, body temperatures would vary by about 1 degree F from person to person. About 68% of body temperatures would be within 1 degree of <span class="math inline">\(\mu\)</span>, about 95% would be within 2 degrees of <span class="math inline">\(\mu\)</span>, etc (assuming that individual body temperatures follows a Normal distributions.)</li>
+<li>The posterior standard deviation of 0.069 (see code below) quantifies, in a single number, our degree of posterior uncertainty about the population mean human body temperature <span class="math inline">\(\mu\)</span> after observing the sample data.</li>
+<li>The posterior mean is 97.71, which is pretty close to the observed sample mean.</li>
+<li>Code gives [97.57, 97.85]. Since the posterior distribution is approximately Normal, we can approximate the endpoints of the confidence interval with <span class="math inline">\(97.71 \pm 2 \times 0.069\)</span>.</li>
+<li>There is a posterior probability of 95% that the population mean human body temperature is between 97.57 and 97.85 degrees Fahrenheit.</li>
+<li>The posterior probability that <span class="math inline">\(\mu\)</span> is less than 98.6 is essentially 1. The value 98.6 is 12.9 standard deviations above the posterior mean: <span class="math inline">\((98.6 - 97.71)/0.069=12.9\)</span>.</li>
+<li>There is a posterior probability of close to 100% that the population mean human body temperature is less than 98.6 degrees Fahrenheit.</li>
+</ol>
+</details>
+<details>
+<p><summary>Show/hide solution </summary></p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="inference.html#cb60-1"></a><span class="co"># posterior mean</span></span>
+<span id="cb60-2"><a href="inference.html#cb60-2"></a>post_ev =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">*</span><span class="st"> </span>posterior)</span>
+<span id="cb60-3"><a href="inference.html#cb60-3"></a>post_ev</span></code></pre></div>
+<pre><code>## [1] 97.70874</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="inference.html#cb62-1"></a><span class="co"># posterior variance</span></span>
+<span id="cb62-2"><a href="inference.html#cb62-2"></a>post_var =<span class="st"> </span><span class="kw">sum</span>(theta <span class="op">^</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>posterior) <span class="op">-</span><span class="st"> </span>post_ev <span class="op">^</span><span class="st"> </span><span class="dv">2</span></span>
+<span id="cb62-3"><a href="inference.html#cb62-3"></a>post_var</span></code></pre></div>
+<pre><code>## [1] 0.004760979</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="inference.html#cb64-1"></a><span class="co"># posterior sd</span></span>
+<span id="cb64-2"><a href="inference.html#cb64-2"></a><span class="kw">sqrt</span>(post_var)</span></code></pre></div>
+<pre><code>## [1] 0.06899985</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="inference.html#cb66-1"></a><span class="co"># posterior 95% credible interval</span></span>
+<span id="cb66-2"><a href="inference.html#cb66-2"></a>posterior_cdf =<span class="st"> </span><span class="kw">cumsum</span>(posterior)</span>
+<span id="cb66-3"><a href="inference.html#cb66-3"></a><span class="kw">c</span>(theta[<span class="kw">max</span>(<span class="kw">which</span>(posterior_cdf <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.025</span>))], theta[<span class="kw">min</span>(<span class="kw">which</span>(posterior_cdf <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.975</span>))])</span></code></pre></div>
+<pre><code>## [1] 97.5734 97.8440</code></pre>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="inference.html#cb68-1"></a><span class="co"># prior prob(theta &lt; 98.6)</span></span>
+<span id="cb68-2"><a href="inference.html#cb68-2"></a><span class="kw">sum</span>(posterior[theta <span class="op">&lt;</span><span class="st"> </span><span class="fl">98.6</span>])</span></code></pre></div>
+<pre><code>## [1] 1</code></pre>
+</details>
+<!-- A **Bayes estimator** is one that *minimizes the expected value of a posterior loss*. -->
+<!-- A *loss function* $L(\theta, \hat{\theta})$ quantifies how bad it is for the estimate $\hat{\theta}$ (a function of the sample data $y$) of the parameter to differ from the actual value of the parameter $\theta$.  -->
+<!-- The expected value is calculated with respect to the posterior distribution: $\E(L(\theta, \hat{\theta})\vert y)$.  The parameter $\theta$ varies according to the posterior distribution, but given the observed data $y$, $\hat{\theta}$ is treated as a constant. -->
+<!-- The most commonly used loss function is *squared error loss*: $L(\theta-\hat{\theta}) = (\theta-\hat{\theta})^2$. -->
+<!-- The **posterior mean** $\hat{\theta} = \E(\theta\vert x)$ is the Bayes estimator for minimizing squared error loss $\E((\theta-\hat{\theta})^2\vert x)$. -->
+<!-- Another common loss function is *absolute error loss*: $L(\theta-\hat{\theta}) = |\theta-\hat{\theta}\vert $. -->
+<!-- \bei -->
+<!-- \item The **posterior median** (i.e., 50th percentile of the posterior distribution) is the Bayes estimator for minimizing squared error loss $\E(|\theta-\hat{\theta}||y)$. -->
+<!-- Less common is a *0-1 (right-or-wrong) loss* function. -->
+<!-- The **posterior mode** (i.e., value of $\theta$ for which the posterior density is maximized) is the Bayes estimator for minimizing 0-1 loss. -->
+
+</div>
+<div class="footnotes">
+<hr />
+<ol start="15">
+<li id="fn15"><p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6258625/">Source</a> and a <a href="https://www.scientificamerican.com/article/are-human-body-temperatures-cooling-down/">related article</a>.<a href="inference.html#fnref15" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="estimation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="prediction.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"google": false,
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bayesian-reasoning-and-methods.pdf"],
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
