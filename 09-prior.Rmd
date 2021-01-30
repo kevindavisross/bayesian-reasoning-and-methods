@@ -1,105 +1,227 @@
 # Considering Prior Distributions  {#prior}
 
-Macalaseter example about why a prior is ok.  Subjectivity - likelihood is also subjective
+One of the most commonly asked questions when one first encounters Bayesian statistics is "how do we choose a prior?"  While there is never one "perfect" prior in any situation, we'll discuss in this chapter some issues to consider when choosing a prior.  But first, here are a few big picture ideas to keep in mind.
 
-The question isn't really "what is the prior?" but rather "is there a prior"?
-That is, are you choosing a Bayesian approach and treating parameters as random variables.
+- The prior is only one part of the Bayesian model.  The likelihood is the other part.  And there is the data that is used to fit the model.  Choice of prior is just one of many modeling assumptions that should be evaluated and checked.
+- In many situations, the posterior distribution is not too sensitive to reasonable changes in prior.  In these situations, the important question isn't "what is the prior?" but rather "is there a prior at all"? That is, are you adopting a Bayesian approach, treating parameters as random variables, and quantifying uncertainty about parameters with probability distributions?
+- One criticism of Bayesian statistics in general and priors in particular is that they are subjective.
+However, any statistical analysis is inherently subjective, filled with many assumptions and decisions along the way.
+Except in the simplest situations, if you ask five statisticians how to approach a particular problem, you will likely get five different answers.
+Priors and Bayesian data analysis are no more inherently subjective than any of the myriad other assumptions made in statistical analysis.
 
-There are advantages and disadvantages.  Do STAT 305 Binomial vs Negative Binomial p-value problem here.
+Subjectivity is OK, and often beneficial. Choosing a subjective prior allows us to explicitly incorporate a wealth of past experience into our analysis.
 
-Tamika is a basketball player who has had a 0.7 probability of making any particular free throw throughout her career.  Tamika has been practicing and believes now that her probability of making a free throw is greater than 0.7. Her coach agrees to allow Tamika to make 50 free throw attempts in an effort to convince
-him that she has improved. Let the random variable $X$ represent the number of free throw attempts that Tamika successfully makes.  Assume that shot attempts are independent, and the probability of success is the same on each attempt.  
+```{example, pepsi}
+Xiomara claims that she can predict which way a coin flip will land. To test her claim, you flip a fair coin 10 times, and she correctly predicts the result of each of the 10 flips.
 
-Suppose that Tamika has actually not improved and her probability of success is still 0.7. Determine how many shots (out of 50) Tamika would have to make, in order for the
-probability of successfully making at least that many shots to be no greater than 0.025. (In statistical language, this determines the ``rejection region'' for a level 0.025
-``significance'' test.)  The coach decides that if Tamika makes at least this many attempts, then he has convincing evidence that she has improved (because the probability of making this many attempts just by luck if she has not improved is fairly small, less than 0.025.) Compute the probability that Tamika actually makes this many attempts if her true probability of success on any attempt is 0.7.
+Rogelio claims that he can taste the difference between Coke and Pepsi.  To test his claim, you give him a blind taste test of 10 cups, flipping a coin for each cup to determine whether to serve Coke or Pespi.  Rogelio correctly identifies each of the 10 cups.
 
+Whose claim do you find more convincing, Xiomara's or Rogelio's? Or are you equally convinced?
 
-If $X$ is the number of shots she makes, then $X$ has a Binomial(50, 0.7) distribution in this scenario.  We want the smallest value $x$ which satisfies $\IP(X \ge x) \le 0.025$.  In other words, we want the largest $x$ for which $\IP(X \le x - 1) \le 0.975$. Binomial(50, 0.7).quantile(1 - 0.025) returns 41; therefore $x-1 = 41$ so $x = 42$.  That is, she needs to make at least 42 shots.  $\IP(X \ge 42) = 0.018$ from 1-Binomial(50, 0.7).cdf(41).  (And $\IP(X \ge 41)>0.025$.)
+Let $\theta_X$ be the probability that Xiomara correctly guess the result of a fair coin flip.
+Let $\theta_R$ be the probability that Rogelio correctly guess the soda in a randomly selected cup.
 
-Now suppose that Tamika has genuinely improved and her probability of success on any attempt is 0.8. Determine
-the probability that she would successfully make enough shots (out of 50) to fall into the
-rejection region from the previous part and therefore convince the coach that she has improved. (In statistical language, this is the ``power'' of the level 0.025 ``significance'' test.) 
+```
 
-Now $X$ has a Binomial(50, 0.8) distribution.  To emphasize that the distribution of $X$ has changed, but $X$ itself has not changed, we'll write $\textrm{Q}(X \ge 42)= 0.307$ from 1 - Binomial(50, 0.8).cdf(41)
+1. How might a frequentist address this situation?  What would the conclusion be?
+1. Consider a Bayesian approach.  Describe, in general terms, your prior distributions for the two parameters.  How do they compare?  How would this impact your conclusions?
 
-Redo parts a) and b) but now assuming that Tamika attempts 200 shots.  Compare the results to those when $n=50$.  (Hint: compare values for $X/n$  between the two scenarios rather than $X$ itself.)
+```{solution}
+to Example \@ref(exm:pepsi)
+```
 
-If she has not improved $X$ has a Binomial(200, 0.7) distribution and the rejection region is $X \ge 153$ with probability $\IP(X \ge 153) = 0.0249$ from 1 - Binomial(200, 0.7).cdf(152).
-
-If she has improved $X$ has a Binomial(200, 0.8) distribution and $\textrm{Q}(X \ge 153) = 0.905$ from 1 - Binomial(200, 0.8).cdf(152).
-
-We see that the probability of incorrectly concluding that she has improved when she hasn't is about the same, 0.025, in both cases.  But the probability of correctly concluding that she has improved when she really has is much larger when $n=200$ (the power is greater with the larger sample size).
-
-
-Throughout her career Tamika has had a probability of 0.5 of making any three point attempt.  However, her coach is afraid that Tamika has been focused so much on improving her free throw shooting that her three point shooting has gotten worse.  To check this, the coach has Tamika shoot a series of three pointers; she makes 7 out of 24.
-
-Suppose that Tamika has actually not gotten worse and her probability of success on any single attempt is still 0.5.  Compute the probability that Tamika makes 7 or fewer attempts out of 24 \emph{if her coach told her to make 24 attempts and then stop.}  (In statistical terms, this is called a ``$p$-value.'') 
-
-Let $X$ be the number of shots she makes.  if she has not improved $X$ has a Binomial(24, 0.5) distribution, so the p-value is $\IP(X \le 7) = 0.032$ from Binomial(24, 0.5).cdf(7).
-
-Suppose that Tamika has actually not gotten worse and her probability of success on any single attempt is still 0.5. Compute the probability that Tamika requires at least 24 attempts to make 7 three pointers \emph{if her coach told her to shoot until she makes 7 three pointers and then stop.} (In statistical terms, this is called a ``$p$-value.'') 
-
-Let $Y$ be the number of shots she makes.  if she has not improved $Y$ has a NegativeBinomial(7, 0.5) distribution, so the p-value is $\IP(Y \ge 24) = 0.017$ from 1 - 1 - NegativeBinomial(7, 0.5).cdf(23)
-
-Before Tamika makes her attempts, the coach decides that he has convincing evidence that Tamika has gotten worse if the $p$-value is less than 0.025.  (In statistical terms, 0.025 is called a ``significance level''.)  Does the fact that Tamika only made 7/24 attempts convince the coach that Tamika got worse?  Explain.  (The issue that you see here is one problem with using $p$-values and significance levels.  There are many, many more.)
-
-It depends.  If the coach had told her to attempt 24 attempts and she made 7, then the p-value of 0.03 is greater than the significance level of 0.025, so the coach does not have sufficient evidence that she got worse.  If the coach had told her to shoot until shes makes 7 and it took her 24 shots, then the p-value of 0.017 is less than the significance level of 0.025, so the coach does have sufficient evidence that she got worse.  But in either case she made 7/24 shots, so it seems undesirable that basically the same data could lead to two different conclusions.  This is one problem with using $p$-values and significance levels. 
+1. For Xiomara, a frequentist might conduct a hypothesis test of the null hypothesis $H_0:\theta_X = 0.5$ versus the alternative hypothesis: $H_a:\theta_X > 0.5$. The p-value would be about 0.001, the probability of observing 10 out of 10 successes from a Binomial distribution with parameters 10 and 0.5.  Rogelio's set up would be similar and would yield the same p-value.  So a strict frequentist would be equally convinced of the two claims.
+1. Prior to observing data, we are probably more skeptical of Xiomara's claim than Rogelio's.  Since coin flips are unpredictable, we would have a strong prior belief that $\theta_X$ is close to 0.5 (what it would be if she were just guessing).  Our prior for $\theta_X$ would have a mean of 0.5 and a small prior SD, to reflect that only values close to 0.5 seem plausible.  Therefore, it would require a lot of evidence to sway our prior beliefs.  
+    On the other hand, we might be familiar with people who can tell the difference between Coke and Pepsi; maybe we even can ourselves.  Our prior for $\theta_R$ would have a smaller prior SD than that of $\theta_X$ to allow for a wider range of plausible values.  We might even have a prior mean for $\theta_R$ above 0.5 if we have experience with a lot of people who can tell the difference between Coke and Pepsi.  Given the sample data, our posterior probability that $\theta_R>0.5$ would be larger than the posterior probability that $\theta_X > 0.5$, and we would be more convinced by Rogelio's claim than by Xiomara's.
 
 
-The prior distribution quantifies the researcher's uncertainty about the parameters *before* observing data.  Some issues to consider when choosing a prior include:
 
-- The researcher's prior beliefs! A prior distribution is part of a statistical model, and should be consistent with knowledge about the underlying scientific problem. 
-- Informative or weakly informative prior.  Prior is tuned to represent some subset of whatever actual prior knowledge is available, which might be expressed in terms of an ``equivalent prior sample size''.
-- Noninformative prior a.k.a.\ (reference, vague, flat prior).  A prior is sought that plays a minimal role in inference so that ``the data can speak for themselves''.
+Even if a prior does not represent strong prior beliefs, just having a prior distribution at all allows for Bayesian analysis.  Remember, both Bayesian and frequentist are valid approaches to statistical analyses, each with advantages and disadvantages.  That said, there are some issues with frequentist approaches that incorporating a prior distribution and adpopting a Bayesian approach alleviates. (To be fair, an upcoming investigation will address some of disadvantages of the Bayesian approach compare with the frequenstist approach.)
+
+```{example, tamika}
+Tamika is a basketball player who throughout her career has had a probability of 0.5 of making any three point attempt.
+However, her coach is afraid that her three point shooting has gotten worse.
+To check this, the coach has Tamika shoot a series of three pointers; she makes 7 out of 24.
+Does the coach have evidence that Tamika has gotten worse?
+  
+Let $\theta$ be the probability that Tamika successfully makes any three point attempt.
+Assume attempts are independent.
+  
+```
+
+1. Prior to collecting data, the coach decides that he'll have convincing evidence that Tamika has gotten worse if the p-value is less than 0.025. Suppose the coach told Tamika to *shoot 24 attempts and then stop* and count the number of successful attempts. Use software to compute the p-value.  Is the coach convinced that Tamika has gotten worse?
+1. Prior to collecting data, the coach decides that he'll have convincing evidence that Tamika has gotten worse if the p-value is less than 0.025. Suppose the coach told Tamika to *shoot until she makes 7 three pointers and then stop* and count the number of total attempts. Use software to compute the p-value.  Is the coach convinced that Tamika has gotten worse? (Hint: the total number of attempts has a Negative Binomial distribution.)
+1. Now suppose the coach takes a Bayesian approach and assumes a Beta($\alpha$, $\beta$) prior distribution for $\theta$.  Suppose the coach told Tamika to *shoot 24 attempts and then stop* and count the number of successful attempts. Identify the likelihood function and the posterior distribution of $\theta$.
+1. Now suppose the coach takes a Bayesian approach and assumes a Beta($\alpha$, $\beta$) prior distribution for $\theta$.  Suppose the coach told Tamika to *shoot until she makes 7 three pointers and then stop* and count the number of total attempts. Identify the likelihood function and the posterior distribution of $\theta$.
+1. Compare the Bayesian and frequentist approaches in this example.  Does the "strength of the evidence" depend on how the data were collected?
+
+```{solution, tamika-sol}
+to Example \@ref(exm:tamika)
+```
+
+
+1. The null hypothesis is $H_0:\theta = 0.5$ and the alternative hypothesis is $H_a:\theta < 0.5$. If the null hypothesis is true and Tamika has not gotten worse, then $Y$, the number of successful attempts, has a Binomial(24, 0.5) distribution. The p-value is $P(Y \le 7) = 0.032$ from `pbinom(7, 24, 0.5)`. Using a strict threshold of 0.025, the coach has NOT been convinced that Tamika has gotten worse.
+1. The null hypothesis is $H_0:\theta = 0.5$ and the alternative hypothesis is $H_a:\theta < 0.5$. If the null hypothesis is true and Tamika has not gotten worse, then $N$, the number of total attempts required to achieve 7 successful attempts, has a Negative Binomial(7, 0.5) distribution. The p-value is $P(N \ge 24) = 0.017$ from `1 - pnbinom(23 - 7, 7, 0.5)`. (In R, `nbinom` only counts the total number of failures, not the total number of trials.) Using a strict threshold of 0.025, the coach has  been convinced that Tamika has gotten worse.
+1. The data is $Y$, the number of successful attempts in 24 attempts, which follows a Binomial(24, $\theta$) distribution.  The likelihood is $P(Y=7|\theta)$
+\[
+f(y=7|\theta) = \binom{24}{7}\theta^7(1-\theta)^{17} \propto \theta^{7}(1-\theta)^{17}, \qquad 0 < \theta < 1.
+\]
+The posterior distribution is the Beta($\alpha + 7$, $\beta + 17$) distribution.
+1. The data is $N$, the number of total attempts required to achieve 7 successful attempts, which follows a Negative Binomial(7, $\theta$) distribution.  The likelihood is $P(N=24|\theta)$
+\[
+f(n = 24|\theta) = \binom{24 - 1}{7 - 1}\theta^7(1-\theta)^{17} \propto \theta^{7}(1-\theta)^{17}, \qquad 0 < \theta < 1.
+\]
+(The $\binom{24 - 1}{7 - 1}$ follows from the fact that the last attempt has to be success.) Note that the shape of the likelihood as a function of $\theta$ is the same as in the previous part.  Therefore, the posterior distribution is the Beta($\alpha + 7$, $\beta + 17$) distribution.
+1. Even though both frequentist scenario involves 7 successes in 24 attempts, the p-value measuring the strength of the evidence to reject the null hypothesis differed depending on how the data were collected.  Using a strict cutoff of 0.025 led the coach to reject the null hypothesis in one scenario but not the other.
+    However, the Bayesian analysis is the same in either scenario since the posterior distributions were the same.  For the Bayesian analysis, all that mattered about the data was that there were 7 successes in 24 attempts.
+
+
+Bayesian data analysis treats parameters as random variables with probability distributions.
+The prior distribution quantifies the researcher's uncertainty about parameters *before* observing data.  Some issues to consider when choosing a prior include, in no particular order:
+
+- The researcher's prior beliefs! A prior distribution is part of a statistical model, and should be consistent with knowledge about the underlying scientific problem. Researchers are often experts with a wealth of past experience that can be explicitly incorporated into the analysis via the prior distribution. Such a prior is called an informative or weakly informative prior.
+- A regularizing prior.  A prior which, when tuned properly, reduces overfitting or "overreacting" to the data.
+- Noninformative prior a.k.a., (reference, vague, flat prior).  A prior is sought that plays a minimal role in inference so that "the data can speak for itself".
 - Mathematical convenience.  The prior is chosen so that computation of the posterior is simplified, as in the case of conjugate priors.
-- Prior based on past data.  Bayesian updating can be viewed as an iterative process.  The posterior distribution obtained from one round of data collection can inform the prior distribution for another round.
+- Interpretation.  The posterior is a compromise between the data and prior.  Some priors allow for easy interpretation of the relative contributions of data and prior to the posterior.  For example, think of the "prior successes and prior failures" interpretation in the Beta-Binomial model.
+- Prior based on *past* data.  Bayesian updating can be viewed as an iterative process.  The posterior distribution obtained from one round of data collection can inform the prior distribution for another round.
 
 
 
 
+For those initially skeptical of prior distributions at all, the strategy of always choosing an informative or flat prior might be appealing.  Flat priors are common, but are rarely ever the best choices from a modeling perspective. Just like you would not want to assume a Normal distribution for the likelihood in every problem, you would not to use a flat prior in every problem.
+
+Furthermore, there are some subtle issues that arise when attempting to choose a noninformative prior.
+
+```{example, flat-prior}
+Suppose we want to estimate $\theta$, the population proportion of Cal Poly students who wore socks at any point yesterday.
+
+```
 
 
-This example illustrates some subtle issues that arise when attempting to choose a noninformative prior.  Suppose we want to estimate $\theta$, the population proportion of success for some binary variable.  Add context
- 
-What are the possible values for $\theta$.  What prior distribution might you consider a noninformative prior distribution?
+1. What are the possible values for $\theta$?  What prior distribution might you consider a noninformative prior distribution?
+1. You might choose a Uniform(0, 1) prior, a.k.a., a Beta(1, 1) prior. Recall how we interpreted the parameters $\alpha$ and $\beta$ in the Beta-Binomial model.  Does the Beta(1, 1) distribution represent "no prior information"?  
+1. Suppose in a sample of 20 students, 4 wore socks yesterday. How would you estimate $\theta$ with a single number based only on the data?
+1. Assume a Beta(1, 1) prior and the 4/20 sample data. Identify the posterior distribution.  Recall that one Bayesian point estimate of $\theta$ is the posterior mean. Find the posterior mean of $\theta$.  Does this estimate let the "data speak entirely for itself"?
+1. How could you change $\alpha$ and $\beta$ in the Beta distribution prior to represent no prior information?  Sketch the prior. Do you see any potential problems?
+1. Assume a Beta(0, 0) prior for $\theta$ and the 4/20 sample data. Identify the posterior distribution.  Find the posterior *mode* of $\theta$.  Does this estimate let the "data speak entirely for itself"?
+1. Now suppose the parameter you want to estimate is the *odds* that a student wore socks yesterday, $\phi=\frac{\theta}{1-\theta}$.  What are the possible values of $\phi$?  What might a non-informative prior look like? Is this a proper prior?
+1. Assume a Beta(1, 1) prior for $\theta$.  Use simulation to approximate the prior distribution of the odds $\phi$.  Would you say this is a noninformative prior for $\phi$?
 
 
-Recall how we interpreted the parameters $\alpha$ and $\beta$.  Does the Beta(1, 1) distribution truly represent no prior information?  
+```{solution, flat-prior-sol}
+to Example \@ref(exm:flat-prior)
+```
 
-For a Beta(1, 1) prior, what is the posterior mean of $\theta$.  Does this let the data speak entirely for themselves?
+1. $\theta$ takes values in (0, 1).  We might assume a flat prior on (0, 1), that is a Uniform(0, 1) prior.
+1. We interpreted $\alpha$ as "prior successes" and $\beta$ as "prior failures".  So a Beta(1, 1) is in some some equivalent to a "prior sample size" of 2.  Certainly not a lot of prior information, but it's not "no prior information" either.
+1. The sample proportion, 4/20 = 0.2.
+1. With a Beta(1, 1) prior and the 4/20 sample data, the posterior distribution is Beta(5, 17).
+The posterior mean of $\theta$ is 5/22 = 0.227.  The posterior mean is a weighted average of the prior mean and the sample proportion: 0.227 = (0.5)(2/22) + (0.2)(20/22).  The "noninformative" prior does have influence; the data does not "speak entirely for itself".
+1. If $\alpha+\beta$ represents "prior sample size", we could try a Beta(0, 0) prior. Unfortunately, such a probability distribution does not actually exist.  For a Beta distribution, the parameters $\alpha$ and $\beta$ have to be strictly positive in order to have a valid pdf. The Beta(0, 0) density would be proportional to
+\[
+\pi(\theta) \propto \theta^{-1}(1-\theta)^{-1}, \qquad 0 < \theta <1.
+\]
+However, this is not a valid pdf since $\int_0^1 \theta^{-1}(1-\theta)^{-1}d\theta = \infty$, so there is no constant that can normalize it to integrate to 1.
+Even so, here is a plot of the "density".  
+
+    ```{r, echo = FALSE}
+theta = seq(0.001,  0.999, 0.001)
+plot(theta, 1/(theta*(1-theta)), xlim=c(0, 1), yaxt='n', ylab="",
+     main="Improper Beta(0, 0)", type="l", xlab = "theta")
+    ```
+    
+    Would you say this is a "noninformative" prior?  It seems to concentrate almost all prior "density" near 0 and 1. 
+1. Beta(0, 0) is an "improper" prior.
+It's not a proper prior distribution, but it can lead to a proper posterior distribution.
+The likelihood is $f(y=4|\theta) \propto \theta^4 (1-\theta)^{16}, 0 < \theta < 1$.
+If we assume the prior is $\pi(\theta)\propto\theta^{-1}(1-\theta)^{-1}, 0 < \theta <1$, then the posterior is
+\[
+\pi(\theta|y = 4) \propto \left(\theta^{-1}(1-\theta)^{-1}\right)\left(\theta^4 (1-\theta)^{16}\right) = \theta^{4 - 1} (1-\theta)^{16 - 1}, \qquad 0 <\theta < 1
+\]
+    That is, the posterior distribution is the Beta(4, 16) distribution.  The posterior mean is 4/20=0.2, the sample proportion. Hoever, the posterior *mode* is $\frac{4- 1}{4 + 16 -2}= \frac{3}{18} = 0.167$.  So the posterior mode does not let the "data speak entirely for itself".
+1. If $\theta=0$ then $\phi=0$; if $\theta=1$ then $\phi = \infty$.
+So $\phi$ takes values in $(0, \infty)$.
+We might choose a flat prior on $(0,\infty)$, $\pi(\phi) \propto 1, \phi > 0$.
+However, this would be an improper prior.
+1. Simulate a value of $\theta$ from a Beta(1, 1) distribution, compute $\phi = \frac{\theta}{1-\theta}$, and repeat many times. The simulation results are below. (The distribution is extremely skewed to the right, so we're only plotting values in (0, 50).)
+
+    ```{r}
+theta = rbeta(1000000, 1, 1)
+odds = theta / (1 - theta)
+hist(odds[odds<50], breaks = 100, xlab = "odds", freq = FALSE,
+     ylab = "density",
+     main = "Prior distribution of odds if prior distribution of probability is Uniform(0, 1)")
+    ```
+
+    Even though the prior for $\theta$ was flat, the prior for a transformation of $\theta$ is not.
 
 
-How could you change $\alpha$ and $\beta$ to represent no prior information?  Do you see any potential problems?
+An *improper* prior distribution is a prior distribution that does not integrate to 1, so is not a proper probability density. However, an improper proper often results in a proper posterior distribution.  Thus, improper prior distributions are sometimes used in practice.
+
+Flat priors are common choices in some situations, but are rarely ever the best choices from a modeling perspective.  Furthermore, flat priors are generally not preserved under transformations of parameters.  So a prior that is flat under one parametrization of the problem will generally not be flat under another. For example, when trying to estimate a population SD $\sigma$, assuming a flat prior for $\sigma$ will result in a non-flat prior for the population variance $\sigma^2$, and vice versa.
 
 
-An *improper* prior distribution is a prior distribution that does not integrate to 1, so is not a proper probability density.
 
-However, an improper proper often results in a proper posterior distribution.  Thus, improper prior distributions are sometimes used in practice.
+```{example, rare-disease}
 
+Suppse that $\theta$ represents the population proportion of adults who have a particular rare disease.
 
-Assume a Beta(0, 0) prior for $\theta$.  In what cases is the posterior distribution a proper distribution?  What is the posterior mean in these cases?  The posterior mode?
+```
 
-Suppose the parameter you want to estimate is the *odds* of success $\phi=\theta/(1-\theta)$.  What are the possible values of $\phi$?  What might a non-informative prior look like?
-
-
-Suppose that you assume a Beta(1, 1) prior for $\theta$.  What is the distribution of the odds $\phi$ under this prior?  Would you say this is a noninformative prior for $\phi$?
-
-
-Some that $\theta$ represents the probability that an individual has a rare disease.  Suppose that in $n=100$ suspected cases, none actually has the disease.  Discuss the disadvantages of using a Beta(1, 1) prior in this case.
+1. Explain why you might not want to use a flat Uniform(0, 1) prior for $\theta$.
+1. Assume a Uniform(0, 1) prior. Suppose you will test $n=100$ suspected cases.  Use simulation to approximate the prior predictive distribution of the number in the sample who have the disease. Does this seem reasonable?
+1. Assume a Uniform(0, 1) prior. Suppose that in $n=100$ suspected cases, none actually has the disease.  Find and interpret the posterior median. Does this seem reasonable?  
 
 
-Just like the likelihood, the prior distribution is a part of a statistical model.
-Perform sensitivity analysis to test the assumptions of the model, both for the form of the likelihood function and for the prior.  For example, how does the inference change in response to changes in the prior distribution?
-In general, in Bayesian estimation the larger the sample size the smaller the role that the prior plays.  
+```{solution}
+to Example \@ref(exm:rare-disease)
+```
+
+
+
+1. We know it's a rare disease! We want to concentrate most of our prior probability for $\theta$ near 0. 
+1. If the disease is rare, we might not expect any actual cases in a sample of 100, maybe 1 or 2.  However, the prior predictive distribution says that any value between 0 and 100 actual cases is equally likely!  This seems very unreasonable given that the disease is rare.
+
+    ```{r}
+    theta_sim = runif(10000)
+    y_sim = rbinom(10000, 100, theta_sim)
+    hist(y_sim,
+         xlab = "Simulated number of successes",
+         main = "Prior predictive distribution")
+
+    ```
+
+1. The posterior distribution is the Beta(1, 101) distribution.
+The posterior median is 0.007 (`qbeta(0.5, 1, 101)`). Based on a sample of 100 suspected cases with no actual cases, there is a posterior probability of 50% that more than 0.7% of people have the disease.  A rate of 7 actual cases in 1000 is not a very rare disease, and we think there's a 50% chance that the rate is even greater than this?  Again, this does not seem very reasonable based on our knowledge that the disease is rare.
+
+
+
+
+**Prior predictive distributions** can be used to check the reasonableness of a prior for a given situation before observing sample data. Do the simulated samples seem consistent with what you might expect of the data based on your background knowledge of the situation? If not, another prior might be more reasonable.
+
+## What NOT to do when considering priors
+
+You have a great deal of flexibility in choosing a prior, and there are many reasonable approaches.  However, there are a few things that you should NOT do.
+
+**Do NOT choose a prior that assigns 0 probability/density to *possible* values of the parameter** regardless of how initially implausible the values are.  Even very stubborn priors can be overturned with enough data, but no amount of data can turn a prior probability of 0 into a positive posterior probability.  Always consider the range of possible values of the parameter, and be sure the prior density is non-zero over that range of values. 
+
+**Do NOT base the *prior* on the observed data.** The prior reflects the degree of uncertainty about parameters *before* observing data.  Adjusting the *prior* to reflect observed data to achieve some desired result is akin to "data snooping" or "p-hacking" and is bad statistics.  (Of course, the *posterior* is based on the observed data. But not the prior.)
+
+**Do NOT feel like you have to find that one, perfect prior.**
+The prior is just one assumption of the model and should be considered just like other assumptions.
+In practice, no assumption of a statistical model is ever satisfied exactly.
+We only hope that our set of assumptions provides a reasonable model for reality.
+No one prior will ever be just right for a situation, but some might be more reasonable than others.
+You are not only allowed but encouraged to try different priors to see how sensitive the results are to the choice of prior.  (Remember, you should check the other assumptions too!)
+There is also no requirement that you have to choose a single prior.  It's possible to consider several models, each consisting of its own prior, and average over these models.  (We'll see a little more detail about model averaging later.)
+
+**Do NOT worry too much about the prior!** In general, in Bayesian estimation the larger the sample size the smaller the role that the prior plays.
 But it is often desirable for the prior to play some role.
-We should not feel constrained to noninformative priors when prior knowledge is available.
-Some subjectivity is OK!
+You should not feel the need to apologize for priors when significant prior knowledge is available.
 
 
 
-What not to do
 
-But choosing a prior based on current data --- i.e., using the same data to determine both the prior and the likelihood --- results in invalid inference.
 
-Don't assign 0 probability to possible values in prior - example
+

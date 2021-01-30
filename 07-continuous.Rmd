@@ -2,6 +2,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 Bayesian analysis is based on the posterior distribution of parameters $\theta$ given data $y$.
 The data $y$ might be discrete (e.g., count data) or continuous (e.g., measurement data).
 However, *parameters* $\theta$ almost always take values on a *continuous* scale, even when the data are discrete.
@@ -14,7 +24,30 @@ Thus, there are two probability distributions which will influence the posterior
 - The conditional distribution of the data $y$ given parameters $\theta$, which determines the likelihood function. Viewed as a conditional distribution of $y$ given $\theta$, the distribution can be discrete or continuous, corresponding to the data type of $y$. However, the likelihood function treats the data $y$ as fixed and the parameters $\theta$ as varying, and therefore the likelihood function is (almost always) a function of continuous $\theta$.
 
 
-This section provides an introduction to using continuous prior and posterior distributions to quantify uncertainty about parameters.
+This section provides an introduction to using continuous prior and posterior distributions to quantify uncertainty about parameters.  Some general notation:
+
+- $\theta$ represents^[$\theta$ is used to denote both: (1) the actual parameter (i.e., the random variable) $\theta$ itself, and (2) possible values of $\theta$.] parameters of interest
+- $y$ denotes observed sample data
+- $\pi(\theta)$ denotes the prior distribution of $\theta$, usually a pdf over possible values of $\theta$
+- $f(y|\theta)$ denotes the likelihood function, a function of continuous $\theta$ for fixed $y$
+- $\pi(\theta |y)$ denotes the posterior distribution of $\theta$, the conditional distribution of $\theta$ given the data $y$.
+
+
+
+Bayes rule works analogously for a continuous parameter $\theta$, given data $y$
+\begin{align*}
+\pi(\theta|y) & = \frac{f(y|\theta)\pi(\theta)}{f_Y(y)}\\
+&  \\
+\pi(\theta|y)  & \propto f(y|\theta)\pi(\theta)\\
+\text{posterior} & \propto \text{likelihood}\times \text{prior}
+\end{align*}
+
+The continuous analog of the law of total probability is
+\[
+f_Y(y) = \int_{-\infty}^{\infty}f(y|\theta)\pi(\theta) d\theta
+\]
+
+
 
 ## A brief review of continuous distributions
 
@@ -85,7 +118,7 @@ What is important about the pdf is *relative* height. For example, if two values
 2 = \frac{f(\tilde{u})}{f(u)} = \frac{f(\tilde{u})\epsilon}{f(u)\epsilon} \approx  \frac{P\left(\tilde{u}-\frac{\epsilon}{2} \le U \le \tilde{u}+\frac{\epsilon}{2}\right)}{P\left(u-\frac{\epsilon}{2} \le U \le u+\frac{\epsilon}{2}\right)}
 \]
 
-(ref:cap-exponential-pdf-area) Illustration of $P(1<U<2.5)$ (left) and $P(0.995<U<1.005)$ and $P(1.695<U<1.705)$ (right) for $U$ with an Exponential(1) distribution, with pdf $f_U(u) = e^{-u}, u>0$. The plot on the left displays the true area under the curve over (1, 2.5). The plot on the right illustrates how the probability that $U$ is "close to" $u$ can be approximated by the area of a rectangle with height equal to the density at $u$, $f_U(u)$.  The density height at $u=1$ is twice as large at $u=1.7$, so the probability that $U$ is "close to" 1 is twice as large as the probability that $U$ is "close to" 1.7.
+(ref:cap-exponential-pdf-area) Illustration of $P(1<U<2.5)$ (left) and $P(0.995<U<1.005)$ and $P(1.695<U<1.705)$ (right) for $U$ with an Exponential(1) distribution, with pdf $f_U(u) = e^{-u}, u>0$. The plot on the left displays the true area under the curve over (1, 2.5). The plot on the right illustrates how the probability that $U$ is "close to" $u$ can be approximated by the area of a rectangle with height equal to the density at $u$, $f_U(u)$.  The density height at $u=1$ is twice as large than the density height at $u=1.7$, so the probability that $U$ is "close to" 1 is (roughly) twice as large as the probability that $U$ is "close to" 1.7.
 
 ```{r exponential-pdf-area, echo=FALSE, fig.cap="(ref:cap-exponential-pdf-area)", out.width='50%', fig.show='hold'}
 
@@ -120,7 +153,7 @@ qplot(x,y,data=xddf,geom="line")+
 
 ```
 
-A sample of values of a continuous random variable are often displayed in a **histogram** which displays the frequencies of values falling in interval "bins". The vertical axis of a histogram is typically on the density scale, so that *areas* of the bars correspond to relative frequencies.
+A sample of values of a continuous random variable is often displayed in a **histogram** which displays the frequencies of values falling in interval "bins". The vertical axis of a histogram is typically on the density scale, so that *areas* of the bars correspond to relative frequencies.
 
 ```{python, echo = FALSE}
 
@@ -136,38 +169,51 @@ plt.show()
 ## Continuous distributions for a population proportion
 
 
-```{example}
+```{example, data-singular-beta1}
 Continuing Example \@ref(exm:data-singular) where
 $\theta$ represents the population proportion of students in Cal Poly statistics classes who prefer to consider data as a singular noun.
 
 ```
 
 1. Assume a continuous prior distribution for $\theta$ which is proportional to $\theta^2,\; 0<\theta<1$.  Sketch this distribution.
-1. The previous part implies that $\pi(\theta)=c \theta^2,\; 0<\theta<1$ for an appropriate constant $c$.  Find $c$.
+1. The previous part implies that $\pi(\theta)=c \theta^2,\; 0<\theta<1$, for an appropriate constant $c$.  Find $c$.
 1. Compute the prior mean of $\theta$.
+1. Now we'll consider a few more prior distributions.  Sketch each of the following priors.  How do they compare?
+    a. proportional to $\theta^2,\; 0<\theta<1$. (from previous)
+    a. proportional to $\theta^5,\; 0<\theta<1$. 
+    a. proportional to $(1-\theta)^2,\; 0<\theta<1$. 
+    a. proportional to $\theta^2(1-\theta)^2,\; 0<\theta<1$. 
+    a. proportional to $\theta^5(1-\theta)^2,\; 0<\theta<1$. 
+   
+   
 
+```{solution}
+to Example \@ref(exm:data-singular-beta1)
+```
 
+1. See the plot below.  The distribution is similar to the discrete grid approximation in  Example \@ref(exm:data-singular2).
+1. Set the total area under the curve equal to 1 and solve for $c=3$
+\[
+1 = \int_0^1 c\theta^2 d\theta = c \int_0^1 \theta^2d\theta = c (1/3) \Rightarrow c = 3
+\]
+1. Since $\theta$ is continuous we use calculus
+\[
+E(\theta) = \int_0^1 \theta \,\pi(\theta)d\theta = \int_0^1 \theta (3\theta^2)d\theta = 3/4
+\]
+1. See the plot below.  The prior proportional to $(1-\theta)^2$ is the mirror image of the prior proportional to $\theta^2$, reflected about 0.5.  As the exponent on $\theta$ increases, more density is shifted towards 1.  As the exponent on $1-\theta$ increases, more density is shifted towards 0.  When the exponents are the same, the density is symmetric about 0.5
 
-Start with Beta(2, 1), triangle
+```{python, echo = FALSE}
 
-- how would you find constant?
-- find prior probability
-- find prior mean
+Beta(3, 1).plot()
+Beta(6, 1).plot()
+Beta(1, 3).plot()
+Beta(3, 3).plot()
+Beta(6, 3).plot()
 
-Beta
+plt.legend([r"$\theta^2$", r"$\theta^5$", r"$(1-\theta)^2$", r"$\theta^2(1-\theta)^2$", r"$\theta^5(1-\theta)^2$"]);
+plt.show()
 
-Bayes rule for continuous RVs? Can I get away without this and just use posterior propto ...
-
-Continuous LOTP?
-
-
-Beta-Binomial
-
-Include link to applet like this one https://shiny.stat.ncsu.edu/bjreich/BetaBinom/
-
-Posterior prediction
-
-Odds
+```
 
 
 A continuous random variable $U$ has a **Beta distribution** with *shape parameters* $\alpha>0$ and $\beta>0$ if its density satisfies^[The expression defines the shape of the Beta density.  All that's  missing is the scaling constant which ensures that the total area under the density is 1.  The actual Beta density formula, including the normalizing constant, is
@@ -175,7 +221,7 @@ A continuous random variable $U$ has a **Beta distribution** with *shape paramet
 	f(u) =\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\; u^{\alpha-1}(1-u)^{\beta-1}, \quad 0<u<1,
 	\]
 	where 
-	$\Gamma(\alpha) = \int_0^\infty e^{-v}v^{\alpha-1} dv$ is the \emph{Gamma function}. For a positive integer $k$,
+	$\Gamma(\alpha) = \int_0^\infty e^{-v}v^{\alpha-1} dv$ is the *Gamma function*. For a positive integer $k$,
 	$\Gamma(k) = (k-1)!$.  Also, $\Gamma(1/2)=\sqrt{\pi}$.
 ]
 \[
@@ -183,196 +229,352 @@ f(u) \propto u^{\alpha-1}(1-u)^{\beta-1}, \quad 0<u<1,
 \]
 and $f(u)=0$ otherwise.
 
-Properties of a Beta density
+- If $\alpha = \beta$ the distribution is symmetric about 0.5
+- If $\alpha > \beta$ the distribution is skewed to the left (with greater density above 0.5 than below)
+- If $\alpha < \beta$ the distribution is skewed to the right (with greater density below 0.5 than above)
+- If $\alpha = 1$ and $\beta = 1$, the Beta(1, 1) distribution is the Uniform distribution on (0, 1).
+
+It can be shown that a Beta($\alpha$, $\beta$) density has 
 \begin{align*}
-\text{Mean (EV)} & = \frac{\alpha}{\alpha+\beta}\\
-\text{Variance} & = \frac{\left(\frac{\alpha}{\alpha+\beta}\right)\left(1-\frac{\alpha}{\alpha+\beta}\right)}{\alpha+\beta+1}
+\text{Mean (EV):} & \quad \frac{\alpha}{\alpha+\beta}\\
+\text{Variance:} & \quad \frac{\left(\frac{\alpha}{\alpha+\beta}\right)\left(1-\frac{\alpha}{\alpha+\beta}\right)}{\alpha+\beta+1}
 \\
-\text{mode} & = \frac{\alpha -1}{\alpha+\beta-2}, \qquad \text{(if $\alpha>1$, $\beta\ge1$ \text{or} $\alpha\ge1$, $\beta>1$)}
+\text{Mode:} & \quad \frac{\alpha -1}{\alpha+\beta-2}, \qquad \text{(if $\alpha>1$, $\beta\ge1$ or $\alpha\ge1$, $\beta>1$)}
 \end{align*}
 
+```{example, data-singular-beta2}
+Continuing  Example \@ref(exm:data-singular-beta1)
+```
 
-The plot contains a few different Beta densities.  Match each density to its pair of parameter values.
-	Also, what is another name for the Beta(1,1) distribution?
-\[
-\text{Beta(1, 1)}\qquad \quad 
-\text{Beta(3, 3)}\qquad \quad 
-\text{Beta(5, 1)}\qquad \quad 
-\text{Beta(5, 3)}\qquad \quad
-\text{Beta(0.5, 0.5)}
-\]
 
-```{python, echo = FALSE}
+1. Each of the previous distributions in the previous example was a Beta distribution.  For each distribution, identify the shape parameters and the prior mean and standard deviation.
+    a. proportional to $\theta^2,\; 0<\theta<1$.
+    a. proportional to $\theta^5,\; 0<\theta<1$. 
+    a. proportional to $(1-\theta)^2,\; 0<\theta<1$. 
+    a. proportional to $\theta^2(1-\theta)^2,\; 0<\theta<1$. 
+    a. proportional to $\theta^5(1-\theta)^2,\; 0<\theta<1$. 
+1. Now suppose that 31 students in a sample of 35 Cal Poly statistics students prefer data as singular. Specify the shape of the likelihood as a function of $\theta, 0<\theta<1$.
+1. Starting with each of the prior distributions from the first part, find the posterior distribution of $\theta$ based on this sample, and identify it as a Beta distribution by specifying the shape parameters $\alpha$ and $\beta$
+    a. proportional to $\theta^2,\; 0<\theta<1$.
+    a. proportional to $\theta^5,\; 0<\theta<1$. 
+    a. proportional to $(1-\theta)^2,\; 0<\theta<1$. 
+    a. proportional to $\theta^2(1-\theta)^2,\; 0<\theta<1$. 
+    a. proportional to $\theta^5(1-\theta)^2,\; 0<\theta<1$.
+1. For each of the posterior distributions in the previous part, compute the posterior mean and standard deviation.  How does each posterior distribution compare to its respective prior distribution?
 
-Beta(1, 1).plot()
+
+```{solution}
+to Example \@ref(exm:data-singular-beta2)
+```
+
+1. Careful with the exponents.  For example, $\theta^2 = \theta^2(1-\theta)^0 = \theta^{3-1}(1-\theta)^{1-1}$, which corresponds to a Beta(3, 1) distribution.
+
+    |   | Distribution | $\alpha$ | $\beta$ |                      Proportional to |  Mean |    SD |
+    |---|--------------|---------:|--------:|-------------------------------------:|------:|------:|
+    | a | Beta(3, 1)   |        3 |       1 |             $\theta^2, 0<\theta < 1$ | 0.750 | 0.194 |
+    | b | Beta(6, 1)   |        6 |       1 |             $\theta^5, 0<\theta < 1$ | 0.857 | 0.124 |
+    | c | Beta(1, 3)   |        1 |       3 |         $(1-\theta)^2, 0<\theta < 1$ | 0.250 | 0.194 |
+    | d | Beta(3, 3)   |        3 |       3 | $\theta^2(1-\theta)^2, 0<\theta < 1$ | 0.500 | 0.189 |
+    | e | Beta(6, 3)   |        3 |       3 | $\theta^5(1-\theta)^2, 0<\theta < 1$ | 0.667 | 0.149 |
+
+
+1. Given $\theta$, the number of students in the sample who prefer data as singular, $Y$, follows a Binomial(35, $\theta$) distribution.  The likelihood is the probability of observing $Y=31$ viewed as a function of $\theta$.
+\begin{align*}
+f(31|\theta) & =  \binom{35}{31}\theta^{31}(1-\theta)^4, \qquad 0 < \theta <1\\
+& \propto \theta^{31}(1-\theta)^4, \qquad 0 < \theta <1
+\end{align*}
+The constant $\binom{35}{31}$ does not affect the *shape* of the likelihood as a function of $\theta$.
+1. As always, the posterior distribution is proportional to the product of the prior distribution and the likelihood.  For the Beta(3, 1) prior, the prior density is proportional to $\theta^2$, $0<\theta<1$, and for the observed data $y=31$ with $n=35$, the likelihood is proportional to $\theta^{31}(1-\theta)^4$, $0<\theta<1$.  Therefore, the posterior density, as a function of $\theta$, is proportional to
+\begin{align*}
+\pi(\theta|y = 31) & \propto \left(\theta^2\right)\left(\theta^{31}(1-\theta)^4\right), \qquad 0 <\theta < 1\\
+& \propto \theta^{33}(1-\theta)^4, \qquad 0 <\theta < 1\\
+& \propto \theta^{34 - 1}(1-\theta)^{5 - 1}, \qquad 0 <\theta < 1\\
+\end{align*}
+    Therefore, the posterior distribution of $\theta$ is the Beta(3 + 31, 1 + 35 - 31), that is, the Beta(34, 5) distribution.
+    The other situations are similar.  The prior changes but the likelihood stays the same, based on a sampel with 31 successes and $35-31 = 4$ failures.  If the prior distribution is Beta($\alpha$, $\beta$) then the posterior distribution  is Beta($\alpha + 31$, $\beta + 35 - 31$).
+    
+    |   | Prior Distribution |                           Posterior proportional to | Posterior Distribution | Posterior Mean | Posterior SD |
+    |---|--------------------|----------------------------------------------------:|-----------------------:|---------------:|-------------:|
+    | a | Beta(3, 1)         | $\theta^{2 + 31}(1-\theta)^{0 + 4}, 0 < \theta < 1$ |            Beta(34, 5) |          0.872 |        0.053 |
+    | b | Beta(6, 1)         | $\theta^{5 + 31}(1-\theta)^{0 + 4}, 0 < \theta < 1$ |            Beta(37, 5) |          0.881 |        0.049 |
+    | c | Beta(1, 3)         | $\theta^{0 + 31}(1-\theta)^{2 + 4}, 0 < \theta < 1$ |            Beta(32, 7) |          0.821 |        0.061 |
+    | d | Beta(3, 3)         | $\theta^{2 + 31}(1-\theta)^{2 + 4}, 0 < \theta < 1$ |            Beta(34, 7) |          0.829 |        0.058 |
+    | e | Beta(6, 3)         | $\theta^{5 + 31}(1-\theta)^{2 + 4}, 0 < \theta < 1$ |            Beta(37, 7) |          0.841 |        0.055 |
+
+    <!-- |   | Prior Distribution |                Prior Proportional to |      Likelihood of $y=31$ proportional to |                   Posterior proportional to | Posterior Distribution | Posterior Mean | Posterior SD | -->
+    <!-- |---|--------------------|-------------------------------------:|------------------------------------------:|--------------------------------------------:|-----------------------:|---------------:|-------------:| -->
+    <!-- | a | Beta(3, 1)         |             $\theta^2, 0<\theta < 1$ | $\theta^{31}(1-\theta)^4, 0 < \theta < 1$ | $\theta^{33}(1-\theta)^{4}, 0 < \theta < 1$ |            Beta(34, 5) |          0.872 |        0.053 | -->
+    <!-- | b | Beta(6, 1)         |             $\theta^5, 0<\theta < 1$ | $\theta^{31}(1-\theta)^4, 0 < \theta < 1$ |   $\theta^{36}(1-\theta)^4, 0 < \theta < 1$ |            Beta(37, 5) |          0.881 |        0.049 | -->
+    <!-- | c | Beta(1, 3)         |         $(1-\theta)^2, 0<\theta < 1$ | $\theta^{31}(1-\theta)^4, 0 < \theta < 1$ |   $\theta^{31}(1-\theta)^6, 0 < \theta < 1$ |            Beta(32, 7) |          0.821 |        0.061 | -->
+    <!-- | d | Beta(3, 3)         | $\theta^2(1-\theta)^2, 0<\theta < 1$ | $\theta^{31}(1-\theta)^4, 0 < \theta < 1$ |   $\theta^{33}(1-\theta)^6, 0 < \theta < 1$ |            Beta(34, 7) |          0.829 |        0.058 | -->
+    <!-- | e | Beta(6, 3)         | $\theta^5(1-\theta)^2, 0<\theta < 1$ | $\theta^{31}(1-\theta)^4, 0 < \theta < 1$ |   $\theta^{36}(1-\theta)^6, 0 < \theta < 1$ |            Beta(37, 7) |          0.841 |        0.055 | -->
+    
+1. See the table above.  Each posterior distribution concentrates more probability towards the observed sample proportion $31/35 = 0.886$, though there are some small differences due to the prior.  The posterior SD is less than the prior SD; there is less uncertainty about $\theta$ after observing some data.
+
+
+```{python, echo = FALSE, message = FALSE, warning = FALSE, fig.show="hold", out.width="50%"}
+
+plt.figure()
+
+Beta(3, 1).plot()
+Beta(6, 1).plot()
+Beta(1, 3).plot()
 Beta(3, 3).plot()
-Beta(5, 1).plot()
-Beta(5, 3).plot()
-Beta(0.5, 0.5).plot()
+Beta(6, 3).plot()
 
-plt.show()
+plt.legend([r"Beta(3, 1)", r"Beta(6, 1)", r"Beta(1, 3)", r"Beta(3, 3)", r"Beta(6, 3)"]);
+plt.show();
+
+n = 35
+y = 31
+
+plt.figure()
+
+Beta(3 + y, 1 + n - y).plot()
+Beta(6 + y, 1 + n - y).plot()
+Beta(1 + y, 3 + n - y).plot()
+Beta(3 + y, 3 + n - y).plot()
+Beta(6 + y, 3 + n - y).plot()
+
+plt.legend([r"Beta(34, 5)", r"Beta(37, 5)", r"Beta(32, 7)", r"Beta(34, 7)", r"Beta(37, 7)"]);
+plt.show();
+
 
 ```
 
 
 
-Set up an integral you could solve to find the prior predictive probability that $Y=20$.
+Beta distributions are often used in Bayesian models involving population proportions.
+Consider some binary ("success/failure") variable and let $\theta$ be the population proportion of success.
+Select a random sample of size $n$ from the population and let $Y$ count the number of successes in the sample.
 
 
-If $\theta\sim \text{Beta}(\alpha, \beta)$ and $(Y|\theta)\sim\text{Binomial}(n, \theta)$ then the marginal distribution of $Y$ is the [Beta-Binomial](https://en.wikipedia.org/wiki/Beta-binomial_distribution) distribution with
-\[
-\IP(Y = y) = \binom{n}{y}\frac{B(\alpha+y,\beta+n-y)}{B(\alpha, \beta)}, \qquad x = 0, 1, \ldots, n,
-\]
-$B(\alpha, \beta)$ is the \emph{beta function}, for which $B(\alpha,\beta)=\frac{(\alpha-1)!(\beta-1)!}{(\alpha+\beta-1)!}$ if $\alpha,\beta$ are positive integers\footnote{For general $\alpha,\beta>0$, $B(\alpha,\beta)=\int_0^1u^{\alpha-1} (1-u)^{\beta-1}du = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}$.}.
-Mean: $n\left(\frac{\alpha}{\alpha+\beta}\right)$
-
-R: `dbbinom, rbbinom, pbbinom` in `extraDistr` package
-
-
-
-
-Bayes rule for a continuous parameter $\theta$, given data $y$
+**Beta-Binomial model.**  If $\theta$ has a Beta$(\alpha, \beta)$ prior distribution and the conditional distribution of $Y$ given $\theta$ is the Binomial$(n, \theta)$ distribution, then the posterior distribution of $\theta$ given $y$ is the Beta$(\alpha + y, \beta + n - y)$ distribution.
 \begin{align*}
-\pi(\theta|y) & = \frac{f(y|\theta)\pi(\theta)}{f_Y(y)}\\ & = \frac{f(y|\theta)\pi(\theta)}{\int_{-\infty}^{\infty}f(y|\theta)\pi(\theta) d\theta}\\
-\pmb{\pi(\theta|y)}  & \pmb{\propto f(y|\theta)\pi(\theta)}\\
-\text{posterior} & \propto \text{likelihood}\times \text{prior}
+\text{prior:} & & \pi(\theta) & \propto \theta^{\alpha-1}(1-\theta)^{\beta-1}, \quad 0<\theta<1,\\
+\\
+\text{likelihood:} & & f(y|\theta) & \propto \theta^y (1-\theta)^{n-y}, \quad 0 < \theta < 1,\\
+\\
+\text{posterior:} & & \pi(\theta|y) & \propto \theta^{\alpha+y-1}(1-\theta)^{\beta+n-y-1}, \quad 0<\theta<1.
 \end{align*}
 
-$\pi(\theta)$ denotes the (marginal) prior density of $\theta$
-\
-$f(y|\theta)$ denotes the likelihood function for data $y$
+Try this [applet which illustrates the Beta-Binomial model](https://shiny.stat.ncsu.edu/bjreich/BetaBinom/).
 
-This is the conditional probability (for discrete $y$) or density (for continuous $y$) of data $y$ given $\theta$
-
-But viewed as a function of $\theta$, with $y$ fixed
-
-Remember, the likelihood function --- as a function of $\theta$ --- is not a probability density
-
-And that even if the data are discrete, the likelihood $f(y|\theta)$ is a function of the \emph{continuous parameter} $\theta$
-
-$\pi(\theta|y)$ denotes the (conditional) posterior density of $\theta$ given data $y$
-
-Notation: $\theta$ is used to represent both: (1) the actual parameter (i.e.\ random variable) $\theta$ itself, and (2) possible values of $\theta$
-
-Replace this with a contextual example and then give the general formulas.
-Consider the general situation of estimating $\theta$, a population proportion of ``success'' for some binary variable.  Suppose the data consist of a simple random sample of size $n$ selected from the population, where $Y$ is the observed number of successes in the sample, with $\hat{p}=Y/n$ denoting the sample proportion of successes.
+In a sense, you can interpret $\alpha$ as "prior successes" and $\beta$ as "prior failures", but these are only "pseudo-observations".  Also, $\alpha$ and $\beta$ are not necessarily integers.
 
 
-Suppose the prior distribution for $\theta$ is a Beta distribution with parameters $\alpha$ and $\beta$.  Write this density (without worrying about the scaling constant).  Be sure to identify possible values of $\theta$.
+|           |          Prior |  Data |            Posterior |
+|-----------|---------------:|------:|---------------------:|
+| Successes |       $\alpha$ |   $y$ |         $\alpha + y$ |
+| Failures  |        $\beta$ | $n-y$ |      $\beta + n - y$ |
+| Total     | $\alpha+\beta$ |   $n$ | $\alpha + \beta + n$ |
 
-What is the conditional distribution of $Y$ given $\theta$?
 
-Identify the likelihood function.
 
-Identify the posterior density of $\theta$ given $Y=y$.  (Again, you can ignore any constants that don't involve $\theta$.) Be sure to identify possible values of $\theta$.
+When the prior and posterior distribution belong to the same family, that family is called a **conjugate** prior distribution for the likelihood. So, the Beta distributions form a conjugate prior family for Binomial distributions.
 
-Does the posterior density have the form of a particular named probability distribution?  If so, what are the parameter values?
 
-\textbf{Beta-Binomial model.}
 
-If $\theta\sim\text{Beta}(\alpha, \beta)$, that is
+
+```{example, data-singular-beta3}
+In Example \@ref(exm:data-singular2) we used a grid approximation to the prior distribution of $\theta$.
+Now we will assume a continuous prior distributions.  Assume that $\theta$ has a Beta(3, 1) prior distribution and that 31 students in a sample of 35 Cal Poly statistics students prefer data as singular. 
+
+```
+
+1. Plot the prior distribution, (scaled) likelihood, and posterior distribution.
+1. Use software to find a 95% credible interval.
+1. Compare the results to those using the grid approximation in Example \@ref(exm:data-singular2).
+1. Express the posterior mean as a weighted average of the prior mean and sample proportion.  Describe what the weights are, and explain why they make sense.
+
+
+
+```{solution}
+to Example \@ref(exm:data-singular-beta3)
+```
+
+1. See plot below.  The posterior distribution is the Beta(34, 5) distribution.
+Note that the grid in the code is just to plot things in R.
+In particular, the posterior is computed using the Beta-Binomial model, not the grid.
+
+    ```{r}
+
+theta = seq(0, 1, 0.0001) # the grid is just for plotting
+
+# prior
+alpha_prior = 3
+beta_prior = 1
+prior = dbeta(theta, alpha_prior, beta_prior)
+
+# data
+n = 35
+y = 31
+
+# likelihood
+likelihood = dbinom(y, n, theta)
+
+# posterior
+alpha_post = alpha_prior + y
+beta_post = beta_prior + n - y
+posterior = dbeta(theta, alpha_post, beta_post)
+
+# plot
+ymax = max(c(prior, posterior))
+scaled_likelihood = likelihood * ymax / max(likelihood)
+
+plot(theta, prior, type='l', col='orange', xlim=c(0, 1), ylim=c(0, ymax), ylab='', yaxt='n')
+par(new=T)
+plot(theta, scaled_likelihood, type='l', col='skyblue', xlim=c(0, 1), ylim=c(0, ymax), ylab='',  yaxt='n')
+par(new=T)
+plot(theta, posterior, type='l', col='seagreen', xlim=c(0, 1), ylim=c(0, ymax), ylab='', yaxt='n')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("orange", "skyblue", "seagreen"))
+
+# posterior credible interval
+qbeta(c(0.025, 0.975), alpha_post, beta_post)
+
+    ```
+
+1. We can use `qbeta` to compute quantiles (a.k.a. percentiles). The posterior mean is 0.872, and the prior standard deviation is 0.053. There is a posterior probability of 95% that between 75% and 96% of Cal Poly students prefer data as singular. 
+1. The results are similar.  The grid is just an approximation of the true Beta-Binomial theory.
+1. The prior mean is $\frac{3}{3+1}=0.75$.  The sample proportion is $\frac{31}{35} = 0.886$.  The posterior mean is $\frac{34}{39} = 0.872$.  We can write
+\begin{align*}
+\frac{34}{39} & = \left(\frac{3}{4}\right)\times \left(\frac{4}{39}\right) + \left(\frac{31}{35}\right)\times \left(\frac{35}{39}\right)\\
+ & = \left(\frac{3}{4}\right)\times \left(\frac{4}{4 + 35}\right) + \left(\frac{31}{35}\right)\times \left(\frac{35}{4 + 35}\right)\\
+\end{align*}
+    The posterior mean is a weighted average of the prior mean and the sample proportion where the weights are given by the relative "samples sizes".  The "prior sample size" is $3+1=4$.  The actual observed sample size is 35.  
+    
+    
+In the Beta-Binomial model, the posterior mean $E(\theta|y)$ can be expressed as a *weighted average* of the prior mean $E(\theta)=\frac{\alpha}{\alpha + \beta}$ and the sample proportion $\hat{p}=y/n$.
 \[
-\text{prior} \propto \theta^{\alpha-1}(1-\theta)^{\beta-1}, \quad 0<\theta<1,
+E(\theta|y) = \frac{\alpha+\beta}{\alpha+\beta+n}E(\theta) + \frac{n}{\alpha+\beta+n}\hat{p}
 \]
-
-And  $(Y | \theta) \sim\text{Binomial}(n, \theta)$, that is
-\[
-\text{likelihood} \propto \theta^y (1-\theta)^{n-y}, \quad 0 < \theta < 1
-\]
-
-Then $(\theta | y)\sim\text{Beta}(\alpha+y, \beta+n-y)$, that is
-\[
-\text{posterior} \propto \theta^{\alpha+y-1}(1-\theta)^{\beta+n-y-1}, \quad 0<\theta<1,
-\]
-
-In a sense, you can interpret $\alpha$ as ``prior successes'' and $\beta$ as ``prior failures''
-
-\begin{center} 
-\begin{tabular}{l r r r}
-	& Prior & Data & Posterior\\
-Successes & $\alpha$ & $y$ & $\alpha+y$\\
-Failures & $\beta$ & $n-y$ & $\beta + n-y$\\
-Total & $\alpha+\beta$ & $n$ & $\alpha + \beta + n$	\\
-& & & \\
-\end{tabular}
-\end{center}
-
-When the prior and posterior distribution belong to the same family, that family is called a \textbf{conjugate} prior distribution for the likelihood.
-
-So, the Beta distributions form a conjugate prior family for the Binomial distribution.
-
-Consider again the kissing study.  Let $\theta$ denote the probability that a kissing couple leans their heads to the right.
-
-Assume a continuous Uniform (i.e.\ Beta(1, 1)) prior distribution for $\theta$.  Find the prior mean and SD, and the prior probability that $\theta > 0.5$.
-
-Suppose again that 8 couples in a sample of 12 lean right.  Identify the posterior distribution, and sketch the prior distribution, the likelihood function, and the posterior distribution.
-
-Determine the posterior mean, median, and mode.
-
-Where does the posterior mean fall in comparison to the prior mean and sample proportion?  Explain why this makes sense.
-
-Express the posterior mean as a weighted average of the prior mean and sample proportion.  Describe what the weights are, and explain why they make sense.
-
-Determine the posterior SD of $\theta$.  How does it compare to the prior SD?  Explain why this makes sense.
-
-Determine the posterior probability that $\theta>0.5$.
-
-Find and interpret a 95\% central credible interval for $\theta$.
-
-Now recall that the study data consisted of a sample of 124 kissing couples, 80 of whom leaned their heads to the right.  Assume again a Uniform prior distribution.  Identify the posterior distribution, and sketch the prior distribution, the likelihood function, and the posterior distribution.
-
-Determine the posterior mean, median, and mode.
-
-Express the posterior mean as a weighted average of the prior mean and sample proportion.  Describe what the weights are, and explain why they make sense.
-
-Determine the posterior SD of $\theta$.  How does it compare to the posterior SD for the sample of size 12? Explain why this makes sense.
-
-Determine the posterior probability that $\theta>0.5$.
-
-Find and interpret a 95\% central credible interval for $\theta$.
-
-In the Beta-Binomial model, the posterior mean $\E(\theta|y)$ can be expressed as a \emph{weighted average} of the prior mean $\E(\theta)$ and the sample proportion $\hat{p}=y/n$.
-\[
-\E(\theta|x) = \frac{\alpha+\beta}{\alpha+\beta+n}\E(\theta) + \frac{n}{\alpha+\beta+n}\hat{p}
-\]
-
-As more data are collected, more weight is given to the sample proportion (and less weight to the prior mean)
-
-The prior ``weight'' is detemined by $\alpha+\beta$, which is called the \emph{concentration} and measured in ``pseudo-observations''
-
-Larger values of $\alpha+\beta$ indicate stronger prior beliefs, due to smaller prior variance, and give more weight to the prior mean
+As more data are collected, more weight is given to the sample proportion (and less weight to the prior mean).
+The prior "weight" is detemined by $\alpha+\beta$, which is sometimes called the *concentration* and measured in "pseudo-observations".
+Larger values of $\alpha+\beta$ indicate stronger prior beliefs, due to smaller prior variance, and give more weight to the prior mean.
 
 
 The posterior variance generally gets smaller as more data are collected
 \[
-\Var(\theta |x) = \frac{\E(\theta|x)(1-\E(\theta|x))}{\alpha+\beta+n+1}
+\text{Var}(\theta |y) = \frac{E(\theta|y)(1-E(\theta|y))}{\alpha+\beta+n+1}
 \]
 
-You can select $\alpha$ (like ``prior successes'') and $\beta$ (like ``prior failures'') for a prior Beta distribution indirectly by specifying the prior mean or mode, and the prior concentration or prior standard deviation
 
-If prior mean $\mu$ and prior concentration $\kappa$ are specified then
+```{example, data-singular-beta-prediction}
+Now let's reconsider the posterior prediction parts of Example \@ref(exm:data-singular2), treating $\theta$ as continuous.
+Assume that $\theta$ has a Beta(3, 1) prior distribution and that 31 students in a sample of 35 Cal Poly statistics students prefer data as singular, so that the posterior distribution of $\theta$ is the Beta(34, 5) distribution. 
+
+```
+
+1. Suppose we plan to randomly select another sample of 35 Cal Poly statistics students.  Let $\tilde{Y}$ represent the number of students in the selected sample who prefer data as singular. How could we use simulation to approximate the posterior predictive distribution of $\tilde{Y}$?
+1. Use software to run the simulation and plot the posterior predictive distribution^[The posterior predictive distribution can be found analytically in the Beta-Binomial situation.
+If $\theta\sim$ Beta$(\alpha, \beta)$ and $(Y|\theta)\sim$ Binomial$(n, \theta)$ then the marginal distribution of $Y$ is the [Beta-Binomial](https://en.wikipedia.org/wiki/Beta-binomial_distribution) distribution with
+\[
+P(Y = y) = \binom{n}{y}\frac{B(\alpha+y,\beta+n-y)}{B(\alpha, \beta)}, \qquad y = 0, 1, \ldots, n,
+\]
+$B(\alpha, \beta)$ is the *beta function*, for which $B(\alpha,\beta)=\frac{(\alpha-1)!(\beta-1)!}{(\alpha+\beta-1)!}$ if $\alpha,\beta$ are positive integers. (For general $\alpha,\beta>0$, $B(\alpha,\beta)=\int_0^1u^{\alpha-1} (1-u)^{\beta-1}du = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}$.) The mean is $n\left(\frac{\alpha}{\alpha+\beta}\right)$. In R: `dbbinom, rbbinom, pbbinom` in `extraDistr` package].
+Compare to Example \@ref(exm:data-singular2).
+1. Use the simulation results to approximate a 95% posterior *prediction* interval for $\tilde{Y}$.  Write a clearly worded sentence interpreting this interval in context.
+
+
+
+
+
+```{solution}
+to Example \@ref(exm:data-singular-beta3)
+```
+
+
+1. Simulate a value of $\theta$ from the posterior Beta(34, 5) distribution.  Given this value of $\theta$, simulate a value $\tilde{y}$ from a Binomial(35, $\theta$) distribution.  Repeat many times, simulating many values of $\tilde{y}$. The simulated distribution of $\tilde{y}$ values will approximate the posterior predictive distribution.
+1. We can use `rbeta` to simulate from a Beta distribution.  The simulation results are similar to those from the grid approximation.
+
+    ```{r}
+    n_sim = 10000
+    
+    theta_sim = rbeta(n_sim, 34, 5)
+    
+    y_sim = rbinom(n_sim, 35, theta_sim)
+    
+    plot(table(y_sim) / n_sim, xlab = "y", ylab = "Posterior predictive probability")
+    
+    quantile(y_sim, c(0.025, 0.975))
+    
+
+    ```
+
+1. The interval is similar to the one from the grid approximation, and the interpretation is the same.
+There is posterior predictive probability of 95% that between 24 and 35 students in a sample of 35 students will prefer data as singular.
+
+
+
+
+
+
+
+
+
+
+You can tune the shape parameters --- $\alpha$ (like "prior successes") and $\beta$ (like "prior failures") --- of a Beta distribution to your prior beliefs in a few ways.
+
+- If prior mean $\mu$ and prior concentration $\kappa$ are specified then
 \begin{align*}
 \alpha &= \mu \kappa\\
 \beta & =(1-\mu)\kappa
 \end{align*}
-
-If prior mode $\omega$ and prior concentration $\kappa$ (with $\kappa>2$) are specified then
+- If prior mode $\omega$ and prior concentration $\kappa$ (with $\kappa>2$) are specified then
 \begin{align*}
 \alpha &= \omega (\kappa-2) + 1\\
 \beta & = (1-\omega) (\kappa-2) + 1
 \end{align*}
-
-If prior mean $\mu$ and prior sd $\sigma$ are specified then
+- If prior mean $\mu$ and prior sd $\sigma$ are specified then
 \begin{align*}
 \alpha &= \mu\left(\frac{\mu(1-\mu)}{\sigma^2} -1\right)\\
 \beta & = \left(1-\mu\right)\left(\frac{\mu(1-\mu)}{\sigma^2} -1\right)
 %\beta & = \alpha\left(\frac{1}{\mu} - 1\right)\\
 \end{align*}
+- You can also [specify two percentiles and use software to find $\alpha$ and $\beta$](https://bayesball.shinyapps.io/ChooseBetaPrior_3/).
+For example, you could specify the endpoints of a prior 95% credible interval.
 
+
+```{example, choose-beta-prior}
 Suppose we want to estimate $\theta$, the proportion of Cal Poly students that are left-handed.
+```
 
-Sketch your Beta prior distribution for $\theta$.  Then translate your prior into a Beta distribution; specify $\mu$, $\omega$, $\alpha$, $\beta$, $\kappa$, and the prior variance.
 
-After collecting some data, find the posterior distribution and its mean and variance.  Express the posterior mean as an appropriate weighted average. 
+1. Sketch your Beta prior distribution for $\theta$.  Describe its main features and your reasoning.
+Then translate your prior into a Beta distribution by specifying the shape parameters $\alpha$ and $\beta$.
+1. Assume a prior Beta distribution for $\theta$ with prior mean 0.15 and prior SD is 0.08.
+Find $\alpha$ and $\beta$, and a prior 95% credible interval for $\theta$.
 
-## Continuous distributions for a population mean
+```{solution}
+to Example \@ref(exm:choose-beta-prior)
+```
+
+1. Of course, choices will vary, based on what you know about left-handedness.
+But do think about what your prior might look like, and use one of the methods to translate it to a Beta distribution.
+1. Let's say we've heard that about 15% of people in general are left-handed, but we've also heard 10% so we're not super sure, and we also don't know how Cal Poly students compare to the general population.
+So we'll assume a prior Beta distribution for $\theta$ with prior mean 0.15 (our "best guess") and a prior SD of 0.08 to reflect our degree of uncertainty.
+This translates to a Beta(2.8, 16.1) prior, with a central 95% prior credible interval for $\theta$ that between 3.1% and 33.7% of Cal Poly students are left-handed.  Seems like a reasonable starting place before observing data.
+
+
+
+```{r}
+
+mu = 0.15
+sigma = 0.08
+
+alpha = mu ^ 2 * ((1 - mu) / sigma ^ 2 - 1 / mu); alpha
+beta <- alpha * (1 / mu - 1); beta
+
+qbeta(c(0.025, 0.975), alpha, beta)
+
+```
+
+
+
+
+
+<!-- ## Continuous distributions for a population mean -->
+
+
+
+

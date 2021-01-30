@@ -1,0 +1,968 @@
+# Bayesian Analysis of Poisson Count Data {#poisson}
+
+
+In this chapter we'll consider Bayesian analysis for count data.
+
+We have covered in some detail the problem of estimating a population proportion for a binary categorical variable.
+In these situations we assumed a Binomial likelihood for the count of "successes" in the sample.
+However, a Binomial model has several restrictive assumptions that might not be satisfied in practice.
+*Poisson models* are more flexible models for count data.
+
+```{example, poisson-hr-intro}
+Let $Y$ be the number of home runs hit (in total by both teams) in a randomly selected Major League Baseball game.
+```
+
+1. In what ways is this like the Binomial situation?  (What is a trial?  What is "success"?)
+1. In what ways is this NOT like the Binomial situation?
+
+```{solution poisson-hr-intro-sol}
+to Example \@ref(exm:poisson-hr-intro)
+```
+
+
+```{asis, fold.chunk = TRUE}
+
+1. Each pitch is a trial, and on each trial either a home run is hit ("success") or not.  The random variable $Y$ counts the number of home runs (successes) over all the trials
+1. Even though $Y$ is counting successes, this is not the Binomial situation.
+    - The number of trials is not fixed.  The total number of pitches varies from game to game. (The average is around 300 pitches per game).
+    - The probability of success is not the same on each trial.  Different batters have different probabilities of hitting home runs.  Also, different pitch counts or game situations lead to different probabilities of home runs.
+    - The trials might not be independent, though this is a little more questionable.  Make sure you distinguish independence from the previous assumption of unequal probabilities of success; you need to consider conditional probabilities to assess independence.  Maybe if a pitcher gives up a home run on one pitch, then the pitcher is "rattled" so the probability that he also gives up a home run on the next pitch increases, or the pitcher gets pulled for a new pitcher which changes the probability of a home run on the next pitch.
+
+
+```
+
+
+```{example, poisson-accidents-intro}
+Let $Y$ be the number of automobiles that get in accidents on Highway 101 in San Luis Obispo on a randomly selected day.
+```
+
+1. In what ways is this like the Binomial situation?  (What is a trial?  What is "success"?)
+1. In what ways is this NOT like the Binomial situation?
+
+
+```{solution poisson-accidents-intro-sol}
+to Example \@ref(exm:poisson-accidents-intro)
+```
+
+
+```{asis, fold.chunk = TRUE}
+
+1. Each automobile on the road in the day is a trial, and on each automobile either gets in an accident ("success") or not.  The random variable $Y$ counts the number of automobiles that get into accidents  (successes).  (Remember "success" is just a generic label for the event you're interested in; "success" is not necessarily good.)
+1. Even though $Y$ is counting successes, this is not the Binomial situation.
+    - The number of trials is not fixed.  The  total number of automobiles on the road varies from day to day.
+    - The probability of success is not the same on each trial.  Different drivers have different probabilities of getting into accidents; some drivers are safer than others.  Also, different conditions increase the probability of an accident, like driving at night.
+    - The trials are plausibly not independent.  Make sure you distinguish independence from the previous assumption of unequal probabilities of success; you need to consider conditional probabilities to assess independence.  If an automobile gets into an accident, then the probability of getting into an accident increases for the automobiles that are driving near it.
+
+```
+
+
+
+
+Poisson models are models for counts that have more flexibility than Binomial models. 
+Poisson models are parameterized by a single parameter (the mean) and do not require all the assumptions of a Binomial model.
+Poisson distributions are often used to model the distribution of variables that count the number of "relatively rare" events that occur over a certain interval of time or in a certain location (e.g., number of accidents on a highway in a day, number of car insurance policies that have claims in a week, number of bank loans that go into default, number of mutations in a DNA sequence, number of earthquakes that occur in SoCal in an hour, etc.)
+
+
+A discrete random variable $Y$ has a **Poisson distribution** with parameter $\theta>0$ if its probability mass function satisfies
+\begin{align*}
+f(y|\theta) & \propto \frac{\theta^y}{y!}, \;\qquad y=0,1,2,\ldots\\
+& = \frac{e^{-\theta}\theta^y}{y!}, \quad y=0,1,2,\ldots
+\end{align*}
+If $Y$ has a Poisson($\theta$) distribution then
+\begin{align*}
+E(Y) & = \theta\\
+Var(Y) & = \theta
+\end{align*}
+
+
+
+For a Poisson distribution, both the mean and variance are equal to $\theta$, but remember that the mean is measured in the count units (e.g., home runs) but the variance is measured in squared units (e.g., $(\text{home runs})^2$).
+
+Poisson distributions have many nice properties, including the following.
+
+**Poisson aggregation.** If $Y_1$ and $Y_2$ are independent, $Y_1$ has a Poisson($\theta_1$) distribution,  and $Y_2$ has a Poisson($\theta_2$) distribution, then $Y_1+Y_2$ has a Poisson($\theta_1+\theta_2$) distribution^[If $Y_1$ has mean $\theta_1$ and $Y_2$ has mean $\theta_2$ then linearity of expected value implies that $Y_1+Y_2$ has mean $\theta_1+\theta_2$.  If $Y_1$ has variance $\theta_1$ and $Y_2$ has variance $\theta_2$ then independence of $Y_1$ and $Y_2$ implies that $Y_1+Y_2$ has variance $\theta_1+\theta_2$.  What Poisson aggregation says is that if component counts are independent and each with a Poisson *shape*, then the total count also has a Poisson *shape*.].
+That is, if independent component counts each follow a Poisson distribution then the total count also follows a Poisson distribution.
+Poisson aggregation extends naturally to more than two components.
+For example, if the number of babies born each day at a certain hospital follows a Poisson distribution --- perhaps with different daily rates (e.g., higher for Friday than Saturday) --- independently from day to day, then the number of babies born each week at the hospital also follows a Poisson distribution.
+
+
+
+```{python, echo = FALSE}
+
+Poisson(0.5).plot()
+Poisson(1).plot()
+Poisson(1.5).plot()
+Poisson(2).plot()
+plt.legend(['Poisson(0.5)', 'Poisson(1)', 'Poisson(1.5)', 'Poisson(2)']);
+plt.xlim(-0.1, 8.1);
+plt.show()
+
+```
+
+
+```{example, poisson-hr-discrete}
+Suppose the number of home runs hit per game (by both teams in total) at a particular Major League Baseball park follows a Poisson distribution with parameter $\theta$.
+```
+
+1. Sketch your prior distribution for $\theta$ and describe its features.
+What are the possible values of $\theta$?
+Does $\theta$ take values on a discrete or continuous scale?
+1. Suppose $Y$ represents a home run count for a single game. 
+What are the possible values of $Y$?
+Does $Y$ take values on a discrete or continuous scale?
+1. We'll start with a discrete prior for $\theta$ to illustrate ideas.
+
+    | $\theta$    |  0.5 |  1.5 |  2.5 |  3.5 |  4.5 |
+    |-------------|-----:|-----:|-----:|-----:|-----:|
+    | Probability | 0.13 | 0.45 | 0.28 | 0.11 | 0.03 |
+
+    Suppose a single game with 1 home run is observed. Find the posterior distribution of $\theta$.  In particular, how do you determine the likelihood column?
+
+1. Now suppose a second game, with 3 home runs, is observed, independently of the first.
+Find the posterior distribution of $\theta$ after observing these two games, using the posterior distribution from the previous part as the prior distribution in this part. 
+1. Now consider the original prior again.
+Find the posterior distribution of $\theta$ after observing 1 home run in the first game and 3 home runs in the second, without the intermediate updating of the posterior after the first game.
+How does the likelihood column relate to the likelihood columns from the previous parts?
+How does the posterior distribution compare with the posterior distribution from the previous part?
+1. Now consider the original prior again.
+Suppose that instead of observing the two individual values, we only observe that there is a total of 4 home runs in 2 games.
+Find the posterior distribution of $\theta$.
+In particular, you do you determine the likelihood column?
+How does the likelihood column compare to the one from the previous part?
+How does posterior compare to the previous part?
+1. Suppose we'll observe a third game tomorrow.  How could you find --- both analytically and via simulation ---the posterior predictive probability that this game has 0 home runs?
+1. Now let's consider a continuous prior distribution for $\theta$ which satisfies
+\[
+\pi(\theta) \propto \theta^{4 -1}e^{-2\theta}, \qquad \theta > 0
+\]
+Use grid approximation to compute the posterior distribution of $\theta$ given 1 home run in a single game.
+Plot the prior, (scaled) likelihood, and posterior.
+(Note: you will need to cut the grid off at some point.
+While $\theta$ can take any value greater than 0, the interval [0, 8] accounts for 99.99% of the prior probability.)
+1. Now let's consider summary real data.
+Assume home runs per game at Citizens Bank Park (Phillies!) follow a Poisson distribution with parameter $\theta$.
+Assume that the prior distribution for $\theta$ satisfies
+\[
+\pi(\theta) \propto \theta^{4 -1}e^{-2\theta}, \qquad \theta > 0
+\]
+The following summarizes data for the 2020 season^[Source: https://www.baseball-reference.com/teams/PHI/2020.shtml].
+There were 97 home runs in 32 games.
+Use grid approximation to compute the posterior distribution of $\theta$ given the data.
+Be sure to specify the likelihood.
+Plot the prior, (scaled) likelihood, and posterior.
+
+    ```{r, echo = FALSE}
+
+hr = 0:9
+games = c(0, 8, 8, 5, 4, 3, 2, 1, 1, 0)
+
+df = data.frame(hr, games)
+
+kable(df,
+      col.names = c("Home runs", "Number of games"))
+
+```
+
+    ```{r, echo = FALSE}
+
+plot(hr, games / sum(games), type = "h", xlab = "Number of home runs",
+     ylab = "Proportion of games", xaxt = "n", lwd = 2)
+axis(1, 0:9)
+```
+
+
+
+
+
+```{solution}
+to Example \@ref(exm:poisson-hr-discrete)
+```
+
+1. Your prior is whatever it is.
+We'll discuss how we chose a prior in a later part.
+Even though each data value is an integer, the mean number of home runs per game $\theta$ can be any value greater than 0.
+That is, the *parameter* $\theta$ takes values on a continuous scale.
+1. $Y$ can be 0, 1, 2, and so on, taking values on a discrete scale.
+Technically, there is no fixed upper bound on what  
+$Y$ can be.
+1. The likelihood is the Poisson probability of 1 home run in a game computed for each value of $\theta$.
+\[
+f(y=1|\theta) = \frac{e^{-\theta}\theta^1}{1!}
+\]
+
+    As always posterior is proportional to the product of prior and likelihood. We see that the posterior distibution puts even greater probability on $\theta=1.5$ than the prior.
+
+    ```{r, echo = FALSE}
+# prior
+theta = 0.5 + 0:4
+prior = c(0.13, 0.45, 0.28, 0.11, 0.03)
+prior = prior / sum(prior)
+
+# data
+n = 1 # sample size
+y = 1 # sample mean 
+
+# likelihood, using binomial
+likelihood = dpois(n * y, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+kable(bayes_table, digits = 4, align = 'r')
+
+
+
+```
+
+
+1. The likelihood is the Poisson probability of 3 home runs in a game computed for each value of $\theta$.
+\[
+f(y=3|\theta) = \frac{e^{-\theta}\theta^3}{3!}
+\]
+
+    The posterior places about 90% of the probability on $\theta=1.5$ and $\theta=2.5$.
+
+    ```{r, echo = FALSE}
+# prior
+prior = posterior
+
+# data
+n = 1 # sample size
+y = 3 # sample mean 
+
+# likelihood, using binomial
+likelihood = dpois(n * y, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+kable(bayes_table, digits = 4, align = 'r')
+
+
+
+```
+
+
+1. Since the games are independent^[I keep meaning to say this, but technically the $Y$ values are not independent.  Rather, they are *conditionally independent given* $\theta$. This is a somewhat subtle distinction, so I've glossed over the details.] the likelihood is the product of the likelihoods from the two previous parts
+\[
+f(y=(1, 3)|\theta) = \left(\frac{e^{-\theta}\theta^1}{1!}\right)\left(\frac{e^{-\theta}\theta^3}{3!}\right)
+\]
+
+    Unsuprisingly, the posterior distribution is the same as in the previous part.
+
+    ```{r, echo = FALSE}
+# prior
+theta = 0.5 + 0:4
+prior = c(0.13, 0.45, 0.28, 0.11, 0.03)
+prior = prior / sum(prior)
+
+# data
+n = 2 # sample size
+y = c(1, 3) # sample mean 
+
+# likelihood, using binomial
+likelihood = dpois(y[1], theta) * dpois(y[2], theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+kable(bayes_table, digits = 4, align = 'r')
+
+
+
+```
+
+1. By Poisson aggregation, the total number of home runs in 2 games follows a Poisson($2\theta$) distribution.
+The likelihood is the probability of a value of 4 (home runs in 2 games) computed using a Poisson($2\theta$) for each value of $\theta$.
+\[
+f(\bar{y}=2|\theta) = \frac{e^{-2\theta}(2\theta)^4}{4!}
+\]
+
+    The likelihood is not the same as in the previous part because there are more samples of two games that yield a total of 4 home runs than those that yield 1 home run in the first game and 3 in the second.  However, the likelihoods are *proportionally* the same. For example, the likelihood for $\theta=2.5$ is about 1.92 times greater than the likelihood for $\theta = 3.5$ in both this part and the previous part.  Therefore, the posterior distribution is the same as in the previous part.
+    
+    ```{r, echo = FALSE}
+# prior
+theta = 0.5 + 0:4
+prior = c(0.13, 0.45, 0.28, 0.11, 0.03)
+prior = prior / sum(prior)
+
+# data
+n = 2 # sample size
+y = 2 # sample mean 
+
+# likelihood, using binomial
+likelihood = dpois(n * y, n * theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+kable(bayes_table, digits = 4, align = 'r')
+
+```
+
+1. Simulate a value of $\theta$ from a Poisson distribution and then given $\theta$ simulate a value of $Y$ from a Poisson($\theta$) distribution, and repeat many times.
+Approximate the probability of 0 home runs by finding the proportion of repetitions that yield a $Y$ value of 0.
+(We'll see some code a little later.)
+
+    We can compute the probability using the law of total probability.  Find the probability of 0 home runs for each value of $\theta$ --- $e^{-\theta}\theta^0/0! = e^{-\theta}$ --- and then weight these values by their posterior probabilities to find the predictive probability of 0 home runs, which is 0.163.
+    
+    \begin{align*}
+    & e^{-0.5}(0.0145) + e^{-1.5}(0.5488) + e^{-2.5}(0.3566) + e^{-3.5}(0.0728) + e^{-4.5}(0.0073)\\
+    = &  (0.6065)(0.0145) + (0.2231)(0.5488) + (0.0821)(0.3566) + (0.0302)(0.0728) + (0.0111)(0.0073) = 0.1628
+    \end{align*}
+
+
+1. Now let's consider a continuous prior distribution for $\theta$ which satisfies
+\[
+\pi(\theta) \propto \theta^{4 -1}e^{-2\theta}, \qquad \theta > 0
+\]
+Use grid approximation to compute the posterior distribution of $\theta$ given 1 home run in a single game.
+Plot the prior, (scaled) likelihood, and posterior.
+(Note: you will need to cut the grid off at some point.
+While $\theta$ can take any value greater than 0, the interval [0, 8] accounts for 99.99% of the prior probability.)
+
+    ```{r}
+# prior
+theta = seq(0, 8, 0.001)
+
+prior = theta ^ (4 - 1) * exp(-2 * theta)
+prior = prior / sum(prior)
+
+# data
+n = 1 # sample size
+y = 1 # sample mean
+
+# likelihood
+likelihood = dpois(y, theta)
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+xlim = range(theta)
+plot(theta, prior, type='l', xlim=xlim, ylim=ylim, col="orange", xlab='theta', ylab='', yaxt='n')
+par(new=T) 
+plot(theta, likelihood/sum(likelihood), type='l', xlim=xlim, ylim=ylim, col="skyblue", xlab='', ylab='', yaxt='n')
+par(new=T)
+plot(theta, posterior, type='l', xlim=xlim, ylim=ylim, col="seagreen", xlab='', ylab='', yaxt='n')
+legend("topright", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("orange", "skyblue", "seagreen"))
+
+```
+
+
+
+1. By Poisson aggregation, the total number of home runs in 32 games follows a Poisson($32\theta$) distribution.
+The likelihood is the probability of observing a value of 97 (for the total number of home runs in 32 games) from a Poisson($32\theta$) distribution.
+\begin{align*}
+f(\bar{y} = 97/32|\theta) & = e^{-32\theta}(32\theta)^{97}/97!, \qquad \theta > 0\\
+& \propto e^{-32\theta}\theta^{97}, \qquad \theta > 0\\
+\end{align*}
+
+    The likelihood is centered at the sample mean of 97/32 = 3.03.  The posterior distribution follows the likelihood fairly closely, but the prior still has a little influence.
+
+
+    ```{r}
+# prior
+theta = seq(0, 8, 0.001)
+
+prior = theta ^ (4 - 1) * exp(-2 * theta)
+prior = prior / sum(prior)
+
+# data
+n = 32 # sample size
+y = 97 / 32 # sample mean
+
+# likelihood - for total count
+likelihood = dpois(n * y, n * theta)
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+xlim = range(theta)
+plot(theta, prior, type='l', xlim=xlim, ylim=ylim, col="orange", xlab='theta', ylab='', yaxt='n')
+par(new=T) 
+plot(theta, likelihood/sum(likelihood), type='l', xlim=xlim, ylim=ylim, col="skyblue", xlab='', ylab='', yaxt='n')
+par(new=T)
+plot(theta, posterior, type='l', xlim=xlim, ylim=ylim, col="seagreen", xlab='', ylab='', yaxt='n')
+legend("topright", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("orange", "skyblue", "seagreen"))
+
+```
+
+
+
+
+In Bayesian analysis of Poisson count, Gamma distributions are commonly used as prior distributions.
+
+A continuous RV $U$ has a **Gamma distribution** with *shape parameter* $\alpha>0$ and *rate parameter*^[Sometimes Gamma densities are parametrized in terms of the *scale parameter* $1/\lambda$, so that the mean is $\alpha\lambda$.] $\lambda>0$ if its density satisfies^[The expression defines the shape of a Gamma density.  All that's  missing is the scaling constant which ensures that the total area under the density is 1.  The actual Gamma density formula, including the normalizing constant, is
+\[
+f(u) =\frac{\lambda^\alpha}{\Gamma(\alpha)}\; u^{\alpha-1}e^{-\lambda u}, \quad u>0,
+\]
+where 
+$\Gamma(\alpha) = \int_0^\infty e^{-u}u^{\alpha-1} du$ is the *Gamma function*. For a positive integer $k$,
+$\Gamma(k) = (k-1)!$.  Also, $\Gamma(1/2)=\sqrt{\pi}$.]
+\[
+f(u) \propto u^{\alpha-1}e^{-\lambda u}, \quad u>0,
+\]
+
+In R: `dgamma(u, shape, rate)` for density, `rgamma` to simulate, `qgamma` for quantiles, etc.
+
+It can be shown that a Gamma($\alpha$, $\lambda$) density has
+\begin{align*}
+\text{Mean (EV)} & = \frac{\alpha}{\lambda}\\
+\text{Variance} & = \frac{\alpha}{\lambda^2}
+\\
+\text{Mode} & = \frac{\alpha -1}{\lambda}, \qquad \text{if $\alpha\ge 1$}
+\end{align*}
+
+
+```{python, echo = FALSE, fig.show="hold", out.width="50%"}
+
+plt.figure();
+Gamma(1, 1).plot()
+Gamma(2, 1).plot()
+Gamma(5, 1).plot()
+Gamma(10, 1).plot()
+plt.title(r"Gamma densities with rate parameter $\lambda=1$");
+plt.show()
+
+plt.figure();
+Gamma(3, 1).plot()
+Gamma(3, 2).plot()
+Gamma(3, 3).plot()
+Gamma(3, 4).plot()
+plt.title(r"Gamma densities with shape parameter $\alpha=3$");
+plt.show()
+
+
+
+```
+
+
+```{example, gamma-plots}
+The plots above show a few examples of Gamma distributions.
+```
+
+
+1. The plot on the left above contains a few different Gamma densities, all with rate parameter $\lambda=1$.  Match each density to its shape parameter $\alpha$; the choices are 1, 2, 5, 10.
+1. The plot on the right above contains a few different Gamma densities, all with shape parameter $\alpha=3$.  Match each density to its rate parameter $\lambda$; the choices are 1, 2, 3, 4.
+
+ 
+```{solution}
+to Example \@ref(exm:gamma-plots)
+```
+
+1. For a fixed $\lambda$, as the shape parameter $\alpha$ increases, both the mean and the standard deviation increase.
+1. For a fixed $\alpha$, as the rate parameter $\lambda$ increases, both the mean and the standard deviation decrease.
+    
+    Observe that changing $\lambda$ doesn't change the overall shape of the curve, just the scale of values that it covers.  However, changing $\alpha$ does change the shape of the curve; notice the changes in concavity in the plot on the left.
+
+
+```{python, echo = FALSE, fig.show="hold", out.width="50%"}
+
+plt.figure();
+Gamma(1, 1).plot()
+Gamma(2, 1).plot()
+Gamma(5, 1).plot()
+Gamma(10, 1).plot()
+plt.legend([r"\alpha=1", r"\alpha=2", r"\alpha=5", r"\alpha=10"]);
+plt.title(r"Gamma densities with rate parameter $\lambda=1$");
+plt.show()
+
+plt.figure();
+Gamma(3, 1).plot()
+Gamma(3, 2).plot()
+Gamma(3, 3).plot()
+Gamma(3, 4).plot()
+plt.legend([r"\lambda=1", r"\lambda=2", r"\lambda=3", r"\lambda=4"]);
+plt.title(r"Gamma densities with shape parameter $\alpha=3$");
+plt.show()
+
+
+
+```
+
+```{example, poisson-hr-continuous}
+Assume home runs per game at Citizens Bank Park follow a Poisson distribution with parameter $\theta$.
+Assume for $\theta$  a Gamma prior distribution with shape parameter $\alpha = 4$ and rate parameter $\lambda = 2$.
+```
+
+1. Write an expression for the prior density $\pi(\theta)$.
+Plot the prior distribution.
+Find the prior mean, prior SD, and a prior 95% credible interval for $\theta$.
+1. Suppose a single game with 1 home run is observed.
+Write the likelihood function.
+1. Write an expression for the posterior distribution of $\theta$ given a single game with 1 home run.
+Identify by the name the posterior distribution and the values of relevant parameters.
+Plot the prior distribution, (scaled) likelihood, and posterior distribution. 
+Find the posterior mean, posterior SD, and a posterior 95% credible interval for $\theta$.
+1. Now consider the original prior again.
+Determine the likelihood of observing 1 home run in game 1 and 3 home runs in game 2 in a sample of 2 games, and the posterior distribution of $\theta$ given this sample.
+Identify by the name the posterior distribution and the values of relevant parameters.
+Plot the prior distribution, (scaled) likelihood, and posterior distribution. 
+Find the posterior mean, posterior SD, and a posterior 95% credible interval for $\theta$.
+1. Consider the original prior again.
+Determine the likelihood of observing a total of 4 home runs in a sample of 2 games, and the posterior distribution of $\theta$ given this sample.
+Identify by the name the posterior distribution and the values of relevant parameters.
+How does this compare to the previous part?
+1. Consider the 2020 data in which there were 97 home runs in 32 games.
+Determine the likelihood function, and the posterior distribution of $\theta$ given this sample.
+Identify by the name the posterior distribution and the values of relevant parameters.
+Plot the prior distribution, (scaled) likelihood, and posterior distribution. 
+Find the posterior mean, posterior SD, and a posterior 95% credible interval for $\theta$.
+1. Interpret the credible interval from the previous part in context.
+1. Express the posterior mean of $\theta$ based on the 2020 data as a weighted average of the prior mean and the sample mean.
+
+
+
+
+
+```{solution, poisson-hr-continuous-sol}
+to Example \@ref(exm:poisson-hr-continuous)
+```
+
+
+1. Remember that in the Gamma(4,2) prior distribution $\theta$ is treated as the variable.
+\[
+\pi(\theta)  \propto \theta^{4-1}e^{-2\theta}, \qquad \theta > 0.
+\]
+
+    This is the same prior we used in the grid approximation in Example \@ref(exm:poisson-hr-discrete). See below for a plot.
+    \begin{align*}
+    \text{Prior mean } & = \frac{\alpha}{\lambda} & & \frac{4}{2} = 2\\
+    \text{Prior SD} & = \sqrt{\frac{\alpha}{\lambda^2}} & & \sqrt{\frac{4}{2^2}} = 1
+    \end{align*}
+
+    Use `qgamma` for find the endpoints of a 95% prior credible interval.
+    
+    ```{r}
+qgamma(c(0.025, 0.975), shape = 4, rate = 2)
+```
+    
+
+1. The likelihood is the Poisson probability of 1 home run in a game computed for each value of $\theta>0$.
+\[
+f(y=1|\theta) = \frac{e^{-\theta}\theta^1}{1!}\propto e^{-\theta}\theta, \qquad \theta>0.
+\]
+1. Posterior is proportional to likelihood times prior
+\begin{align*}
+\pi(\theta|y = 1)  & \propto \left(e^{-\theta}\theta\right)\left(\theta^{4-1}e^{-2\theta}\right), \qquad \theta > 0,\\
+& \propto \theta^{(4 + 1) - 1}e^{-(2+1)\theta}, \qquad \theta > 0.
+\end{align*}
+
+    We recognize the above as the Gamma density with shape parameter $\alpha=4+1$ and rate parameter $\lambda = 2 + 1$.
+
+    \begin{align*}
+    \text{Posterior mean } & = \frac{\alpha}{\lambda} & & \frac{5}{3} = 1.667\\
+    \text{Posterior SD} & = \sqrt{\frac{\alpha}{\lambda^2}} & & \sqrt{\frac{5}{3^2}} = 0.745
+    \end{align*}
+
+    
+    ```{r}
+qgamma(c(0.025, 0.975), shape = 4 + 1, rate = 2 + 1)
+```
+
+
+    ```{r}
+
+theta = seq(0, 8, 0.001) # the grid is just for plotting
+
+# prior
+alpha = 4
+lambda = 2
+prior = dgamma(theta, shape = alpha, rate = lambda)
+
+# likelihood
+n = 1 # sample size
+y = 1 # sample mean
+likelihood = dpois(n * y, n * theta)
+
+# posterior
+posterior = dgamma(theta, alpha + n * y, lambda + n)
+
+# plot
+plot_continuous_posterior <- function(theta, prior, likelihood, posterior) {
+  
+  ymax = max(c(prior, posterior))
+  
+  scaled_likelihood = likelihood * ymax / max(likelihood)
+  
+  plot(theta, prior, type='l', col='orange', xlim= range(theta), ylim=c(0, ymax), ylab='', yaxt='n')
+  par(new=T)
+  plot(theta, scaled_likelihood, type='l', col='skyblue', xlim=range(theta), ylim=c(0, ymax), ylab='',  yaxt='n')
+  par(new=T)
+  plot(theta, posterior, type='l', col='seagreen', xlim=range(theta), ylim=c(0, ymax), ylab='', yaxt='n')
+  legend("topright", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("orange", "skyblue", "seagreen"))
+}
+
+plot_continuous_posterior(theta, prior, likelihood, posterior)
+
+abline(v = qgamma(c(0.025, 0.975), alpha + n * y, lambda + n),
+       col = "seagreen", lty = 2)
+```
+
+
+1. The likelihood is the product of the likelihoods of $y=1$ and $y=3$.
+\[
+f(y=(1, 3)|\theta) = \left(\frac{e^{-\theta}\theta^1}{1!}\right)\left(\frac{e^{-\theta}\theta^3}{3!}\right) \propto e^{-2\theta}\theta^{4}, \qquad \theta>0.
+\]
+    
+    The posterior satisfies
+\begin{align*}
+ \pi(\theta|y = (1, 3))  & \propto \left(e^{-2\theta}\theta^4\right)\left(\theta^{4-1}e^{-2\theta}\right), \qquad \theta > 0,\\
+& \propto \theta^{(4 + 4) - 1}e^{-(2+2)\theta}, \qquad \theta > 0.
+\end{align*}
+
+
+    We recognize the above as the Gamma density with shape parameter $\alpha=4+4$ and rate parameter $\lambda = 2 + 2$.
+
+    \begin{align*}
+    \text{Posterior mean } & = \frac{\alpha}{\lambda} & & \frac{8}{4} = 2\\
+    \text{Posterior SD} & = \sqrt{\frac{\alpha}{\lambda^2}} & & \sqrt{\frac{8}{4^2}} = 0.707
+    \end{align*}
+    
+    ```{r}
+n  = 2 # sample size
+y = 2 # sample mean
+
+# likelihood
+likelihood = dpois(1, theta) * dpois(3, theta)
+
+# posterior
+posterior = dgamma(theta, alpha + n * y, lambda + n)
+
+# plot
+plot_continuous_posterior(theta, prior, likelihood, posterior)
+
+abline(v = qgamma(c(0.025, 0.975), alpha + n * y, lambda + n),
+       col = "seagreen", lty = 2)
+```
+
+1. By Poisson aggregation, the total number of home runs in 2 games follows a Poisson($2\theta$) distribution.
+The likelihood is the probability of a value of 4 (home runs in 2 games) computed using a Poisson($2\theta$) for each value of $\theta$.
+\[
+f(\bar{y}=2|\theta) = \frac{e^{-2\theta}(2\theta)^4}{4!} \propto e^{-2\theta}\theta^4, \qquad \theta >0
+\]
+    The shape of the likelihood as a function of $\theta$ is the same as in the previous part; the likelihood functions are proportionally the same regardless of whether you observe the individual values or just the total count.
+    Therefore, the posterior distribution is the same as in the previous part.
+
+    ```{r}
+# likelihood
+n = 2 # sample size
+y = 2 # sample mean
+likelihood = dpois(n * y, n * theta)
+
+# posterior
+posterior = dgamma(theta, alpha + n * y, lambda + n)
+
+# plot
+plot_continuous_posterior(theta, prior, likelihood, posterior)
+
+abline(v = qgamma(c(0.025, 0.975), alpha + n * y, lambda + n),
+       col = "seagreen", lty = 2)
+```
+
+1. By Poisson aggregation, the total number of home runs in 32 games follows a Poisson($32\theta$) distribution.
+The likelihood is the probability of observing a value of 97 (for the total number of home runs in 32 games) from a Poisson($32\theta$) distribution.
+\begin{align*}
+f(\bar{y} = 97/32|\theta) & = e^{-32\theta}(32\theta)^{97}/97!, \qquad \theta > 0\\
+& \propto e^{-32\theta}\theta^{97}, \qquad \theta > 0\\
+\end{align*}
+
+    The posterior satisfies
+\begin{align*}
+\pi(\theta|\bar{y} = 97/32)  & \propto \left(e^{-32\theta}\theta^{97}\right)\left(\theta^{4-1}e^{-2\theta}\right), \qquad \theta > 0,\\
+& \propto \theta^{(4 + 97) - 1}e^{-(2+32)\theta}, \qquad \theta > 0.
+\end{align*}
+
+
+    We recognize the above as the Gamma density with shape parameter $\alpha=4+97$ and rate parameter $\lambda = 2 + 32$.
+
+    \begin{align*}
+    \text{Posterior mean } & = \frac{\alpha}{\lambda} & & \frac{101}{34} = 2.97\\
+    \text{Posterior SD} & = \sqrt{\frac{\alpha}{\lambda^2}} & & \sqrt{\frac{101}{34^2}} = 0.296
+    \end{align*}
+
+    The likelihood is centered at the sample mean of 97/32 = 3.03.  The posterior distribution follows the likelihood fairly closely, but the prior still has a little influence. The posterior is essentially identical to the one we computed via grid approximation in Example \@ref(exm:poisson-hr-discrete).
+    
+    ```{r}
+# likelihood
+n = 32 # sample size
+y = 97 / 32 # sample mean
+likelihood = dpois(n * y, n * theta)
+
+# posterior
+posterior = dgamma(theta, alpha + n * y, lambda + n)
+
+# plot
+plot_continuous_posterior(theta, prior, likelihood, posterior)
+
+abline(v = qgamma(c(0.025, 0.975), alpha + n * y, lambda + n),
+       col = "seagreen", lty = 2)
+
+qgamma(c(0.025, 0.975), alpha + n * y, lambda + n)
+```
+
+
+1. There is a posterior probability of 95% that the mean number of home runs per games at Citizen Bank Park is between 2.4 and 3.6.
+1. The prior mean is 4/2=2, based on a "prior sample size" of 2.
+The sample mean is 97/32 = 3.03, based on a sample size of 32.
+The posterior mean is (4 + 97)/(2 + 32) = 2.97.
+The posterior mean is a weighted average of the prior mean and the sample mean with the weights based on the "sample sizes"
+\[
+2.97 = \frac{4+97}{2 + 32} = \left(\frac{2}{2 + 32}\right)\left(\frac{4}{2}\right) +  \left(\frac{32}{2 + 32}\right)\left(\frac{97}{32}\right) = (0.0589)(2)+ (0.941)(3.03)
+\]
+
+
+ 
+
+In the previous example we saw that if the values of the measured variable follow a Poisson distribution with parameter $\theta$  and the prior for $\theta$ follows a Gamma distribution, then the posterior distribution for $\theta$ given the data also follows a Gamma distribution.
+
+
+**Gamma-Poisson model.** Consider a measured variable $Y$ which, given $\theta$, follows a Poisson$(\theta)$ distribution.
+Let $\bar{y}$ be the sample mean for a random sample of size $n$.
+Suppose $\theta$ has a Gamma$(\alpha, \lambda)$ prior distribution.
+Then the posterior distribution of $\theta$ given $\bar{y}$ is the Gamma$(\alpha+n\bar{y}, \lambda+n)$ distribution.
+
+That is, Gamma distributions form a *conjugate prior* family for a Poisson likelihood.
+
+
+The posterior distribution is a compromise between prior and likelihood.
+For the Gamma-Poisson model, there is an intuitive interpretation of this compromise.
+In a sense, you can interpret $\alpha$ as "prior total count" and $\lambda$ as "prior sample size", but these are only "pseudo-observations".
+Also, $\alpha$ and $\lambda$ are not necessarily integers.
+
+Note that if $\bar{y}$ is the sample mean count is then $n\bar{y} = \sum_{i=1}^n y_i$ is the sample total count.
+
+
+|             |                    Prior |       Data |                           Posterior |
+|-------------|-------------------------:|-----------:|------------------------------------:|
+| Total count |                 $\alpha$ | $n\bar{y}$ |                   $\alpha+n\bar{y}$ |
+| Sample size |                $\lambda$ |        $n$ |                       $\lambda + n$ |
+| Mean        | $\frac{\alpha}{\lambda}$ |  $\bar{y}$ | $\frac{\alpha+n\bar{y}}{\lambda+n}$ |
+
+
+
+- The posterior total count is the sum of the "prior total count" $\alpha$ and the sample total count $n\bar{y}$.
+- The posterior sample size is the sum of the "prior sample size" $\lambda$ and the observed sample size $n$. 
+- The posterior mean is a weighted average of the prior mean and the sample mean, with weights proportional to the "sample sizes".
+
+\[
+\frac{\alpha+n\bar{y}}{\lambda+n} = \frac{\lambda}{\lambda+n}\left(\frac{\alpha}{\lambda}\right) + \frac{n}{\lambda+n}\bar{y}
+\]
+
+- As more data are collected, more weight is given to the sample mean (and less weight to the prior mean)
+- Larger values of $\lambda$ indicate stronger prior beliefs, due to smaller prior variance (and larger "prior sample size"), and give more weight to the prior mean
+
+
+Try this [applet which illustrates the Gamma-Poisson model](https://shiny.stat.ncsu.edu/bjreich/PoissonGamma/).
+
+
+Rather than specifying $\alpha$ and $\beta$, a Gamma distribution prior can be specified by its prior mean and SD directly.
+If the prior mean is $\mu$ and the prior SD is $\sigma$, then
+\begin{align*}
+\lambda & = \frac{\mu}{\sigma^2}\\
+\alpha & = \mu\lambda
+\end{align*}
+ 
+```{example, poisson-hr-simulation}
+Continuing the previous example, assume home runs per game at Citizens Bank Park follow a Poisson distribution with parameter $\theta$.
+Assume for $\theta$  a Gamma prior distribution with shape parameter $\alpha = 4$ and rate parameter $\lambda = 2$.
+Consider the 2020 data in which there were 97 home runs in 32 games.
+```
+
+1. Use JAGS to approximate the posterior distribution of $\theta$ given this sample.
+Compare with the results from the previous example.
+1. How could you use simulation (not JAGS) to approximate the posterior predictive distribution of home runs in a game?
+1. Use the simulation from the previous part to find and interpret a 95% posterior prediction interval with a lower bound of 0.
+1. Is a Poisson model a reasonable model for the data?
+How could you use posterior predictive simulation to simulate what a sample of 32 games might look like under this model.
+Simulate many such samples. Does the observed sample seem consistent with the model?
+1. Regarding the appropriateness of a Poisson model, we might be concerned that there are no games in the sample with 0 home runs.
+Use simulation to approximate the posterior predictive distribution of the number of games in a sample of 32 with 0 home runs.
+From this perspective, does the observed value of the statistic seem consistent with the Gamma-Poisson model?
+ 
+ 
+ 
+ 
+```{solution, poisson-hr-simulation-sol}
+to Example \@ref(exm:poisson-hr-simulation)
+```
+
+
+
+1. The JAGS code is at the end.  The results are very similar to the theoretical results from the previous example.
+1. Simulate a value of $\theta$ from its Gamma(101, 34) posterior distribution, then given $\theta$ simulate a value of $y$ from a Poisson($\theta$) distribution. Repeat many times and summarize the $y$ values to approximate the posterior predictive distribution.
+
+
+```{r}
+Nrep = 10000
+theta_sim = rgamma(Nrep, 101, 34)
+
+y_sim = rpois(Nrep, theta_sim)
+
+plot(table(y_sim) / Nrep, type = "h",
+     xlab = "Number of home runs",
+     ylab = "Simulated relative frequency",
+     main = "Posterior predictive distribution")
+
+```
+
+1. There is a posterior predictive probability of 95% of between 0 and 6 home runs in a game.
+Very roughly, about 95% of games have between 0 and 6 home runs.
+
+    ```{r}
+quantile(y_sim, 0.95)
+```
+
+1. Simulate a value of $\theta$ from its Gamma(101, 34) posterior distribution, then given $\theta$ simulate 32 values of $y$ from a Poisson($\theta$) distribution. Summarize each sample. Repeat many times to simulate many samples of size 32. Compare the observed sample with the simulated samples.
+    Aside from the fact there the sample has no games with 0 home runs, the model seems reasonable.
+
+
+    ```{r}
+df = read.csv("_data/citizens-bank-hr-2020.csv")
+y = df$hr
+n = length(y)
+
+plot(table(y) / n, type = "h", xlim = c(0, 13), ylim = c(0, 0.4),
+     xlab = "Number of home runs",
+     ylab = "Observed/Simulated relative frequency",
+     main = "Posterior predictive distribution")
+axis(1, 0:13)
+
+n_samples = 100
+
+
+# simulate samples
+for (r in 1:n_samples){
+  
+  # simulate theta from posterior distribution
+  theta_sim = rgamma(1, 101, 34)
+  
+  # simulate values from Poisson(theta) distribution
+  y_sim = rpois(n, theta_sim)
+  
+  # add plot of simulated sample to histogram
+  par(new = T)
+  plot(table(factor(y_sim, levels = 0:13)) / n, type = "o", xlim = c(0, 13), ylim = c(0, 0.4),
+  xlab = "", ylab = "", xaxt='n', yaxt='n',
+        col = rgb(135, 206, 235, max = 255, alpha = 25))
+}
+
+```
+
+
+1. Continuing with the simulation from the previous part, now for each simulated sample we record the number of games with 0 home runs.
+
+
+    ```{r}
+
+n_samples = 10000
+
+zero_count = rep(NA, n_samples)
+
+# simulate samples
+for (r in 1:n_samples){
+  
+  # simulate theta from posterior distribution
+  theta_sim = rgamma(1, 101, 34)
+  
+  # simulate values from Poisson(theta) distribution
+  y_sim = rpois(n, theta_sim)
+  zero_count[r] = sum(y_sim == 0)
+}
+  
+
+plot(table(zero_count) / n_samples, type = "h",
+  xlab = "Number of games with 0 home runs",
+  ylab = "Simulated posterior predictive probability")
+
+
+```
+
+
+Here is the JAGS code.  Note
+
+- The data has been loaded as individual values, number of home runs in each of the 32 games
+- Likelihood is defined as a loop.  For each `y[i]` value, the likelihood is computing according to a Poisson($\theta$) distribution
+- Prior distribution is a Gamma distribution.  (Remember, JAGS syntax for `dgamma`, `dpois`, etc, is not the same as in R.)
+
+
+```{r}
+
+# data
+df = read.csv("_data/citizens-bank-hr-2020.csv")
+y = df$hr
+n = length(y)
+
+# model
+model_string <- "model{
+
+  # Likelihood
+  for (i in 1:n){
+    y[i] ~ dpois(theta)
+  }
+
+  # Prior
+  theta ~ dgamma(alpha, lambda)
+  alpha <- 4  
+  lambda <- 2
+
+}"
+
+# Compile the model
+dataList = list(y=y, n=n)
+
+Nrep = 10000
+Nchains = 3
+
+model <- jags.model(textConnection(model_string), 
+                    data=dataList,
+                    n.chains=Nchains)
+
+update(model, 1000, progress.bar="none")
+
+posterior_sample <- coda.samples(model, 
+                                 variable.names=c("theta"),
+                                 n.iter=Nrep,
+                                 progress.bar="none")
+
+# Summarize and check diagnostics
+summary(posterior_sample)
+plot(posterior_sample)
+
+```
