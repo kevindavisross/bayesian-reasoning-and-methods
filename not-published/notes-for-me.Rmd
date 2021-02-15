@@ -5,6 +5,12 @@ General technology
 General material
 
 - more examples, exercises
+- See McElreath (2nd), there is some good stuff. e.g. Figure 3.6 for posterior prediction
+- Include more spinner illustrations, especially conditional (e.g., posterior prediction)
+- Add things that I say in the videos as text, especially intuitive explanations
+- Add more links to applets and animation
+- Add more illustrations of ideas; not just graphs of posterior/etc, pictures to illustrate ideas (e.g. Markov chain simulation)
+- Add quiz questions and HW problems and investigations to notes
 
 
 
@@ -12,10 +18,12 @@ Chapter 2
 
 - include mosaic plots?
 
+
 Chapter 3
 
 - add more base rate fallacy examples
 - include plot with comparison of Binomial distributions and ratio of likelihoods
 - review Binomial?
 - include how could you use simulation to approximate likelihood in Binomial?
+- refer to marginal probability of evidence as "average likelihood"
 

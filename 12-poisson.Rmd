@@ -139,7 +139,7 @@ Use grid approximation to compute the posterior distribution of $\theta$ given 1
 Plot the prior, (scaled) likelihood, and posterior.
 (Note: you will need to cut the grid off at some point.
 While $\theta$ can take any value greater than 0, the interval [0, 8] accounts for 99.99% of the prior probability.)
-1. Now let's consider summary real data.
+1. Now let's consider some real data.
 Assume home runs per game at Citizens Bank Park (Phillies!) follow a Poisson distribution with parameter $\theta$.
 Assume that the prior distribution for $\theta$ satisfies
 \[
@@ -332,7 +332,7 @@ kable(bayes_table, digits = 4, align = 'r')
 
 ```
 
-1. Simulate a value of $\theta$ from a Poisson distribution and then given $\theta$ simulate a value of $Y$ from a Poisson($\theta$) distribution, and repeat many times.
+1. Simulate a value of $\theta$ from its posterior distribution and then given $\theta$ simulate a value of $Y$ from a Poisson($\theta$) distribution, and repeat many times.
 Approximate the probability of 0 home runs by finding the proportion of repetitions that yield a $Y$ value of 0.
 (We'll see some code a little later.)
 
@@ -499,7 +499,7 @@ Gamma(1, 1).plot()
 Gamma(2, 1).plot()
 Gamma(5, 1).plot()
 Gamma(10, 1).plot()
-plt.legend([r"\alpha=1", r"\alpha=2", r"\alpha=5", r"\alpha=10"]);
+plt.legend([r"$\alpha=1$", r"$\alpha=2$", r"$\alpha=5$", r"$\alpha=10$"]);
 plt.title(r"Gamma densities with rate parameter $\lambda=1$");
 plt.show()
 
@@ -508,7 +508,7 @@ Gamma(3, 1).plot()
 Gamma(3, 2).plot()
 Gamma(3, 3).plot()
 Gamma(3, 4).plot()
-plt.legend([r"\lambda=1", r"\lambda=2", r"\lambda=3", r"\lambda=4"]);
+plt.legend([r"$\lambda=1$", r"$\lambda=2$", r"$\lambda=3$", r"$\lambda=4$"]);
 plt.title(r"Gamma densities with shape parameter $\alpha=3$");
 plt.show()
 
@@ -829,7 +829,7 @@ to Example \@ref(exm:poisson-hr-simulation)
 1. Simulate a value of $\theta$ from its Gamma(101, 34) posterior distribution, then given $\theta$ simulate a value of $y$ from a Poisson($\theta$) distribution. Repeat many times and summarize the $y$ values to approximate the posterior predictive distribution.
 
 
-```{r}
+    ```{r}
 Nrep = 10000
 theta_sim = rgamma(Nrep, 101, 34)
 
