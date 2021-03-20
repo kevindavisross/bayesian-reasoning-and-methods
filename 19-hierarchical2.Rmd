@@ -1,0 +1,328 @@
+# More Hierarchical Models {#hierarchical2}
+
+This chapter contains a few more examples and comments about hierarchical models.
+Keep in mind that this chapter and the last only provide a brief introduction to hierarchical models.
+
+
+We'll start by revisiting a previous example from a hierarchical perspective.
+
+## Comparing Groups with a Hierarchical Model
+
+```{example, baby-smoke-hier}
+Example \@ref(exm:baby-smoke) which concerned whether newborns born to mothers who smoke tend to weigh less at birth than newborns from mothers who don't smoke.
+
+
+Assume birthweights follow a Normal distribution with mean $\mu_1$ for nonsmokers and mean $\mu_2$ for smokers, and standard deviation $\sigma$.
+(We're assuming a common standard deviation to simplify a little, but we could also let standard deviation vary by smoking status.)
+
+```
+
+1. Explain how you could model this scenario with a hierarchical model.  Specify all levels in the hierarchy and the relevant parameters and distributions at each level.
+1. Use simulation to approximate the joint and marginal prior distributions of $\mu_1$ and $\mu_2$, and the marginal prior distribution of $\mu_1-\mu_2$.
+How does the prior compare to one in Example \@ref(exm:baby-smoke-hier)?
+1. Use JAGS to fit the model to the data.
+Summarize the joint and marginal posterior distributions of $\mu_1$ and $\mu_2$, and the marginal posterior distribution of $\mu_1-\mu_2$, and of the effect size.
+How does the posterior compare the one in Example\@ref(exm:baby-smoke-hier)?
+1. Do the conclusions change substantially compared to those in \@ref(exm:baby-smoke-hier)?
+
+
+
+```{solution}
+to Example \@ref(exm:baby-smoke-hier)
+```
+
+1. As in Example \@ref(exm:baby-smoke-hier) we assume that given $\mu_1, \mu_2, \sigma$, individual birthweights are Normally distributed with a mean that depends on smoking status: $Y_{i, x}\sim N(\mu_x, \sigma)$.
+    $\sigma$ represents the baby-to-baby variability in birthweights.  We could have separate $\sigma$'s for each smoking status.  Our main reason for not doing so is simplicity, and to be consistent with Example \@ref(exm:baby-smoke-hier). Also  to be consistent with Example \@ref(exm:baby-smoke-hier) we'll assume $(1/\sigma^2)$ has a Gamma(1, 1) prior distribution (though this isn't the greatest choice.)
+    Now we assume that given $\mu_0, \sigma_\mu$, the group means $\mu_1$ and $\mu_2$ are i.i.d. $N(\mu_0, \sigma_\mu)$. $\mu_0$ represents the overall average birthweight, and $\sigma_\mu$ represents how much the mean birthweights would vary from group to group.
+    The hyperparameters are $\mu_0$ and $\sigma_\mu$. The prior on $\mu_0$ represents prior uncertainty about the overall average birthweight.  We'll assume a Normal distribution prior for $\mu_0$ with prior mean 7.5 and prior SD 0.5, consistent with  to be consistent with Example \@ref(exm:baby-smoke-hier).
+    $\sigma_mu$ represents how much means vary from group to group. Recall that in Example we used a prior that gave rather large credibility to no difference in means. To be somewhat consistent we'll use an informative prior^[I did test a few different priors for $\sigma_\mu$ and the other parameters, and the results are not very sensitive to choice of prior.  For some discussion and recommendations regarding prior distributions for variance parameters, see Section 5.7 of Gelman et. al. *Bayesian Data Analysis*, 3rd ed.] which places large credibility on $\sigma_\mu$ being small, Gamma(1, 3).
+
+1. While the prior distribution isn't the same as in Example \@ref(exm:baby-smoke-hier), there is still a strong prior credibility of no difference.  However, we see that the prior distribution of $\mu_1-\mu_2$ has heavier tails here than it did in Example \@ref(exm:baby-smoke-hier).
+
+    ```{r, fig.show="hold", out.width="50%"}
+
+N = 10000
+
+# hyperprior
+mu0 = rnorm(N, 7.5, 0.5)
+sigma_mu = rgamma(N, 1, 3)
+
+# prior
+mu1 = rnorm(N, mu0, sigma_mu)
+mu2 = rnorm(N, mu0, sigma_mu)
+
+theta_sim_prior = data.frame(mu0, mu1, mu2)
+
+hist(theta_sim_prior$mu1 - theta_sim_prior$mu2, xlab = "mu1 - mu2")
+
+ggplot(theta_sim_prior, aes(mu1, mu2)) +
+  geom_point(color = "skyblue", alpha = 0.4) +
+  geom_density_2d(color = "orange", size = 1) +
+  geom_abline(intercept = 0, slope = 1, color="black", 
+                 linetype="dashed")
+
+```
+
+
+1. The posterior is pretty similar to the one in Example\@ref(exm:baby-smoke-hier).
+The min difference is that the posterior for the hierarchical model gives a little more credibility to a large difference in means.
+
+    ```{r}
+# data
+data = read.csv("_data/baby_smoke.csv")
+
+y = data$weight
+
+x = (data$habit == "smoker") + 1
+
+n = length(y)
+
+n_groups = 2
+
+# Model
+model_string <- "model{
+
+  # Likelihood
+  for (i in 1:n){
+      y[i] ~ dnorm(mu[x[i]], tau)
+  }
+
+  # Prior
+  for (j in 1:n_groups){
+      mu[j] ~ dnorm(mu0, 1 / sigma_mu ^ 2)
+  }
+  
+  sigma <- 1 / sqrt(tau)
+  tau ~ dgamma(1, 1)
+  
+  # Hyperprior
+  mu0 ~ dnorm(7.5, 0.5)
+  sigma_mu ~ dgamma(1, 3)
+
+}"
+
+dataList = list(y = y, x = x, n = n, n_groups = n_groups)
+
+# Compile
+model <- jags.model(textConnection(model_string),
+                    data = dataList,
+                    n.chains = 5)
+
+# Simulate
+update(model, 1000, progress.bar = "none")
+
+Nrep = 10000
+
+posterior_sample <- coda.samples(model,
+                                 variable.names = c("mu", "tau", "sigma", "mu0", "sigma_mu"),
+                                 n.iter = Nrep,
+                                 progress.bar = "none")
+
+# Summarize and check diagnostics
+summary(posterior_sample)
+plot(posterior_sample)
+
+theta_sim_posterior = as.matrix(posterior_sample)
+head(theta_sim_posterior)
+theta_sim_posterior = as.data.frame(theta_sim_posterior)
+names(theta_sim_posterior)[c(1, 2)] = c("mu1", "mu2")
+
+ggplot(theta_sim_posterior, aes(mu1, mu2)) +
+  geom_point(color = "skyblue", alpha = 0.4) +
+  geom_density_2d(color = "orange", size = 1) +
+  geom_abline(intercept = 0, slope = 1, color="black", 
+                 linetype="dashed")
+
+cor(theta_sim_posterior$mu1, theta_sim_posterior$mu2)
+```
+
+    ```{r}
+mu_diff = theta_sim_posterior$mu1 - theta_sim_posterior$mu2
+
+hist(mu_diff, xlab = "mu1 - mu2")
+abline(v = quantile(mu_diff, c(0.025, 0.975)), lty = 2)
+
+quantile(mu_diff, c(0.025, 0.975))
+
+mean(mu_diff)
+
+sum(mu_diff > 0 ) / 50000
+```
+
+    ```{r}
+sigma = 1 / sqrt(theta_sim_posterior$tau)
+    
+effect_size = mu_diff / sigma
+
+hist(effect_size, xlab = "effect size")
+abline(v = quantile(effect_size, c(0.95)), lty = 2)
+
+quantile(effect_size, c(0.95))
+
+mean(effect_size)
+
+```
+
+
+1. The posterior distribution in the hierarchical model gives a little more credibility to a large difference in means.  However, there are no major differences and the conclusions do not change substantially compared to those in \@ref(exm:baby-smoke-hier).
+
+
+
+
+## Adding Levels to the Hierarchy
+
+
+A hierarchical model can have several layers.
+In the free throw example in \@ref(hierarchical), we considered free throw percentages of individual players relative to the league-wide average free throw percentage.
+But suppose we want to compare the free throw percentage of individual players relative to the average free throw percentage of players of the same position (guard, forward, center), and also compare the position-by-position average free throw percentage to the overall league-wide average.
+For example, do guards have higher free throw percentages on average than centers?
+
+Recall that $\theta$ represents the free throw percentage of an individual player, while $\mu$ represents the league-wide average.
+Before we assumed that for each player, $\theta$ was drawn from a Beta distribution with mean $\mu$.
+Now we will introduce an intermediate level: for a player of position $k$, $\theta$ will be drawn from a Beta distribution with mean $\mu_k$, the league-wide mean for that position ($k$).
+For each position, $\mu_k$ will be drawn from a Beta distribution with mean $\mu_0$, the overall average.
+(We could let the $\kappa$ parameter of the Beta distribution on $\theta$ vary by position too.)
+
+
+With the additional position level in the hierarchy, the model from \@ref(hierarchical) becomes the following (with somewhat sketchy notation; we have not explicitly specified all the conditional independencies).
+The data consist of number of free throws attempted ($n_j$), number of free throws made ($y_{j|x}$), and position ($x$) for each player ($j$).
+
+1. **Likelihood.** For player $j$ in position $x$, $y_{j|x} \sim$ Binomial$\left(n_j, \theta_{j|x}\right)$
+1. **Prior.**
+    a. For player $j$ in position $x$, $\theta_{j|x}\sim$ Beta$(\mu_x\kappa_x, (1-\mu_x)\kappa_x)$.
+        - The prior distribution on $\theta_{j|x}$ encapsulates our uncertainty about the free throw percentage of an individual player of position $x$.
+        - $\mu_x$ represents the league-wide mean for position $x$, and is our expected value  for $\theta_{j|x}$
+        - $\kappa_x$ is the "equivalent prior sample size" relating to the strength of our beliefs about $\theta_{j|x}$, the free throw percentage of an individual player of position $x$.
+        - Another way to think about it: $\kappa_x$ is inversely related to the player-by-player variability for  players of position $x$.
+    a. For category $x$, $\mu_x\sim$ Beta$(\mu_0\kappa_0, (1-\mu_0)\kappa_0)$, and $\kappa_x\sim$ Gamma$(0.1, 0.1)$
+        - The prior distribution on $\mu_x$ encapsulates our uncertainty about the league-wide average for players of position $x$.
+        - $\mu_0$ represents the overall league-wide average, and is our expected value for $\mu_x$
+        - $\kappa_0$ is the "equivalent prior sample size" relating to the strength of our beliefs about $\mu_{x}$, the league-wide average for player of position $x$.
+        - Another way to think about it, $\kappa_0$ is inversely related to the position-by-position variability of the position means $\mu_x$ relative to the overall mean $\mu_0$.
+        - The prior distribution on $\kappa_x$ encapsulates our uncertainty in the strength of our prior beliefs about $\mu_x$.  Drawing each $\mu_x$ from the same prior distribution is like saying the  degree of uncertainty in the strength of our prior beliefs for the position-by-position averages is the same for each position.  (We could include hyperparameters in the distribution for $\kappa_x$, but it seems unnecessary.) 
+1. **Hyperprior.** $\mu_0, \kappa_0$ independent with $\mu_0\sim$ Beta(15, 5) and $\kappa_0\sim$ Gamma$(1, 0.1)$.
+    - Just as in \@ref(hierarchical), the prior distribution  on $\mu_0$ encapsulates our uncertainty about the overall league-wide average.
+
+
+We'll use data from the 2018-2019 NBA season available at [basketball-reference](https://www.basketball-reference.com/leagues/NBA_2019_totals.html).
+Note that some position designations have been recoded, and that  the position variable needs to be coded as numbers by JAGS.
+
+
+```{r}
+# load the data
+myData = read.csv('_data/freethrows.csv', stringsAsFactors = FALSE)
+myData = myData[order(myData$FTA),] # sort by number of attempts
+
+#myData2 = myData[sample(1:nrow(myData), 50, replace=FALSE),]
+
+# recode positions
+myData[,"Pos2"] = myData$Pos
+myData[myData$Pos %in% c("C", "C-PF"), "Pos2"] = "C"
+myData[myData$Pos %in% c("PF", "PF-SF", "SF", "SF-PF", "SF-SG"), "Pos2"] = "F"
+myData[myData$Pos %in% c("PG", "PG-SG", "SG", "SG-PF", "SG-PG", "SG-SF"), "Pos2"] = "G"
+table(myData$Pos2)
+aggregate(myData$FTA ~ Pos2, myData, sum, na.rm = TRUE)
+aggregate(myData$FT ~ Pos2, myData, sum, na.rm = TRUE)
+aggregate(myData$FT. ~ Pos2, myData, mean, na.rm = TRUE)
+
+
+y = myData$FT
+n = myData$FTA
+J = length(y) # number of players
+x = as.numeric(factor(myData$Pos2)) # convert to numbers
+K = length(unique(x)) # number of categories
+
+```
+
+The table displays average free throw percentage by position.  The overall average free throw percentage for the `r J` players is `r round(mean(y/n, na.rm=TRUE),3)`.
+
+We now specify the hierarchical model.  Below
+
+- `j` indexes player
+- `k` indexes position
+- `x[j]` is the position for player `j`
+- `mu[x[j]]` is the league-wide mean for player j's position
+- the `for k` loop is where the prior distribution for `mu[k]` is specified
+- `kappa` is treated similarly to `mu`
+    
+
+```{r}
+# specify the model: likelihood, prior, hyperprior
+
+model_string <- "model{
+
+  # Likelihood
+  for (j in 1:J){
+    y[j] ~ dbinom(theta[j], n[j])
+  }
+
+  # Prior - now the mean for theta depends on position
+  for (j in 1:J){
+    theta[j] ~ dbeta(mu[x[j]] * kappa[x[j]], (1 - mu[x[j]]) * kappa[x[j]])
+  }
+
+  # For each position, draw its mean from prior distribution
+  for (k in 1:K){
+    mu[k] ~ dbeta(mu0 * kappa0, (1-mu0) * kappa0)
+    kappa[k] ~ dgamma(0.1, 0.1)
+  }
+
+  # Hyperprior, phi=(mu, kappa)
+  mu0 ~ dbeta(3, 1)
+  kappa0 ~ dgamma(0.1, 0.1)
+}"
+
+dataList = list(y = y, n = n, J = J,
+                x = x, K = K) # adding position info
+
+model <- jags.model(file = textConnection(model_string), 
+                    data = dataList)
+
+update(model, n.iter = 1000)
+
+posterior_sample <- coda.samples(model,
+                       variable.names = c("theta", "mu", "mu0"),
+                       n.iter = 10000,
+                       n.chains = 5)
+
+```
+
+Let's first look at the posterior means and SDs for the $\mu$ parameters.
+
+```{r}
+# first four parameters are mu's
+# first two statistics in summary are mean, SD
+summary(posterior_sample)$statistics[1:4, 1:2]
+```
+
+Notice that the posterior SDs of the position means are less than the SDs of the overall mean.  The certainty of an estimate at a level in the hierarchy depends on how many parameter values are contributing to that level.  Each of the position means has hundreds of players contributing to it *directly*.  But the overall mean only has the three positions means contributing directly to it.  In some sense, the model with position in the hierarchy utilizes the data to estimate the position means as precisely as possible, somewhat at the expense of estimating the overall mean. 
+
+
+```{r}
+posterior_sample_values = as.matrix(posterior_sample)
+mu0 = posterior_sample_values[, "mu0"]
+mu1 = posterior_sample_values[, "mu[1]"]
+mu2 = posterior_sample_values[, "mu[2]"]
+mu3 = posterior_sample_values[, "mu[3]"]
+
+plotPost(mu0, main = "mu0")
+plotPost(mu1, main = "mu1")
+plotPost(mu2, main = "mu2")
+plotPost(mu3, main = "mu3")
+```
+
+
+
+The code below will launch in a browser the ShinyStan GUI for exploring the results of the NBA simulation.
+(You'll need to change eval to TRUE to run this code chunk.)
+
+```{r, eval=FALSE}
+
+nba_sso <- as.shinystan(posterior_sample, model_name = "NBA Free Throws")
+# nba_sso <- drop_parameters(nba_sso, pars = c("kappa", "kappa0"))
+launch_shinystan(nba_sso)
+
+```
+
+
+

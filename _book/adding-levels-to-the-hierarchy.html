@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>19.2 Adding Levels to the Hierarchy | An Introduction to Bayesian Reasoning and Methods</title>
+  <meta name="description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="generator" content="bookdown 0.20.1 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="19.2 Adding Levels to the Hierarchy | An Introduction to Bayesian Reasoning and Methods" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  <meta name="github-repo" content="rstudio/bayesian-reasoning-and-methods" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="19.2 Adding Levels to the Hierarchy | An Introduction to Bayesian Reasoning and Methods" />
+  
+  <meta name="twitter:description" content="This textbook presents an introduction to Bayesian reasoning and methods" />
+  
+
+<meta name="author" content="Kevin Ross" />
+
+
+<meta name="date" content="2021-03-07" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="comparing-groups-with-a-hierarchical-model.html"/>
+<link rel="next" href="regression.html"/>
+<script src="libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="interpretations.html"><a href="interpretations.html"><i class="fa fa-check"></i><b>1</b> Interpretations of Probability and Statistics</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="randomness.html"><a href="randomness.html"><i class="fa fa-check"></i><b>1.1</b> Instances of randomness</a></li>
+<li class="chapter" data-level="1.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html"><i class="fa fa-check"></i><b>1.2</b> Interpretations of probability</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#rel-freq"><i class="fa fa-check"></i><b>1.2.1</b> Long run relative frequency</a></li>
+<li class="chapter" data-level="1.2.2" data-path="interpretations-of-probability.html"><a href="interpretations-of-probability.html#subjective-probability"><i class="fa fa-check"></i><b>1.2.2</b> Subjective probability</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="consistency.html"><a href="consistency.html"><i class="fa fa-check"></i><b>1.3</b> Working with probabilities</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="consistency.html"><a href="consistency.html#consistency-requirements"><i class="fa fa-check"></i><b>1.3.1</b> Consistency requirements</a></li>
+<li class="chapter" data-level="1.3.2" data-path="consistency.html"><a href="consistency.html#odds"><i class="fa fa-check"></i><b>1.3.2</b> Odds</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="interpretations-of-statistics.html"><a href="interpretations-of-statistics.html"><i class="fa fa-check"></i><b>1.4</b> Interpretations of Statistics</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="bayes-rule.html"><a href="bayes-rule.html"><i class="fa fa-check"></i><b>2</b> Bayes’ Rule</a></li>
+<li class="chapter" data-level="3" data-path="bayes-factor.html"><a href="bayes-factor.html"><i class="fa fa-check"></i><b>3</b> Odds and Bayes Factors</a></li>
+<li class="chapter" data-level="4" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>4</b> Introduction to Estimation</a></li>
+<li class="chapter" data-level="5" data-path="inference.html"><a href="inference.html"><i class="fa fa-check"></i><b>5</b> Introduction to Inference</a></li>
+<li class="chapter" data-level="6" data-path="prediction.html"><a href="prediction.html"><i class="fa fa-check"></i><b>6</b> Introduction to Prediction</a></li>
+<li class="chapter" data-level="7" data-path="continuous.html"><a href="continuous.html"><i class="fa fa-check"></i><b>7</b> Introduction to Continuous Prior and Posterior Distributions</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="a-brief-review-of-continuous-distributions.html"><a href="a-brief-review-of-continuous-distributions.html"><i class="fa fa-check"></i><b>7.1</b> A brief review of continuous distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="continuous-distributions-for-a-population-proportion.html"><a href="continuous-distributions-for-a-population-proportion.html"><i class="fa fa-check"></i><b>7.2</b> Continuous distributions for a population proportion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="jags.html"><a href="jags.html"><i class="fa fa-check"></i><b>8</b> Introduction to Posterior Simulation and JAGS</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="introduction-to-jags.html"><a href="introduction-to-jags.html"><i class="fa fa-check"></i><b>8.1</b> Introduction to JAGS</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="introduction-to-jags.html"><a href="introduction-to-jags.html#load-the-data"><i class="fa fa-check"></i><b>8.1.1</b> Load the data</a></li>
+<li class="chapter" data-level="8.1.2" data-path="introduction-to-jags.html"><a href="introduction-to-jags.html#specify-the-model-likelihood-and-prior"><i class="fa fa-check"></i><b>8.1.2</b> Specify the model: likelihood and prior</a></li>
+<li class="chapter" data-level="8.1.3" data-path="introduction-to-jags.html"><a href="introduction-to-jags.html#compile-in-jags"><i class="fa fa-check"></i><b>8.1.3</b> Compile in JAGS</a></li>
+<li class="chapter" data-level="8.1.4" data-path="introduction-to-jags.html"><a href="introduction-to-jags.html#simulate-values-from-the-posterior-distribution"><i class="fa fa-check"></i><b>8.1.4</b> Simulate values from the posterior distribution</a></li>
+<li class="chapter" data-level="8.1.5" data-path="introduction-to-jags.html"><a href="introduction-to-jags.html#summarizing-simulated-values-and-diagnostic-checking"><i class="fa fa-check"></i><b>8.1.5</b> Summarizing simulated values and diagnostic checking</a></li>
+<li class="chapter" data-level="8.1.6" data-path="introduction-to-jags.html"><a href="introduction-to-jags.html#posterior-prediction"><i class="fa fa-check"></i><b>8.1.6</b> Posterior prediction</a></li>
+<li class="chapter" data-level="8.1.7" data-path="introduction-to-jags.html"><a href="introduction-to-jags.html#loading-data-as-individual-values-rather-than-summary-statistics"><i class="fa fa-check"></i><b>8.1.7</b> Loading data as individual values rather than summary statistics</a></li>
+<li class="chapter" data-level="8.1.8" data-path="introduction-to-jags.html"><a href="introduction-to-jags.html#simulating-multiple-chains"><i class="fa fa-check"></i><b>8.1.8</b> Simulating multiple chains</a></li>
+<li class="chapter" data-level="8.1.9" data-path="introduction-to-jags.html"><a href="introduction-to-jags.html#shinystan"><i class="fa fa-check"></i><b>8.1.9</b> ShinyStan</a></li>
+<li class="chapter" data-level="8.1.10" data-path="introduction-to-jags.html"><a href="introduction-to-jags.html#back-to-the-left-handed-problem"><i class="fa fa-check"></i><b>8.1.10</b> Back to the left-handed problem</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="prior.html"><a href="prior.html"><i class="fa fa-check"></i><b>9</b> Considering Prior Distributions</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="what-not-to-do-when-considering-priors.html"><a href="what-not-to-do-when-considering-priors.html"><i class="fa fa-check"></i><b>9.1</b> What NOT to do when considering priors</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="model-comparison.html"><a href="model-comparison.html"><i class="fa fa-check"></i><b>10</b> Introduction to Bayesian Model Comparison</a></li>
+<li class="chapter" data-level="11" data-path="mean.html"><a href="mean.html"><i class="fa fa-check"></i><b>11</b> Bayesian Analysis of a Population Mean (Known SD)</a></li>
+<li class="chapter" data-level="12" data-path="poisson.html"><a href="poisson.html"><i class="fa fa-check"></i><b>12</b> Bayesian Analysis of Poisson Count Data</a></li>
+<li class="chapter" data-level="13" data-path="exponential.html"><a href="exponential.html"><i class="fa fa-check"></i><b>13</b> Bayesian Analysis of Rates</a></li>
+<li class="chapter" data-level="14" data-path="multi-parameter.html"><a href="multi-parameter.html"><i class="fa fa-check"></i><b>14</b> Introduction to Multi-Parameter Models</a></li>
+<li class="chapter" data-level="15" data-path="mcmc.html"><a href="mcmc.html"><i class="fa fa-check"></i><b>15</b> Introduction to Markov Chain Monte Carlo (MCMC) Simulation</a></li>
+<li class="chapter" data-level="16" data-path="diagnostics.html"><a href="diagnostics.html"><i class="fa fa-check"></i><b>16</b> Some Diagnostics for MCMC Simulation</a></li>
+<li class="chapter" data-level="17" data-path="two-samples.html"><a href="two-samples.html"><i class="fa fa-check"></i><b>17</b> Comparing Two Samples</a></li>
+<li class="chapter" data-level="18" data-path="hierarchical.html"><a href="hierarchical.html"><i class="fa fa-check"></i><b>18</b> Introduction to Hierarchical Models</a></li>
+<li class="chapter" data-level="19" data-path="hierarchical2.html"><a href="hierarchical2.html"><i class="fa fa-check"></i><b>19</b> More Hierarchical Models</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="comparing-groups-with-a-hierarchical-model.html"><a href="comparing-groups-with-a-hierarchical-model.html"><i class="fa fa-check"></i><b>19.1</b> Comparing Groups with a Hierarchical Model</a></li>
+<li class="chapter" data-level="19.2" data-path="adding-levels-to-the-hierarchy.html"><a href="adding-levels-to-the-hierarchy.html"><i class="fa fa-check"></i><b>19.2</b> Adding Levels to the Hierarchy</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="regression.html"><a href="regression.html"><i class="fa fa-check"></i><b>20</b> Bayesian Analysis of Simple Linear Regression</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Introduction to Bayesian Reasoning and Methods</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="adding-levels-to-the-hierarchy" class="section level2" number="19.2">
+<h2><span class="header-section-number">19.2</span> Adding Levels to the Hierarchy</h2>
+<p>A hierarchical model can have several layers.
+In the free throw example in <a href="hierarchical.html#hierarchical">18</a>, we considered free throw percentages of individual players relative to the league-wide average free throw percentage.
+But suppose we want to compare the free throw percentage of individual players relative to the average free throw percentage of players of the same position (guard, forward, center), and also compare the position-by-position average free throw percentage to the overall league-wide average.
+For example, do guards have higher free throw percentages on average than centers?</p>
+<p>Recall that <span class="math inline">\(\theta\)</span> represents the free throw percentage of an individual player, while <span class="math inline">\(\mu\)</span> represents the league-wide average.
+Before we assumed that for each player, <span class="math inline">\(\theta\)</span> was drawn from a Beta distribution with mean <span class="math inline">\(\mu\)</span>.
+Now we will introduce an intermediate level: for a player of position <span class="math inline">\(k\)</span>, <span class="math inline">\(\theta\)</span> will be drawn from a Beta distribution with mean <span class="math inline">\(\mu_k\)</span>, the league-wide mean for that position (<span class="math inline">\(k\)</span>).
+For each position, <span class="math inline">\(\mu_k\)</span> will be drawn from a Beta distribution with mean <span class="math inline">\(\mu_0\)</span>, the overall average.
+(We could let the <span class="math inline">\(\kappa\)</span> parameter of the Beta distribution on <span class="math inline">\(\theta\)</span> vary by position too.)</p>
+<p>With the additional position level in the hierarchy, the model from <a href="hierarchical.html#hierarchical">18</a> becomes the following (with somewhat sketchy notation; we have not explicitly specified all the conditional independencies).
+The data consist of number of free throws attempted (<span class="math inline">\(n_j\)</span>), number of free throws made (<span class="math inline">\(y_{j|x}\)</span>), and position (<span class="math inline">\(x\)</span>) for each player (<span class="math inline">\(j\)</span>).</p>
+<ol style="list-style-type: decimal">
+<li><strong>Likelihood.</strong> For player <span class="math inline">\(j\)</span> in position <span class="math inline">\(x\)</span>, <span class="math inline">\(y_{j|x} \sim\)</span> Binomial<span class="math inline">\(\left(n_j, \theta_{j|x}\right)\)</span></li>
+<li><strong>Prior.</strong>
+<ol style="list-style-type: lower-alpha">
+<li>For player <span class="math inline">\(j\)</span> in position <span class="math inline">\(x\)</span>, <span class="math inline">\(\theta_{j|x}\sim\)</span> Beta<span class="math inline">\((\mu_x\kappa_x, (1-\mu_x)\kappa_x)\)</span>.
+<ul>
+<li>The prior distribution on <span class="math inline">\(\theta_{j|x}\)</span> encapsulates our uncertainty about the free throw percentage of an individual player of position <span class="math inline">\(x\)</span>.</li>
+<li><span class="math inline">\(\mu_x\)</span> represents the league-wide mean for position <span class="math inline">\(x\)</span>, and is our expected value for <span class="math inline">\(\theta_{j|x}\)</span></li>
+<li><span class="math inline">\(\kappa_x\)</span> is the “equivalent prior sample size” relating to the strength of our beliefs about <span class="math inline">\(\theta_{j|x}\)</span>, the free throw percentage of an individual player of position <span class="math inline">\(x\)</span>.</li>
+<li>Another way to think about it: <span class="math inline">\(\kappa_x\)</span> is inversely related to the player-by-player variability for players of position <span class="math inline">\(x\)</span>.</li>
+</ul></li>
+<li>For category <span class="math inline">\(x\)</span>, <span class="math inline">\(\mu_x\sim\)</span> Beta<span class="math inline">\((\mu_0\kappa_0, (1-\mu_0)\kappa_0)\)</span>, and <span class="math inline">\(\kappa_x\sim\)</span> Gamma<span class="math inline">\((0.1, 0.1)\)</span>
+<ul>
+<li>The prior distribution on <span class="math inline">\(\mu_x\)</span> encapsulates our uncertainty about the league-wide average for players of position <span class="math inline">\(x\)</span>.</li>
+<li><span class="math inline">\(\mu_0\)</span> represents the overall league-wide average, and is our expected value for <span class="math inline">\(\mu_x\)</span></li>
+<li><span class="math inline">\(\kappa_0\)</span> is the “equivalent prior sample size” relating to the strength of our beliefs about <span class="math inline">\(\mu_{x}\)</span>, the league-wide average for player of position <span class="math inline">\(x\)</span>.</li>
+<li>Another way to think about it, <span class="math inline">\(\kappa_0\)</span> is inversely related to the position-by-position variability of the position means <span class="math inline">\(\mu_x\)</span> relative to the overall mean <span class="math inline">\(\mu_0\)</span>.</li>
+<li>The prior distribution on <span class="math inline">\(\kappa_x\)</span> encapsulates our uncertainty in the strength of our prior beliefs about <span class="math inline">\(\mu_x\)</span>. Drawing each <span class="math inline">\(\mu_x\)</span> from the same prior distribution is like saying the degree of uncertainty in the strength of our prior beliefs for the position-by-position averages is the same for each position. (We could include hyperparameters in the distribution for <span class="math inline">\(\kappa_x\)</span>, but it seems unnecessary.)</li>
+</ul></li>
+</ol></li>
+<li><strong>Hyperprior.</strong> <span class="math inline">\(\mu_0, \kappa_0\)</span> independent with <span class="math inline">\(\mu_0\sim\)</span> Beta(15, 5) and <span class="math inline">\(\kappa_0\sim\)</span> Gamma<span class="math inline">\((1, 0.1)\)</span>.
+<ul>
+<li>Just as in <a href="hierarchical.html#hierarchical">18</a>, the prior distribution on <span class="math inline">\(\mu_0\)</span> encapsulates our uncertainty about the overall league-wide average.</li>
+</ul></li>
+</ol>
+<p>We’ll use data from the 2018-2019 NBA season available at <a href="https://www.basketball-reference.com/leagues/NBA_2019_totals.html">basketball-reference</a>.
+Note that some position designations have been recoded, and that the position variable needs to be coded as numbers by JAGS.</p>
+<div class="sourceCode" id="cb461"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb461-1"><a href="adding-levels-to-the-hierarchy.html#cb461-1"></a><span class="co"># load the data</span></span>
+<span id="cb461-2"><a href="adding-levels-to-the-hierarchy.html#cb461-2"></a>myData =<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;_data/freethrows.csv&#39;</span>, <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb461-3"><a href="adding-levels-to-the-hierarchy.html#cb461-3"></a>myData =<span class="st"> </span>myData[<span class="kw">order</span>(myData<span class="op">$</span>FTA),] <span class="co"># sort by number of attempts</span></span>
+<span id="cb461-4"><a href="adding-levels-to-the-hierarchy.html#cb461-4"></a></span>
+<span id="cb461-5"><a href="adding-levels-to-the-hierarchy.html#cb461-5"></a><span class="co">#myData2 = myData[sample(1:nrow(myData), 50, replace=FALSE),]</span></span>
+<span id="cb461-6"><a href="adding-levels-to-the-hierarchy.html#cb461-6"></a></span>
+<span id="cb461-7"><a href="adding-levels-to-the-hierarchy.html#cb461-7"></a><span class="co"># recode positions</span></span>
+<span id="cb461-8"><a href="adding-levels-to-the-hierarchy.html#cb461-8"></a>myData[,<span class="st">&quot;Pos2&quot;</span>] =<span class="st"> </span>myData<span class="op">$</span>Pos</span>
+<span id="cb461-9"><a href="adding-levels-to-the-hierarchy.html#cb461-9"></a>myData[myData<span class="op">$</span>Pos <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;C&quot;</span>, <span class="st">&quot;C-PF&quot;</span>), <span class="st">&quot;Pos2&quot;</span>] =<span class="st"> &quot;C&quot;</span></span>
+<span id="cb461-10"><a href="adding-levels-to-the-hierarchy.html#cb461-10"></a>myData[myData<span class="op">$</span>Pos <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;PF&quot;</span>, <span class="st">&quot;PF-SF&quot;</span>, <span class="st">&quot;SF&quot;</span>, <span class="st">&quot;SF-PF&quot;</span>, <span class="st">&quot;SF-SG&quot;</span>), <span class="st">&quot;Pos2&quot;</span>] =<span class="st"> &quot;F&quot;</span></span>
+<span id="cb461-11"><a href="adding-levels-to-the-hierarchy.html#cb461-11"></a>myData[myData<span class="op">$</span>Pos <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;PG&quot;</span>, <span class="st">&quot;PG-SG&quot;</span>, <span class="st">&quot;SG&quot;</span>, <span class="st">&quot;SG-PF&quot;</span>, <span class="st">&quot;SG-PG&quot;</span>, <span class="st">&quot;SG-SF&quot;</span>), <span class="st">&quot;Pos2&quot;</span>] =<span class="st"> &quot;G&quot;</span></span>
+<span id="cb461-12"><a href="adding-levels-to-the-hierarchy.html#cb461-12"></a><span class="kw">table</span>(myData<span class="op">$</span>Pos2)</span></code></pre></div>
+<pre><code>## 
+##   C   F   G 
+##  92 180 229</code></pre>
+<div class="sourceCode" id="cb463"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb463-1"><a href="adding-levels-to-the-hierarchy.html#cb463-1"></a><span class="kw">aggregate</span>(myData<span class="op">$</span>FTA <span class="op">~</span><span class="st"> </span>Pos2, myData, sum, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>##   Pos2 myData$FTA
+## 1    C       9573
+## 2    F      12787
+## 3    G      17071</code></pre>
+<div class="sourceCode" id="cb465"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb465-1"><a href="adding-levels-to-the-hierarchy.html#cb465-1"></a><span class="kw">aggregate</span>(myData<span class="op">$</span>FT <span class="op">~</span><span class="st"> </span>Pos2, myData, sum, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>##   Pos2 myData$FT
+## 1    C      6823
+## 2    F      9811
+## 3    G     13554</code></pre>
+<div class="sourceCode" id="cb467"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb467-1"><a href="adding-levels-to-the-hierarchy.html#cb467-1"></a><span class="kw">aggregate</span>(myData<span class="op">$</span>FT. <span class="op">~</span><span class="st"> </span>Pos2, myData, mean, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<pre><code>##   Pos2 myData$FT.
+## 1    C  0.6916023
+## 2    F  0.7338343
+## 3    G  0.7585885</code></pre>
+<div class="sourceCode" id="cb469"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb469-1"><a href="adding-levels-to-the-hierarchy.html#cb469-1"></a>y =<span class="st"> </span>myData<span class="op">$</span>FT</span>
+<span id="cb469-2"><a href="adding-levels-to-the-hierarchy.html#cb469-2"></a>n =<span class="st"> </span>myData<span class="op">$</span>FTA</span>
+<span id="cb469-3"><a href="adding-levels-to-the-hierarchy.html#cb469-3"></a>J =<span class="st"> </span><span class="kw">length</span>(y) <span class="co"># number of players</span></span>
+<span id="cb469-4"><a href="adding-levels-to-the-hierarchy.html#cb469-4"></a>x =<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">factor</span>(myData<span class="op">$</span>Pos2)) <span class="co"># convert to numbers</span></span>
+<span id="cb469-5"><a href="adding-levels-to-the-hierarchy.html#cb469-5"></a>K =<span class="st"> </span><span class="kw">length</span>(<span class="kw">unique</span>(x)) <span class="co"># number of categories</span></span></code></pre></div>
+<p>The table displays average free throw percentage by position. The overall average free throw percentage for the 501 players is 0.737.</p>
+<p>We now specify the hierarchical model. Below</p>
+<ul>
+<li><code>j</code> indexes player</li>
+<li><code>k</code> indexes position</li>
+<li><code>x[j]</code> is the position for player <code>j</code></li>
+<li><code>mu[x[j]]</code> is the league-wide mean for player j’s position</li>
+<li>the <code>for k</code> loop is where the prior distribution for <code>mu[k]</code> is specified</li>
+<li><code>kappa</code> is treated similarly to <code>mu</code></li>
+</ul>
+<div class="sourceCode" id="cb470"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb470-1"><a href="adding-levels-to-the-hierarchy.html#cb470-1"></a><span class="co"># specify the model: likelihood, prior, hyperprior</span></span>
+<span id="cb470-2"><a href="adding-levels-to-the-hierarchy.html#cb470-2"></a></span>
+<span id="cb470-3"><a href="adding-levels-to-the-hierarchy.html#cb470-3"></a>model_string &lt;-<span class="st"> &quot;model{</span></span>
+<span id="cb470-4"><a href="adding-levels-to-the-hierarchy.html#cb470-4"></a></span>
+<span id="cb470-5"><a href="adding-levels-to-the-hierarchy.html#cb470-5"></a><span class="st">  # Likelihood</span></span>
+<span id="cb470-6"><a href="adding-levels-to-the-hierarchy.html#cb470-6"></a><span class="st">  for (j in 1:J){</span></span>
+<span id="cb470-7"><a href="adding-levels-to-the-hierarchy.html#cb470-7"></a><span class="st">    y[j] ~ dbinom(theta[j], n[j])</span></span>
+<span id="cb470-8"><a href="adding-levels-to-the-hierarchy.html#cb470-8"></a><span class="st">  }</span></span>
+<span id="cb470-9"><a href="adding-levels-to-the-hierarchy.html#cb470-9"></a></span>
+<span id="cb470-10"><a href="adding-levels-to-the-hierarchy.html#cb470-10"></a><span class="st">  # Prior - now the mean for theta depends on position</span></span>
+<span id="cb470-11"><a href="adding-levels-to-the-hierarchy.html#cb470-11"></a><span class="st">  for (j in 1:J){</span></span>
+<span id="cb470-12"><a href="adding-levels-to-the-hierarchy.html#cb470-12"></a><span class="st">    theta[j] ~ dbeta(mu[x[j]] * kappa[x[j]], (1 - mu[x[j]]) * kappa[x[j]])</span></span>
+<span id="cb470-13"><a href="adding-levels-to-the-hierarchy.html#cb470-13"></a><span class="st">  }</span></span>
+<span id="cb470-14"><a href="adding-levels-to-the-hierarchy.html#cb470-14"></a></span>
+<span id="cb470-15"><a href="adding-levels-to-the-hierarchy.html#cb470-15"></a><span class="st">  # For each position, draw its mean from prior distribution</span></span>
+<span id="cb470-16"><a href="adding-levels-to-the-hierarchy.html#cb470-16"></a><span class="st">  for (k in 1:K){</span></span>
+<span id="cb470-17"><a href="adding-levels-to-the-hierarchy.html#cb470-17"></a><span class="st">    mu[k] ~ dbeta(mu0 * kappa0, (1-mu0) * kappa0)</span></span>
+<span id="cb470-18"><a href="adding-levels-to-the-hierarchy.html#cb470-18"></a><span class="st">    kappa[k] ~ dgamma(0.1, 0.1)</span></span>
+<span id="cb470-19"><a href="adding-levels-to-the-hierarchy.html#cb470-19"></a><span class="st">  }</span></span>
+<span id="cb470-20"><a href="adding-levels-to-the-hierarchy.html#cb470-20"></a></span>
+<span id="cb470-21"><a href="adding-levels-to-the-hierarchy.html#cb470-21"></a><span class="st">  # Hyperprior, phi=(mu, kappa)</span></span>
+<span id="cb470-22"><a href="adding-levels-to-the-hierarchy.html#cb470-22"></a><span class="st">  mu0 ~ dbeta(3, 1)</span></span>
+<span id="cb470-23"><a href="adding-levels-to-the-hierarchy.html#cb470-23"></a><span class="st">  kappa0 ~ dgamma(0.1, 0.1)</span></span>
+<span id="cb470-24"><a href="adding-levels-to-the-hierarchy.html#cb470-24"></a><span class="st">}&quot;</span></span>
+<span id="cb470-25"><a href="adding-levels-to-the-hierarchy.html#cb470-25"></a></span>
+<span id="cb470-26"><a href="adding-levels-to-the-hierarchy.html#cb470-26"></a>dataList =<span class="st"> </span><span class="kw">list</span>(<span class="dt">y =</span> y, <span class="dt">n =</span> n, <span class="dt">J =</span> J,</span>
+<span id="cb470-27"><a href="adding-levels-to-the-hierarchy.html#cb470-27"></a>                <span class="dt">x =</span> x, <span class="dt">K =</span> K) <span class="co"># adding position info</span></span>
+<span id="cb470-28"><a href="adding-levels-to-the-hierarchy.html#cb470-28"></a></span>
+<span id="cb470-29"><a href="adding-levels-to-the-hierarchy.html#cb470-29"></a>model &lt;-<span class="st"> </span><span class="kw">jags.model</span>(<span class="dt">file =</span> <span class="kw">textConnection</span>(model_string), </span>
+<span id="cb470-30"><a href="adding-levels-to-the-hierarchy.html#cb470-30"></a>                    <span class="dt">data =</span> dataList)</span></code></pre></div>
+<pre><code>## Compiling model graph
+##    Resolving undeclared variables
+##    Allocating nodes
+## Graph information:
+##    Observed stochastic nodes: 501
+##    Unobserved stochastic nodes: 509
+##    Total graph size: 2029
+## 
+## Initializing model</code></pre>
+<div class="sourceCode" id="cb472"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb472-1"><a href="adding-levels-to-the-hierarchy.html#cb472-1"></a><span class="kw">update</span>(model, <span class="dt">n.iter =</span> <span class="dv">1000</span>)</span>
+<span id="cb472-2"><a href="adding-levels-to-the-hierarchy.html#cb472-2"></a></span>
+<span id="cb472-3"><a href="adding-levels-to-the-hierarchy.html#cb472-3"></a>posterior_sample &lt;-<span class="st"> </span><span class="kw">coda.samples</span>(model,</span>
+<span id="cb472-4"><a href="adding-levels-to-the-hierarchy.html#cb472-4"></a>                       <span class="dt">variable.names =</span> <span class="kw">c</span>(<span class="st">&quot;theta&quot;</span>, <span class="st">&quot;mu&quot;</span>, <span class="st">&quot;mu0&quot;</span>),</span>
+<span id="cb472-5"><a href="adding-levels-to-the-hierarchy.html#cb472-5"></a>                       <span class="dt">n.iter =</span> <span class="dv">10000</span>,</span>
+<span id="cb472-6"><a href="adding-levels-to-the-hierarchy.html#cb472-6"></a>                       <span class="dt">n.chains =</span> <span class="dv">5</span>)</span></code></pre></div>
+<p>Let’s first look at the posterior means and SDs for the <span class="math inline">\(\mu\)</span> parameters.</p>
+<div class="sourceCode" id="cb473"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb473-1"><a href="adding-levels-to-the-hierarchy.html#cb473-1"></a><span class="co"># first four parameters are mu&#39;s</span></span>
+<span id="cb473-2"><a href="adding-levels-to-the-hierarchy.html#cb473-2"></a><span class="co"># first two statistics in summary are mean, SD</span></span>
+<span id="cb473-3"><a href="adding-levels-to-the-hierarchy.html#cb473-3"></a><span class="kw">summary</span>(posterior_sample)<span class="op">$</span>statistics[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]</span></code></pre></div>
+<pre><code>##            Mean          SD
+## mu[1] 0.7004085 0.011887615
+## mu[2] 0.7481864 0.008133269
+## mu[3] 0.7764106 0.007198279
+## mu0   0.7215298 0.083255344</code></pre>
+<p>Notice that the posterior SDs of the position means are less than the SDs of the overall mean. The certainty of an estimate at a level in the hierarchy depends on how many parameter values are contributing to that level. Each of the position means has hundreds of players contributing to it <em>directly</em>. But the overall mean only has the three positions means contributing directly to it. In some sense, the model with position in the hierarchy utilizes the data to estimate the position means as precisely as possible, somewhat at the expense of estimating the overall mean.</p>
+<div class="sourceCode" id="cb475"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb475-1"><a href="adding-levels-to-the-hierarchy.html#cb475-1"></a>posterior_sample_values =<span class="st"> </span><span class="kw">as.matrix</span>(posterior_sample)</span>
+<span id="cb475-2"><a href="adding-levels-to-the-hierarchy.html#cb475-2"></a>mu0 =<span class="st"> </span>posterior_sample_values[, <span class="st">&quot;mu0&quot;</span>]</span>
+<span id="cb475-3"><a href="adding-levels-to-the-hierarchy.html#cb475-3"></a>mu1 =<span class="st"> </span>posterior_sample_values[, <span class="st">&quot;mu[1]&quot;</span>]</span>
+<span id="cb475-4"><a href="adding-levels-to-the-hierarchy.html#cb475-4"></a>mu2 =<span class="st"> </span>posterior_sample_values[, <span class="st">&quot;mu[2]&quot;</span>]</span>
+<span id="cb475-5"><a href="adding-levels-to-the-hierarchy.html#cb475-5"></a>mu3 =<span class="st"> </span>posterior_sample_values[, <span class="st">&quot;mu[3]&quot;</span>]</span>
+<span id="cb475-6"><a href="adding-levels-to-the-hierarchy.html#cb475-6"></a></span>
+<span id="cb475-7"><a href="adding-levels-to-the-hierarchy.html#cb475-7"></a><span class="kw">plotPost</span>(mu0, <span class="dt">main =</span> <span class="st">&quot;mu0&quot;</span>)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-286-1.png" width="672" /></p>
+<pre><code>##                  ESS      mean    median      mode hdiMass    hdiLow   hdiHigh
+## Param. Val. 5044.133 0.7215298 0.7299816 0.7419421    0.95 0.5385269 0.8722351
+##             compVal pGtCompVal ROPElow ROPEhigh pLtROPE pInROPE pGtROPE
+## Param. Val.      NA         NA      NA       NA      NA      NA      NA</code></pre>
+<div class="sourceCode" id="cb477"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb477-1"><a href="adding-levels-to-the-hierarchy.html#cb477-1"></a><span class="kw">plotPost</span>(mu1, <span class="dt">main =</span> <span class="st">&quot;mu1&quot;</span>)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-286-2.png" width="672" /></p>
+<pre><code>##                  ESS      mean    median      mode hdiMass   hdiLow   hdiHigh
+## Param. Val. 2998.316 0.7004085 0.7005151 0.7000677    0.95 0.676471 0.7228399
+##             compVal pGtCompVal ROPElow ROPEhigh pLtROPE pInROPE pGtROPE
+## Param. Val.      NA         NA      NA       NA      NA      NA      NA</code></pre>
+<div class="sourceCode" id="cb479"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb479-1"><a href="adding-levels-to-the-hierarchy.html#cb479-1"></a><span class="kw">plotPost</span>(mu2, <span class="dt">main =</span> <span class="st">&quot;mu2&quot;</span>)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-286-3.png" width="672" /></p>
+<pre><code>##                  ESS      mean    median      mode hdiMass    hdiLow   hdiHigh
+## Param. Val. 2077.568 0.7481864 0.7483244 0.7491845    0.95 0.7331388 0.7646601
+##             compVal pGtCompVal ROPElow ROPEhigh pLtROPE pInROPE pGtROPE
+## Param. Val.      NA         NA      NA       NA      NA      NA      NA</code></pre>
+<div class="sourceCode" id="cb481"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb481-1"><a href="adding-levels-to-the-hierarchy.html#cb481-1"></a><span class="kw">plotPost</span>(mu3, <span class="dt">main =</span> <span class="st">&quot;mu3&quot;</span>)</span></code></pre></div>
+<p><img src="bayesian-reasoning-and-methods_files/figure-html/unnamed-chunk-286-4.png" width="672" /></p>
+<pre><code>##                  ESS      mean    median      mode hdiMass    hdiLow   hdiHigh
+## Param. Val. 2154.528 0.7764106 0.7765245 0.7771053    0.95 0.7626673 0.7905926
+##             compVal pGtCompVal ROPElow ROPEhigh pLtROPE pInROPE pGtROPE
+## Param. Val.      NA         NA      NA       NA      NA      NA      NA</code></pre>
+<p>The code below will launch in a browser the ShinyStan GUI for exploring the results of the NBA simulation.
+(You’ll need to change eval to TRUE to run this code chunk.)</p>
+<div class="sourceCode" id="cb483"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb483-1"><a href="adding-levels-to-the-hierarchy.html#cb483-1"></a>nba_sso &lt;-<span class="st"> </span><span class="kw">as.shinystan</span>(posterior_sample, <span class="dt">model_name =</span> <span class="st">&quot;NBA Free Throws&quot;</span>)</span>
+<span id="cb483-2"><a href="adding-levels-to-the-hierarchy.html#cb483-2"></a><span class="co"># nba_sso &lt;- drop_parameters(nba_sso, pars = c(&quot;kappa&quot;, &quot;kappa0&quot;))</span></span>
+<span id="cb483-3"><a href="adding-levels-to-the-hierarchy.html#cb483-3"></a><span class="kw">launch_shinystan</span>(nba_sso)</span></code></pre></div>
+
+</div>
+<!-- </div> -->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="comparing-groups-with-a-hierarchical-model.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"],
+"google": false,
+"instapper": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bayesian-reasoning-and-methods.pdf"],
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

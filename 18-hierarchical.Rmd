@@ -1,0 +1,462 @@
+# Introduction to Hierarchical Models {#hierarchical}
+
+
+
+
+
+In a **Bayesian hierarchical model**, the model for the data depends on certain parameters, and those parameters in turn depend on other parameters.
+Hierarchical modeling provides a framework for building
+complex and high-dimensional models from simple and
+low-dimensional building blocks.
+
+
+
+Suppose we want to estimate the probability that each basketball player on the Houston Rockets successfully makes a free throw attempt.
+(That is, we want to estimate each player's true free throw percentage.)
+We'll consider free throw data from the 2018-2019 NBA season for players on the Houston Rockets at the time^[Why the Rockets? At the time I found the data, James Harden had by far the most FT attempts in the NBA and I wanted to see what affect he would have on the analysis.  He's still near the league leaders in attempts, but not at the top.  I just haven't updated the data.].
+
+
+```{r}
+data = read.csv('_data/rockets.csv')
+data = data[order(data$FTA), ] # sort by number of attempts
+
+player = data$Name
+y = data$FT
+n = data$FTA
+J = length(y)
+
+player_summary = data.frame(player, n, y, y / n)
+names(player_summary) = c("player", "FTA", "FT", "FTpct")
+knitr::kable(player_summary, digits = 3)
+
+```
+
+
+
+Over the `r J` players in the data, there are `r sum(n)` attempts, of which `r sum(y)` were successful, for an overall free throw percentage of `r round(sum(y) / sum(n),3)`.  The sample mean free throw percentage is `r round(mean(y / n, na.rm = TRUE), 3)`.
+
+Let $\theta_j$ denote the true (long run) probability that player $j$ successfully make a free throw attempt; for example, $\theta_{\text{Harden}}$, $\theta_{\text{Capela}}$, etc.
+Let $n_j$ denote the number of free throw attempts and $y_j$ the number of free throws made for player $j$.
+
+```{example, ft1}
+We could assume a model with a prior in which all $\theta_j$ are independent.
+What are some disadvantages of this model?
+In particular, what would be an issue for players like James Nunnally?
+```
+
+```{solution}
+to Example \@ref(exm:ft1)
+```
+
+
+Given the parameters $\theta_j$, it is reasonable to assume that the $y_j$ are independent across players.
+Assuming independence in the data, if the $\theta_j$ are independent in the prior, then the $\theta_j$ will be independent in the posterior.
+The posterior distribution of each parameter $\theta_j$ could be updated separately as in a one-parameter problem, with the posterior distribution of $\theta_j$ for player $j$ will be based only on the data $(y_j, n_j)$ for player $j$.
+Therefore, we would not be able to find the posterior distribution of $\theta_j$ for players like James Nunnally with 0 attempts (no data).
+It would be useful if we could borrow information from other players to estimate free throw percentages for players with few or no attempts.
+
+
+
+As we've mentioned before, it is often useful to have dependence between parameters.
+We will introduce a hierarchical model for introducing dependence.
+
+```{example, ft2}
+Let's first consider just a single player with true free throw percentage $\theta$.
+Given $n$ independent attempts, conditional on $\theta$, we might assume $(y|\theta)\sim$ Binomial($n, \theta$).
+
+```
+
+1. If we imagine the player is randomly selected, how might we interpret the prior distribution for $\theta$?
+1. The prior distribution for $\theta$ has a prior mean $\mu$. How might we interpret $\mu$?
+1. The prior mean $\mu$ is also a parameter, so we could place a prior distribution on it.
+What would the prior distribution on $\mu$ represent?
+1. In this model $\mu$ and $\theta$ are dependent.
+Why is this dependence useful?
+
+
+```{solution}
+to Example \@ref(exm:ft2)
+```
+
+
+1. Free throw percentages vary from player to player.
+There is a distribution of free throw percentages over many players in the league.
+If the player is randomly selected we can think of the prior distribution $\pi(\theta)$ as the league-wide distribution of free throw percentages.
+(This interpretation is kind of mixing Bayesian and frequentist ideas, but I think it helps the motivation.)
+1. With the above interpretation $\mu$ represents the league-wide average free throw percentage over all players in the league.
+1. We can specify a prior distribution on $\mu$ to encapsulate our uncertainty in the true league-wide average free throw percentage.
+For example, if our prior belief is that $\mu$ is around 0.75 we could choose a prior distribution for $\mu$ that has a mean (or mode) of 0.75.
+1. When we observe data for a single player, we can directly make inference about $\theta$ for that player. 
+But since $\theta$ and $\mu$ are dependent, *we can also use the data for a single player to make inference about the league-wide average. This in turn allows us to use data for a single player to inform inference about other players*.  We'll see that this is one of the benefits of a hierarchical model.
+
+
+In the model in the previous example
+
+- The prior distribution on the model parameter $\theta$ reflects our uncertainty in the individual player's free throw percentage.
+- The prior distribution on the *hyperparameter* $\mu$ reflects our uncertainty about the league-wide average free throw percentage.
+
+
+
+We could translate the setup from the previous example, for a single player, into a Bayesian hierarchical model as follows.
+
+1. **Likelihood.** $(y|\theta)\sim$ Binomial($n, \theta$)The likelihood assumes^[With $n$ attempts and $y$ successes, the likelihood is proportional to $\theta^y(1-\theta)^{n-y}$.  This is true regardless of whether the number of attempts, the number of successes, or neither, is fixed in advanced.  Therefore, it's not necessary that the number of attempts is fixed in advanced, so technically we don't have to assume that $(y|\theta)\sim$ Binomial$(n, \theta)$, but rather just that the likelihood is proportional of $\theta^y(1-\theta)^{n-y}$. 
+], conditional on $\theta$, $n$ independent attempts with constant probability $\theta$.
+1. **Prior.** $(\theta|\mu,\kappa)\sim$ Beta$(\mu\kappa, (1-\mu)\kappa)$.
+    - The prior distribution for $\theta$ has two *hyperparameters*: $\mu$, $\kappa$.  These parameters represent our prior beliefs about $\theta$, the free throw percentage of an individual player.
+    - We might consider $\theta\sim$ Beta($\alpha, \beta$).
+    - However, it is often more convenient to reparemetrize a Beta distribution in terms of its mean $\mu=\alpha/(\alpha+\beta)$ and concentration $\kappa=\alpha+\beta$ rather than $\alpha$ and $\beta$, which is what we've done here.  So $\alpha=\mu\kappa$ and $\beta=(1-\mu)\kappa$.
+    - $\mu$ represents what we expect $\theta$ to be around.
+    - $\kappa$ represents the "equivalent prior sample size" upon which our expectations for $\theta$ are based; larger $\kappa$ corresponds to stronger prior beliefs about $\theta$.  (Alternatively, $\kappa$ is inversely related to the variance of the prior distribution, so the larger the $\kappa$ the smaller the prior variance of $\theta$ and the closer we expect $\theta$ to be to $\mu$.)
+1. **Hyperprior.** $\mu, \kappa$ independent with $\mu\sim$ Beta(15, 5) and $\kappa\sim$ Gamma$(1, 0.1)$.
+    - $\mu$ is the mean of the prior distribution of $\theta$, which is like the league-wide average free throw percentage.  The prior distribution for $\mu$ represents our uncertainty in the league-wide average free throw percentage. Assuming a Beta(15, 5) prior for $\mu$ says we expect that the league-wide average free throw percentage is around 0.75, but there is still some uncertainty: 95% prior credible interval for $\mu$, the league-wide average, is (`r round(qbeta(0.025,15,5),3)`, `r round(qbeta(0.975,15,5),3)`).
+    - $\kappa$ represents the "equivalent prior sample size[For a Beta prior, we often interpret $\alpha$ as "prior successes" and $\beta$ as "prior failures", so $\kappa=\alpha+\beta$ is the "prior sample size".  But $\alpha$ and $\beta$, and hence $\kappa$ do not need to be integers; the only requirement is that $\alpha>0$ and $\beta>0$, and hence $\kappa>0$.  This is one reason we model $\kappa$ with a Gamma prior.]" upon which our beliefs about $\theta$ are based.  Putting a prior on $\kappa$ is like allowing for different degrees of strength for our prior beliefs about $\theta$.  (Alternatively, $\kappa$ is inversely related to the variance of the prior distribution.  So putting a prior on $\kappa$ represents our uncertainty in the league-wide player-to-player variance in free throw percentages.) A Gamma(1, 0.1) prior^[Kruschke recommends a prior like this, and I've tried to justify the rationale, but I don't quite buy it myself.  Just think of it as a noninformative prior.] has mean 10 and standard deviation 10. So we're saying our prior beliefs about $\theta$ are likely based on an "equivalent prior sample size" in the single digits or a few tens (but not hundreds or thousands) of pseudo-observations.  This is like saying we haven't observed any players, so we don't have much information about the league-wide distribution or player-to-player variability of free throw percentages.
+
+To emphasize:
+
+- The prior distribution on $\theta$ reflects our uncertainty in an individual player's free throw percentage.
+- The prior distributions on $\mu$ and $\kappa$ reflect our uncertainty about the league-wide player-to-player distribution of free throw percentages.
+
+
+
+
+
+Remember that the posterior distribution is what's important, but let's first take a brief look at the prior.
+Notice the positive correlation between $\mu$ and $\theta$.
+Also notice that while conditional on $\mu$ and $\kappa$ the prior distribution of $\theta$ is a Beta distribution, the marginal prior distribution of $\theta$ is not a Beta distribution.
+
+
+```{r, fig.show="hold", out.width="50%"}
+N = 10000
+
+# hyperprior
+mu = rbeta(N, 15, 5)
+kappa = rgamma(N, 1, 0.1)
+
+# prior
+theta = rbeta(N, mu * kappa, (1 - mu) * kappa)
+
+sim_prior = data.frame(mu, kappa, theta)
+
+ggplot(sim_prior, aes(mu, theta)) +
+  geom_point(color = "skyblue", alpha = 0.4) +
+  geom_density_2d(color = "orange", size = 1) +
+  geom_abline(intercept = 0, slope = 1, color="black", 
+                 linetype="dashed")
+
+cor(mu, theta)
+
+ggplot(sim_prior, aes(theta)) +
+  geom_histogram()
+
+```
+
+
+
+
+
+
+Now suppose we have data on a single player who made $y=9$ free throws out of $n=10$ attempts.
+The following is the JAGS code for approximating the posterior distribution.
+Note that the hyperprior is specified similarly to the prior.
+The JAGS output can be used to make posterior inference about the player's free throw percentage $\theta$ and the league-wide average free throw percentage.
+
+This example merely motivates the hierarchical model and illustrates the JAGS code.
+Next well find the posterior distribution based on the Rockets data and inspect it more carefully.
+
+
+
+```{r}
+# load the data
+y = 9
+n = 10
+
+# specify the model: likelihood, prior, hyperprior
+
+model_string <- "model{
+
+  # Likelihood
+  y ~ dbinom(theta, n)
+
+  # Prior
+  theta ~ dbeta(mu * kappa, (1 - mu) * kappa)
+  
+  # Hyperprior, phi=(mu, kappa)
+  mu ~ dbeta(15, 5)
+  kappa ~ dgamma(1, 0.1)
+}"
+
+dataList = list(y = y,
+                n = n)
+
+model <- jags.model(file = textConnection(model_string), 
+                    data = dataList)
+
+update(model, n.iter = 1000)
+
+posterior_sample <- coda.samples(model,
+                       variable.names = c("theta", "mu", "kappa"),
+                       n.iter = 10000,
+                       n.chains = 5)
+
+summary(posterior_sample)
+plot(posterior_sample)
+```
+
+
+```{r}
+posterior_sample_values = as.matrix(posterior_sample)
+theta = posterior_sample_values[, "theta"]
+mu = posterior_sample_values[, "mu"]
+kappa = posterior_sample_values[, "kappa"]
+plotPost(theta, main = "theta")
+plotPost(mu, main = "mu")
+plotPost(kappa, main = "kappa")
+
+sim_posterior = as.data.frame(posterior_sample_values)
+
+ggplot(sim_posterior, aes(mu, theta)) +
+  geom_point(color = "skyblue", alpha = 0.4) +
+  geom_density_2d(color = "orange", size = 1) +
+  geom_abline(intercept = 0, slope = 1, color="black", 
+                 linetype="dashed")
+
+cor(mu, theta)
+
+```
+
+
+
+
+
+
+
+A Bayesian hierarchical model consists of the following layers in the hierarchy.
+
+1. A model for the data $y$ which depends on model parameters $\theta$ and is represented by the likelihood $f(y|\theta)$.
+    - The model often involves multiple parameters.  Generically, $\theta$ represents a vector of parameters that show up in the likelihood function.  (In particular problems, we might use other notation, e.g. $\theta$ replaced by $(\mu, \sigma)$ when the data are assumed to follow a Normal distribution.)
+    - Remember: While the likelihood for a particular $(y, \theta)$ value is computed by evaulating the conditional density of $y$ given $\theta$, the likelihood function is *a function of $\theta$, treating the data $y$ as fixed*.
+1. A (joint) prior distribution for the model[^1] parameter(s) $\theta$, denoted $\pi(\theta|\phi)$, which depends on *hyperparameters* $\phi$.
+1. A *hyperprior* distribution, i.e.\ a prior distribution for the hyperparameters, denoted $\pi(\phi)$.  (Again, $\phi$ generically represents a vector of hyperparameters.)
+
+[^1]: "Model parameters" is not the best terminology since the model is everything - likelihood, prior, hyperprior.  But we're using "model parameters" to distinguish the "primary" parameters that show up in the likelihood, from the "secondary" hyperparameters that only show up in the prior.
+
+The above specification implicitly assumes that the data distribution and likelihood function only depend on $\theta$; the hyperparameters only affect $y$ through $\theta$.  That is, the general hierarchical model above assumes that the data $y$ and hyperparameters $\phi$ are conditionally independent given the model parameters $\theta$, so the likelihood satisfies
+\[
+f(y|\theta, \phi) = f(y|\theta)
+\]
+The joint prior distribution on parameters and hyperparameters is
+\[
+\pi(\theta, \phi) = \pi(\theta|\phi)\pi(\phi)
+\]
+
+Given the observed data $y$, we find the joint posterior density of the parameters and hyperparameters, denoted $\pi(\theta, \phi|y)$, using Bayes rule: posterior $\propto$ likelihood $\times$ prior.
+\begin{align*}
+\pi(\theta, \phi|y) & \propto f(y|\theta, \phi)\pi(\theta, \phi)\\
+& \propto f(y|\theta)\pi(\theta|\phi)\pi(\phi)
+\end{align*}
+
+
+
+
+
+In Bayesian hierarchical models, there will generally be dependence between parameters.  But dependence among parameters is actually useful for several reasons:
+
+1. The dependence is natural and meaningful in the problem context. For example, we might expect the free throw percentages of guards to be close together.
+1. If parameters are dependendent, then all data can inform parameter estimates.  
+1. Dependence between parameters is usually modeled conditionally, which enables efficient MCMC algorithms for sampling from the posterior distribution.  For example, Gibbs sampling is based on sampling from conditional distributions.
+
+
+Now suppose want to estimate the free throw percentages for $J$ NBA players, given data consisting of the number of free throws attempted $(n_j)$ and made $(y_j)$ by player $j$.  One possible model is 
+
+
+1. **Likelihood.** Conditional on $(\theta_1, \ldots, \theta_j)$, the individual success counts $y_1,\ldots, y_J$ are independent with $(y_j|\theta_j)\sim$ Binomial($n_j, \theta_j$)
+    - Assumes conditional independence between players given the individual free throw percentages $(\theta_1, \ldots, \theta_J)$.  That is, once the free throw percentage for a particular player is given, knowing the free throw percentages of the other players does not offer any additional information about the distribution of the number of successful free throw attempts of the particular player.
+    - Assumes conditional independence within players; given $\theta_j$, the $n_j$ attempts are independent with constant probability $\theta_j$.
+1. **Prior.** Conditional on $\mu, \kappa$, the individual free throw percentages $\theta_1, \ldots, \theta_J$ are i.i.d. Beta$(\mu\kappa, (1-\mu)\kappa)$.
+    - The prior distribution for $\theta_j$ has two hyperparameters: $\mu$, $\kappa$.  These parameters represent our prior beliefs about the $\theta_j$'s, the free throw percentages of individual players.
+    - We can consider Beta$(\mu\kappa, (1-\mu)\kappa)$ as the "population distribution" of free throw percentages, with $\mu$ representing the "population" mean, and $\kappa$ inversely related to the "population" SD
+    - We can consider the $\theta_j$'s as drawn independently from this distribution, as if a random sample.  Given the "population" mean $\mu$ and "population" SD (via $\kappa$) knowing the values of the individual free throw percentages of other players does not provide any additional information about the distribution of the free throw percentage of a particular player.
+1. **Hyperprior.** $\mu, \kappa$ independent with $\mu\sim$ Beta(15, 5) and $\kappa\sim$ Gamma$(1, 0.1)$.
+    - The assumptions and interpretation are the same as in the single player model.
+
+
+
+The following is the JAGS code for specifying the Bayesian hiearchical model based on the Rockets data.
+Notice that values that vary from player to player are indexed by j, and note the use of the for loop to specify the model.
+In particular, we have an observed number of attempts `n[j]` and successfully made attempts `y[j]` for each player, as well as a parameter representing the true probability that any given free throw attempt is successful `theta[j]` for each player.
+Also notice that `theta` defines a vector of parameters, so calling `"theta"` in `variable.names` returns a column of simulated values of each `theta[j]`.
+Notice that the model has 23 parameters!
+
+```{r}
+data = read.csv('_data/rockets.csv')
+data = data[order(data$FTA), ] # sort by number of attempts
+
+player = data$Name
+y = data$FT
+n = data$FTA
+J = length(y)
+
+# specify the model: likelihood, prior, hyperprior
+
+model_string <- "model{
+
+  # Likelihood
+  for (j in 1:J){
+    y[j] ~ dbinom(theta[j], n[j])
+  }
+
+  # Prior
+  for (j in 1:J){
+    theta[j] ~ dbeta(mu * kappa, (1 - mu) * kappa)
+  }
+  
+  # Hyperprior, phi=(mu, kappa)
+  mu ~ dbeta(15, 5)
+  kappa ~ dgamma(1, 0.1)
+}"
+
+dataList = list(y = y, n = n, J = J)
+
+model <- jags.model(file = textConnection(model_string), 
+                    data = dataList)
+
+update(model, n.iter = 1000)
+
+posterior_sample <- coda.samples(model,
+                       variable.names=c("theta", "mu", "kappa"),
+                       n.iter = 10000,
+                       n.chains = 5)
+
+```
+
+Let's first examine the posterior distribution of $\mu$.
+
+```{r}
+head(round(as.matrix(posterior_sample), 3))
+
+# The parameters are indexed as (1) kappa, (2) mu, (3) theta[1], ...
+summary(posterior_sample)$statistics[2, ]
+mu_values = as.matrix(posterior_sample)[, "mu"]
+plotPost(mu_values)
+```
+
+
+```{example, ft4}
+Summarize and describe the posterior distribution of $\mu$.
+```
+
+
+```{solution}
+to Example \@ref(exm:ft4)
+```
+
+The posterior distribution of $\mu$ is approximate Normal with a posterior mean of about 0.73 and a posterior standard deviation of 0.03. 
+There is a posterior probability of 95% that the league-wide player average free throw percentage is between 0.67 and 0.79.
+
+
+Now we'll compare the posterior means of the individual $\theta$ parameters to the individual free throw percentages.
+
+```{r}
+# In posterior_sample list, the first two entries correspond to kappa and mu, so we remove them.
+player_summary[c("posterior_mean", "posterior_SD")] =
+  summary(posterior_sample)$statistics[-(1:2), c("Mean", "SD")]
+knitr::kable(player_summary, digits = 3)
+```
+
+
+```{example, ft5}
+Use the table above to answer the following questions.
+
+```
+
+
+1. What is the posterior mean of $\theta$ for players with no attempts?  Why does this make sense?
+1. For which players in the posterior mean closest to the observed free throw percentage?  Why?
+1. Examine the player-by-player posterior SDs. Which players have the smallest posterior SDs?  Why?
+
+
+```{solution}
+to Example \@ref(exm:ft5)
+```
+
+1. The posterior mean of $\theta$ for players with zero attempts is just the posterior mean of $\mu$, our estimate of the league-wide average.
+1. The posterior mean closest to the observed free throw percentage for players with a greater number of attempts because for these players the data has more influence than the prior.
+1. As a player's number of attempts increases, there is less uncertainty about the value of $\theta$ for that player, so the player's posterior SD decreases.
+ 
+
+If each player were analyzed separately, the posterior mean for each player would be close to the sample proportion for that player.
+
+But in the hierarchical model, the posterior mean of each individual $\theta$ is influenced by $\mu$ which represents the league-wide average and is affected by the data from all players.
+So the posterior mean of each player is affected, indirectly, by all the data.
+
+In general, the posterior mean of $\theta$ for an individual player is a compromise between (1) the observed sample proportion for the player, and (2) the posterior mean of $\mu$, which represents the league-wide average.
+As the number of attempts increases, the data ($\hat{p}_j$) has more influence on $\theta_j$  than $\mu$ does.
+We say that the individual posterior means of $\theta$ are  "shrunk toward" the overall posterior mean $\mu$.
+Players who have the fewest free throw attempts experience the most shrinkage.
+In some sense, the estimate for a player with few observed attempts "borrows" information from the other players.
+The idea of shrinkage is similar in a sense to regression to the mean.
+
+```{r}
+players = player_summary[!is.na(player_summary$FTpct), ]
+plot(c(1:3, 0:1), type = 'n',
+     ylim = range(players[, "FTpct"]),
+     ylab = "",
+     xlim = c(1, 3), xaxt = 'n')
+text(x = rep(2, nrow(players)), y = players[, "posterior_mean"],
+     labels = players[, "player"],
+     cex = 0.5, adj = 0)
+segments(x0 = rep(1, nrow(players)),
+         y0 = players[, "FTpct"],
+         x1 = rep(2, nrow(players)),
+         y1 = players[, "posterior_mean"])
+```
+
+<!-- Now we'll investigate the posterior distribution for a few individual players: one with no attempts, one with a moderate amount of attempts, and one with many attempts. -->
+
+<!-- ```{r} -->
+<!-- players = c(1, 10, 21) -->
+<!-- players_names = as.vector(player[players]) -->
+<!-- summary(posterior_sample)$statistics[2 + players, ] -->
+<!-- theta_low = as.matrix(posterior_sample)[, "theta[1]"] -->
+<!-- theta_med = as.matrix(posterior_sample)[, "theta[10]"] -->
+<!-- theta_high = as.matrix(posterior_sample)[, "theta[21]"] -->
+<!-- plotPost(theta_low, main = players_names[1]) -->
+<!-- plotPost(theta_med, main = players_names[2]) -->
+<!-- plotPost(theta_high, main = players_names[3]) -->
+<!-- ``` -->
+
+
+
+<!-- Now we'll investigate relationships between the individual $\theta$ values and $\mu$ -->
+<!-- ```{r} -->
+<!-- plot(mu_values, theta_low, main=cor(mu_values, theta_low)) -->
+<!-- plot(mu_values, theta_med, main=cor(mu_values, theta_med)) -->
+<!-- plot(mu_values, theta_high, main=cor(mu_values, theta_high)) -->
+<!-- ``` -->
+
+<!-- **Exercise.** Describe what these plots tell you. -->
+
+
+<!-- Now we'll investigate relationships between individual $\theta$ values. -->
+
+<!-- ```{r} -->
+<!-- plot(theta_med, theta_low, main=cor(theta_med, theta_low)) -->
+<!-- plot(theta_high, theta_med, main=cor(theta_high, theta_med)) -->
+<!-- plot(theta_low, theta_high, main=cor(theta_low, theta_high)) -->
+<!-- ``` -->
+
+<!-- **Exercise.** Describe what these plots tell you. -->
+
+
+
+
+ShinyStan provides a nice interface to interactively investigate the posterior distribution.
+
+```{r, eval=FALSE}
+library(shinystan)
+
+rockets_sso <- as.shinystan(posterior_sample, model_name = "Houston Rockets Free Throws")
+rockets_sso <- drop_parameters(rockets_sso, pars = c("kappa"))
+launch_shinystan(rockets_sso)
+
+```

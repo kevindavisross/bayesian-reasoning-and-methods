@@ -1,0 +1,497 @@
+# Bayesian Analysis of Simple Linear Regression {#regression}
+
+
+
+
+Regression is one of the most widely used statistical techniques for modeling relationships between variables.
+We will now consider a Bayesian treatment of *simple linear regression*.
+We'll use the following example throughout.
+
+[Percent body fat](https://en.wikipedia.org/wiki/Body_fat_percentage) (PBF, total mass of fat divided by total body mass) is an indicator of physical fitness level, but it is difficult to measure accurately.
+Body mass index (BMI), which is easily computed based on height and weight ($\text{BMI} = \frac{\text{weight in kg}}{\text{(height in m)}^2}$), is another commonly used measure^[But BMI has its own problems; see <http://fivethirtyeight.com/features/bmi-is-a-terrible-measure-of-health/>.].
+What is the relationship between BMI and percent body fat?
+How can we use a person's BMI to estimate their percent body fat?
+
+The following summarizes data  on a nationally representative sample of 2157 U.S. males from the [National Health and Nutrition Examination Survey (NHANES)](http://www.cdc.gov/nchs/nhanes/about_nhanes.htm).
+
+
+```{r}
+myData = read.csv("_data/nhanes_males.csv")
+y = myData$PBF
+x = myData$BMI
+n = length(y)
+
+hist(y, xlab = "Percent body fat (%)", main = paste("Mean=", mean(y), ", SD=", sd(y)))
+hist(x, xlab = "BMI (kg/m^2)", main = paste("Mean=",mean(x), ", SD=", sd(x)))
+plot(x, y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)", main = paste("Correlation=", cor(x, y)))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{example, regression-freq}
+Before considering a Bayesian analysis, let's recall a simple linear regression model for predicting percent body fat from BMI.
+
+```
+
+
+
+1. What are the assumptions of the simple linear regression model? (There are many different regression models. We're referring to the one that is usually the first one you see in introductory statistics.  Sometimes the assumptions are introduced with the acronym "LINE".)
+1. Find and interpret the slope of the fitted regression line.
+1. Find and interpret a 95% confidence interval for the slope of the regression line.
+1. Find the equation of the fitted regression line.
+1. Find and interpret the fitted value for men with a BMI of 15 kg/m^2^.
+1. Find and interpret a 95% confidence interval based on the fitted value for men with a BMI of 15 kg/m^2^.
+1. Find and interpret the estimate of $\sigma$.
+1. Find and interpret a 95% *prediction* interval for men with a BMI of 15 kg/m^2^.
+
+
+
+
+
+```{solution}
+to Example \@ref(exm:regression-freq)
+```
+
+
+1. See below for the general assumptions.
+
+1. Recall that the slope of the fitted ("least squares") regression line is
+\[
+\frac{rs_y}{s_x} = \frac{\text{correlation}\times\text{SD of response variable}}{\text{SD of explanatory variable}} = \frac{0.398\times 8.7}{5.69} = 0.609
+\]
+Among males, a one kg/$\text{m}^2$ increase in BMI is associated with a 0.609 percentage point increase in percent body fat *on average*.  ("Percentage points" are the measurement units of percent body fat.)
+
+    ```{r}
+plot(x, y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)", main = paste("Correlation=", cor(x, y)))
+
+lm1 = lm(y ~ x)
+abline(lm1, col = "orange", lwd = 2)
+summary(lm1)
+```
+
+1. The SE of the slope is 0.03 so a 95% confidence interval has endpoints $0.609 \pm 2 \times 0.030$.
+We estimate with 95% confidence that among males, a one kg/$\text{m}^2$ increase in BMI is associated with between a 0.550 and a 0.669 percentage point increase in percent body fat *on average*.
+
+
+    ```{r}
+confint(lm1)
+```
+
+
+1. The slope is 0.609.  The intercept is
+\[
+\text{Intercept} = \bar{y} - \text{slope}\times \bar{x} = 23.43 - 0.609 \times 24.45 = 8.534
+\]
+The equation of the regression line is
+\[
+\widehat{\text{Percent body fat (%)}} = 8.534 + 0.609\times \text{BMI(kg/m^2)}
+\]
+
+1. For a BMI of 15.0 kg/$\text{m}^2$
+\[
+\widehat{\text{Percent body fat (%)}} = 8.534 + 0.609\times 15.0 = 17.67 \text{ percent}
+\]
+The *mean* percent body fat for males with a BMI of kg/$\text{m}^2$ is 17.67%.
+
+    ```{r}
+xnew = data.frame(x = c(15))
+predict(lm1, xnew, interval = "confidence", se.fit = TRUE)
+```
+
+1. We estimate with 95% confidence that the *mean* percent body fat for males with a BMI of kg/$\text{m}^2$ is between 17.02% and 18.33%.
+1. The "residual standard error" of $s=7.99$ percent is an estimate of $\sigma$.  This value measures the variability of percent body fat *among males with the same BMI*. Roughly, $s\approx s_Y\sqrt{1-r^2}=8.7\sqrt{1-0.398^2}=7.99$. There is less variability in percent body fat among males with the same BMI, than among men in general.
+1. Assuming that percent body fats of males with a BMI of 15 kg/m^2^ follow a Normal distribution, with mean 17.67 and standard deviation 7.99, 95% of values lie in the interval with endpoints^[This interval isn't quite correct because the 7.99 doesn't account for the sample-to-sample variability (SE) of the mean BMI for these men.  But that SE (0.3335) is very small in comparison to the variability in individual percent body fats (7.986).  Adjusting the prediction interval to reflect the estimation of the mean yields $17.67\pm 2 \times 7.993$, where $7.993=\sqrt{7.986^2 + 0.3335^2}$] $17.67\pm2\times 7.99$.  We estimate that 95% *of males with BMI of 15 kg/m^2^* have percent body fat between 2.00% and 33.35%.
+
+    ```{r}
+predict(lm1, xnew, interval = "prediction")
+```
+
+
+
+Consider data on a response variable $Y$ and an explanatory variable $x$. A **simple linear regression model** of $Y$ on $x$ assumes
+
+-  Linearity: the conditional mean of $Y$ is \emph{linear} in $x$; for some $\beta_0, \beta_1$ and every $x$
+\[
+E(Y|X=x) = \beta_0 + \beta_1 x
+\]
+- Independence: $Y_1,\ldots, Y_n$ are independent.
+- Normality: for each $x$, the conditional distribution of $Y$ given $X=x$ is Normal
+- Equal variance: the conditional variance of $Y$ does not depend on $x$; for each $x$
+\[
+Var(Y|X=x) = \sigma^2
+\] 
+
+
+The regression model above is *conditional*.
+That is, we make assumptions about and perform inference for the conditional distribution of the response variable $Y$ given values of the explanatory variable $x$.
+Therefore, even when we technically have a sample of pairs $(X_i,Y_i)$ from a bivariate distribution, we will always condition on the values of $X$ and treat them as non-random.
+
+
+Linearity is an assumption: we assume there is some "true" population *regression line* $\beta_0 + \beta_1 x$ which specifies the conditional *mean* of the response variable for each value of the explanatory variable.
+
+The above set of assumptions can be stated more compactly as
+\[
+Y_i \sim N\left( \beta_0 + \beta_1 x_i, \sigma^2\right), \text{ and } Y_1, \ldots, Y_n \text{ are independent}
+\]
+Equivalently,
+\[
+Y_i = \beta_0 + \beta_1 x_i + \varepsilon_i, \text{ where } \varepsilon_i, \ldots, \varepsilon_n \text{ are i.i.d. } N(0,\sigma^2).
+\]
+
+The parameters of the above model are $\beta_0$, $\beta_1$, and $\sigma^2$.
+Note that $\sigma_Y^2$ denotes the variance of the response variable $Y$ with respect to its overall mean, while $\sigma^2$ denotes the variance of values of the response variable  about the true regression line.
+Thus, $\sigma^2 = (1-\rho^2)\sigma^2_Y$, where $\rho$ is the population correlation between the explanatory and response variables.
+
+
+
+The assumptions of the linear regression model can be relaxed in a number of ways, some of which we'll mention briefly at the end of the section.
+
+
+
+```{example, regression-setup}
+Continuing the previous, example, now we'll consider a Bayesian approach.
+```
+
+
+
+1. Suppose there are just two observations of (BMI, PBF): (15, 20) and (40, 30).
+How would you compute the likelihood?
+1. What are the parameters of the Bayesian model?
+That is, what do we need to put a prior distribution on?
+1. We'll use a non-informative prior.
+Suppose $\beta_0$, $\beta_1$, and $\sigma$ are independent with $\beta_0$ and $\beta_1$ each having a Normal distribution with mean 0 and SD 100, and $\sigma$ having a Uniform(1/1000, 1000) distribution.
+Use JAGS to fit the Bayesian model to the data.
+Inspect diagnostic plots; do you notice any problems?
+
+
+
+```{solution}
+to Example \@ref(exm:regression-setup)
+```
+
+
+
+1. The assumptions of the regression model define the likelihood.
+Given a BMI of 15, PBFs follow a Normal distribution with mean $\beta_0+15\beta_1$, so we would evaluate the likelihood of a PBF of 20 using a $N(\beta_0+15\beta_1, \sigma)$ distribution: `dnorm(20, beta0 + 15 * beta1, sigma)`.
+Similarly the likelihood for the observation (40, 30) is  `dnorm(40, beta0 + 30 * beta1, sigma)`.
+Since the regression model assumes independence between the response values, the likelihood for the sample would be, as a function of $(\beta_0, \beta_1, \sigma)$, proportional to
+\[
+\propto \exp\left(-\frac{1}{2}\left(\frac{20-(\beta_0+15\beta_1)}{\sigma}\right)^2\right)\exp\left(-\frac{1}{2}\left(\frac{40-(\beta_0+30\beta_1)}{\sigma}\right)^2\right)
+\]
+1. The parameters $\beta_0$ and $\beta_1$ are related to the conditional mean of $Y$ given $x$, and the parameter $\sigma$ is the conditional SD of $Y$ given $x$.
+1. The JAGS code is below.
+For observation `i`, the likelihood of `y[i]` is determined using the Normal distribution with mean $\beta_0 + \beta_1 x_i$ and SD $\sigma$: `y[i] ~ dnorm(beta[1] + beta[2] * x[i], 1 / sigma ^ 2)`. (Remember: JAGS uses precision for `dnorm`, and JAGS indices start at 1.)
+Diagnostics for $\sigma$ seem fine.
+However, we notice that $\beta_0$ and $\beta_1$ have pretty low effective sample sizes and autocorrelations that decay to 0 fairly slowly. We'll discuss further below.
+
+
+```{r}
+library(rjags)
+
+model_string <- "model{
+
+  # Likelihood
+  for(i in 1:n){
+    y[i] ~ dnorm(mu[i], 1 / sigma ^ 2)
+    mu[i] <- beta[1] + beta[2] * x[i]
+  }
+
+  # Prior for beta
+  for(j in 1:2){
+    beta[j] ~ dnorm(0, 1 / 100 ^ 2)
+  }
+
+  # Prior for sigma
+  sigma ~ dunif(0.001, 1000)
+
+}"
+
+model <- jags.model(textConnection(model_string), 
+                    data=list(n = n, y = y, x = x),
+                    n.chains = 5)
+update(model, 1000, progress.bar = "none"); # Burnin for 1000 samples
+
+posterior_sample <- coda.samples(model, 
+                                 variable.names = c("beta", "sigma"), 
+                                 n.iter = 10000, progress.bar = "none")
+
+summary(posterior_sample)
+plot(posterior_sample)
+
+params = as.matrix(posterior_sample)
+beta0 = params[, 1]
+beta1 = params[, 2]
+sigma = params[, 3]
+
+```
+
+
+```{r}
+mcmc_acf(posterior_sample)
+```
+
+
+```{r}
+mcmc_trace(posterior_sample)
+```
+
+
+
+
+```{r}
+plotPost(beta0)
+```
+
+
+
+```{r}
+plotPost(beta1)
+```
+
+```{r}
+plotPost(sigma)
+```
+
+
+
+
+
+
+We can tell from the diagnostic plots above that there is something amiss with the MCMC algorithm that JAGS is running.
+As we mentioned in Chapter \@ref(mcmc) there are many different MCMC algorithms.
+We mainly studied the Metropolis algorithm, but this is just one of many MCMC algorithms.
+JAGS uses a number of different algorithms, but it is primarily based on *Gibbs sampling*.
+(JAGS stands for "Just Another Gibbs Sampler".)
+It turns out that Gibbs sampling does not work very well for sampling from the posterior distribution in the previous situation.
+
+Here is a brief description for how Gibbs sampling works to simulate $(\beta_0, \beta_1)$ pairs from their joint posterior distribution.
+
+- Start with some initial $(\beta_0, \beta_1)$ pair, say (0, 0).
+- A new $(\beta_0, \beta_1)$ pair is generated in two steps
+    - Given $\beta_0$, generate a value of $\beta_1$ from the conditional distribution of $\beta_1$ given $\beta_0$.  (For example, if $(\beta_0, \beta_1)$ has a Bivariate Normal distribution, then conditional on $\beta_0$, $\beta_1$ has a Normal distribution with a mean that depends on $\beta_0$.)
+    - Given $\beta_1$, generate a value of $\beta_0$ from the conditional distribution of $\beta_0$ given $\beta_1$.
+
+Remember that MCMC algorithms generally involve two stages: proposal and acceptance/rejection.
+In Gibbs sampling the proposals are made according to conditional distributions and they are always accepted.
+
+Let's look at the simulated posterior joint distribution of $\beta_0$ and $\beta_1$ to see why Gibbs sampling is inefficient.
+
+```{r}
+mcmc_scatter(posterior_sample,
+             pars = c("beta[1]", "beta[2]"),
+             alpha = 0.25)
+```
+
+
+
+
+In the scatterplot, we see a strong posterior correlation between $\beta_0$ and $\beta_1$.
+The conditional variance of $\beta_1$ given $\beta_0$ is fairly small.
+Therefore, starting from a $(\beta_0, \beta_1)$ pair, the next value of $\beta_1$ will be fairly close to the current value of $\beta_1$; similarly for $\beta_0$.
+Essentially, the strong correlation puts up "walls" that the Gibbs sampler keeps slamming into, making it hard to go anywhere.
+So the Gibbs sampling Markov chain which generates values of $(\beta_0, \beta_1)$ takes only small steps, which leads to strong autocorrelation and small effective sample sizes.
+
+The problem that we're seeing is due to the Gibbs sampling algorithm, not with the model.
+The posterior distribution is what it is --- there is nothing wrong with it --- Gibbs sampling just doesn't sample from it very efficiently.
+We could solve the problem by using another MCMC algorithm which makes more efficient proposals, such as Hamiltonian Monte Carlo in Stan.
+However, we can also make a small change to the model that helps Gibbs sampling run more efficiently.
+
+```{example, regression-centered}
+We'll now consider a model with $x$ (BMI) replaced with $x-\bar{x}$.
+```
+
+1. Before fitting the model, let's think about why this change might help.
+We saw a strong negative correlation between $\beta_0$ and $\beta_1$ above.
+Why should this negative correlation not be surprising?
+(Think about the least squares estimates of $\beta_0$ and $\beta_1$.)
+1. How does replacing  $x$ with $x-\bar{x}$ help with the issue in the previous part?
+1. Use JAGS to fit the model.
+Compare the diagnostic summaries with those from the previous example.
+Does Gibbs sampling seem to work more efficiently when the explanatory variable is centered?
+
+
+```{solution}
+to Example \@ref(exm:regression-centered)
+```
+
+1. The least squares regression line always passes through the point of the means $(\bar{x}, \bar{y})$.  Since $\bar{x}>0$, if the slope increases then the intercept must decrease.  Similar ideas apply to the distribution of $\beta_0$ and $\beta_1$.
+1. The centered variable $x-\bar{x}$ has mean 0, and the least squares estimate of the intercept $\beta_0$ is $\bar{y}$, regardless of the slope.  In this case, we expect the posterior distribution of $\beta_0$ to be centered close to $\bar{y}$, regardless of the slope $\beta_0$.  That is, we expect the posterior correlation between $\beta_0$ and $\beta_1$ to be close to 0.  The problem Gibbs sampling encountered was due to the strong correlation. If we eliminate this correlation, Gibbs sampling should run more efficiently.
+1. See below for the JAGS code. We replaced `x` with `xc = x - mean(x)`, but otherwise the code is similar to before.  The diagnostics for $\beta_0$ and $\beta_1$ look much better, with autocorrelations decaying quickly to 0 and large effective sample sizes.
+
+
+
+```{r}
+xc = x - mean(x)
+
+model_string <- "model{
+
+  # Likelihood
+  for(i in 1:n){
+    y[i] ~ dnorm(mu[i], 1 / sigma ^ 2)
+    mu[i] <- beta[1] + beta[2] * xc[i]
+  }
+
+  # Prior for beta
+  for(j in 1:2){
+    beta[j] ~ dnorm(0, 1 / 100 ^ 2)
+  }
+
+  # Prior for sigma
+  sigma ~ dunif(0.001, 1000)
+
+}"
+
+model <- jags.model(textConnection(model_string), 
+                    data=list(n = n, y = y, xc = xc),
+                    n.chains = 5)
+update(model, 1000, progress.bar = "none"); # Burnin for 1000 samples
+
+posterior_sample <- coda.samples(model, 
+                                 variable.names=c("beta", "sigma"), 
+                                 n.iter = 10000, progress.bar="none")
+
+summary(posterior_sample)
+plot(posterior_sample)
+
+params = as.matrix(posterior_sample)
+beta0 = params[, 1]
+beta1 = params[, 2]
+sigma = params[, 3]
+```
+
+```{r}
+mcmc_acf(posterior_sample)
+```
+
+
+```{r}
+mcmc_trace(posterior_sample)
+```
+
+
+
+
+```{r}
+plotPost(beta0)
+```
+
+
+```{r}
+plotPost(beta1)
+```
+
+```{r}
+plotPost(sigma)
+```
+
+
+
+
+
+
+
+```{example, regression-bayes}
+Now we'll summarize the posterior distribution and report conclusions analagous to those in Example \@ref(exm:regression-freq).
+```
+
+
+1. Find and interpret a 95% posterior credible interval for $\beta_1$.
+1. Find and interpret a 95% posterior credible interval for the mean PBF for men with a BMI of 15 kg/m^2^.
+1. Find and interpret a 95% posterior credible interval for $\sigma$.
+1. Compare the 95% posterior credible intervals with the corresponding frequentist 95% confidence intervals.
+How are they similar?  How are they different?
+1. Find and interpret a 95% posterior *predictive* interval for men with a BMI of 15 kg/m^2^.
+1. Compare the 95% posterior prediction interval with the corresponding frequentist 95% prediction interval.
+How are they similar?  How are they different?
+1. Perform a posterior predictive check of the model by computing posterior predictive intervals for PBF for a variety of values of BMI.  Does the model seem reasonable based on the data?
+
+
+```{solution}
+to Example \@ref(exm:regression-bayes)
+```
+
+
+1. The posterior distribution of $\beta_1$, the slope of the population regression line, is approximately Normal with a posterior mean of 0.61 and a posterior SD of 0.03.
+There is a 95% posterior probability that the slope of the population regression line is between 0.55 and 0.67. 
+That is, there is a posterior probability of 95% that among males, a one kg/$\text{m}^2$ increase in BMI is associated with between a 0.550 and a 0.669 percentage point increase in percent body fat *on average*.
+
+    ```{r}
+plot(x,y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)",
+     main = paste("Correlation=", cor(x, y)))
+
+nlines = sample(1:length(beta0), 1000)
+
+for (l in nlines){
+  abline(beta0[l] - mean(x) * beta1[l], beta1[l], col = "orange", lwd = 1)
+}
+```
+
+1. Given the simulated joint posterior distribution of $(\beta_0, \beta_1)$, we can simulate the posterior distribution of $\beta_0+\beta_1(15-\bar{x})$, the mean PBF for males with a BMI of 15. There is a 95% posterior probability that the *mean* percent body fat for males with a BMI of kg/$\text{m}^2$ is between 17.02% and 18.33%.
+
+    ```{r}
+mu_15 = beta0 + beta1 * (15 - mean(x))
+hist(mu_15)
+quantile(mu_15, c(0.025, 0.975))
+```
+
+1. The posterior distribution of $\sigma$ is approximately Normal with mean 7.99 and SD 0.12.  There is a 95% posterior probability that $\sigma$, which measures the SD of percent body fat *among males with the same BMI*, is between 7.76 and 8.23 percent.
+
+1. The values are similar to the frequentist analysis, but the interpretation is different.
+
+1. Simulate values of $\beta_0, \beta_1, \sigma$ from their joint posterior distribution, then given these values simulate a value of $y$ from a Normal distribution with mean $\beta_0+\beta_1(15-\bar{x})$ and SD $\sigma$.
+There is a posterior predictive probability of 95% that the PBF of a male with a BMI of 15 kg/m^2^ is between 2.0 and 33.3 percent.
+Roughly, 95% *of males with BMI of 15 kg/m^2^* have percent body fat between 2.00% and 33.3%.
+
+
+
+    ```{r}
+xnew = 15
+ynew = beta0 + beta1 * (xnew - mean(x)) + sigma * rnorm(50000, 0, 1)
+hist(ynew, freq = FALSE, main = paste("Mean=", mean(ynew), ", SD=", sd(ynew)))
+lines(density(ynew))
+quantile(ynew, c(0.025, 0.975))
+```
+
+1. Again, the values are very similar to the frequentist analysis.  The interpretation of predictions about $y$ is roughly the same between Bayesian and frequentist, but the uncertainty in the values of $\beta_0, \beta_1, \sigma$ is accounted for in different ways.
+
+1. See the plot below.  Most of the observed values of PBF fall within the predictive intervals.  The model seems reasonable.
+
+```{r}
+plot(x, y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)",
+     main = "95% Posterior Prediction Intervals")
+
+xnew = seq(10, 50, 2.5)
+
+for (xx in xnew){
+  ynew = beta0 + beta1 * (xx - mean(x)) + sigma * rnorm(50000, 0, 1)
+  segments(x0 = xx, y0 = quantile(ynew, 0.025), x1 = xx,
+           y1 = quantile(ynew, 0.975), col = "orange", lwd=2)
+  points(x = xx, y = mean(ynew), pch = 19, col = "orange")
+}
+```
+
+
+
+
+There are a number of ways the assumptions of the simple linear regression model could be revised.
+
+- We could assume the mean of $Y$ changes with $x$ is a non-linear way (e.g., quadratic).
+- We could assume distributions other than Normal in the likelihood. For example, we could assume a $t$-distribution if outliers were an issue.
+- We could assume the conditional variance of $Y$ also changes with $x$.
+
+Each of the above would be a change in the likelihood, perhaps introducing additional parameters.
+
+We could also combine regression with a hierarchical set up.  For example, suppose that the cohort of men in the sample was observed over a ten year period, and BMI and percent body fat was recorded for each man in each year.  Then the independence assumption of the simple linear regression model would be violated.
+However, we could revise the model so that each man had a slope and and intercept relating BMI and PBF, and then fit a hiearchical model.
