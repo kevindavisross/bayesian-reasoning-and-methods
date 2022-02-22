@@ -1,0 +1,551 @@
+---
+title: "STAT 415 Lab 3"
+author: "TYPE YOUR NAMES HERE"
+date: ''
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+  pdf_document: default
+---
+
+
+
+
+# Introduction
+
+In the handouts we have focused on inference for a population proportion.
+This lab will continue Lab 2 and cover inference for a population mean of a numerical variable.
+In particular, this lab covers:
+
+- Predictive distributions for a numerical variable
+- Continuous prior and posterior distributions for a population mean
+
+As in Lab 2,this lab will make some simplifying assumptions.
+We'll consider more realistic scenarios later.
+
+**Important note regarding code:**
+We will cover code for performing and summarizing Bayesian analyses in much more detail throughout the course.
+Early in the course I have tried to keep the code as simple and bare bones as possible, especially with respect to plotting.
+There are certainly better ways to code, especially better plots that could be made.
+You are welcome to jazz it up (or tidyverse it up) if you want, but it's certainly not required.
+The main goal for this lab is to understand the basic process.
+
+
+
+
+# Instructions
+
+This RMarkdown file provides a template for you to fill in.
+**Read the file from start to finish, completing the parts as indicated.**
+**Some code is provided for you. Be sure to run this code, and make sure you understand what it's doing.**
+Some blank "code chunks" are provided; you are welcome to add more (Code > Insert chunk or CTRL-ALT-I) as needed.
+There are also a few places where you should type text responses.
+Feel free to add additional text responses as necessary.
+
+You can run individual code chunks using the play button.
+You can use objects defined in one chunk in others.
+Just keep in mind that chunks are evaluated in order.
+So if you call something x in one chunk, but redefine x as something else in another chunk, it's essential that you evaluate the chunks in the proper order.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+When you are finished
+
+- click **Knit** and check to make sure that you have no errors and everything runs properly. (Fix any problems and redo this step until it works.)
+- Make sure your type your name(s) at the top of the notebook where it says "Type your name(s) here". If you worked in a team, you will submit a single notebook with both names; make sure both names are included
+- Submit your completed files in Canvas.
+
+You'll need a few R packages, which you can install using `install.packages`
+
+```{r, warning = FALSE, message = FALSE}
+
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(janitor)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+
+```
+
+
+
+# Estimating mean human body temperature: Prior predictive tuning
+
+Assume body temperatures (degrees Fahrenheit) of *healthy adult humans* follow a Normal distribution with unknown mean $\theta$ and known standard deviation $\sigma=1$.
+We wish to estimate $\theta$, the population mean healthy human body temperature, based on sample data.  
+Note: it's unrealistic to assume the population standard deviation is known.
+We'll consider the case of unknown standard deviation later.
+
+
+In Lab 2 we used a grid approximation for the possible value of $\theta$.
+Now we'll treat $\theta$ as a continuous random variable and assign it a continuous prior distribution.
+
+
+We'll assume the prior distribution of $\theta$ is a Normal distribution.
+We'll assume a prior mean of 98.6 since that is what most "people on the street" would say is average human body temperature.
+But we're not sure of what our prior SD should be, so we'll use prior predictive tuning to determine a reasonable value.
+
+Let's start with a prior SD of 2, which is a fairly uninformative prior, assigning relative high prior probability to a wide range of values.
+For example, a 68% prior credible interval for $\theta$ based on this prior is [96.6, 100.6]; 95% is [94.6, 102.6].
+
+**Exercise.**
+Use simulation to approximate the prior predictive distribution of body temperatures for a large sample of healthy adult humans.
+Make a histogram of the values.
+Explain why the simulation results suggest we might want to change our model.
+
+Note: [lots of things influence body temperature, and there is a wide range of what is "normal"](https://www.webmd.com/first-aid/normal-body-temperature).
+But there are certainly body temperatures that would indicate a non-healthy human.
+For example, hypothermia occurs when body temperature is below 95 degrees F.
+
+
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+A Bayesian model consists of both prior and likelihood.
+Inadequacies in the model could be due to prior, likelihood, or both.
+For now, we'll just consider changing the prior, and more specifically just changing the prior SD.
+
+**Exercise.**
+Choose another value for the prior SD and rerun the prior predictive simulation.
+Continue experimenting with different values of prior SD until you have what you think is a reasonable prior predictive distribution of healthy adult human body temperatures.
+There is no one right answer here, but explain your reasoning behind your final choice for the prior SD
+
+You should try a few values of prior SD, but you only need to include the results for your final choice.
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+# Deriving the posterior distribution
+
+Regardless of your answer to the previous part, assume a prior SD of 0.3.
+That is, assume the prior distribution of $\theta$ is a Normal distribution with mean 98.6 and standard deviation 0.3 (degrees Fahrenheit).
+
+Also, recall that we're assuming that body temperatures (degrees Fahrenheit) of *healthy adult humans* follow a Normal distribution with unknown mean $\theta$ and known standard deviation $\sigma=1$.
+
+We'll walk through the derivation of the posterior distribution given a few data points.
+Mind the **PAUSE**s; be sure to **PAUSE** and think about these questions before proceeding.
+
+## Prior distribution
+
+First, we'll write an expression for the prior distribution of $\theta$. **PAUSE** and try this now.
+
+The prior distribution is represented by a continuous probability density function.
+Remember that in the prior distribution $\theta$ is treated as the variable.
+We'll leave out constants (e.g., $1/\sqrt{2\pi}$) that won't affect the *shape* of the prior
+\[
+\pi(\theta)  \propto \exp\left(-\frac{1}{2}\left(\frac{\theta - 98.6}{0.3}\right)^2\right)
+\]
+This is a distribution on values of the parameter $\theta$.
+
+## Likelihood for a single observation
+
+Suppose a single temperature value of 97.9 is observed.
+Write an expression for the likelihood function.
+**PAUSE** and try this now.
+
+The likelihood follows from the assumption that body temperatures follows a Normal($\theta$, 1) distribution.
+The likelihood of the data $y=97.9$ is the Normal($\theta$, 1) density evaluated at 97.9, viewed as a function of $\theta$.
+\[
+f(y = 97.9|\theta) \propto \exp\left(-\frac{1}{2}\left(\frac{97.9-\theta}{1}\right)^2\right)
+\]
+**Careful!** In the prior distribution, $\theta$ plays the role of the random variable.
+In the likelihood, $\theta$ enters the picture as the *mean* of the measured variable (temperature); but the likelihood is a function of $\theta$.
+
+## Posterior distribution given a single observation
+Write an expression for the posterior distribution of $\theta$ given a single temperature value of 97.9.
+**PAUSE** and try this now.
+
+As always, posterior is proportional to likelihood times prior
+\[
+\pi(\theta|y = 97.9)  \propto \exp\left(-\frac{1}{2}\left(\frac{\theta - 98.6}{0.3}\right)^2\right)\exp\left(-\frac{1}{2}\left(\frac{97.9-\theta}{1}\right)^2\right)
+\]
+After some algebra (e.g., completing the square), you can show that as a function of $\theta$ this expression represents a Normal distribution.
+We'll provide more detail below.
+
+## Likelihood for two observations
+Now consider the original Normal(98.6, 0.3) prior again.
+Determine the likelihood of observing temperatures of 97.9 and 97.5 in a random sample of size 2.
+**PAUSE** and try this now.
+
+Assuming a random sample, the two temperature measurements are independent.
+So the likelihood of the pair (97.9, 97.5) is the product of the likelihood of each value.
+\[
+f(y=(97.9, 97.5)|\theta)  \propto \exp\left(-\frac{1}{2}\left(\frac{97.9-\theta}{1}\right)^2\right)\exp\left(-\frac{1}{2}\left(\frac{97.5-\theta}{1}\right)^2\right)
+\]
+
+## Posterior distribution given two observations
+Write an expression for the posterior distribution of $\theta$ given temperature measurements of 97.9 and 97.5 in a random sample of size 2.
+**PAUSE** and try this now.
+
+Again, the posterior is proportional to likelihood times prior.
+\[
+\pi(\theta|y = (97.9, 97.5))  \propto \exp\left(-\frac{1}{2}\left(\frac{\theta - 98.6}{0.7}\right)^2\right)\left[\exp\left(-\frac{1}{2}\left(\frac{97.9-\theta}{1}\right)^2\right)\exp\left(-\frac{1}{2}\left(\frac{97.5-\theta}{1}\right)^2\right)\right]
+\]
+After some algebra, you can show that as a function of $\theta$ this expression represents a Normal distribution.
+
+The following is a plot of prior, (scaled) likelihood, and posterior after the (97.9, 97.5) sample.
+Observe that the posterior resembles a Normal distribution.
+
+Note: don't worry too much about the following code.
+Some of the details just adjust the scales so that the three curves can be viewed on a single plot.
+Just focus on
+
+- `dnorm(theta, 98.6, 0.3)` for the prior
+- `dnorm(97.9, theta, sigma) * dnorm(97.5, theta, sigma)` for the likelihood
+- `posterior = prior * likelihood` for the posterior
+
+
+
+
+```{r}
+
+delta = 0.0001
+theta = seq(95, 101, delta)
+
+# prior
+prior = dnorm(theta, 98.6, 0.3)
+
+# likelihood of (97.9, 97.5)
+sigma = 1
+
+likelihood = dnorm(97.9, theta, sigma) * dnorm(97.5, theta, sigma)
+likelihood = likelihood / sum(likelihood) / delta # density scale
+
+# posterior
+posterior = prior * likelihood
+posterior = posterior / sum(posterior) / delta # density scale
+
+# plot
+ymax = max(c(prior, likelihood, posterior))
+
+plot(theta, prior, type='l', col='skyblue', xlim=range(theta), ylim=c(0, ymax), ylab='', yaxt='n')
+par(new=T)
+plot(theta, likelihood, type='l', col='orange', xlim=range(theta), ylim=c(0, ymax), ylab='',  yaxt='n')
+par(new=T)
+plot(theta, posterior, type='l', col='seagreen', xlim=range(theta), ylim=c(0, ymax), ylab='', yaxt='n')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+```
+
+
+## Likelihood of the sample mean
+
+Consider the original prior again.
+Suppose that we take a random sample of two temperature measurements, but instead of observing the two individual values, we only observe that the sample mean is 97.7.
+Determine the likelihood of observing a sample mean of 97.7 in a random 
+sample of size 2.
+**PAUSE** and try this now.
+Hint: if $\bar{Y}$ is the sample mean of $n$ values from a $N(\theta, \sigma)$ distribution, what is the distribution of $\bar{Y}$?
+
+
+If $\bar{Y}$ is the sample mean of $n$ values from a $N(\theta, \sigma)$ distribution, then $\bar{Y}$  follows a $N(\theta, \sigma/\sqrt{n})$ distribution.
+To evaluate the likelihood of a sample mean of 97.7, evaluate the Normal($\theta$, $1/\sqrt{2}$) density at 97.7, viewed as a function of $\theta$.
+\[
+f(\bar{y} = 97.7|\theta)  \propto \exp\left(-\frac{1}{2}\left(\frac{97.7-\theta}{1/\sqrt{2}}\right)^2\right)
+\]
+
+## Posterior distribution given the sample mean
+Write an expression for the posterior distribution of $\theta$ given a sample mean of 97.7 in a random sample of size 2.
+**PAUSE** and try this now.
+
+
+Again, the posterior is proportional to likelihood times prior
+\[
+\pi(\theta|\bar{y} = 97.7)  \propto \exp\left(-\frac{1}{2}\left(\frac{\theta - 98.6}{0.7}\right)^2\right)\exp\left(-\frac{1}{2}\left(\frac{97.7-\theta}{1/\sqrt{2}}\right)^2\right)
+\]
+Some algebra shows that this results in the same posterior distribution as the one based on the (97.9, 97.5) sample.
+
+The plot below illustrates the prior, scaled likelihood, and posterior given the sample mean of 97.7.
+Compare to the plot based on the (97.9, 97.5) above; the results are the same.
+
+Note: Again, don't worry about the details of the code.
+Just focus on:
+
+- `dnorm(theta, 98.6, 0.3)` for the prior
+- `dnorm(97.7, theta, sigma / sqrt(n))` for the likelihood
+- `posterior = prior * likelihood` for the posterior
+- posterior based on sample mean of 97.7 is same as based on full sample of (97.9, 97.5)
+
+```{r}
+
+delta = 0.0001
+theta = seq(95, 101, delta)
+
+# prior
+prior = dnorm(theta, 98.6, 0.3)
+
+# likelihood of sample mean of 97.7
+sigma = 1
+
+n = 2
+ybar = 97.7
+
+likelihood = dnorm(ybar, theta, sigma / sqrt(n))
+likelihood = likelihood / sum(likelihood) / delta # density scale
+
+# posterior
+posterior = prior * likelihood
+posterior = posterior / sum(posterior) / delta # density scale
+
+# plot
+ymax = max(c(prior, likelihood, posterior))
+
+plot(theta, prior, type='l', col='skyblue', xlim=range(theta), ylim=c(0, ymax), ylab='', yaxt='n')
+par(new=T)
+plot(theta, likelihood, type='l', col='orange', xlim=range(theta), ylim=c(0, ymax), ylab='',  yaxt='n')
+par(new=T)
+plot(theta, posterior, type='l', col='seagreen', xlim=range(theta), ylim=c(0, ymax), ylab='', yaxt='n')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+```
+
+
+
+It is often not necessary to know all the individual data values to evaluate the *shape* of the likelihood as a function of the parameter $\theta$, but rather simply the values of a few summary statistics.   
+For example, when  estimating the population mean of a Normal distribution with known standard deviation $\sigma$, it is sufficient to know the sample mean for the purposes of evaluating the shape of the likelihood of the observed data under different potential values of the population mean.
+
+# Normal-Normal model
+
+In the previous example we saw that if the values of the measured variable (temperature) follow a Normal distribution with mean $\theta$ (and known SD) and the prior for $\theta$ follows a Normal distribution, then the posterior distribution for $\theta$ given the data also follows a Normal distribution.
+Performing some algebra on the product of the Normal prior and the Normal likelihood, we can show the following.
+
+
+**Normal-Normal model.** Consider a measured variable $Y$ which, given $\theta$, follows a Normal$(\theta, \sigma)$ distribution, with $\sigma$ known.
+Let $\bar{y}$ be the sample mean for a random sample of size $n$.
+Suppose $\theta$ has a Normal$(\mu_0, \tau_0)$ prior distribution.
+Then the posterior distribution of $\theta$ given $\bar{y}$ is the Normal$(\mu_n, \tau_n)$ distribution, where
+
+\begin{align*}
+\text{posterior precision:} & &\frac{1}{\tau_n^2} & = \frac{1}{\tau_0^2} + \frac{n}{\sigma^2}\\
+\text{posterior mean:} & & \mu_n & = \left(\frac{\frac{1}{\tau_0^2} }{\frac{1}{\tau_0^2} + \frac{n}{\sigma^2}}\right)\mu_0 + \left(\frac{\frac{n}{\sigma^2}}{ \frac{1}{\tau_0^2} + \frac{n}{\sigma^2}}\right)\bar{y}\\
+\end{align*}
+
+That is, Normal distributions form a *conjugate prior* family for a Normal likelihood.
+
+The  **precision** of a Normal distribution is the reciprocal of its variance. 
+If $Y$ follows a Normal$(\theta, \sigma)$ distribution, the precision in a single measurement of $Y$ is $1/\sigma^2$.
+For a random sample of $n$ values of the variable $Y$, the sample mean $\bar{Y}$ follows a Normal distribution with standard deviation $\sigma/\sqrt{n}$ and precision $n/\sigma^2$.
+That is, the precision in $n$ independent data values is $n$ times the precision in a single value.
+
+The posterior distribution is a compromise between prior and likelihood.
+For the Normal-Normal model, there is an intuitive interpretation of this compromise.
+
+- The posterior precision is the sum of the prior precision and the data precision.
+- The posterior mean is a weighted average of the prior mean and the sample mean, with weights proportional to the precisions.
+
+
+|           |                Prior |        Data (Sample Mean) |                                                                                                                                                                                  Posterior |
+|-----------|---------------------:|--------------------------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| Precision | $\frac{1}{\tau_0^2}$ |      $\frac{n}{\sigma^2}$ |                                                                                                                               $\frac{1}{\tau_n^2} = \frac{1}{\tau_0^2}+\frac{n}{\sigma^2}$ |
+| SD        |             $\tau_0$ | $\frac{\sigma}{\sqrt{n}}$ |                                                                                                                                                                                   $\tau_n$ |
+| Mean      |              $\mu_0$ |                 $\bar{y}$ | $\mu_n  = \left(\frac{\frac{1}{\tau_0^2} }{\frac{1}{\tau_0^2} + \frac{n}{\sigma^2}}\right)\mu_0 + \left(\frac{\frac{n}{\sigma^2}}{ \frac{1}{\tau_0^2} + \frac{n}{\sigma^2}}\right)\bar{y}$ |
+
+Try this [applet which illustrates the Normal-Normal model](https://shiny.stat.ncsu.edu/bjreich/NormalNormal/).
+
+In the previous example:
+
+- $\mu_0 = 98.6$, the prior mean
+- $\tau_0 = 0.3$, the prior SD
+- $\bar{y} = 97.7$, the sample mean
+- $n=2$, the sample size
+
+The code below just plugs the numbers into the above Normal-Normal model formulas.
+
+```{r}
+# prior
+mu0 = 98.6
+tau0 = 0.3
+
+# data
+sigma = 1
+n = 2
+ybar = 97.7
+
+# posterior
+tau_n = 1 / sqrt(n / sigma ^ 2 + 1 / tau0 ^ 2)
+mu_n = mu0 * (1 / tau0 ^ 2) / (1 / tau_n ^ 2) + ybar * (n / sigma ^ 2) / (1 / tau_n ^ 2)
+
+df = data.frame(c("Precision", "SD", "Mean"),
+                c(1 / tau0 ^ 2, tau0, mu0),
+                c(n / sigma ^ 2, sigma / sqrt(n), ybar),
+                c(1 / tau_n ^ 2, tau_n, mu_n))
+
+kable(df, digits = 3, align = 'r',
+      col.names = c("", "Prior", "Data (Sample Mean)", "Posterior"))
+```
+
+Therefore, the posterior distribution of $\theta$ is Normal with posterior mean `r round(mu_n, 2)` and posterior SD `r round(tau_n, 3)`, which seems consistent with the plot above.
+
+## Exercises
+
+Recall the assumptions:
+
+- body temperatures (degrees Fahrenheit) of *healthy adult humans* follow a Normal distribution with unknown mean $\theta$ and known standard deviation $\sigma=1$.
+- the prior distribution of $\theta$ is a Normal distribution with mean 98.6 and standard deviation 0.3 (degrees Fahrenheit).
+
+In a recent study^[[Source](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6258625/) and a [related article](https://www.scientificamerican.com/article/are-human-body-temperatures-cooling-down/).], the sample mean body temperature in a sample of 208 healthy adults was 97.7 degrees F.
+
+In the previous lab you used grid approximation to find the posterior distribution.
+Now you will use the Normal-Normal model.
+
+1. Use the Normal-Normal model to find the posterior distribution of $\theta$.
+1. Make a plot of the prior, the scaled likelihood and the posterior.
+How do the results for the $n=208$ sample compare to the $n=2$ sample?
+1. Compute and interpret central 50%, 80%, and 98% posterior credible intervals for $\theta$.
+1. Compute the posterior probability that $\theta$ is less than 98.6.
+
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+# Posterior predictive checking
+
+Continuing the previous exercises, is the model from above reasonable?
+We can use the posterior predictive distribution to simulate what samples of size $n=208$ might look like and compare to the observed sample data.
+
+First let's look at the sample data on 208 temperature measurements.
+Notice that the sample mean is 97.7 and the sample SD is 1 (consistent with the assumed population SD of $\sigma = 1$.)
+
+```{r}
+
+data = read.csv("temperature.csv")
+y = data$temperature
+
+hist(y, freq = FALSE)
+summary(y)
+sd(y)
+
+n = length(y)
+ybar = mean(y)
+
+```
+
+
+How would you use posterior predictive simulation to simulate a possible sample of size 208 under the model?
+
+**PAUSE** to try this now.
+
+1. Simulate a value of $\theta$ from the posterior distribution
+1. Given the values of $\theta$, simulate a sample of size 208 from a Normal distribution with mean $\theta$ and SD $\sigma = 1$.
+
+Then we repeat this process many times and compare the simulated samples to the observed data.
+
+The plot below displays a histogram of the observed sample data, along with a density curve for each of 100 simulated samples from the posterior predictive distribution.
+**The posterior distribution of $\theta$ below is based on the sample of size 2.**
+The posterior distribution based on the sample of size 2 does *not* seem to provide an adequate model.
+
+```{r, echo = TRUE }
+    
+# plot the observed data
+hist(y, freq = FALSE) # observed data
+
+# number of samples to simulate
+n_samples = 100
+
+# simulate thetas from posterior
+theta = rnorm(n_samples, mu_n, tau_n)
+
+# simulate samples
+for (r in 1:n_samples){
+  
+  # simulate values from N(theta, sigma) distribution
+  y_sim = rnorm(n, theta[r], sigma)
+  
+  # add plot of simulated sample to histogram
+  lines(density(y_sim),
+        col = rgb(135, 206, 235, max = 255, alpha = 50))
+}
+
+```
+
+## Exercises.
+
+1. Rerun the posterior predictive simulation using the posterior distribution based on the full sample of size $n=208$.
+Reproduce a plot like the one above.
+1. Does the model seem reasonable in light of the posterior predictive simulation?
+1. Use simulation to find a 95% posterior prediction interval.
+1. Write a clearly worded sentence interpreting the prediction interval from the previous part in context.
+
+
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+# Application: Birthweights
+
+Suppose that birthweights (grams) of human babies follow a Normal distribution with unknown mean $\theta$ and known SD $\sigma = 600$.
+(1 pound $\approx$ 454 grams.)
+
+1. Assume a Normal prior distribution for $\theta$.
+Identify what you think are reasonable values for the prior mean and the prior SD.
+Explain your reasoning.
+Include a prior predictive simulation as part of your justification.
+
+1. The following summarizes data on a random sample^[There are about 4 million live births in the U.S. per year.  The data is available at the [CDC website](https://www.cdc.gov/nchs/data_access/vitalstatsonline.htm).] of 1000 live births in the U.S. in 2001.
+
+```{r}
+data = read.csv("birthweight.csv")
+y = data$birthweight
+
+hist(y, freq = FALSE)
+summary(y)
+sd(y)
+
+n = length(y)
+ybar = mean(y)
+
+sigma = 600 # assumed
+```
+
+1. Find the posterior distribution of $\theta$ given the sample data.
+
+1. Find and interpret 50%, 80%, 98% central posterior credible interval for $\theta$.
+
+1. Use simulation to compute a 95% prediction interval.
+
+1. Write a clearly worded sentence interpreting the prediction interval from the previous part in context.
+
+1. Use posterior predictive checking to simulate what samples of size 1000 might look like under the posterior model.
+Include a plot comparing simulated samples to the observed data.
+Do you notice any problems with the fit of the model?
+If so, what assumption of the model appears to be violated?
+
+
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+
+
+
+# Reflection
+
+1. Write a few sentences summarizing one important concept you have learned in this lab
+1. What is (at least) one question that you still have?
+
+**TYPE YOUR RESPONSE HERE.**
+

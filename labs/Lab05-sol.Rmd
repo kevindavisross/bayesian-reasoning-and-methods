@@ -1,0 +1,425 @@
+---
+title: "STAT 415 Lab 5"
+author: "TYPE YOUR NAMES HERE"
+date: ''
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+  pdf_document: default
+---
+
+
+
+
+# Introduction
+
+Bayes factors can be used as part of a Bayesian approach to null hypothesis testing.
+However, Bayes factors can be highly sensitive to choice of prior.
+Also, rejecting a point null hypothesis (e.g., $H_0:\theta = 0.5$) is hardly ever an interesting or meaningful conclusion.
+Rather, the *posterior distribution* provides all relevant information to make decisions about practically meaningful issues.
+Credible intervals are usually much more useful, and provide much more information about *how large* is the parameter/difference/effect than just "evidence to reject the null hypothesis".
+
+# Instructions
+
+This RMarkdown file provides a template for you to fill in.
+**Read the file from start to finish, completing the parts as indicated.**
+**Some code is provided for you. Be sure to run this code, and make sure you understand what it's doing.**
+Some blank "code chunks" are provided; you are welcome to add more (Code > Insert chunk or CTRL-ALT-I) as needed.
+There are also a few places where you should type text responses.
+Feel free to add additional text responses as necessary.
+
+You can run individual code chunks using the play button.
+You can use objects defined in one chunk in others.
+Just keep in mind that chunks are evaluated in order.
+So if you call something x in one chunk, but redefine x as something else in another chunk, it's essential that you evaluate the chunks in the proper order.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+When you are finished
+
+- click **Knit** and check to make sure that you have no errors and everything runs properly. (Fix any problems and redo this step until it works.)
+- Make sure your type your name(s) at the top of the notebook where it says "Type your name(s) here". If you worked in a team, you will submit a single notebook with both names; make sure both names are included
+- Submit your completed files in Canvas.
+
+You'll need a few R packages, which you can install using `install.packages`
+
+```{r, warning = FALSE, message = FALSE}
+
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(janitor)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+
+```
+
+# Two-sided hypothesis test
+
+(Continuing a problem from a previous assignment.)
+
+Does uniform color give athletes an advantage over their competitors?  To investigate this question, Hill and Barton (*Nature*, 2005) examined the records in the 2004 Olympic Games for four combat sports: boxing, tae kwon do, Greco-Roman wrestling, and freestyle wrestling.  *Competitors in these sports were randomly assigned to wear either a red or a blue uniform.*  The researchers investigated whether competitors wearing one color won significantly more often than those wearing the other color.  They collected data on a total of 457 matches.
+
+Let the parameter $\theta$ represent the probability that a competitor wearing *red* wins a match. Let $Y$ be the number of matches, out of 457, in which the competitor wearing red defeats the competitor wearing blue.
+
+Let's first consider a null hypothesis of $H_0:\theta = 0.5$ and an alternative hypothesis of $H_a:\theta \neq 0.5$.
+Generally in a Bayesian analysis a parameter $\theta$ is a random variable.
+However, if the null hypothesis here is true then $\theta$ is just a constant.
+
+The interpretation of the Bayes factor as the ratio of the posterior and prior odds breaks down for a point null hypothesis like $H_0:\theta = 0.5$ because if $\theta$ has a continuous distribution then the probability that $\theta$ equals 0.5 is 0, so the odds are 1/0.
+(Or 0/1, but then both posterior and prior odds would be 0, so the ratio would be 0/0.)
+
+Instead, we use the interpretation of the Bayes factor as the ratio of the likelihoods.
+
+Compute the likelihood of observing the sample data if the null hypothesis is true.
+(You could use simulation, but you don't have to if the null hypothesis is true.)
+
+```{r}
+# Enter your code here.
+```
+
+
+```{r}
+
+n = 457
+y = 248
+
+theta0 = 0.5
+
+lik0 = dbinom(y, n, theta0)
+
+lik0
+```
+
+
+If the alternative hypothesis is true, then $\theta$ can potentially take any value other than 0.5, so it can truly be considered a random variable.
+Assume a Uniform(0, 1) = Beta(1, 1) prior for $\theta$.
+Use simulation to approximate the likelihood of observing the sample data if the alternative hypothesis is true.
+
+```{r}
+# Enter your code here.
+```
+
+
+
+```{r}
+
+alpha = 1
+beta = 1
+
+n_sim = 100000
+
+theta_a = rbeta(n_sim, alpha, beta)
+
+lik1 = sum(rbinom(n_sim, n, theta_a) == y) / n_sim
+lik1
+```
+
+Compute the Bayes Factor in favor of the alternative hypothesis as the ratio of the likelihoods from the previous parts.
+Which hypothesis does the Bayes Factor favor?
+
+```{r}
+# Enter your code here.
+```
+
+```{r}
+lik1 / lik0
+```
+
+**BF < 1 signifies that the data are more likely under the null than under the alternative, so the BF favors the null hypothesis.**
+**When moving from prior to posterior probabilities of the hypotheses, a BF < 1 will move probability towards the null hypothesis.**
+
+Now suppose instead we had assumed a Beta(10, 10) prior for $\theta$.
+Use simulation to approximate the likelihood of observing the sample data if the alternative hypothesis is true.
+
+```{r}
+# Enter your code here.
+```
+
+```{r}
+
+alpha = 10
+beta = 10
+
+n_sim = 100000
+
+theta_a = rbeta(n_sim, alpha, beta)
+
+lik1 = sum(rbinom(n_sim, n, theta_a) == y) / n_sim
+lik1
+```
+
+Compute the Bayes Factor in favor of the alternative hypothesis as the ratio of the likelihood from the previous part and the likelihood under the null hypothesis from above
+Which hypothesis does the Bayes Factor favor?
+
+```{r}
+# Enter your code here.
+```
+
+
+```{r}
+lik1 / lik0
+```
+
+**A BF of about 1 signifies that the data are about equally likely under the null than under the alternative, so the BF doesn't favor either hypothesis.**
+**With a BF of about 1 the posterior probabilities of the hypotheses will be the same as the prior probabilities.**
+
+Now suppose instead we had assumed a Beta(200, 200) prior for $\theta$.
+Use simulation to approximate the likelihood of observing the sample data if the alternative hypothesis is true.
+
+```{r}
+# Enter your code here.
+```
+
+```{r}
+
+alpha = 200
+beta = 200
+
+n_sim = 100000
+
+theta_a = rbeta(n_sim, alpha, beta)
+
+lik1 = sum(rbinom(n_sim, n, theta_a) == y) / n_sim
+lik1
+```
+
+Compute the Bayes Factor in favor of the alternative hypothesis as the ratio of the likelihood from the previous part and the likelihood under the null hypothesis from above
+Which hypothesis does the Bayes Factor favor?
+
+```{r}
+# Enter your code here.
+```
+
+```{r}
+lik1 / lik0
+```
+
+**BF > 1 signifies that the data are more likely under the alternative than under the null, so the BF favors the alternative hypothesis.**
+**When moving from prior to posterior probabilities of the hypotheses, a BF > 1 will move probability towards the alternative hypothesis.**
+
+Is the Bayes Factor sensitive to the choice of prior?
+Consider each of the prior distributions.
+Which prior distribution places the highest prior probability on $\theta$ being close to 0.5?
+Far from 0.5?
+Which prior distribution leads to the largest Bayes Factor in favor of the alternative hypothesis?
+Does this make sense?
+
+**TYPE YOUR RESPONSE HERE.**
+
+Yes, it appears that the Bayes Factor is pretty sensitive to the choice of prior.
+The Beta(200, 200) distribution places the highest prior probability of $\theta$ being close to 0.5, and the Beta(1, 1) distribution places the highest prior probability on $\theta$ being far from 0.5.
+So it seems like with the Beta(1, 1) prior we might be more easily convinced that the alternative is true.
+However, we see the opposite: given the sample data the Beta(200, 200) prior leads to the largest BF in favor of the alternative hypothesis.
+
+I think this is counter-intuitive, but if we think about where the BF comes from we can see why this happens.
+The reason is that the BF is based on *average* likelihoods.
+The sample proportion is `r round(y / n, 3)`.
+The likelihood of observing this sample data is large for values of $\theta$ near the observed sample proportion, like 0.53 or 0.51, but small for values of $\theta$ far away from the observed sample proportion.
+The Beta(200, 200) only gives significant prior probability to values that are around 0.5, all of which are in the neighborhood of the sample proportion and so produce non-small values of the likelihood, so the average likelihood is not-small.
+On the other hand, the Beta(1, 1) prior distribution stretches plausibility over all values of $\theta$ from 0 to 1.
+For many of these values the likelihood of observing a sample proportion of 0
+`r round(y / n, 3)` will be basically be 0, and so the average likelihood is small.
+
+# Regional of practical equivalence
+
+A point null hypothesis is hardly ever a realistic hypothesis.
+Do we really think that $\theta$ is exactly equal to 0.500000000?
+A more practical and realistic hypothesis can be formed by considering a range of values that are "practically equivalent" to 0.5.
+What this range of values is depends on the context and should be determined before collecting data.
+
+In this context, we might say that if the probability of winning by the competitor wearing red is between 0.49 and 0.51, then any color advantage is small enough to be considered unimportant.
+That is, we might consider a null hypothesis of $H_0: 0.49 \le \theta \le 0.51$ and an alternative that $\theta$ is outside of [0.49, 0.51].
+
+Assume a Uniform(0, 1) = Beta(1, 1) prior distribution for $\theta$.
+Compute the prior odds in favor of the alternative hypothesis, the posterior odds in favor of the alternative hypothesis, and the Bayes Factor in favor of the alternative hypothesis.
+(You can compute probabilities using `pbeta`; you don't need simulation.)
+
+
+```{r}
+# Enter your code here.
+```
+
+```{r}
+rope_lb = 0.5 - 0.01
+rope_ub = 0.5 + 0.01
+```
+
+
+```{r}
+
+alpha = 1
+beta = 1
+
+prior_prob = 1 - (pbeta(rope_ub, alpha, beta) - pbeta(rope_lb, alpha, beta))
+
+prior_odds = prior_prob / (1 - prior_prob)
+
+post_prob = 1 - (pbeta(rope_ub, alpha + y, beta + n - y) - pbeta(rope_lb, alpha + y , beta + n - y))
+
+post_odds = post_prob / (1 - post_prob)
+
+post_odds / prior_odds
+
+```
+
+Assume a Beta(10, 10) prior distribution for $\theta$.
+Compute the prior odds in favor of the alternative hypothesis, the posterior odds in favor of the alternative hypothesis, and the Bayes Factor in favor of the alternative hypothesis.
+(You can compute probabilities using `pbeta`; you don't need simulation.)
+
+
+```{r}
+# Enter your code here.
+```
+
+```{r}
+
+alpha = 10
+beta = 10
+
+prior_prob = 1 - (pbeta(rope_ub, alpha, beta) - pbeta(rope_lb, alpha, beta))
+
+prior_odds = prior_prob / (1 - prior_prob)
+
+post_prob = 1 - (pbeta(rope_ub, alpha + y, beta + n - y) - pbeta(rope_lb, alpha + y , beta + n - y))
+
+post_odds = post_prob / (1 - post_prob)
+
+post_odds / prior_odds
+
+```
+
+
+Assume a Beta(200, 200) prior distribution for $\theta$.
+Compute the prior odds in favor of the alternative hypothesis, the posterior odds in favor of the alternative hypothesis, and the Bayes Factor in favor of the alternative hypothesis.
+(You can compute probabilities using `pbeta`; you don't need simulation.)
+
+
+```{r}
+# Enter your code here.
+```
+
+
+
+```{r}
+
+alpha = 200
+beta = 200
+
+prior_prob = 1 - (pbeta(rope_ub, alpha, beta) - pbeta(rope_lb, alpha, beta))
+
+prior_odds = prior_prob / (1 - prior_prob)
+
+post_prob = 1 - (pbeta(rope_ub, alpha + y, beta + n - y) - pbeta(rope_lb, alpha + y , beta + n - y))
+
+post_odds = post_prob / (1 - post_prob)
+
+post_odds / prior_odds
+
+```
+
+
+```{r}
+# Enter your code here.
+```
+
+Is the Bayes Factor sensitive to the choice of prior?
+Consider each of the prior distributions.
+Which prior distribution places the highest prior probability on the alternative hypothesis being true?
+Which prior distribution leads to the largest Bayes Factor in favor of the alternative hypothesis?
+Does this make sense?
+
+**TYPE YOUR RESPONSE HERE.**
+
+**Yes, the BF is sensitive to the choice of prior.**
+**The same ideas we saw in the previous section apply here.**
+
+
+# Credible intervals
+
+An alternative to hypothesis testing is to just use credible intervals to determine ranges of plausible values for the parameters, and to assess any hypotheses or regions of practical equivalence in light of the credible values.
+
+Assume a Uniform(0, 1) = Beta(1, 1) prior for $\theta$.
+Compute a posterior 98% credible interval for $\theta$ given the sample data.
+
+```{r}
+alpha = 1
+beta = 1
+
+qbeta(c(0.01, 0.99), alpha + y, beta + n - y)
+```
+
+
+Assume a Beta(10, 10) prior for $\theta$.
+Compute a posterior 98% credible interval for $\theta$ given the sample data.
+
+```{r}
+alpha = 10
+beta = 10
+
+qbeta(c(0.01, 0.99), alpha + y, beta + n - y)
+```
+
+Assume a Beta(200, 200) prior for $\theta$.
+Compute a posterior 98% credible interval for $\theta$ given the sample data.
+
+
+```{r}
+alpha = 200
+beta = 200
+
+qbeta(c(0.01, 0.99), alpha + y, beta + n - y)
+```
+
+Are the posterior 98% credible intervals highly sensitive to the choice of prior?
+Based on the credible intervals, do you have evidence that $\theta$ lies outside of [0.49, 0.51]?
+
+**TYPE YOUR RESPONSE HERE.**
+
+**The credible intervals are NOT very sensitive to the choice of prior, but they do change a little.**
+**In each case, the ROPE [0.49, 0.51] overlaps with the credible interval.**
+**Since the credible interval contains the values of $\theta$ we think are plausible, and since this interval overlaps with the ROPE, the values within the ROPE are plausible.**
+**That is, we do NOT have evidence that $\theta$ lies outside of [0.49, 0.51].**
+**(Of course, this depends on the credibility level.**
+**But we want to take into account the full posterior distribution when assessing the ROPE, and that's why we're using a high credibility level like 98%.)**
+
+Suppose instead that there were $y=2480$ successes in a sample of size $n=4570$.
+
+Assume a Beta(200, 200) prior for $\theta$.
+Compute a posterior 98% credible interval for $\theta$ given this sample data.
+
+
+```{r}
+n = 4570
+y = 2480
+
+alpha = 200
+beta = 200
+
+qbeta(c(0.01, 0.99), alpha + y, beta + n - y)
+```
+
+Based on this sample, would you have evidence that $\theta$ lies outside of [0.49, 0.51]?
+
+**TYPE YOUR RESPONSE HERE.**
+
+**The credible interval does not overlap with the ROPE.**
+**Based on the posterior, the values within the ROPE are not plausible values of $\theta$.**
+**So based on this sample we do have evidence that $\theta$ lies outside of [0.49, 0.51].**
+
+
+
+# Reflection
+
+1. Write a few sentences summarizing one important concept you have learned in this lab
+1. What is (at least) one question that you still have?
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+

@@ -1,0 +1,774 @@
+---
+title: "STAT 415 Lab 7: Comparing Two Proportions"
+author: "TYPE YOUR NAMES HERE"
+date: ''
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+  pdf_document: default
+---
+
+
+
+
+# Introduction
+
+Most interesting statistical problems involve multiple unknown parameters.
+For example, many problems involve comparing two (or more) populations or groups based on two (or more) samples.
+In such situations, each population or group will have its own parameters, and there will often be dependence between parameters.
+We are usually interested in difference or ratios of parameters between groups.
+
+The example below concerns the familiar context of comparing two proportions.
+We will start by assuming prior independence between parameters, but we will also consider dependence between parameters.
+
+
+
+# Instructions
+
+This RMarkdown file provides a template for you to fill in.
+**Read the file from start to finish, completing the parts as indicated.**
+**Some code is provided for you. Be sure to run this code, and make sure you understand what it's doing.**
+In particular, mind the **PAUSE**s; be sure to **PAUSE** and think about these questions before proceeding.
+
+
+Some blank "code chunks" are provided; you are welcome to add more (Code > Insert chunk or CTRL-ALT-I) as needed.
+There are also a few places where you should type text responses.
+Feel free to add additional text responses as necessary.
+
+
+You can run individual code chunks using the play button.
+You can use objects defined in one chunk in others.
+Just keep in mind that chunks are evaluated in order.
+So if you call something x in one chunk, but redefine x as something else in another chunk, it's essential that you evaluate the chunks in the proper order.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+When you are finished
+
+- click **Knit** and check to make sure that you have no errors and everything runs properly. (Fix any problems and redo this step until it works.)
+- Make sure your type your name(s) at the top of the notebook where it says "Type your name(s) here". If you worked in a team, you will submit a single notebook with both names; make sure both names are included
+- Submit your completed files in Canvas.
+
+You'll need a few R packages, which you can install using `install.packages`
+
+```{r, warning = FALSE, message = FALSE}
+
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(janitor)
+library(rjags)
+library(viridis)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+
+```
+
+
+
+# Setup
+
+Many studies of animals involve tagging the animals, but can the tags be harmful?
+Specifically, are metal bands used for tagging penguins harmful?
+[Researchers studied the effects of banding in a sample of 100 king penguins near Antarctica](https://www.nature.com/articles/nature09630) that had already been tagged with RFID (radio frequency identification) chips.
+Of these 100 penguins, 50 were randomly assigned to receive metal bands on their flippers (in addition to the RFID chip), while the remaining 50 did not receive metal bands.
+The penguins were followed for 4.5 years to see which penguins survived.
+
+
+Let $\theta_1$  denote the probability that a penguin *without* a metal band survives a 4.5-year period, and let $\theta_2$ denote the probability that a penguin *with* a metal band survives a 4.5-year period.
+(Throughout, "penguin" refers to whatever population of penguins this sample would be reasonbly representative of.)
+
+**PAUSE** to consider your prior distribution for $\theta_1$ and $\theta_2$.
+Suppose you don't know much about penguin survival in Antarctica; what prior distribution might you assume?
+Would you necessarily assume that $\theta_1$ and $\theta_2$ are independent?
+Why might you want to assume some dependence between the parameters in the prior?
+
+We'll discuss some issues in choosing the prior later.
+Here's a summary of the sample data.
+
+- Of the 50 penguins without metal bands, 31 survived this 4.5-year study period.
+- Of the 50 penguins with metal bands, 16 survived the 4.5-year study period.
+
+
+We will use the sample data to perform Bayesian inference to compare the probability of surviving with and without the metal band.
+In particular, we're interested in the parameters $\theta_1 - \theta_2$ and $\theta_1 / \theta_2$.
+
+
+# Prior independence
+
+We'll start with a prior that assumes $\theta_1$ and $\theta_2$ are independent.
+We'll choose the same marginal prior distribution for both $\theta_1$ and $\theta_2$ to reflect a prior belief of "no difference".
+A quick Google search reveals that the lifespan of Antarctic king penguins is 15-20 years, though we don't know how old the penguins were at the start of the 4.5-year study.
+Let's assume a prior with a mean that represents penguins are more likely to survive than not, but is still fairly non-informative.
+Therefore, our prior assumes
+
+- $\theta_1$ and $\theta_2$ are independent according to the prior
+- $\theta_1$ has a Beta(3, 2) prior distribution
+- $\theta_2$ has a Beta(3, 2) prior distribution
+
+(We could have used a Uniform(0, 1) = Beta(1, 1) prior, but choosing $\alpha$ and $\beta$ values other than 1 will illustrate the process of finding the posterior a little better.)
+
+The following simulates $(\theta_1, \theta_2)$ pairs from the joint prior distribution and plots them.
+
+```{r}
+
+N = 10000
+
+# prior 
+alpha1_prior = 3
+beta1_prior = 2
+
+alpha2_prior = 3
+beta2_prior = 2
+
+theta1 = rbeta(N, alpha1_prior, beta1_prior)
+theta2 = rbeta(N, alpha2_prior, beta2_prior)
+
+sim_prior = data.frame(theta1, theta2)
+
+ggplot(sim_prior, aes(theta1, theta2)) +
+  geom_point(color = "skyblue", alpha = 0.4) +
+  stat_ellipse(level = 0.98, color = "black", size = 2) +
+  stat_density_2d(color = "grey", size = 1) +
+  geom_abline(intercept = 0, slope = 1)
+
+ggplot(sim_prior, aes(theta1, theta2)) +
+  stat_density_2d(aes(fill = ..level..),
+                  geom = "polygon", color = "white") +
+  scale_fill_viridis_c() +
+  geom_abline(intercept = 0, slope = 1)
+
+```
+
+
+We can use simulation to approximate the prior distribution of $\theta_1 - \theta_2$.
+**PAUSE** to consider what this prior distribution says about how the survival probabilities compare with and without the band.
+
+```{r}
+
+theta_diff = theta1 - theta2
+
+hist(theta_diff,
+     freq = FALSE,
+     xlab = "Difference in survival probabilities (no band - band)",
+     main = "Prior Distribution")
+
+quantile(theta_diff, c(0.01, 0.10, 0.25, 0.75, 0.90, 0.99))
+
+```
+
+This prior distribution gives credibility to a wide range of scenarios: survival could be more likely either with or without the band, and the difference in survival probabilities could either be 0, small, or large.
+
+
+## Exercise
+
+The parameter $\theta_1-\theta_2$ compares the two survival probabilities with an absolute difference.
+For a relative difference, we can investigate $\theta_1 / \theta_2$ (often called the "relative risk").
+
+Use simulation to approximate the prior distribution of $\theta_1 / \theta_2$ and write a short sentence or two describing the prior distribution.
+(Note: you might see a few super extreme ratios that will throw of the scale, so you might consider $\log(\theta_1 / \theta_2)$ instead for plotting.)
+
+```{r}
+# Type your code here.
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+```{r}
+
+theta_ratio = theta1 / theta2
+
+hist(theta_ratio,
+     freq = FALSE,
+     xlab = "Ratio of survival probabilities (no band / band)",
+     main = "Prior Distribution")
+
+quantile(theta_ratio, c(0.01, 0.99))
+
+```
+
+This prior distribution gives credibility to a wide range of scenarios: survival could be more likely either with or without the band, and the difference in survival probabilities could either be 0, small, or large.
+Our 98% prior credible interval says probability of surviving can be anywhere from `r round(quantile(theta_ratio, c(0.01)), 2)` times as likely to `r round(quantile(theta_ratio, c(0.99)), 2)` times more likely for without bands than with.
+
+# Deriving the posterior distribution
+
+Recall the prior distribution
+
+- $\theta_1$ and $\theta_2$ are independent according to the prior
+- $\theta_1$ has a Beta(3, 2) prior distribution
+- $\theta_2$ has a Beta(3, 2) prior distribution
+
+**PAUSE** to carefully write an expression for the prior distribution.
+
+The prior distribution for $\theta_1$ satisfies
+\[
+\pi(\theta_1) \propto \theta_1^{3 - 1}(1-\theta_1)^{2-1} 
+\]
+The prior distribution for $\theta_2$ satisfies
+\[
+\pi(\theta_2) \propto \theta_2^{3 - 1}(1-\theta_2)^{2-1} 
+\]
+Since the prior assumes $\theta_1$ and $\theta_2$ are independent, the joint prior distribution for $\theta_1$ and $\theta_2$ satisfies
+\[
+\pi(\theta_1, \theta_2) = \pi(\theta_1)\pi(\theta_2) \propto \left(\theta_1^{3 - 1}(1-\theta_1)^{2-1} \right)\left(\theta_2^{3 - 1}(1-\theta_2)^{2-1} \right)
+\]
+
+Recall the sample data
+
+- Of the 50 penguins without metal bands, 31 survived this 4.5-year study period.
+- Of the 50 penguins with metal bands, 16 survived the 4.5-year study period.
+
+**PAUSE** to carefully write the likelihood function.
+Is it reasonable to assume that the two samples (50 without bands, 50 with bands) are independent?
+
+
+For the penguins without bands, the likelihood of 31 out of 50 penguins surviving is, from a Binomial likelihood,
+\[
+f(y_1 = 31 | \theta_1) \propto \theta_1^{31}(1-\theta_1)^{50-31}
+\]
+
+For the penguins with bands, the likelihood of 16 out of 50 penguins surviving is, from a Binomial likelihood,
+\[
+f(y_2 = 16 | \theta_2) \propto \theta_2^{16}(1-\theta_2)^{50-16}
+\]
+
+
+Because the penguins were randomly assigned to band/no band, it is reasonable to assume that these are two independent random samples (conditional on $\theta_1, \theta_2$).
+Therefore, the likelihood of the sample is the product of the two likelihoods above
+\[
+f(y_1 = 31, y_2 = 16 | \theta_1, \theta_2) \propto \left(\theta_1^{31}(1-\theta_1)^{50-31}\right)\left(\theta_2^{16}(1-\theta_2)^{50-16}\right)
+\]
+
+
+**PAUSE** to carefully write an expression for the posterior distribution.
+What do you notice?
+Are $\theta_1$ and $\theta_2$ independent according to the posterior distribution?
+What is the marginal posterior distribution of $\theta_1$?
+Of $\theta_2$?
+
+Posterior is proportional to the product of prior and likelihood
+
+
+\begin{align*}
+& \quad \pi(\theta_1, \theta_2 | y_1 = 31, y_2 = 16)\\
+\propto & \quad \pi(\theta_1, \theta_2) f(y_1 = 31, y_2 = 16|\theta_1, \theta_2)\\
+\propto & \quad \left[\left(\theta_1^{3 - 1}(1-\theta_1)^{2-1} \right)\left(\theta_2^{3 - 1}(1-\theta_2)^{2-1} \right)\right]\left[\left(\theta_1^{31}(1-\theta_1)^{50-31}\right)\left(\theta_2^{16}(1-\theta_2)^{50-16}\right)\right]\\
+\propto & \quad \left(\theta_1^{3 + 31 - 1}(1-\theta_1)^{2 + 50 - 31 -1} \right)\left(\theta_2^{3 + 16 - 1}(1-\theta_2)^{2 + 50 - 16 -1} \right)
+\end{align*}
+
+
+- Since the joint posterior distribution factors into two factors, one involving $\theta_1$ only and one involving $\theta_2$ only, then $\theta_1$ and $\theta_2$ are independent according to the posterior
+- The marginal posterior distribution of $\theta_1$ is Beta(3 + 31, 2 + 19).
+That is, the posterior distribution of $\theta_1$ is updated based on the data from sample 1 (no band) only as in the Beta-Binomial model.
+- The marginal posterior distribution of $\theta_2$ is Beta(3 + 16, 2 + 34).
+That is, the posterior distribution of $\theta_2$ is updated based on the data from sample 2 (band) only as in the Beta-Binomial model.
+
+```{r}
+# data
+n1 = 50
+y1 = 31
+
+n2 = 50
+y2 = 16
+
+# posterior
+alpha1 = alpha1_prior + y1
+beta1 = beta1_prior + n1 - y1
+
+alpha2 = alpha2_prior + y2
+beta2 = beta2_prior + n2 - y2
+
+theta1 = rbeta(N, alpha1, beta1)
+theta2 = rbeta(N, alpha2, beta2)
+
+sim_posterior = data.frame(theta1, theta2)
+
+# plots
+ggplot(sim_posterior, aes(theta1, theta2)) +
+  geom_point(color = "skyblue", alpha = 0.4) +
+  stat_ellipse(level = 0.98, color = "black", size = 2) +
+  stat_density_2d(color = "grey", size = 1) +
+  geom_abline(intercept = 0, slope = 1)
+
+ggplot(sim_posterior, aes(theta1, theta2)) +
+  stat_density_2d(aes(fill = ..level..),
+                  geom = "polygon", color = "white") +
+  scale_fill_viridis_c() +
+  geom_abline(intercept = 0, slope = 1)
+
+```
+
+
+# Comparing proportions
+
+Once we have the posterior distribution of $(\theta_1, \theta_2)$ pairs, we can find the posterior distribution of any transformations of these parameters.
+
+We can approximate the posterior distribution of $\theta_1-\theta_2$ by simulating $(\theta_1, \theta_2)$ pairs from the joint posterior distribution and then finding the difference $\theta_1-\theta_2$ for each pair.
+Because $\theta_1$ and $\theta_2$ are independent in the posterior, we can simulate $(\theta_1, \theta_2)$ pairs by simulating $\theta_1$ and $\theta_2$ independently.
+
+```{r}
+theta_diff = theta1 - theta2
+
+hist(theta_diff,
+     freq = FALSE,
+     xlab = "Difference in survival probabilities (no band - band)",
+     main = "Posterior Distribution")
+
+```
+
+## Exercises
+
+Compute and interpret the posterior probability that $\theta_1 > \theta_2$.
+
+
+```{r}
+# Type your code here
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+```{r}
+sum(theta_diff > 0) / length(theta_diff)
+```
+
+There is posterior probability of `r round(100 * sum(theta_diff > 0) / length(theta_diff), 1)` percent that penguins without bands are more likely to survive than those with bands. 
+
+Compute and interpret posterior central 50%, 80%, and 98% credible intervals for $\theta_1 - \theta_2$
+
+```{r}
+# Type your code here
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+```{r}
+quantile(theta_diff, c(0.01, 0.10, 0.25, 0.75, 0.90, 0.99))
+```
+
+- There is posterior probability of 50% that the probability of surviving is between `r round(quantile(theta_diff, c(0.25)), 2)` and `r round(quantile(theta_diff, c(0.75)), 2)` greater for penguins without bands than with bands. It is equally plausible that the difference in survival probabilities is inside this interval than outside.
+- There is posterior probability of 80% that the probability of surviving is between `r round(quantile(theta_diff, c(0.10)), 2)` and `r round(quantile(theta_diff, c(0.90)), 2)` greater for penguins without bands than with bands. It is four times more plausible that the difference in survival probabilities is inside this interval than outside.
+- There is posterior probability of 98% that the probability of surviving is between `r round(quantile(theta_diff, c(0.01)), 2)` and `r round(quantile(theta_diff, c(0.99)), 2)` greater for penguins without bands than with bands. It is 49 times more plausible that the difference in survival probabilities is inside this interval than outside.
+
+
+
+Use simulation to approximate the posterior distribution of $\theta_1/\theta_2$.
+
+```{r}
+# Type your code here
+```
+
+```{r}
+theta_ratio = theta1 / theta2
+
+hist(theta_ratio,
+     freq = FALSE,
+     xlab = "Ratio survival probabilities (no band / band)",
+     main = "Posterior Distribution")
+
+```
+
+
+Compute and interpret posterior central 50%, 80%, and 98% credible intervals for $\theta_1 /\theta_2$.
+
+```{r}
+# Type your code here
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+```{r}
+quantile(theta_ratio, c(0.01, 0.10, 0.25, 0.75, 0.90, 0.99))
+```
+
+- There is posterior probability of 50% that the probability of surviving is between `r round(quantile(theta_ratio, c(0.25)), 2)` and `r round(quantile(theta_ratio, c(0.75)), 2)` *times* greater for penguins without bands than with bands. It is equally plausible that the ratio of survival probabilities is inside this interval than outside.
+- There is posterior probability of 80% that the probability of surviving is between `r round(quantile(theta_ratio, c(0.10)), 2)` and `r round(quantile(theta_ratio, c(0.90)), 2)` *times* greater for penguins without bands than with bands. It is four times more plausible that the ratio of survival probabilities is inside this interval than outside.
+- There is posterior probability of 98% that the probability of surviving is between `r round(quantile(theta_ratio, c(0.01)), 2)` and `r round(quantile(theta_ratio, c(0.99)), 2)` *times* greater for penguins without bands than with bands. It is four times more plausible that the ratio of survival probabilities is inside this interval than outside.
+
+
+
+
+# A few notes about independence
+
+- It is typical to assume *independence in the data*, e.g., independence of values of the measured variables within and between samples (conditional on the parameters).
+    - Whether independence in the data is a reasonable assumption depends on *how the data is collected*.
+- But whether it is reasonable to assume *independence of parameters* is a completely separate question and is dependent upon our subjective beliefs about any relationships between parameters.
+- When there are multiple parameters and
+    - there is independence between parameters in the prior
+    - and independence in the data (e.g., independently selected samples)
+    - then there will be independence between parameters in the posterior
+    - so the posterior distribution of each parameter can be updated separately as in a one parameter model.
+
+# Prior dependence
+
+We might wish to assume some prior dependence between parameters.
+In this example, while there could be differences in survival probability due to bands, knowing the survival probability with the band tells us *something* about the survival probability without the band (and vice versa).
+Furthermore, if we wanted a prior that reflects a prior belief in "no difference" then we would want a prior correlation between $\theta_1$ and $\theta_2$.
+With the independent prior, and same prior means, the average difference was 0, but there was wide variability about that average.
+
+Constructing a prior distribution in which the marginal distributions are Beta but there is dependence is difficult.
+Instead, we'll try an easier way to introduce correlation.
+
+Bivariate Normal distributions are commonly used as joint distributions for two random variables.
+We'll assume a Bivariate Normal distribution for $\theta_1$ and $\theta_2$ with
+
+- prior mean of 0.6 and prior SD of 0.2 for $\theta_1$ (similar mean and SD as the Beta(3, 2) prior)
+- prior mean of 0.6 and prior SD of 0.2 for $\theta_2$ (similar mean and SD as the Beta(3, 2) prior)
+- prior correlation of 0.7 between $\theta_1$ and $\theta_2$.
+
+Note: Normal distributions are not the most natural in this example since $\theta_1$ and $\theta_2$ can only take values between 0 and 1.
+We could truncate the Bivariate Normal prior to assign plausibility only to pairs in (0, 1).
+But we're primarily interested in the posterior, and the likelihood will handle zero-ing out the posterior for $\theta$ values outside of (0, 1).
+So we'll leave the Bivariate Normal prior as is for simplicity.
+
+The following code simulates $(\theta_1, \theta_2)$ pairs from the joint prior distribution.
+(The function `mvrnorm` in the `MASS` package can be used to simulate values from a Multivariate Normal distribution.
+The inputs are a mean vector, and a covariance matrix.)
+
+```{r}
+
+prior_mean <- c(0.6, 0.6)
+prior_sd <- c(0.2, 0.2)
+prior_corr <- 0.7
+
+prior_cov <- matrix(c(prior_sd[1] ^ 2,
+              prior_corr * prior_sd[1] * prior_sd[2],
+              prior_corr * prior_sd[1] * prior_sd[2],
+              prior_sd[2] ^ 2), nrow = 2)
+
+library(MASS)
+
+sim_prior = data.frame(mvrnorm(N, prior_mean, prior_cov))
+names(sim_prior) = c("theta1", "theta2")
+
+ggplot(sim_prior, aes(theta1, theta2)) +
+  geom_point(color = "skyblue", alpha = 0.4) +
+  stat_ellipse(level = 0.98, color = "black", size = 2) +
+  stat_density_2d(color = "grey", size = 1) +
+  geom_abline(intercept = 0, slope = 1)
+
+ggplot(sim_prior, aes(theta1, theta2)) +
+  stat_density_2d(aes(fill = ..level..),
+                  geom = "polygon", color = "white") +
+  scale_fill_viridis_c() +
+  geom_abline(intercept = 0, slope = 1)
+
+```
+
+
+## Exercises
+
+
+Use simulation to approximate the prior distribution of $\theta_1-\theta_2$.
+How does this distribution compare to the one for the independent prior?
+
+
+```{r}
+# Type your code here
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+```{r}
+
+theta_diff = sim_prior$theta1 - sim_prior$theta2
+
+hist(theta_diff,
+     freq = FALSE,
+     xlab = "Difference in survival probabilities (no band - band)",
+     main = "Prior Distribution")
+
+quantile(theta_diff, c(0.01, 0.10, 0.25, 0.75, 0.90, 0.99))
+
+```
+
+
+Compute prior central 50%, 80%, and 98% credible intervals for $\theta_1 - \theta_2$.
+How do the credible intervals compare to the ones for the independent prior?
+
+```{r}
+# Type your code here
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+The prior distribution still gives credibility to a fairly wide range of values, but not as wide as for the independent prior.
+The credible intervals based on the dependent prior are all narrower than those based on the dependent prior, reflecting a stronger prior belief towards "no difference".
+
+
+
+Use simulation to approximate the prior distribution of $\theta_1/\theta_2$.
+How does this distribution compare to the one for the independent prior?
+
+```{r}
+# Type your code here
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+```{r}
+
+theta_ratio = sim_prior$theta1 / sim_prior$theta2
+
+hist(theta_ratio,
+     freq = FALSE,
+     xlab = "Ratio of survival probabilities (no band / band)",
+     main = "Prior Distribution")
+
+quantile(theta_ratio, c(0.01, 0.10, 0.25, 0.75, 0.90, 0.99))
+
+```
+
+Compute and interpret prior central 50%, 80%, and 98% credible intervals for $\theta_1 /\theta_2$.
+How do the credible intervals compare to the ones for the independent prior?
+
+```{r}
+# Type your code here
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+Similar comments as for the difference.
+
+
+Which prior distribution --- independent or dependent --- represents a stronger prior belief in "no difference"?
+
+**TYPE YOUR RESPONSE HERE.**
+
+Dependent prior represents a stronger prior belief in "no difference".
+
+
+# Posterior distribution in JAGS
+
+We'll assume the dependent prior from the previous section and the same sample data as before.
+
+**Exercise.**
+Describe in detail how you would use naive simulation (not JAGS or MCMC) to approximate the joint posterior distribution of $(\theta_1, \theta_2)$.
+In particular, how would you use simulation to approximate the posterior probability that $\theta_1 > \theta_2$?
+
+**TYPE YOUR RESPONSE HERE.**
+
+- Simulate a pair $(\theta_1, \theta_2)$ from the joint prior distribution.
+- Given $\theta_1$, simulate $y_1$ from a Binomial(50, $\theta_1$) distribution
+- Given $\theta_2$, simulate $y_2$ from a Binomial(50, $\theta_2$) distribution
+- Repeat many times to generate many repetitions of $(\theta_1, \theta_2, y_1, y_2)$.
+- Discard the repetitions for which either $y_1$ is not 31 or $y_2$ is not 16.
+- Summarize the $(\theta_1, \theta_2)$ pairs for the remaining repetitions to approximate the joint posterior distribution.
+- Among the remaining repetitions, count the repetitions for $\theta_1>\theta_$ and divide by the number of non-discarded repetitions to approximate the posterior probability that $\theta_1$ is greater than $\theta_2$
+
+
+The following JAGS code uses simulation to approximate the joint posterior distribution of $(\theta_1, \theta_2)$.
+The syntax is tricky, so don't worry about the details yet.
+Later we'll cover other examples that have similar syntax, in more common situations (e.g. regression, hierarchical models).
+Just know that JAGS is carrying out the simulation you described in the previous exercise in an efficient way.
+(Some notes about similar syntax for comparing two means are near the end of [Chapter 16](https://bookdown.org/kevin_davisross/bayesian-reasoning-and-methods/two-samples.html).)
+
+
+
+```{r}
+
+# data
+n_groups = 2
+
+y = c(31, 16)
+n = c(50, 50)
+
+# model: likelihood and prior
+
+model_string <- "model{
+
+  # Likelihood
+  for (g in 1:n_groups){
+      y[g] ~ dbinom(theta[g], n[g])
+  }
+
+  # Prior
+  theta[1:n_groups] ~ dmnorm.vcov(prior_mean[1:n_groups],
+                                  prior_cov[1:n_groups, 1:n_groups])
+
+}"
+
+# pass inputs to JAGS
+dataList = list(y = y,
+                n = n,
+                n_groups = n_groups,
+                prior_mean = prior_mean,
+                prior_cov = prior_cov)
+
+# Compile
+model <- jags.model(textConnection(model_string),
+                data = dataList,
+                n.chains = 5)
+
+update(model, 1000, progress.bar = "none")
+
+Nrep = 10000
+
+posterior_sample <- coda.samples(model,
+                             variable.names = c("theta"),
+                             n.iter = Nrep,
+                             progress.bar = "none")
+
+# Summarize and check diagnostics
+summary(posterior_sample)
+```
+
+The following code extracts the JAGS output as a data.frame/matrix.
+
+```{r}
+sim_posterior = data.frame(as.matrix(posterior_sample))
+names(sim_posterior) = c("theta1", "theta2")
+
+head(sim_posterior, 10) %>%
+  kable(digits = 5)
+```
+
+The following plots the joint posterior distribution of $(\theta_1, \theta_2)$
+
+```{r}
+
+
+ggplot(sim_posterior, aes(theta1, theta2)) +
+  geom_point(color = "skyblue", alpha = 0.4) +
+  stat_ellipse(level = 0.98, color = "black", size = 2) +
+  stat_density_2d(color = "grey", size = 1) +
+  geom_abline(intercept = 0, slope = 1)
+
+ggplot(sim_posterior, aes(theta1, theta2)) +
+  stat_density_2d(aes(fill = ..level..),
+              geom = "polygon", color = "white") +
+ scale_fill_viridis_c() +
+  geom_abline(intercept = 0, slope = 1)
+
+```
+
+## Exercises
+
+Be sure you don't miss the "how would you simulate the posterior distribution" exercise at the start of this section!
+
+Compute and interpret the posterior probability that $\theta_1 > \theta_2$.
+How does it compare to the posterior probability for the independent prior?
+
+
+```{r}
+# Type your code here
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+```{r}
+sum(sim_posterior$theta1 > sim_posterior$theta2) / nrow(sim_posterior)
+```
+
+Pretty close to 100% credibility that penguins are more likely to survive without the band than with.
+
+
+Use simulation to approximate the posterior distribution of $\theta_1-\theta_2$.
+How does this distribution compare to the one for the independent prior?
+
+
+```{r}
+# Type your code here
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+```{r}
+theta_diff = sim_posterior$theta1 - sim_posterior$theta2
+
+hist(theta_diff,
+     freq = FALSE,
+     xlab = "Difference of survival probabilities (no band - band)",
+     main = "Posterior Distribution")
+
+```
+
+
+Pretty similar to the posterior based on the independent prior, but with a little less credibility on the largest differences.
+
+
+Compute posterior central 50%, 80%, and 98% credible intervals for $\theta_1 - \theta_2$.
+How do the credible intervals compare to the ones for the independent prior?
+
+```{r}
+# Type your code here
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+```{r}
+quantile(theta_diff, c(0.01, 0.10, 0.25, 0.75, 0.90, 0.99))
+```
+
+Pretty similar to the posterior based on the independent prior, but with a little less credibility on the largest differences.
+
+
+Use simulation to approximate the posterior distribution of $\theta_1/\theta_2$.
+How does this distribution compare to the one for the independent prior?
+
+```{r}
+# Type your code here
+```
+
+```{r}
+theta_ratio = sim_posterior$theta1 / sim_posterior$theta2
+
+hist(theta_ratio,
+     freq = FALSE,
+     xlab = "Ratio survival probabilities (no band / band)",
+     main = "Posterior Distribution")
+
+```
+
+
+Compute and interpret posterior central 50%, 80%, and 98% credible intervals for $\theta_1 /\theta_2$.
+How do the credible intervals compare to the ones for the independent prior?
+
+```{r}
+# Type your code here
+```
+
+
+```{r}
+quantile(theta_ratio, c(0.01, 0.10, 0.25, 0.75, 0.90, 0.99))
+```
+
+Pretty similar to the posterior based on the independent prior.
+
+
+# Conclusions
+
+Is there evidence that penguins with metal bands are more likely to die than those without?
+Can we conclude that the bands are the *cause* of any difference in survival probabilities?
+Write a few sentences summarizing your analysis and reporting conclusions in context.
+Be sure to support you conclusions with appropriate values reported in context.
+
+**TYPE YOUR RESPONSE HERE.**
+
+- Yes, there is a high posterior probability that penguins with metal bands are more likely to die than those without.
+- Yes, because the penguins were randomly assigned to have a band or not, we can conclude that the metal bands are the cause of the difference in survival probabilities.
+
+
+
+
+# Reflection
+
+1. Write a few sentences summarizing one important concept you have learned in this lab
+1. What is (at least) one question that you still have?
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+

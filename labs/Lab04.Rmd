@@ -1,0 +1,206 @@
+---
+title: "STAT 415 Lab 4"
+author: "TYPE YOUR NAMES HERE"
+date: ''
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+  pdf_document: default
+---
+
+
+
+
+# Introduction
+
+**You should start by reading [Section 10](https://bookdown.org/kevin_davisross/bayesian-reasoning-and-methods/jags.html) of the textbook.**
+
+All of Bayesian inference is based on the posterior distribution of parameters given sample data.
+Therefore, the main computational task in a Bayesian analysis is computing, or approximating, the posterior distribution.
+We have seen three ways to compute/approximate the posterior distribution
+
+- Math. Only works in a few special cases (e.g., Beta-Binomial, Normal-Normal, conjugate prior situations).
+- Grid approximation. Not feasible when they are many parameters.
+- Simulation. By far the most common method (though we have only seen a very naive approach so far)
+
+In principle, the posterior distribution $\pi(\theta|y)$ of parameters $\theta$ given observed data $y$ can be found by
+
+- simulating many $\theta$ values from the prior distribution
+- simulating, for each simulated value of $\theta$, a $Y$ value from the corresponding conditional distribution of $Y$ given $\theta$ ($Y$ could be a sample or the value of a sample statistic)
+- discarding $(\theta, Y)$ pairs for which the simulated $Y$ value is not equal to the observed $y$ value
+- Summarizing the simulated $\theta$ values for the remaining pairs with $Y=y$.
+
+However, this is a very computationally inefficient way of approximating the posterior distribution.
+Unless the sample size is really small, the simulated sample statistic $Y$ will only match the observed $y$ value in relatively few samples, simply because in large samples there are just many more possibilities.
+For example, in 1000 flips of a fair coin, the most likely value of the number of heads is 500, but the probability of *exactly* 500 heads in 1000 flips is only 0.025.  When there are many possibilities, the probability gets stretched fairly thin.  Therefore, if we want say 10000 simulated values of $\theta$ given $y$, we would have first simulate many, many more values.
+
+The situation is even more extreme when the data is continuous, where the probably of replicating the observed sample is essentially 0.
+
+
+Therefore, we need more efficient simulation algorithms for approximating posterior distributions. **Markov chain Monte Carlo (MCMC)** methods provide powerful and widely applicable algorithms for simulating from probability distributions, including complex and high-dimensional distributions.
+These algorithms include Metropolis-Hastings, Gibbs sampling, Hamiltonian Monte Carlo, among others.
+We will see later some of the ideas behind MCMC algorithms.
+However, we will rely on the software package JAGS to carry out MCMC simulations.
+
+JAGS ("Just Another Gibbs Sampler") is a stand alone program for performing MCMC simulations.
+JAGS takes as input a Bayesian model description --- prior plus likelihood --- and data and returns an MCMC sample from the posterior distribution.
+JAGS uses a combination of Metropolis sampling, Gibbs sampling, and other MCMC algorithms.   
+
+
+This lab gets you started with the JAGS software.
+You will be coding in JAGS examples that we have already seen so that you can compare JAGS output with results from the other methods (math, grid approximation.)
+
+The purpose of this lab is to just get you up and running with JAGS.
+We will talk a little bit more about how MCMC works later.
+
+# Instructions
+
+This RMarkdown file provides a template for you to fill in.
+**Read the file from start to finish, completing the parts as indicated.**
+**Some code is provided for you. Be sure to run this code, and make sure you understand what it's doing.**
+Some blank "code chunks" are provided; you are welcome to add more (Code > Insert chunk or CTRL-ALT-I) as needed.
+There are also a few places where you should type text responses.
+Feel free to add additional text responses as necessary.
+
+You can run individual code chunks using the play button.
+You can use objects defined in one chunk in others.
+Just keep in mind that chunks are evaluated in order.
+So if you call something x in one chunk, but redefine x as something else in another chunk, it's essential that you evaluate the chunks in the proper order.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+When you are finished
+
+- click **Knit** and check to make sure that you have no errors and everything runs properly. (Fix any problems and redo this step until it works.)
+- Make sure your type your name(s) at the top of the notebook where it says "Type your name(s) here". If you worked in a team, you will submit a single notebook with both names; make sure both names are included
+- Submit your completed files in Canvas.
+
+You'll need a few R packages, which you can install using `install.packages`
+
+```{r, warning = FALSE, message = FALSE}
+
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(janitor)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+
+```
+
+
+# Install JAGS
+
+**JAGS is a standalone software program that you need to download and install *outside of R*.**
+Install JAGS using [Step 3 of these instructions](https://sites.google.com/site/doingbayesiandataanalysis/software-installation).
+
+# Install rjags
+
+JAGS is a separate program that must be installed outside of R.
+However, we will only interface with JAGS through R/RStudio.
+To do this, you will need to install the `rjags` package in R: `install.packages("rjags")`.
+
+You should also install the `bayesplot` package.
+
+```{r}
+# you'll need to install the packages first
+# install.packages("rjags")
+# install.packages("bayesplot")
+
+library(rjags)
+library(bayesplot)
+
+```
+
+
+# Introduction to JAGS
+
+**Read [Section 10.1](https://bookdown.org/kevin_davisross/bayesian-reasoning-and-methods/introduction-to-jags.html) of the textbook** for a brief introduction to JAGS.
+
+# Exercise: left/right eye and hand dominance
+
+In Lab 1, you used simulation to approximate a posterior distribution.
+Now you will use JAGS to conduct a similar but much more computationally efficient simulation.
+
+Suppose you're interested in $\theta$, the population proportion of Cal Poly students whose [dominant eye](https://www.allaboutvision.com/resources/dominant-eye-test.htm) (right or left) is the same same as their dominant hand (right or left).
+
+Assume a Beta(2, 1) prior for $\theta$.
+(This is similar to the prior used in parts 3-6 of Lab 1.)
+
+
+In a sample of 36 students, 29 students have the same dominant right eye and right hand. (This is based on my STAT 217 class in Fall 2021, but you can assume it’s a random sample.)
+
+**To do:**
+
+1. Code and run the model in JAGS, and produce summaries of the posterior distribution of $\theta$ given the sample data.
+1. Compare to the results from Lab 1.
+Is the JAGS output reasonably consistent with the previous results?
+
+Hints:
+
+- You should be able to follow the code in [Section 10.1](https://bookdown.org/kevin_davisross/bayesian-reasoning-and-methods/introduction-to-jags.html#loading-data-as-individual-values-rather-than-summary-statistics) pretty closely.
+- The main output of JAGS will be values simulated from the posterior distribution.
+You can experiment with different ways of summarizing them (bayesplot, DBDA2E functions, creating your own plots/summaries).
+But your summaries should include the usual: plot, posterior mean, posterior SD, posterior credible intervals.
+
+# Exercise: body temperatures
+
+You'll use JAGS to perform a Bayesian analysis of the body temperature problem from Lab 3.
+Recall the assumptions:
+
+- body temperatures (degrees Fahrenheit) of *healthy adult humans* follow a Normal distribution with unknown mean $\theta$ and known standard deviation $\sigma=1$.
+- the prior distribution of $\theta$ is a Normal distribution with mean 98.6 and standard deviation 0.3 (degrees Fahrenheit).
+
+In a recent study^[[Source](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6258625/) and a [related article](https://www.scientificamerican.com/article/are-human-body-temperatures-cooling-down/).], the sample mean body temperature in a sample of 208 healthy adults was 97.7 degrees F.
+Here is the sample data on 208 temperature measurements.
+Notice that the sample mean is 97.7 and the sample SD is 1 (consistent with the assumed population SD of $\sigma = 1$.)
+
+```{r}
+
+data = read.csv("temperature.csv")
+y = data$temperature
+
+hist(y, freq = FALSE)
+summary(y)
+sd(y)
+
+n = length(y)
+ybar = mean(y)
+
+```
+
+**To do:**
+
+1. Code and run the model in JAGS, and produce summaries of the posterior distribution of $\theta$ given the sample data.
+1. Use simulation to approximate the posterior predictive distribution of body temperatures.
+1. Compare to the results from Lab 3.
+Is the JAGS output reasonably consistent with the previous results?
+
+Hints:
+
+- The data consists of 208 individual temperature measurements, so make sure you read [Section 10.1.7](https://bookdown.org/kevin_davisross/bayesian-reasoning-and-methods/introduction-to-jags.html#loading-data-as-individual-values-rather-than-summary-statistics) on loading data as individual values.
+- Also make sure the likelihood reflects the data, i.e., individual values.
+- The JAGS code in the textbook is for Beta-Binomial types models.
+The main modifications to the JAGS code will be to implement a Normal-Normal type model.
+But you might need to make other small modifications.
+- The main output of JAGS will be values simulated from the posterior distribution.
+You can experiment with different ways of summarizing them (bayesplot, DBDA2E functions, creating your own plots/summaries).
+But your summaries should include the usual: plot, posterior mean, posterior SD, posterior credible intervals.
+- JAGS simulates values of $\theta$ from the posterior distribution. Once you have these values, you can run posterior predictive simulation as usual.
+That is, if you think of posterior predictive simulation as a two-stage process, then JAGS takes care of the first stage for you.
+
+
+
+
+# Reflection
+
+1. Write a few sentences summarizing one important concept you have learned in this lab
+1. What is (at least) one question that you still have?
+
+**TYPE YOUR RESPONSE HERE.**
+

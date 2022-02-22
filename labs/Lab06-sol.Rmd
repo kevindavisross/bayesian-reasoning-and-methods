@@ -1,0 +1,1120 @@
+---
+title: "STAT 415 Lab 6: Bayesian Analysis of Rates"
+author: "TYPE YOUR NAMES HERE"
+date: ''
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+  pdf_document: default
+---
+
+
+
+
+# Introduction
+
+
+Poisson distributions are often used to model the number of "relatively rare" events that occur over a certain interval of time.
+In a Poisson distribution situation, the length of the time interval is fixed, e.g., earthquakes in *an hour*, births in *a day*, accidents in *a week*, home runs in *a baseball game*.
+Given data on time intervals of this fixed length, we measure the *number* of events that happen in each interval
+
+Now we will estimate the *rate* at which events happen by measuring the *time* that elapses between events.
+*Exponential distributions* are often used to model waiting times between "relatively rare" events that occur over time.
+
+
+
+# Instructions
+
+This RMarkdown file provides a template for you to fill in.
+**Read the file from start to finish, completing the parts as indicated.**
+**Some code is provided for you. Be sure to run this code, and make sure you understand what it's doing.**
+In particular, mind the **PAUSE**s; be sure to **PAUSE** and think about these questions before proceeding.
+
+
+Some blank "code chunks" are provided; you are welcome to add more (Code > Insert chunk or CTRL-ALT-I) as needed.
+There are also a few places where you should type text responses.
+Feel free to add additional text responses as necessary.
+
+
+You can run individual code chunks using the play button.
+You can use objects defined in one chunk in others.
+Just keep in mind that chunks are evaluated in order.
+So if you call something x in one chunk, but redefine x as something else in another chunk, it's essential that you evaluate the chunks in the proper order.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+When you are finished
+
+- click **Knit** and check to make sure that you have no errors and everything runs properly. (Fix any problems and redo this step until it works.)
+- Make sure your type your name(s) at the top of the notebook where it says "Type your name(s) here". If you worked in a team, you will submit a single notebook with both names; make sure both names are included
+- Submit your completed files in Canvas.
+
+You'll need a few R packages, which you can install using `install.packages`
+
+```{r, warning = FALSE, message = FALSE}
+
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(janitor)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+
+```
+
+
+# Exponential distributions
+
+An Exponential distribution is a special case of a Gamma distribution with shape parameter $\alpha=1$.
+A continuous RV $Y$ has an **Exponential distribution** with *rate parameter*^[Sometimes Exponential densities are parametrized in terms of the *scale parameter* $1/\theta$, so that the mean is $\theta$.] $\theta>0$ if its density satisfies
+\begin{align*}
+f(y|\theta) & = \theta e^{-\theta y}, \qquad y>0.
+\end{align*}
+
+In R: `dexp(y, rate)` for density, `rexp` to simulate, `qexp` for quantiles, etc.
+
+The rate parameter $\theta$ will be the parameter of interest in Bayesian analysis of data on waiting times from an Exponential distribution (i.e., Exponential likelihood).
+
+
+
+It can be shown that an Exponential($\theta$) density has
+\begin{align*}
+\text{Mean (EV)} & = \frac{1}{\theta}\\
+\text{Variance} & = \frac{1}{\theta^2}
+\\
+\text{Mode} & = 0,\\
+\text{Median} & = \frac{\log(2)}{\theta} \approx \frac{0.693}{\theta}
+\end{align*}
+
+Exponential distributions are often used to model waiting times between events. Data values are measured in units of time, e.g., minutes, hours, etc.
+
+- $\theta$ is the *rate* at which events occur over time (e.g., 2 *per hour* on average)
+- $1/\theta$ is the *mean* time between events (e.g., 1/2 *hour* on average)
+
+
+Exponential distributions have many nice properties, including the following.
+
+**Cumulative waiting time follows a Gamma distribution.** If $Y_1$ and $Y_2$ are independent, $Y_1$ has an Exponential($\theta$) distribution,  and $Y_2$ has an Exponential($\theta$) distribution, then $Y_1+Y_2$ has a Gamma distribution^[This result is a special case of the following. If $Y_1$ and $Y_2$ are independent, $Y_1$ has a Gamma($\alpha_1$, $\theta$) distribution,  and $Y_2$ has a Gamma($\alpha_2$, $\theta$) distribution, then $Y_1+Y_2$ has a Gamma distribution with shape parameter $\alpha_1+\alpha_2$ and rate parameter $\theta$. The rate parameters must be the same, for otherwise the variables would be on different scales (e.g., minutes versus hours) and it wouldn't make sense to add them.] with shape parameter 2 and rate parameter $\theta$.
+For example, if $Y_1$ represents the waiting time until the first event, and $Y_2$ represents the *additional* waiting time until the second event, then $Y_1+Y_2$ is the total waiting time until 2 events occurs, and $Y_1+Y_2$ follows a Gamma(2, $\theta$) distribution.
+This result extends naturally to more than two events.
+If $Y_1, Y_2, \ldots, Y_n$ are independent, each with an Exponential($\theta$) distribution, then $(Y_1+\cdots +Y_n)$ follows a Gamma($n$, $\theta$) distribution.
+Including the normalizing constant, the Gamma($n$, $\theta$) density is
+\[
+f(y|\theta) = \frac{\theta^n}{(n-1)!}y^{n - 1}e^{-\theta y}, \qquad y>0
+\]
+
+**Time rescaling.** If $Y$ has an Exponential distribution with rate parameter $\theta$ and $c>0$ is a constant, then $cY$ has an Exponential distribution with rate parameter $\theta/c$. For example, if $Y$ is measured in hours with rate 2 per hour (and mean 1/2 hour), then $60Y$ is measured in minutes with rate 2/60 per minute (and mean 60/2 minutes).
+
+
+# Earthquake times
+
+Suppose that times (measured in hours, including fractions of an hour) between earthquakes of any magnitude in Southern California follow an Exponential distribution with rate parameter $\theta$.
+We wish to estimate the rate at which earthquakes occur $\theta$, that is, the average number of earthquakes per hour. 
+
+
+Before proceeding, **PAUSE** to sketch/describe your prior distribution for $\theta$ and describe its features.
+What are the possible values of $\theta$?
+Does $\theta$ take values on a discrete or continuous scale?
+
+
+
+# Discrete prior
+
+As usual, we'll start with a discrete prior for $\theta$ to illustrate ideas.
+
+| $\theta$          | 0.25 | 0.50 | 0.75 | 1.00 | 1.25 |
+|-------------------|-----:|-----:|-----:|-----:|-----:|
+| Prior probability | 0.04 | 0.16 | 0.25 | 0.29 | 0.26 |
+
+Suppose a single earthquake with a waiting time of 3.2 hours is observed. Determine the likelihood column of the Bayes table.
+Find the posterior distribution of $\theta$.
+For what values of $\theta$ is the posterior probability greater than the prior probability?
+Why?
+**PAUSE** to answer these questions before proceeding.
+
+The likelihood is the Exponential($\theta$) density evaluated at $y=3.2$, computed for each value of $\theta$.
+\[
+f(y=3.2|\theta) = \theta e^{-3.2\theta}
+\]
+
+For example, the likelihood of $y=3.2$ when $\theta=0.25$ is $0.25 e^{-3.2(0.25)}=0.11$.
+As always posterior is proportional to the product of prior and likelihood.
+Remember that $\theta$ represents the *rate*, so smaller values of $\theta$ correspond to longer average wait times.
+Observing a wait time of 3.2 places greater probability on $\theta = 0.25$ (mean wait of 4 hours) and $\theta=0.5$ (mean wait of 2 hours) relative to prior.
+
+```{r, echo = TRUE}
+
+theta = seq(0.25, 1.25, 0.25)
+
+# prior
+prior = c(0.04, 0.16, 0.25, 0.29, 0.26)
+prior = prior / sum(prior)
+
+# data
+n = 1 # sample size
+y = 3.2 # sample mean 
+
+# likelihood, using Exponential
+likelihood = dexp(y, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+kable(bayes_table, digits = 4, align = 'r')
+
+```
+
+
+## Exercises
+
+Now suppose a second wait time of 1.6 hours is observed, independently of the first.
+Find the posterior distribution of $\theta$ after observing these two wait times, using the posterior distribution from the previous part as the prior distribution in this part. 
+For what values of $\theta$ is the posterior probability greater than the prior probability?
+Why?
+
+```{r}
+# Type your code here.
+```
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+The likelihood is the Exponential($\theta$) density evaluated at $y=1.6$, computed for each value of $\theta$.
+\[
+f(y=1.6|\theta) = \theta e^{-1.6\theta}
+\]
+
+For example, the likelihood of $y=1.6$ when $\theta=0.25$ is $0.25 e^{-1.6(0.25)}=0.168$. As always posterior is proportional to the product of prior and likelihood. The posterior distribution after these two earthquakes is similar to the posterior after the first earthquake, though the SD is a little smaller.
+
+```{r, echo = TRUE}
+# prior
+prior = posterior
+
+# data
+n = 1 # sample size
+y = 1.6 # sample mean 
+
+# likelihood, using binomial
+likelihood = dexp(y, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+kable(bayes_table, digits = 4, align = 'r')
+
+
+
+```
+
+
+Now consider the original prior again.
+Suppose that instead of observing the two individual values, we only observe that there is a total of wait time of 4.8 hours for 2 earthquakes.
+Find the posterior distribution of $\theta$.
+In particular, how do you determine the likelihood column?
+How does the likelihood column compare to the one from the previous part?
+How does posterior compare to the previous part?
+
+```{r}
+# Type your code here.
+```
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+
+
+By the Gamma property of cumulative times, the total time until 2 earthquakes follows a Gamma distribution with shape parameter 2 and rate parameter $\theta$.
+The likelihood is the *Gamma* density evaluated at a value of 4.8 (total wait time for 2 earthquakes) computed for each value of $\theta$.
+\begin{align*}
+f(\bar{y}=4.8/2|\theta) & = \frac{\theta^2}{(2-1)!}{4.8}^{2-1}e^{-4.8\theta}\\
+& \propto \theta^2 e^{-4.8\theta}
+\end{align*}
+
+For example, the likelihood for $\theta=0.25$ is $\frac{0.25^2}{(2-1)!}{4.8}^{2-1}e^{-4.8(0.25)} = 0.09$.
+The likelihood is not the same as in the previous part because there are more samples of size two that yield a total wait time of 4.8 hours than those that yield a pair of wait times of 3.2 and 1.6.
+However, the likelihoods are *proportionally* the same.
+For example, the likelihood for $\theta=1.00$ is about 2.12 times greater than the likelihood for $\theta = 1.25$ in both this part and the previous part.
+Therefore, the posterior distribution is the same as in the previous part.
+    
+```{r, echo = TRUE}
+theta = seq(0.25, 1.25, 0.25)
+
+# prior
+prior = c(0.04, 0.16, 0.25, 0.29, 0.26)
+prior = prior / sum(prior)
+
+# data
+n = 2 # sample size
+y = (3.2 + 1.6) / 2 # sample mean 
+
+# likelihood
+likelihood = dgamma(n* y, shape = n, rate = theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+kable(bayes_table, digits = 4, align = 'r')
+
+```
+
+
+
+# Grid approximation
+
+Now let's consider a continuous Gamma(4, 3) prior distribution for $\theta$.
+**PAUSE** to consider how you can use grid approximation to compute the posterior distribution of $\theta$ given a single wait time of 3.2 hours.
+(Note: you will need to cut the grid off at some point.
+While $\theta$ can take any value greater than 0, the interval [0, 5] accounts for 99.98% of the prior probability.)
+
+
+Create a discrete grid of possible values of $\theta$, say 0, 0.001, 0.002, ...
+For each value of $\theta$ in the grid compute the prior density according to the Gamma(4, 3) distribution
+\[
+\pi(\theta) \propto \theta^{4 -1}e^{-3\theta}, \qquad \theta > 0
+\]
+The likelihood is the Exponential($\theta$) density evaluated at $y=3.2$, computed for each value of $\theta$ in the grid.
+\[
+f(y=3.2|\theta) = \theta e^{-3.2\theta}
+\]
+The likelihood is maximized at the observed sample rate of 1/3.2 = 0.3125 earthquakes per hour.
+
+Here is a plot of prior, (scaled) likelihood, and posterior.
+The prior mean wait time is $4/3 = 1.33$ hours.
+Observing a wait time of 3.2 hours pushes density towards smaller values of $\theta$.
+Roughly, because the observed wait time was smaller than the prior mean wait time, we now think earthquakes occur less frequently than we did prior to observing data.
+
+```{r}
+
+theta = seq(0, 5, 0.001)
+# prior
+
+prior = dgamma(theta, shape = 4, rate = 3)
+prior = prior / sum(prior)
+
+# data
+n = 1 # sample size
+y = 3.2 # sample mean
+
+# likelihood
+likelihood = dexp(y, theta)
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+xlim = range(theta)
+plot(theta, prior, type='l', xlim=xlim, ylim=ylim, col="orange", xlab='theta', ylab='', yaxt='n')
+par(new=T) 
+plot(theta, likelihood/sum(likelihood), type='l', xlim=xlim, ylim=ylim, col="skyblue", xlab='', ylab='', yaxt='n')
+par(new=T)
+plot(theta, posterior, type='l', xlim=xlim, ylim=ylim, col="seagreen", xlab='', ylab='', yaxt='n')
+legend("topright", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("orange", "skyblue", "seagreen"))
+
+```
+
+## Exercises
+
+
+Now let's consider some real data.
+Assume that waiting times between earthquakes (of any magnitude) in Southern California follow an Exponential distribution with rate $\theta$.
+Assume a Gamma(4, 3) prior distribution for $\theta$.
+The following summarizes data for a sample of 100 earthquakes^[Source: Lots of data on earthquakes can be found at https://scedc.caltech.edu/.].
+There was a total waiting time of 63.09 hours for the 100 earthquakes.
+
+
+```{r, echo = TRUE}
+
+data = read.csv("quakes100.csv")
+
+y = (1 / 60) * data$Waiting.time..minutes.
+
+hist(y, xlab = "Time (hours) between earthquakes",
+     main = "Sample of 100 earthquakes")
+
+summary(y)
+
+sd(y)
+```
+
+Use grid approximation to compute the posterior distribution of $\theta$ given the data.
+Be sure to specify the likelihood.
+Plot the prior, (scaled) likelihood, and posterior.
+How does posterior compare to the prior?
+
+```{r}
+# Type your code here.
+```
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+
+The total wait time for 100 earthquakes follows a *Gamma* distribution with shape parameter 100 and rate parameter $\theta$.
+The likelihood is the Gamma(100, $\theta$) density evaluated at a value of 63.09 (for the wait time for the 100 earthquakes) computed for each $\theta$.
+\begin{align*}
+f(\bar{y}=63.09 / 100|\theta) & = \frac{\theta^{100}}{(100-1)!}{63.09}^{100-1}e^{-63.09\theta}\\
+& \propto \theta^{100} e^{-63.09\theta}
+\end{align*}
+
+The sample mean time between earthquakes is 63.09/100 = 0.63 hours (about 38 minutes).
+The likelihood is centered at the sample *rate* of 100/63.09 =  1.59 earthquakes per hour.
+The posterior distribution follows the likelihood fairly closely.
+
+
+```{r}
+# prior
+theta = seq(0, 5, 0.001)
+
+prior = dgamma(theta, shape = 4, rate = 3)
+prior = prior / sum(prior)
+
+# data
+n = 100 # sample size
+y = 63.09 / 100 # sample mean
+
+# likelihood - for total time
+likelihood = dgamma(n * y, shape = n, rate = theta)
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+xlim = range(theta)
+plot(theta, prior, type='l', xlim=xlim, ylim=ylim, col="orange", xlab='theta', ylab='', yaxt='n')
+par(new=T) 
+plot(theta, likelihood/sum(likelihood), type='l', xlim=xlim, ylim=ylim, col="skyblue", xlab='', ylab='', yaxt='n')
+par(new=T)
+plot(theta, posterior, type='l', xlim=xlim, ylim=ylim, col="seagreen", xlab='', ylab='', yaxt='n')
+legend("topright", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("orange", "skyblue", "seagreen"))
+
+```
+
+
+
+
+
+
+# Continuous prior - deriving the posterior
+
+We'll again assume a continuous Gamma(4, 3) prior distribution for $\theta$.
+But now we'll derive the continuous posterior distribution rather than using grid approximation.
+
+**PAUSE** to find the prior mean, prior SD, and a prior 98% credible interval for $\theta$.
+
+
+The prior mean is $\mu = 4/3$ and the prior SD is $\sigma = \sqrt{4/3^2} = 2/3$.
+A prior 98% credible interval for $\theta$ is
+
+```{r}
+qgamma(c(0.01, 0.99), shape = 4, rate = 3)
+```
+
+**PAUSE** to identify prior density $\pi(\theta)$.
+
+This is just the Gamma(4, 3) density on values of the parameter $\theta$.
+\[
+\pi(\theta)  \propto \theta^{4-1}e^{-3\theta}, \qquad \theta > 0.
+\]
+
+
+Suppose a single wait time of 3.2 hours is observed.
+**PAUSE** to write the likelihood function.
+
+
+
+The likelihood is the Exponential($\theta$) density evaluated at $y=3.2$, computed for each value of $\theta$.
+\[
+f(y=3.2|\theta) = \theta e^{-3.2\theta}, \qquad \theta > 0
+\]
+
+
+**PAUSE** to write an expression for the posterior distribution of $\theta$ given a single wait time of 3.2 hours.
+
+
+
+
+Posterior is proportional to likelihood times prior
+\begin{align*}
+\pi(\theta|y = 3.2)  & \propto \left(\theta e^{-3.2\theta}\right)\left(\theta^{4-1}e^{-3\theta}\right), \qquad \theta > 0,\\
+& \propto \theta^{(4 + 1) - 1}e^{-(3+3.2)\theta}, \qquad \theta > 0.
+\end{align*}
+
+
+
+**PAUSE** to identify by the name the posterior distribution and the values of relevant parameters.
+
+We recognize the posterior pdf above as the Gamma density with shape parameter $\alpha=4+1$ and rate parameter $\lambda = 3 + 3.2$.
+
+
+
+**PAUSE** to find the posterior mean, posterior SD, and a posterior 98% credible interval for $\theta$.
+
+\begin{align*}
+\text{Posterior mean } & = \frac{\alpha}{\lambda} & & \frac{5}{6.2} = 0.806\\
+\text{Posterior SD} & = \sqrt{\frac{\alpha}{\lambda^2}} & & \sqrt{\frac{5}{6.2^2}} = 0.361
+\end{align*}
+
+
+    
+```{r}
+qgamma(c(0.01, 0.99), shape = 4 + 1, rate = 3 + 3.2)
+```
+
+The following plots the prior distribution, (scaled) likelihood, and posterior distribution.
+The posterior is similar to what we obtained via grid approximation.
+Note that we have derived the posterior distribution using theory; the grid below is just for plotting.
+
+```{r}
+
+theta = seq(0, 5, 0.001) # the grid is just for plotting
+
+# prior
+alpha = 4
+lambda = 3
+prior = dgamma(theta, shape = alpha, rate = lambda)
+
+# likelihood
+n = 1 # sample size
+y = 3.2 # sample mean
+likelihood = dexp(y, theta)
+
+# posterior
+posterior = dgamma(theta, alpha + n, lambda + n * y)
+
+# plot
+plot_continuous_posterior <- function(theta, prior, likelihood, posterior) {
+  
+  ymax = max(c(prior, posterior))
+  
+  scaled_likelihood = likelihood * ymax / max(likelihood)
+  
+  plot(theta, prior, type='l', col='skyblue', xlim= range(theta), ylim=c(0, ymax), ylab='', yaxt='n')
+  par(new=T)
+  plot(theta, scaled_likelihood, type='l', col='orange', xlim=range(theta), ylim=c(0, ymax), ylab='',  yaxt='n')
+  par(new=T)
+  plot(theta, posterior, type='l', col='seagreen', xlim=range(theta), ylim=c(0, ymax), ylab='', yaxt='n')
+  legend("topright", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue",  "orange", "seagreen"))
+}
+
+plot_continuous_posterior(theta, prior, likelihood, posterior)
+
+abline(v = qgamma(c(0.01, 0.99), alpha + n, lambda + n * y),
+       col = "seagreen", lty = 2)
+```
+
+
+
+## Exercises
+
+
+Now consider the original Gamma(4, 3) prior again.
+Determine the likelihood of observing a wait time of 3.2 hours for the first earthquake and a wait time of 1.6 hours for the second.
+Find the posterior distribution of $\theta$ given this sample.
+Identify by the name the posterior distribution and the values of relevant parameters.
+
+
+```{r}
+# Type your code here.
+```
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+The likelihood is the product of the likelihoods of $y=3.2$ and $y=1.6$.
+\[
+f(y=(3.2, 1.6)|\theta) = \left(\theta e^{-3.2\theta}\right)\left(\theta e^{-1.6\theta}\right) = \theta^2 e^{-4.8\theta}, \qquad \theta>0.
+\]
+    
+The posterior satisfies
+\begin{align*}
+ \pi(\theta|y = (3.2, 1.6))  & \propto \left(\theta^2 e^{-4.8\theta}\right)\left(\theta^{4-1}e^{-3\theta}\right), \qquad \theta > 0,\\
+& \propto \theta^{(4 + 2) - 1}e^{-(3+4.8)\theta}, \qquad \theta > 0.
+\end{align*}
+
+
+We recognize the above as the Gamma density with shape parameter $\alpha=4+2$ and rate parameter $\lambda = 3 + 4.8$.
+
+\begin{align*}
+\text{Posterior mean } & = \frac{\alpha}{\lambda} & & \frac{6}{7.8} = 0.769\\
+\text{Posterior SD} & = \sqrt{\frac{\alpha}{\lambda^2}} & & \sqrt{\frac{6}{7.8^2}} = 0.314
+\end{align*}
+    
+```{r}
+n  = 2 # sample size
+y = (3.2 + 1.6) / 2 # sample mean
+
+# likelihood
+likelihood = dexp(3.2, theta) * dexp(1.6, theta)
+
+# posterior
+posterior = dgamma(theta, alpha + n, lambda + n * y)
+
+# plot
+plot_continuous_posterior(theta, prior, likelihood, posterior)
+
+abline(v = qgamma(c(0.01, 0.99), alpha + y, lambda + n * y),
+       col = "seagreen", lty = 2)
+```
+
+
+Consider the original prior again.
+Determine the likelihood of observing a total wait time until two earthquakes of 4.8 hours.
+Find the posterior distribution of $\theta$ given this sample.
+Identify by the name the posterior distribution and the values of relevant parameters.
+How does this compare to the previous part?
+
+
+```{r}
+# Type your code here.
+```
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+By the Gamma property of cumulative times, the total time until 2 earthquakes follows a Gamma distribution with shape parameter 2 and rate parameter $\theta$.
+The likelihood is the *Gamma* density evaluated at a value of 4.8 (total wait time for 2 earthquakes) computed for each value of $\theta$.
+\begin{align*}
+f(\bar{y}=4.8/2|\theta) & = \frac{\theta^2}{(2-1)!}{4.8}^{2-1}e^{-4.8\theta}\\
+& \propto \theta^2 e^{-4.8\theta}
+\end{align*}
+
+The shape of the likelihood as a function of $\theta$ is the same as in the previous part; the likelihood functions are proportionally the same. Therefore, the posterior distribution is the same as in the previous part.
+
+```{r}
+
+# likelihood
+n = 2 # sample size
+y = (3.2 + 1.6) / 2 # sample mean
+likelihood = dgamma(n * y, shape = n, rate = theta)
+
+# posterior
+posterior = dgamma(theta, alpha + n, lambda + n * y)
+
+# plot
+plot_continuous_posterior(theta, prior, likelihood, posterior)
+
+abline(v = qgamma(c(0.01, 0.99), alpha + n, lambda + n * y),
+       col = "seagreen", lty = 2)
+```
+
+
+
+
+# Gamma-Exponential Model
+
+In the previous example we saw that if the values of the measured variable follow an Exponential distribution with rate parameter $\theta$  and the prior for $\theta$ follows a Gamma distribution, then the posterior distribution for $\theta$ given the data also follows a Gamma distribution.
+
+
+**Gamma-Exponential model.**
+Consider a measured variable $Y$ which, given $\theta$, follows an Exponential distribution with rate parameter $\theta$.
+Let $\bar{y}$ be the sample mean for a random sample of size $n$.
+Suppose $\theta$ has a Gamma$(\alpha, \lambda)$ prior distribution.
+Then the posterior distribution of $\theta$ given $\bar{y}$ is the Gamma$(\alpha+n, \lambda+n\bar{y})$ distribution.
+
+That is, Gamma distributions form a *conjugate prior* family for an Exponential likelihood.
+
+
+The posterior distribution is a compromise between prior and likelihood.
+For the Gamma-Exponential model, there is an intuitive interpretation of this compromise.
+In a sense, you can interpret $\alpha$ as "prior number of events" and $\lambda$ as "prior total observation time", but these are only "pseudo-observations".
+Also, $\alpha$ and $\lambda$ are not necessarily integers. (Be careful not confuse this interpretation with the one for Poisson distributions.)
+
+Note that if $\bar{y}$ is the sample mean time between events is then $n\bar{y} = \sum_{i=1}^n y_i$ is the total time of observation.
+
+
+|              |                    Prior |                Data |                           Posterior |
+|--------------|-------------------------:|--------------------:|------------------------------------:|
+| Total count  |                 $\alpha$ |                 $n$ |                          $\alpha+n$ |
+| Total time   |                $\lambda$ |          $n\bar{y}$ |                $\lambda + n\bar{y}$ |
+| Average rate | $\frac{\alpha}{\lambda}$ | $\frac{1}{\bar{y}}$ | $\frac{\alpha+n}{\lambda+n\bar{y}}$ |
+
+- The posterior "sample size" is the sum of the "prior sample size" $\alpha$ and the observed sample size of $n$.
+- The posterior "total time" is the sum of the "prior total observation time" $\lambda$ and the total observation time of $n\bar{y}$. 
+- The posterior mean is a weighted average of the prior mean of the rate parameter $\theta$ and the sample *rate* ($1/\bar{y}$), with weights proportional to the "total times".
+
+\[
+\frac{\alpha+n}{\lambda+n\bar{y}}= \frac{\lambda}{\lambda+n\bar{y}}\left(\frac{\alpha}{\lambda}\right) + \frac{n\bar{y}}{\lambda+n\bar{y}}\left(\frac{1}{\bar{y}}\right)
+\]
+
+
+- Larger values of $\lambda$ indicate stronger prior beliefs, due to smaller prior variance, and give more weight to the prior. Roughly, larger $\lambda$ means a "longer prior total observation time".
+- The posterior SD generally gets smaller as more data are collected --- via a longer total time of observation $n\bar{y}$. (Since the denominator below is squared, it will be large relative to the numerator).
+\[
+\text{Posterior SD of $\theta$:} \qquad  \sqrt{\frac{\alpha+n}{(\lambda+n\bar{y})^2}}
+\]
+
+
+Rather than specifying $\alpha$ and $\beta$, a Gamma distribution prior can be specified by its prior mean and SD directly.
+If the prior mean is $\mu$ and the prior SD is $\sigma$, then
+\begin{align*}
+\lambda & = \frac{\mu}{\sigma^2}\\
+\alpha & = \mu\lambda
+\end{align*}
+
+
+
+
+## Exercises
+
+
+
+Consider the data on a sample of 100 earthquakes in the total wait time ws 63.09 hours.
+Use the theory of the Gamma-Exponential model to find the posterior distribution.
+
+
+```{r}
+# Type your code here.
+```
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+- The prior Gamma(4, 3) distribution reflects a "prior count" of 4 "earthquakes" in a "prior observation time" of 3 "hours", for an average rate of 4/3 = 1.33 earthquakes per hour.
+- The sample reflects an observed count of 100 earthquakes in a total observation time of 63.09 hours, for an observed rate of 1.59 earthquakes per hour.
+- The posterior reflects a total count of 104 earthquakes observed in a total time of 66.09 hours, for a posterior mean rate of 1.57 earthquakes per hour.
+
+|              | Prior |  Data | Posterior |
+|--------------|------:|------:|----------:|
+| Total count  |     4 |   100 |       104 |
+| Total time   |     3 | 63.09 |     66.09 |
+| Average rate |  1.33 |  1.59 |      1.57 |
+
+Therefore, the posterior distribution of $\theta$ is the Gamma distribution with shape parameter 104 and rate parameter 66.09.
+
+
+Once you've derived the Gamma-Exponential theory, you can just use the theory.
+But here are the details of deriving the posterior distribution in this example.
+
+The total wait time for 100 earthquakes follows a *Gamma* distribution with shape parameter 100 and rate parameter $\theta$.
+The likelihood is the Gamma(100, $\theta$) density evaluated at a value of 63.09 (for the wait time for the 100 earthquakes) computed for each $\theta$.
+\begin{align*}
+f(\bar{y}=63.09 / 100|\theta) & = \frac{\theta^{100}}{(100-1)!}{63.09}^{100-1}e^{-63.09\theta}\\
+& \propto \theta^{100} e^{-63.09\theta}
+\end{align*}
+The sample mean time between earthquakes is 63.09/100 = 0.63 hours (about 38 minutes). The likelihood is centered at the sample *rate* of 100/63.09 =  1.59 earthquakes per hour.  
+
+The posterior satisfies
+\begin{align*}
+ \pi(\theta|\bar{y} = 63.09/100)  & \propto \left(\theta^{100} e^{-63.09\theta}\right)\left(\theta^{4-1}e^{-3\theta}\right), \qquad \theta > 0,\\
+& \propto \theta^{(100 + 4) - 1}e^{-(3+63.09)\theta}, \qquad \theta > 0.
+\end{align*}
+
+
+
+
+Plot prior, likelihood, and posterior.
+Compare to the grid approximation.
+
+```{r}
+# Type your code here.
+```
+
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+
+The posterior distribution follows the likelihood fairly closely, but the prior still has a little influence.
+The results are similar to grid approximation.
+    
+```{r}
+# likelihood
+n = 100 # sample size
+y = 63.09 / 100 # sample mean
+likelihood = dgamma(n * y, n, theta)
+
+# posterior
+posterior = dgamma(theta, alpha + n, lambda + n * y)
+
+# plot
+plot_continuous_posterior(theta, prior, likelihood, posterior)
+
+abline(v = qgamma(c(0.01, 0.99), alpha + n, lambda + n * y),
+       col = "seagreen", lty = 2)
+
+```
+
+
+
+
+
+
+
+Find the posterior mean, posterior SD, and a posterior 98% credible interval for $\theta$.
+
+```{r}
+# Type your code here.
+```
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+The posterior distribution is the Gamma density with shape parameter $\alpha=104$ and rate parameter $\lambda = 66.09$. 
+\begin{align*}
+\text{Posterior mean } & = \frac{\alpha}{\lambda} & & \frac{104}{66.09} = 1.57\\
+\text{Posterior SD} & = \sqrt{\frac{\alpha}{\lambda^2}} & & \sqrt{\frac{104}{66.09^2}} = 0.154
+    \end{align*}
+
+```{r}
+qgamma(c(0.01, 0.99), alpha + n, lambda + n * y)
+```
+
+
+
+Interpret the credible interval from the previous part in context.
+
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+There is a posterior probability of 98% that the rate at which earthquakes occur in Southern California is between `r round(qgamma(c(0.01), alpha + n, lambda + n), 2)` and `r round(qgamma(c(0.99), alpha + n, lambda + n), 2)` earthquakes per hour.
+Based on our prior beliefs and the observed data, it is 49 times more plausible that the per hour rate at which earthquakes occurs in Southern California lies inside this interval than outside.
+
+
+
+Express the posterior mean of $\theta$ based on the data as a weighted average of the prior mean and the sample mean.
+
+
+```{r}
+# Type your code here.
+```
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+
+The prior mean of the rate parameter is 4/3=1.333, based on a "prior observation time" of 3 "hours".
+The sample rate is 100/63.09 = 1.59, based on a sample size of 100.
+The posterior mean of the rate parameter is (4 + 100)/(3 + 63.09) = 1.57.
+The posterior mean is a weighted average of the prior mean and the sample mean with the weights based on the "sample sizes"
+\[
+1.57 = \frac{4+100}{3 + 63.09} = \left(\frac{3}{3 + 63.09}\right)\left(\frac{4}{3}\right) +  \left(\frac{63.09}{3 + 63.09}\right)\left(\frac{100}{63.09}\right) = (0.045)(1.333)+ (0.955)(1.585)
+\]
+
+
+
+# Investigating other parameters (Exercises)
+
+The main parameter of an Exponential distribution is the rate parameter, but there are also other related parameters of interest.
+
+**For the rest of the lab, continue to assume the set up of the previous part and the sample of size 100 earthquakes.**
+
+How could you use simulation to find the posterior distribution of the *mean* time between earthquakes. 
+Conduct the simulation and find a central 98% posterior credible interval for the *mean* time between earthquakes.
+
+```{r}
+# Type your code here.
+```
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+Since $\theta$ is the rate, the mean waiting time is $1/\theta$.
+Therefore, we can just simulate a value of $\theta$ from its posterior distribution, find $1/\theta$ and repeat many times.
+
+```{r}
+Nrep = 10000
+
+theta_sim = rgamma(Nrep, 104, 66.09)
+
+hist(1 / theta_sim, freq = FALSE,
+     main = "Posterior distribution of mean",
+     xlab = "Mean waiting time (hours)",
+     ylab = "Density")
+
+quantile(1 / theta_sim, c(0.01, 0.99))
+```
+
+
+There is a 98% posterior probability that the mean time between earthquakes is between `r round(quantile(1 / theta_sim, c(0.01)), 2)` and `r round(quantile(1 / theta_sim, c(0.99)), 2)` hours (about `r round(60 * quantile(1 / theta_sim, c(0.01)), 2)` to `r round(60 * quantile(1 / theta_sim, c(0.99)), 2)` minutes.)
+
+
+Because the waiting times are skewed to the right, we might be more interested in the *median* time between earthquakes.
+How could you use simulation to find the posterior distribution of the *median* time between earthquakes.
+(Hint: use properties of Exponential distributions.)
+Conduct the simulation and find a central 98% posterior credible interval for the *median* time between earthquakes.
+
+
+```{r}
+# Type your code here.
+```
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+In general, finding the posterior distribution of the median could be tricky.
+But for Exponential, we have that the median is $\log(2)/\theta$.
+Therefore, we can just simulate a value of $\theta$ from its posterior distribution, find $\log(2)/\theta$ and repeat many times.
+
+(We could have just used the simulated means from the previous part, but I'm re-simulating and including the whole code for completeness.)
+
+```{r}
+Nrep = 10000
+
+theta_sim = rgamma(Nrep, 104, 66.09)
+
+hist(log(2) / theta_sim, freq = FALSE,
+     main = "Posterior distribution of median",
+     xlab = "Median waiting time (hours)",
+     ylab = "Density")
+
+quantile(log(2) / theta_sim, c(0.025, 0.975))
+```
+
+There is a 98% posterior probability that the *median* time between earthquakes is between `r round(quantile(log(2) / theta_sim, c(0.01)), 2)` and `r round(quantile(log(2) / theta_sim, c(0.99)), 2)` hours (about `r round(60 * quantile(log(2) / theta_sim, c(0.01)), 2)` to `r round(60 * quantile(log(2) / theta_sim, c(0.99)), 2)` minutes.)
+
+# Posterior predictive distribution (Exercises)
+
+Describe in words how you could use simulation (not JAGS) to approximate the posterior predictive distribution of the waiting time until the next earthquake.
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+- Simulate a value of $\theta$ from its Gamma(104, 66.09) posterior distribution
+- Given $\theta$ simulate a value of $Y$ from an Exponential distribution with rate $\theta$
+- Repeat many times and summarizes the $Y$'s.
+
+
+
+Code and run the posterior predictive simulation, plot the results, and find a 95% posterior predictive interval with a lower bound of 0.
+
+```{r}
+# Type your code here.
+```
+
+
+
+```{r}
+Nrep = 10000
+    
+theta_sim = rgamma(Nrep, 104, 66.09)
+
+y_sim = rexp(Nrep, rate = theta_sim)
+
+hist(y_sim, breaks = 100, freq = FALSE,
+     main = "Posterior predictive distribution",
+     xlab = "Waiting time (hours)",
+     ylab = "Density")
+
+quantile(y_sim, 0.95)
+
+```
+
+
+
+Write a clearly worded sentence interpreting the predictive interval from the previous part.
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+
+There is a posterior predictive probability of 95% that the next earthquake will occur within `r round(quantile(y_sim, 0.95)
+, 2)` hours (`r round(60 * quantile(y_sim, 0.95)
+, 0)` minutes)
+Roughly, for 95% of earthquakes the waiting time for the next earthquake is less than `r round(quantile(y_sim, 0.95), 2)` hours.
+
+
+
+# JAGS (Exercises)
+
+Use JAGS to approximate the posterior distribution of $\theta$ given the data from the sample of 100 earthquakes.
+Write the JAGS code, run it, and then summarize the results in appropriate plots and summary values.
+Compare to the theoretical Gamma distribution from an early part.
+ 
+ 
+
+```{r}
+# Type your code here.
+```
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+
+
+
+
+
+
+See JAGS code below.  The results are very similar to the theoretical results from the previous example.
+
+- The data has been loaded as individual values, the waiting time for each of the 100 earthquakes.
+- Likelihood is defined as a loop.  For each `y[i]` value, the likelihood is computing according to a Exponential($\theta$) distribution. (If only the total time had been loaded, then this would be a Gamma likelihood.)
+- Prior distribution is a Gamma distribution.  (Remember, JAGS syntax for `dgamma`, `dpois`, etc, is not the same as in R.)
+
+
+```{r}
+library(rjags)
+
+# data
+data = read.csv("quakes100.csv")
+y = (1 / 60) * data$Waiting.time..minutes.
+n = length(y)
+
+# model
+model_string <- "model{
+
+  # Likelihood
+  for (i in 1:n){
+    y[i] ~ dexp(theta)
+  }
+
+  # Prior
+  theta ~ dgamma(alpha, lambda)
+  alpha <- 4  
+  lambda <- 3
+
+}"
+
+# Compile the model
+dataList = list(y=y, n=n)
+
+Nrep = 10000
+Nchains = 3
+
+model <- jags.model(textConnection(model_string), 
+                    data=dataList,
+                    n.chains=Nchains)
+
+update(model, 1000, progress.bar="none")
+
+posterior_sample <- coda.samples(model, 
+                                 variable.names=c("theta"),
+                                 n.iter=Nrep,
+                                 progress.bar="none")
+
+# Summarize and check diagnostics
+summary(posterior_sample)
+plot(posterior_sample)
+
+```
+
+
+
+
+
+
+
+# Optional Exercise - More JAGS
+
+One benefit to using JAGS is that you can use any prior you want.
+Choose a prior other than Gamma or Uniform for $\theta$ and redo the JAGS code.
+Is the posterior sensitive to reasonable changes in prior?
+
+
+
+```{r}
+# Type your code here.
+```
+
+
+**TYPE YOUR RESPONSE HERE.**
+
+We'll try a Normal prior with the same mean (4/3) and SD (2/3) as a Gamma(4, 3) distribution.
+Remember, in JAGS it's `dnorm(mean, precision)`.
+The posterior is similar to what we found above; changing from a Normal to Gamma shape didn't change much in this situation.
+(Though in other situations it might, and if we had changed prior mean and SD we might also see some changes.)
+```{r}
+library(rjags)
+
+# data
+data = read.csv("quakes100.csv")
+y = (1 / 60) * data$Waiting.time..minutes.
+n = length(y)
+
+# model
+model_string <- "model{
+
+  # Likelihood
+  for (i in 1:n){
+    y[i] ~ dexp(theta)
+  }
+
+  # Prior
+  theta ~ dgamma(prior_mean, 1 / prior_sd ^ 2)
+  prior_mean <- 4 / 3 
+  prior_sd <- 2 / 3
+
+}"
+
+# Compile the model
+dataList = list(y=y, n=n)
+
+Nrep = 10000
+Nchains = 3
+
+model <- jags.model(textConnection(model_string), 
+                    data=dataList,
+                    n.chains=Nchains)
+
+update(model, 1000, progress.bar="none")
+
+posterior_sample <- coda.samples(model, 
+                                 variable.names=c("theta"),
+                                 n.iter=Nrep,
+                                 progress.bar="none")
+
+# Summarize and check diagnostics
+summary(posterior_sample)
+plot(posterior_sample)
+
+```
+
+
+
+
+
+# Reflection
+
+1. Write a few sentences summarizing one important concept you have learned in this lab
+1. What is (at least) one question that you still have?
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+

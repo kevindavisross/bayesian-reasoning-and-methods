@@ -1,0 +1,582 @@
+---
+title: "STAT 415 Lab 2"
+author: "TYPE YOUR NAMES HERE"
+date: ''
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+  pdf_document: default
+---
+
+
+
+
+# Introduction
+
+In the handouts we have focused on inference for a population proportion.
+This lab will introduce you to another of the most common problems in statistics: inference for a population mean of a numerical variable.
+You will apply a process similar to what we covered in handouts to perform Bayesian inference for a population mean.
+This lab will make some simplifying assumptions to illustrate the basic process and ideas.
+We'll consider more realistic scenarios later.
+
+**Important note regarding code:**
+We will cover code for performing and summarizing Bayesian analyses in much more detail throughout the course.
+Early in the course I have tried to keep the code as simple and bare bones as possible, especially with respect to plotting.
+There are certainly better ways to code, especially better plots that could be made.
+You are welcome to jazz it up (or tidyverse it up) if you want, but it's certainly not required.
+The main goal for this lab is to understand the basic process.
+
+
+
+
+# Instructions
+
+This RMarkdown file provides a template for you to fill in.
+**Read the file from start to finish, completing the parts as indicated.**
+**Some code is provided for you. Be sure to run this code, and make sure you understand what it's doing.**
+Some blank "code chunks" are provided; you are welcome to add more (Code > Insert chunk or CTRL-ALT-I) as needed.
+There are also a few places where you should type text responses.
+Feel free to add additional text responses as necessary.
+
+You can run individual code chunks using the play button.
+You can use objects defined in one chunk in others.
+Just keep in mind that chunks are evaluated in order.
+So if you call something x in one chunk, but redefine x as something else in another chunk, it's essential that you evaluate the chunks in the proper order.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+When you are finished
+
+- click **Knit** and check to make sure that you have no errors and everything runs properly. (Fix any problems and redo this step until it works.)
+- Make sure your type your name(s) at the top of the notebook where it says "Type your name(s) here". If you worked in a team, you will submit a single notebook with both names; make sure both names are included
+- Submit your completed files in Canvas.
+
+You'll need a few R packages, which you can install using `install.packages`
+
+```{r, warning = FALSE, message = FALSE}
+
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(janitor)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+
+```
+
+# Likelihood function for continuous data 
+
+Recall that the likelihood function is the probability of observing the sample data $y$ viewed as a *function of the parameter* $\theta$.
+When the data $y$ takes values on a continuous scale, the likelihood is determined by the *probability density function* of $Y$ given $\theta$, $f(y|\theta)$.
+In the likelihood function, the observed value of the data $y$ is treated as a fixed constant, and the likelihood of observing that $y$ is evaluated for all potential values of $\theta$.
+
+# Review of Normal distributions
+
+Recall that a continuous random variable^[Why $U$ and not $X$ or $Y$?  In a Bayesian analysis, we might assume the data follows a Normal distribution, but we might also use a Normal distribution to quantify the uncertainty about a parameter.  We generally associate $X$ and $Y$ with data.  $U$ is supposed to represent a more general variable, which could be either data or a parameter.] $U$ follows a **Normal (a.k.a., Gaussian) distribution** with mean $\mu$ and standard deviation $\sigma>0$ if its probability density function is^[$\exp$ is just another way of writing the exponential function, $\exp(u)=e^u$.]
+\begin{align*}
+f_U(u) & = \frac{1}{\sigma\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{u-\mu}{\sigma}\right)^2\right), \quad -\infty<u<\infty.\\
+& \propto \frac{1}{\sigma}\,\exp\left(-\frac{1}{2}\left(\frac{u-\mu}{\sigma}\right)^2\right), \quad -\infty<u<\infty.
+\end{align*}
+The constant $1/\sqrt{2\pi}$ ensures that the total area under the density is 1, but it doesn't effect the shape of the density.
+
+In R, `dnorm(u, mu, sigma)` returns the density at $u$.
+
+Remember, *density is NOT probability*: $f_U(u) \neq P(U = u)$, because for a continuous random variable the probability of any particular value is 0.
+We'll review continuous distributions in a little more detail soon.
+In this lab, you just need to use `dnorm`.
+
+Normal distributions follow the empirical rule; in particular:
+
+- Values within 1 SD of the mean account for 68% of the probability
+- Values within 2 SDs of the mean account for 95% of the probability
+- Values within 3 SDs of the mean account for 99.7% of the probability
+
+
+# Estimating mean human body temperature
+
+Assume body temperatures (degrees Fahrenheit) of healthy adults follow a Normal distribution with unknown mean $\theta$ and known standard deviation $\sigma=1$.
+We wish to estimate $\theta$, the population mean healthy human body temperature, based on sample data.  
+Note: it's unrealistic to assume the population standard deviation is known.
+We'll consider the case of unknown standard deviation later.
+
+**Exercises.**
+
+1. Describe in words what the population SD $\sigma$ represents.
+1. Describe in words what the Normal distribution assumption, with $\sigma = 1$, says about the distribution of healthy human body temperatures.
+(Hint: remember the empirical rule.)
+
+**TYPE YOUR RESPONSE HERE.**
+
+# Discrete example
+
+In this section, all the code and output is provided for you.
+But be sure to carefully read through the section and run the code.
+In particular, mind the **PAUSE**s; be sure to **PAUSE** and think about these questions before proceeding.
+
+We'll walk through a discrete example to illustrate ideas.
+Try to see what is the same and what is different from what we have done in the handouts.
+The basic process is the same as what we did for proportions.
+The main difference is in the type of data - categorical versus numerical - resulting in a different likelihood.
+
+Assume first the following discrete prior distribution for $\theta$ which places probability 0.10, 0.25, 0.30, 0.25, 0.10 on the values 97.6, 98.1, 98.6, 99.1, 99.6, respectively. 
+
+## Posterior after the first temperature observation
+
+Suppose a single temperature value of 97.9 is observed. 
+We'll construct a Bayes table and find the posterior distribution of $\theta$ given this single temperature value.
+
+**PAUSE.**
+Before proceeding, pause to consider **how do you determine the likelihood?**
+
+
+The likelihood is determined by evaluating the Normal($\theta$, 1) density at $y=97.9$ for different values of $\theta$: `dnorm(97.9, theta, 1)` or
+\[
+f(97.9|\theta)  = \frac{1}{\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{97.9-\theta}{1}\right)^2\right)
+\]
+For example, the likelihood for $\theta = 98.6$ is $\frac{1}{\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{97.9-98.6}{1}\right)^2\right)$, or `dnorm(97.9, 98.6, 1)` = 0.312.
+
+See the Bayes table below. 
+
+**PAUSE.**
+Before proceeding, pause to consider **how do you expect the posterior distribution to compare to the prior distribution?**
+
+
+```{r}
+
+theta = seq(97.6, 99.6, 0.5)
+
+# prior
+prior = c(0.10, 0.25, 0.30, 0.25, 0.10)
+prior = prior / sum(prior)
+
+# data
+y = 97.9 # single observed value
+sigma = 1 # assume known population SD
+
+
+# likelihood
+likelihood = dnorm(y, theta, sigma) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+bayes_table %>%
+  adorn_totals("row") %>%
+  kable(digits = 4, align = 'r')
+
+```
+
+We see that posterior probability is shifted towards the smaller values of $\theta$ since those give the higher likelihood of the observed value $y=97.9$.
+
+
+
+## Posterior after the second temperature observation
+
+
+Now suppose a second temperature value, 97.5, is observed, independently of the first.
+We'll construct a Bayes table and find the posterior distribution of $\theta$ after observing these two measurements, *using the posterior distribution after the first observation as the prior distribution before the second observation*.
+
+**PAUSE.**
+Before proceeding, pause to consider **how do you determine the likelihood?**
+
+
+The likelihood is determined by evaluating the Normal($\theta$, 1) density at $y=97.5$ for different values of $\theta$: `dnorm(97.5, theta, 1)` or
+\[
+f(97.5|\theta)  = \frac{1}{\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{97.5-\theta}{1}\right)^2\right)
+\]
+For example, the likelihood for $\theta = 98.6$ is $\frac{1}{\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{97.5-98.6}{1}\right)^2\right)$, or `dnorm(97.5, 98.6, 1)` = 0.218.
+
+See the Bayes table below. 
+
+**PAUSE.**
+Before proceeding, pause to consider **how do you expect the posterior distribution to compare to the prior distribution?**
+
+
+```{r}
+
+# prior is posterior from previous part
+prior = posterior
+
+# data
+y = 97.5 # second observed value
+
+# likelihood
+likelihood = dnorm(y, theta, sigma) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+bayes_table %>%
+  adorn_totals("row") %>%
+  kable(digits = 4, align = 'r')
+
+```
+
+Again, we see that posterior probability is shifted towards the smaller values of $\theta$ since those give the higher likelihood of the observed value $y=97.5$.
+
+**PAUSE.**
+Before proceeding, pause to consider **Does the order in which the observations were recorded matter?**
+That is, if we had first observed 97.5 and then 97.9, would the posterior after the second observation be the same as for the (97.9, 97.5) sample?
+Think about it; if you're not convinced you can always try it out and see what happens!
+
+
+## Posterior after two observations
+
+
+Now consider the original prior again.
+Suppose we update our posterior distribution only after observing the two measurements, rather than after each measurement.
+That is, we'll construct a Bayes table to find the posterior distribution after observing a sample of size 2 with a first measurement of 97.9 and a second measurement of 97.5.
+
+
+**PAUSE.**
+Before proceeding, pause to consider **how do you determine the likelihood?**
+
+Since the two measurements are independent, the likelihood is the product of the likelihoods for $y=97.9$ and $y=97.5$: `dnorm(97.9, theta, 1) * dnorm(97.5, theta, 1)` or
+\[
+f((97.9, 97.5)|\theta)  = \left(\frac{1}{\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{97.9-\theta}{1}\right)^2\right)\right)\left(\frac{1}{\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{97.5-\theta}{1}\right)^2\right)\right)
+\]
+For example, the likelihood for $\theta = 98.6$ is
+\[
+f((97.9, 97.5)|\theta=98.6)  = \left(\frac{1}{\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{97.9-98.6}{1}\right)^2\right)\right)\left(\frac{1}{\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{97.5-98.6}{1}\right)^2\right)\right)
+\]
+or `dnorm(97.9, 98.6, 1) * dnorm(97.5, 98.6, 1)` = (0.312)(0.218) = 0.068.
+
+See the Bayes table below. 
+
+**PAUSE.**
+Before proceeding, pause to consider **how do you expect the posterior distribution to compare to the posterior distribution after the second measurement above?**
+
+```{r}
+
+theta = seq(97.6, 99.6, 0.5)
+
+# prior
+prior = c(0.10, 0.25, 0.30, 0.25, 0.10)
+prior = prior / sum(prior)
+
+# data
+y = c(97.9, 97.5) # two observed values
+sigma = 1
+
+
+# likelihood - function of theta
+likelihood = dnorm(y[1], theta, sigma) * dnorm(y[2], theta, sigma)
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+bayes_table %>%
+  adorn_totals("row") %>%
+  kable(digits = 4, align = 'r')
+
+```
+
+The posterior is the same in the previous part.
+It doesn't matter if we update the posterior after each observations, or all at once.
+
+
+
+
+## Posterior based on the sample mean rather than individual values
+
+Consider the original prior again.
+Suppose that we take a random sample of two temperature measurements, but instead of observing the two individual values, we only observe that the sample mean is 97.7.
+We'll construct a Bayes table to find the posterior distribution after observing a sample of size 2 with a sample mean of 97.7.
+
+
+**PAUSE.**
+Before proceeding, pause to consider **how do you determine the likelihood?**
+Hint: if $\bar{Y}$ is the sample mean of $n$ values from a $N(\theta, \sigma)$ distribution, what is the distribution of $\bar{Y}$?
+
+
+
+
+For a sample of size $n$ from a $N(\theta,\sigma)$ distribution, the sample mean $\bar{Y}$ follows a $N\left(\theta, \frac{\sigma}{\sqrt{n}}\right)$ distribution.
+Remember: $\sigma/\sqrt{n}$ represents the sample-to-sample variability of sample means.
+
+The likelihood is determined by evaluating the Normal($\theta$, $\frac{1}{\sqrt{2}}$) density at $\bar{y}=97.7$ for different values of $\theta$: `dnorm(97.7, theta, 1 / sqrt(2))` or
+\[
+f_{\bar{Y}}(97.7|\theta)  \propto \exp\left(-\frac{1}{2}\left(\frac{97.7-\theta}{1/\sqrt{2}}\right)^2\right)
+\]
+For example, the likelihood for $\theta = 98.6$ is
+\[
+f_{\bar{Y}}((97.7)|\theta=98.6)  \propto \exp\left(-\frac{1}{2}\left(\frac{97.7-98.6}{1/\sqrt{2}}\right)^2\right)
+\]
+or `dnorm(97.7, 98.6, 1 / sqrt(2))` = 0.251.
+
+See the Bayes table below. 
+
+
+**PAUSE.**
+Before proceeding, pause to consider
+
+- How do you expect the posterior distribution based the sample $n=2$, $\bar{y} = 97.7$ to compare to the posterior distribution after the sample (97.9, 97.5) above?
+- Is the likelihood based the sample $n=2$, $\bar{y} = 97.7$ *the same as* the likelihood based on sample (97.9, 97.5) above?
+- Is the likelihood based the sample $n=2$, $\bar{y} = 97.7$ *proportionally the same as* the likelihood based on sample (97.9, 97.5) above?
+
+
+
+```{r}
+
+theta = seq(97.6, 99.6, 0.5)
+
+# prior
+prior = c(0.10, 0.25, 0.30, 0.25, 0.10)
+prior = prior / sum(prior)
+
+# data
+n = 2
+y = 97.7 # sample mean
+sigma = 1
+
+
+# likelihood
+likelihood = dnorm(y, theta, sigma / sqrt(n)) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+bayes_table %>%
+  adorn_totals("row") %>%
+  kable(digits = 4, align = 'r')
+
+```
+
+The likelihood is *not* the same as in the previous part.
+There are many samples with a sample mean of 97.7, of which the sample (97.9, 97.5) is only one possibility, so the likelihood of observing a sample mean of 97.7 is greater than the likelihood of (97.9, 97.5).
+However, while the likelihood is not the same as in the previous part, it is *proportionally* the same.
+That is, the likelihood in this part has the same *shape* as the likelihood in the previous part.
+For example, the ratio of the likelihoods for $\theta=98.6$ and $\theta=98.1$ is the same in both parts: $0.4808/0.2510 = 1.91$ and $0.1303/0.068=1.91$.
+Since the prior distribution is the same in both parts, and the likelihoods are proportionally the same, then the posterior distributions are the same.
+
+# Likelihoods based on summary statistics
+
+It is often not necessary to know all the individual data values to evaluate the *shape* of the likelihood as a function of the parameter $\theta$, but rather simply the values of a few summary statistics.   
+For example, when  estimating the population mean of a Normal distribution with known standard deviation $\sigma$, it is sufficient to know the sample mean for the purposes of evaluating the shape of the likelihood of the observed data under different potential values of the population mean.
+For the population proportion examples from handouts, we didn't need to know the individual success/failure responses but rather just the number (or proportion) of successes.
+
+Recall that if $Y_1, \ldots, Y_n$ is a random sample from a $N(\mu, \sigma)$ distribution, then $\bar{Y}$ has a $N\left(\mu, \frac{\sigma}{\sqrt{n}}\right)$ distribution
+
+- $\sigma$ measures the unit-to-unit variability of individual values of the variable over all possible units in the population. For example, how much do body temperatures vary from person-to-person over many people?
+- $\frac{\sigma}{\sqrt{n}}$ measures the sample-to-sample variability of sample means over all possible samples of size $n$ from the population. For example, how much do sample mean body temperatures vary from sample to sample over many samples of $n$ people?
+
+
+# Exercises: Influence of different priors in a small sample
+
+The small discrete example illustrated ideas.
+For the remaining parts we'll now use a grid approximation and assume that any multiple of 0.0001 between 96.0 and 100.0 is a possible value of $\theta$: $96.0, 96.0001, 96.0002, \ldots, 99.9999, 100.0$.
+
+As in the previous section, we'll consider data from a sample of size $n=2$ with a sample mean of $\bar{y} = 97.7$.
+
+We'll investigate sensitivity of the posterior distribution to changes in the prior.
+**For each of the following priors:**
+
+- Describe in words and with appropriate summary characteristics what the prior distribution says about $\theta$.
+- Create a Bayes table to find the posterior distribution, but do NOT print the Bayes table.
+- Create a plot of prior, likelihood, and posterior.
+(You can see the textbook for some examples, but you're also welcome to create your own)
+- Describe in words and with appropriate summary characteristics what the posterior distribution says about $\theta$.
+
+Note: "appropriate summary characteristics" can include: mean/median/mode, SD, credible intervals, percentiles, or probabilities of events (e.g., probability that $\theta$ is less than 98.0.)
+You can choose - you don't have to include everything - but include what you think gives a reasonable summary of the distribution.
+
+
+**Scenario 1:** Prior distribution is Uniform over the possible values of $\theta$
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+**Scenario 2:** Prior distribution is proportional to $2-|\theta - 98.0|$ over the possible values of $\theta$.
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+**Scenario 3:** Prior distribution is proportional to a Normal distribution with mean 98.6 and standard deviation 0.7 over the possible values of $\theta$.
+Careful: be sure not to confuse a Normal prior distribution with the likelihood.
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+**Scenario 4:** Prior distribution is your choice!
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+**Discussion.** Compare the posterior distributions from the scenarios above and discuss what influence the prior has on the results.
+
+**TYPE YOUR RESPONSE HERE.**
+
+# Data Analysis
+
+
+Continuing the body temperature example, now we'll do a Bayesian analysis based on actual sample data.
+
+We'll again use a grid approximation and assume that any multiple of 0.0001 between 96.0 and 100.0 is a possible value of $\mu$: $96.0, 96.0001, 96.0002, \ldots, 99.9999, 100.0$.
+
+Choose one of the prior distributions from the four scenarios in the previous section as the prior distribution.
+
+In a recent study^[[Source](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6258625/) and a [related article](https://www.scientificamerican.com/article/are-human-body-temperatures-cooling-down/).], the sample mean body temperature in a sample of 208 healthy adults was 97.7 degrees F.
+You can assume this is a reasonably representative sample of healthy human body temperatures.
+
+- Create a Bayes table to find the posterior distribution, but do NOT print the Bayes table.
+- Create a plot of prior, likelihood, and posterior.
+(You can see the textbook for some examples, but you're also welcome to create your own)
+- Describe in words and with appropriate summary characteristics what the posterior distribution says about $\theta$.
+- Write a few sentences summarizing your conclusions in context about $\theta$ based on your analysis.
+
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+# Data Analysis: Sensitivity to prior
+
+
+If you had chosen a different prior in the previous part, would your conclusions have changed substantially?
+
+Redo the analysis from the previous part with a different prior from the four scenarios above.
+Choose whichever prior seems most different from the one you used in your data analysis in the previous section.
+(You can try all the other priors if you want, but you don't have to.)
+Are the conclusions sensitive to the choice of prior?
+
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+# Comparison between Bayesian and frequentist results
+
+Continue to assume $\sigma=1$ and the sample data with $n=208$ and $\bar{y}=97.7$.
+This section contains some exercises to compare the results and interpretations of Bayesian and frequentist analyses.
+
+## Interval estimates
+
+Bayesian
+
+- Compute a 95% central posterior credible interval for $\theta$.
+- Write a clearly worded sentence containing the conclusion of the credible interval in context.
+- Write a clearly worded sentence explaining what "95% credibility" means in context.
+
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+Frequentist
+
+- Compute a frequentist 95% confidence for $\theta$.
+- Write a clearly worded sentence containing the conclusion of the confidence interval in context.
+- Write a clearly worded sentence explaining what "95% confidence" means in context.
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+Write a few sentences comparing both the numerical results and the interpretations of the Bayesian and frequentist interval estimates.
+
+**TYPE YOUR RESPONSE HERE.**
+
+## Bayesian posterior probability versus frequentist p-value
+
+Bayesian 
+
+1. Compute the posterior probability that $\theta$ is less than 98.0.
+1. Write a clearly worded sentence explaining what the posterior probability means in context.
+
+
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+Frequentist
+
+1. Conduct a one-sided frequentist hypothesis test of the null hypothesis $H_0: \theta = 98.0$ versus the alternative $H_a:\theta < 98.0$. Report the p-value.
+1. Write a clearly worded sentence containing the conclusion of the hypothesis test in context.
+1. Write a clearly worded sentence explaining what the p-value means in context.
+
+
+
+```{r}
+### Type your code here. Feel free to add chunks as necessary
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+Write a few sentences comparing both the numerical results (posterior probability versus p-value) and the interpretations of the Bayesian and frequentist interval estimates.
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+# Reflection
+
+1. Write a few sentences summarizing one important concept you have learned in this lab
+1. What is (at least) one question that you still have?
+
+**TYPE YOUR RESPONSE HERE.**

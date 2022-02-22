@@ -1,0 +1,533 @@
+---
+title: "STAT 415 Lab 1"
+author: "TYPE YOUR NAME HERE"
+date: ''
+output:
+  html_document:
+    number_sections: yes
+  pdf_document: default
+---
+
+
+
+
+# Introduction
+
+This lab will walk you through some of the code for performing a simulation like the one in Handout 1, and a spreadsheet analysis like the one in Handout 2.
+You will also start to explore the influence of changing priors.
+
+**Important note regarding code:**
+We will cover code for performing and summarizing Bayesian analyses in much more detail throughout the course.
+For this introductory lab I have tried to keep the code as simple and bare bones as possible, especially with respect to plotting.
+There are certainly better ways to code, and better plots that could be made.
+You are welcome to jazz it up (or tidyverse it up) if you want, but it's certainly not required.
+The main goal for this lab is to understand the basic process.
+
+**Important note regarding the simulation process:**
+The particular simulation process we use here (and in Handout 1) is used mainly to illustrate ideas in a fairly concrete way.
+While the logic of the simulation process is correct, in practice we would run into some technical difficulties (that we'll discuss later).
+Simulation does play an essential role in Bayesian statistics, but in practice much more efficient and sophisticated simulation methods are required.
+We'll study simulation and the role it plays in much more detail throughout the course.
+Again, the main goal for this lab is to understand the basic process.
+
+
+
+# Instructions
+
+This RMarkdown file provides a template for you to fill in.
+Read the file from start to finish, completing the parts as indicated.
+Some code is provided for you. Be sure to run this code, and make sure you understand what it's doing.
+Some blank "code chunks" are provided; you are welcome to add more (Code > Insert chunk or CTRL-ALT-I) as needed.
+There are also a few places where you should type text responses.
+Feel free to add additional text responses as necessary.
+
+You can run individual code chunks using the play button.
+You can use objects defined in one chunk in others.
+Just keep in mind that chunks are evaluated in order.
+So if you call something x in one chunk, but redefine x as something else in another chunk, it's essential that you evaluate the chunks in the proper order.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+When you are finished
+
+- click **Knit** and check to make sure that you have no errors and everything runs properly. (Fix any problems and redo this step until it works.)
+- Make sure your type your name(s) at the top of the notebook where it says "Type your name(s) here". If you worked in a team, you will submit a single notebook with both names; make sure both names are included
+- Submit your completed files in Canvas.
+
+You'll need a few R packages, which you can install using `install.packages`
+
+```{r, warning = FALSE, message = FALSE}
+
+library(ggplot2)
+library(dplyr)
+library(knitr)
+library(janitor)
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE
+)
+
+```
+
+
+# Estimating a population proportion - coarse grid simulation
+
+Suppose you're interested in $\theta$, the population proportion of Cal Poly students whose [dominant eye](https://www.allaboutvision.com/resources/dominant-eye-test.htm) (right or left) is the same same as their dominant hand (right or left).
+We will use data from a sample of 36 Cal Poly students; you can assume this represents a randomly selected sample.
+
+We'll start by assuming the only possible values of $\theta$ are 0, 0.1, $\ldots$, 0.9, 1.
+
+```{r}
+
+theta = seq(0, 1, 0.1)
+
+```
+
+
+Suppose you initially think that most people have the same dominant eye and hand.
+So you put greater plausibility on values of $\theta$ near 1 and less plausibility of values of $\theta$ near 0.
+In particular, suppose you place 0 "units" of plausibility on 0, 1 unit on 0.1, 2 units on 0.2, and so on, with 10 units on 1.
+The following defines the corresponding prior distribution, rescaling the plausibility values so that they add up to 1 while maintaining the proper ratios.
+
+
+```{r}
+
+units = 0:10
+
+prior = units / sum(units)
+
+plot(theta, prior, type = "h")
+
+```
+
+
+Now we'll simulate values of $\theta$ according to the prior distribution, using the `sample` function with the `prob` option.
+(Note: the `prob` option will automatically rescale values so they add up to 1, so we could have used `prob = units`.)
+
+```{r}
+
+n_rep = 100000
+
+theta_sim = sample(theta, n_rep, replace = TRUE, prob = prior)
+
+```
+
+We table and plot the simulated values of $\theta$ just to check that they follow (approximately) the prior distribution. (The `table` function gives a quick way of counting values.)
+
+```{r}
+
+kable(table(theta_sim) / n_rep,
+      digits = 4) # kable just adds nicer formatting to the table
+
+```
+
+
+```{r}
+
+plot(table(theta_sim) / n_rep, type = "h")
+
+```
+
+We will use data from a sample of 36 Cal Poly students.
+Before looking at the sample data, we consider what might happen, keeping in mind our initial assessment of plausibility (so values of $\theta$ near 1 get more "weight" than values of $\theta$ near 0).
+For each simulated value of $\theta$, we simulate a sample of size 36 and count the number of successes ($Y$).
+For example, if $\theta=0.8$ we simulate a value $Y$ from a Binomial(36, 0.8) distribution; if $\theta = 0.9$ we simulate a value $Y$ from a Binomial(36, 0.9) distribution.
+
+Note: `rbinom(1, 36, 0.8)` simulates a 1 value from a Binomial(36, 0.8) distribution; `rbinom(2, 36, 0.8)` simulates 2 values from a Binomial(36, 0.8) distribution; etc.
+But we want to simulate values from different Binomial distributions, depending on the value of $\theta$.
+Fortunately, R is "vectorized".
+For example, if `theta` has two elements, (0.8, 0.9), then `rbinom(2, 36, theta)` will output two elements: the first element will be simulated from a Binomial(36, 0.8) distribution, and the second element will be simulated from a Binomial(36, 0.9) distribution.
+
+```{r}
+
+n = 36
+
+y_sim = rbinom(n_rep, n, theta_sim)
+
+```
+
+
+(The marginal distribution of the $Y$ values is called the "prior predictive distribution".
+We will see uses for it soon, but we'll skip it for now.)
+
+Now we plot the simulated $(\theta, Y)$ pairs.
+(The $\theta$ values have been "jittered" or "wiggled" a little in the plot so they don't coincide.)
+
+
+```{r}
+
+plot(jitter(theta_sim), y_sim)
+
+```
+
+Remember, all of the simulated samples are hypothetical.
+
+Now we observe sample data.
+In the sample of 36 students, 29 students have the same dominant right eye and right hand.
+(This is based on my STAT 217 class in Fall 2021, but you can assume it's a random sample.)
+
+
+Consider only the simulated samples for which the sample count $Y$ is equal to the observed count 29.
+
+
+```{r}
+
+y_obs = 29
+
+# put the simulated (theta, Y) pairs together in a data frame
+sim = data.frame(theta_sim, y_sim)
+
+# select only the rows where simulated Y equals observed y
+# we could also get the theta values using `theta_sim[y_sim == y_obs]`
+sim_given_y_obs = sim %>%
+  filter(y_sim == y_obs)
+
+# display a few rows
+head(sim_given_y_obs)
+
+```
+
+
+Now we summarize the $\theta$ values for only the samples with a count equal to the observed count.
+
+```{r}
+
+table(sim_given_y_obs$theta_sim)
+
+```
+
+To approximate the distribution, we want to divide only by the number of repetitions that resulted in a count equal to the observed count.
+
+```{r}
+
+n_rep_given_y_obs = sum(y_sim == y_obs)
+
+n_rep_given_y_obs
+
+```
+
+The table displays the approximate posterior distribution
+
+```{r}
+
+kable(table(sim_given_y_obs$theta_sim) / n_rep_given_y_obs,
+      digits = 4)
+
+```
+
+
+The following plot displays the (approximate) posterior distribution.
+
+```{r}
+
+plot(table(sim_given_y_obs$theta_sim) / n_rep_given_y_obs,
+     type = "h",
+     xlab = "theta",
+     ylab = "posterior")
+
+```
+
+We often plot the prior and posterior distributions on the same plot.
+We won't do that yet.
+But do take a minute to compare the prior and posterior distributions.
+
+**Exercise.** Write a sentence or two comparing the prior and posterior distributions.
+How has our assessment of plausibility changed after observing the sample data?
+Does this make sense?
+
+**TYPE YOUR RESPONSE HERE.**
+
+# Estimating a population proportion - coarse grid spreadsheet
+
+Continuing the previous section, we'll now use a spreadsheet/table approach to find the posterior distribution, as we did in Handout 2 (see [Example 2.1 and solutions](https://bookdown.org/kevin_davisross/bayesian-reasoning-and-methods/ideas.html#exm:harry-potter-discrete-intro).)
+
+Again, we'll assume that $\theta$ only takes values 0, 1, $\ldots$, 0.9, 1.
+
+```{r}
+
+theta = seq(0, 1, 0.1)
+
+```
+
+
+We'll use the same prior as before (but we define it again here so that this section is self contained).
+
+
+```{r}
+
+units = 0:10
+
+prior = units / sum(units)
+
+plot(theta, prior, type = "h")
+
+```
+
+
+The possible values of $\theta$ and the prior make up the first two columns of our spreadsheet.
+
+Now we observe sample data (same as before).
+In the sample of 36 students, 29 students have the same dominant right eye and right hand.
+
+Remember, we want to find the likelihood of observing a sample count of 29 in a sample of size 36 for each possible value of $\theta$.
+If $Y$ is the number of successes in the sample, then for a given $\theta$ the sample count $Y$ follows a Binomial(36, $\theta$) distribution, so we can find the likelihood of 29 successes using `dbinom(29, 36, theta)`.
+For example, we can find the likelihood of a sample count of 29 when $\theta=0.8$ using `dbinom(29, 36, 0.8)`.
+
+```{r}
+
+dbinom(29, 36, 0.8)
+
+```
+
+
+We want to evaluate `dbinom(29, 36, theta)` for each possible value of $\theta$.
+Again, fortunately, R is "vectorized".
+For example, if `theta` has two elements, (0.8, 0.9), then `dbinom(29, 36, theta)` will output two elements: the first element will be the value of `dbinom(29, 36, 0.8)`, and the second element will be the value of `dbinom(29, 36, 0.9)`.
+
+```{r}
+
+n = 36
+
+y_obs = 29
+
+likelihood = dbinom(y_obs, n, theta)
+
+```
+
+Let's see what our spreadsheet looks like so far.
+We put the columns together, add a total row, and display.
+
+```{r}
+
+data.frame(theta,
+           prior,
+           likelihood) %>%
+  adorn_totals("row") %>%
+  kable(digits = 6)
+
+```
+Remember, the likelihood column doesn't need to add up to anything in particular.
+
+Note we want to compute the posterior distribution which revises our assessment of plausibility after observing the sample data.
+The key is: **posterior is proportional to the product of prior and likelihood.**
+For each value of $\theta$, we compute the product of prior and likelihood. 
+In the spreadsheet we go row-by-row multiplying the values in the prior and likelihood columns.
+
+```{r}
+
+product = prior * likelihood
+
+```
+
+Let's see what the table looks like with the product column.
+
+
+```{r}
+
+data.frame(theta,
+           prior,
+           likelihood,
+           product) %>%
+  adorn_totals("row") %>%
+  kable(digits = 6)
+
+```
+
+
+The product column gives us the relative ratios.
+For example, the product column tells us that the posterior plausibility of 0.8 is 3.75 times greater than the posterior plausibility of 0.9 (3.75 = 0.024 / 0.0064.
+Now we simply need to rescale these values — by dividing by the sum of the product column — to obtain posterior plausibilities in the proper ratios that add up to one.
+For example, the posterior probability of 0.624 for 0.8 is 0.024 (the value in the 0.8 row of the product column) divided by 0.0385 (the sum of the product column).
+
+
+```{r}
+
+posterior = product / sum(product)
+
+```
+
+Here is the completed table.
+
+```{r}
+
+data.frame(theta,
+           prior,
+           likelihood,
+           product,
+           posterior) %>%
+  adorn_totals("row") %>%
+  kable(digits = 6)
+
+```
+
+The plot displays the posterior distribution.
+Compare to the simulation-based approximation from the first section.
+
+
+```{r}
+
+plot(theta, posterior, type = "h")
+
+```
+
+
+**Exercise.** Write a sentence or two comparing the posterior distribution computed based on the spreadsheet approach (this section) to the simulation-based approximation (previous section).
+
+**TYPE YOUR RESPONSE HERE.**
+
+# EXERCISE - Fine grid simulation
+
+Now you will repeat the analysis from the first two sections, but assuming $\theta$ can take values 0, 0.0001, 0.0002, etc.
+
+```{r}
+
+theta = seq(0, 1, 0.0001)
+
+```
+
+We'll assume a prior similar similar to the previous sections, with plausibility increasing linearly to a maximum value at $\theta=1$.
+
+```{r}
+
+units = theta
+
+prior = units / sum(units)
+
+plot(theta, prior, type = "l")
+
+```
+
+Assume the same sample data (29 out of 36).
+
+Tasks:
+
+
+1. **Use simulation to approximate the posterior distribution of $\theta$.**
+Your end result should be a *histogram* of the posterior distribution.
+
+1. **Approximate the posterior probability that more than 75% of Cal Poly students have the same dominant eye as dominant hand.**
+
+1. **Then write a few sentences describing the posterior distribution.**
+What does it say about the plausibility of values of $\theta$ after observing sample data?
+How has the plausibility changed from the prior?
+Does this make sense?
+
+
+
+**Important note:** There are a lot more possible values of $\theta$ now, so you will want to boost the number of repetitions in the simulation to see more of the possibilities.
+Also, since each possible value of $\theta$ will only occur at most a few times in the simulation, a spike plot (plot with type="h") is not reasonable.
+Instead, create *histograms* of $\theta$ values (e.g., using `hist`)
+You will NOT want to try to create or display a table in this case; just focus on the histograms.
+
+**Important note:** You can obviously just cut and paste earlier code.
+But I strongly encourage you to try to write the code on your own in this section.
+
+```{r}
+# Type your code here.
+# Add as many code cells as you want.
+
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+# EXERCISE - Fine grid spreadsheet
+
+Now you will repeat the spreadsheet analysis, but assuming $\theta$ can take values 0, 0.0001, 0.0002, etc.
+
+```{r}
+
+theta = seq(0, 1, 0.0001)
+
+```
+
+We'll assume the same prior as in the previous section.
+
+```{r}
+
+units = theta
+
+prior = units / sum(units)
+
+plot(theta, prior, type = "l")
+
+```
+
+Assume the same sample data (29 out of 36).
+
+Tasks:
+
+1. **Use a spreadsheet/table analysis to compute the posterior distribution of $\theta$.**
+Your end result should be a plot like the one at the end of [Section 2 of the textbook](https://bookdown.org/kevin_davisross/bayesian-reasoning-and-methods/ideas.html) that displays prior, (scaled) likelihood, and posterior on the same plot.
+(There is some hack-y code in that section for one plot, but you're welcome to use your own.)
+
+1. **Approximate the posterior probability that more than 75% of Cal Poly students have the same dominant eye as dominant hand.**
+
+1. **Then write a few sentences describing the posterior distribution.**
+What does it say about the plausibility of values of $\theta$ after observing sample data?
+*What influence does the likelihood have?*
+How has the plausibility changed from the prior?
+Does this make sense?
+(These are the same questions from the previous section, but now you'll be able to see a little more directly the roll the likelihood plays.)
+
+**Important note:** You will compute the full table with all possible values of $\theta$, but *do NOT display the whole table!*
+You can display a few selected rows if you want (like I did in Section 2).
+But your main output will be the plot.
+
+**Important note:** You can obviously just cut and paste earlier code.
+But I strongly encourage you to try to write the code on your own in this section.
+
+```{r}
+# Type your code here.
+# Add as many code cells as you want.
+
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+# EXERCISE - Fine grid spreadsheet, different prior
+
+You'll redo the analysis from Part 6, but assuming a different prior.
+
+Tasks
+
+- **Assume all possible values of $\theta$ are initially equally plausible.**
+- **Redo Part 6 using this prior.**
+- Compare the results from this part with those from Part 6. **Write a few sentences discussing the influence of the prior.**
+
+
+```{r}
+# Type your code here.
+# Add as many code cells as you want.
+
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+
+# EXERCISE - Fine grid spreadsheet, another different prior
+
+You'll redo the analysis from Part 6, but assuming a different prior.
+
+Tasks
+
+- [This site claims that 65% of people have the same dominant eye as hand](https://shanbomeye.com/blog/facts-about-eye-dominance#:~:text=Sixty%2Dfive%20percent%20of%20people,different%20from%20their%20dominant%20hand.). **Assume your prior for $\theta$ can be described by a Normal distribution with mean 0.65 and standard deviation 0.1.** (Hint: you can use `dnorm` like in [Example 2.2 of Section 2 of the textbook](https://bookdown.org/kevin_davisross/bayesian-reasoning-and-methods/ideas.html#exm:harry-potter-discrete-grid.))
+- **Redo Part 6 using this prior.**
+- Compare the results from this part with those from Part 6. **Write a few sentences discussing the influence of the prior.**
+
+
+```{r}
+# Type your code here.
+# Add as many code cells as you want.
+
+```
+
+**TYPE YOUR RESPONSE HERE.**
+
+# Reflection
+
+1. Write a few sentences summarizing one important concept you have learned in this lab
+1. What is (at least) one question that you still have?
+
+**TYPE YOUR RESPONSE HERE.**
