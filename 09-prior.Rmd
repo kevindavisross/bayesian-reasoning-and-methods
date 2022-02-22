@@ -2,6 +2,8 @@
 
 One of the most commonly asked questions when one first encounters Bayesian statistics is "how do we choose a prior?"  While there is never one "perfect" prior in any situation, we'll discuss in this chapter some issues to consider when choosing a prior.  But first, here are a few big picture ideas to keep in mind.
 
+- Bayesian inference is based on the *posterior* distribution, not the prior.
+Therefore, the posterior requires much more attention than the prior.
 - The prior is only one part of the Bayesian model.  The likelihood is the other part.  And there is the data that is used to fit the model.  Choice of prior is just one of many modeling assumptions that should be evaluated and checked.
 - In many situations, the posterior distribution is not too sensitive to reasonable changes in prior.  In these situations, the important question isn't "what is the prior?" but rather "is there a prior at all"? That is, are you adopting a Bayesian approach, treating parameters as random variables, and quantifying uncertainty about parameters with probability distributions?
 - One criticism of Bayesian statistics in general and priors in particular is that they are subjective.
@@ -12,14 +14,25 @@ Priors and Bayesian data analysis are no more inherently subjective than any of 
 Subjectivity is OK, and often beneficial. Choosing a subjective prior allows us to explicitly incorporate a wealth of past experience into our analysis.
 
 ```{example, pepsi}
-Xiomara claims that she can predict which way a coin flip will land. To test her claim, you flip a fair coin 10 times, and she correctly predicts the result of each of the 10 flips.
+Xiomara claims that she can predict which way a coin flip will land.
+Rogelio claims that he can taste the difference between Coke and Pepsi.
 
-Rogelio claims that he can taste the difference between Coke and Pepsi.  To test his claim, you give him a blind taste test of 10 cups, flipping a coin for each cup to determine whether to serve Coke or Pespi.  Rogelio correctly identifies each of the 10 cups.
+Before reading further, stop to consider: whose claim - Xiomara’s or Rogelio’s - is initially more convincing?
+Or are you equally convinced? Why?
+To put it another way, whose claim are you initially more skeptical of? Or are you equally skeptical?
+To put it one more way, whose claim would require more data to convince you?^[This example is motivated by an example in Section 1.1 of @bayesrules.]
 
-Whose claim do you find more convincing, Xiomara's or Rogelio's? Or are you equally convinced?
+To test Xiomara's claim, you flip a fair coin 10 times, and she correctly predicts the result of 9 of the 10 flips.
+(You can assume the coin is fair, the flips are independent, and there is no funny business in data collection.)
 
-Let $\theta_X$ be the probability that Xiomara correctly guess the result of a fair coin flip.
-Let $\theta_R$ be the probability that Rogelio correctly guess the soda in a randomly selected cup.
+To test Rogelio's claim, you give him a blind taste test of 10 cups, flipping a coin for each cup to determine whether to serve Coke or Pespi.
+Rogelio correctly identifies 9 of the 10 cups.
+(You can assume the coin is fair, the flips are independent, and there is no funny business in data collection.)
+
+
+
+Let $\theta_X$ be the probability that Xiomara correctly guesses the result of a fair coin flip.
+Let $\theta_R$ be the probability that Rogelio correctly guesses the soda (Coke or Pepsi) in a randomly selected cup.
 
 ```
 
@@ -30,13 +43,69 @@ Let $\theta_R$ be the probability that Rogelio correctly guess the soda in a ran
 to Example \@ref(exm:pepsi)
 ```
 
-1. For Xiomara, a frequentist might conduct a hypothesis test of the null hypothesis $H_0:\theta_X = 0.5$ versus the alternative hypothesis: $H_a:\theta_X > 0.5$. The p-value would be about 0.001, the probability of observing 10 out of 10 successes from a Binomial distribution with parameters 10 and 0.5.  Rogelio's set up would be similar and would yield the same p-value.  So a strict frequentist would be equally convinced of the two claims.
+1. For Xiomara, a frequentist might conduct a hypothesis test of the null hypothesis $H_0:\theta_X = 0.5$ versus the alternative hypothesis: $H_a:\theta_X > 0.5$. The p-value would be about 0.01, the probability of observing at least 9 out of 10 successes from a Binomial distribution with parameters 10 and 0.5 (`1 - pbinom(8, 10, 0.5)`).  Rogelio's set up would be similar and would yield the same p-value.  So a strict frequentist would be equally convinced of the two claims.
 1. Prior to observing data, we are probably more skeptical of Xiomara's claim than Rogelio's.  Since coin flips are unpredictable, we would have a strong prior belief that $\theta_X$ is close to 0.5 (what it would be if she were just guessing).  Our prior for $\theta_X$ would have a mean of 0.5 and a small prior SD, to reflect that only values close to 0.5 seem plausible.  Therefore, it would require a lot of evidence to sway our prior beliefs.  
     On the other hand, we might be familiar with people who can tell the difference between Coke and Pepsi; maybe we even can ourselves.  Our prior for $\theta_R$ would have a smaller prior SD than that of $\theta_X$ to allow for a wider range of plausible values.  We might even have a prior mean for $\theta_R$ above 0.5 if we have experience with a lot of people who can tell the difference between Coke and Pepsi.  Given the sample data, our posterior probability that $\theta_R>0.5$ would be larger than the posterior probability that $\theta_X > 0.5$, and we would be more convinced by Rogelio's claim than by Xiomara's.
 
+```{r, echo=FALSE, fig.show="hold", out.width="50%"}
+
+theta <- seq(0.3, 0.7, length = 10000)
+
+# prior
+
+a_m = 5000
+b_m = 5000
+pi_m = dbeta(theta, a_m, b_m)
+
+a_b = 10
+b_b = 10
+pi_b = dbeta(theta, a_b, b_b)
+
+plot(theta, pi_m, type = "l", lty = 1, lwd = 2, col = "orange",
+     xlab = "Population proportion",
+     ylab = "Density",
+     yaxt = "n",
+     main = "Prior Distributions")
+
+lines(theta, pi_b, lwd = 2, col = "skyblue")
+
+legend("topright", c("Mabel (prior)", "Dipper (prior)"), lty = c(1, 1), lwd = c(2, 2),
+       col = c("orange", "skyblue"))
+
+# posterior
+n = 10
+y_b = 9
+y_m = 9
+
+a_b1 = a_b + y_b
+b_b1 = b_b + n - y_b
+pi_b1 = dbeta(theta, a_b1, b_b1)
+
+a_m1 = a_m + y_m
+b_m1 = b_m + n - y_m
+pi_m1 = dbeta(theta, a_m1, b_m1)
+
+plot(theta, pi_m1, type = "l", lty = 2, lwd = 2, col = "orange",
+     xlab = "Population proportion",
+     ylab = "Density",
+     yaxt = "n",
+     main = "Prior and Posterior Distributions")
+
+lines(theta, pi_b1, lwd = 2, lty = 2, col = "skyblue")
+lines(theta, pi_m, lwd = 2, lty = 1, col = "orange")
+lines(theta, pi_b, lwd = 2, lty = 1, col = "skyblue")
+
+legend("topright",
+       c("Mabel (prior)", "Dipper (prior)", "Mabel (posterior)", "Dipper (posterior)"),
+       lty = c(1, 1, 2, 2), lwd = c(2, 2, 2, 2),
+       col = rep(c("orange", "skyblue"), 2))
 
 
-Even if a prior does not represent strong prior beliefs, just having a prior distribution at all allows for Bayesian analysis.  Remember, both Bayesian and frequentist are valid approaches to statistical analyses, each with advantages and disadvantages.  That said, there are some issues with frequentist approaches that incorporating a prior distribution and adpopting a Bayesian approach alleviates. (To be fair, an upcoming investigation will address some of disadvantages of the Bayesian approach compare with the frequenstist approach.)
+```
+
+
+
+Even if a prior does not represent strong prior beliefs, just having a prior distribution at all allows for Bayesian analysis.  Remember, both Bayesian and frequentist are valid approaches to statistical analyses, each with advantages and disadvantages.  That said, there are some issues with frequentist approaches that incorporating a prior distribution and adopting a Bayesian approach alleviates. (To be fair, an upcoming investigation will address some disadvantages of the Bayesian approach compared with the frequentist approach.)
 
 ```{example, tamika}
 Tamika is a basketball player who throughout her career has had a probability of 0.5 of making any three point attempt.
@@ -50,7 +119,7 @@ Assume attempts are independent.
 ```
 
 1. Prior to collecting data, the coach decides that he'll have convincing evidence that Tamika has gotten worse if the p-value is less than 0.025. Suppose the coach told Tamika to *shoot 24 attempts and then stop* and count the number of successful attempts. Use software to compute the p-value.  Is the coach convinced that Tamika has gotten worse?
-1. Prior to collecting data, the coach decides that he'll have convincing evidence that Tamika has gotten worse if the p-value is less than 0.025. Suppose the coach told Tamika to *shoot until she makes 7 three pointers and then stop* and count the number of total attempts. Use software to compute the p-value.  Is the coach convinced that Tamika has gotten worse? (Hint: the total number of attempts has a Negative Binomial distribution.)
+1. Prior to collecting data, the coach decides that he'll have convincing evidence that Tamika has gotten worse if the p-value is less than 0.025. Suppose the coach told Tamika to *shoot until she makes 7 three pointers and then stop* and count the number of total attempts. Use software to compute the p-value.  Is the coach convinced that Tamika has gotten worse? (Hint: the total number of attempts has a [Negative Binomial distribution](https://bookdown.org/kevin_davisross/probsim-book/NegativeBinomial.html).)
 1. Now suppose the coach takes a Bayesian approach and assumes a Beta($\alpha$, $\beta$) prior distribution for $\theta$.  Suppose the coach told Tamika to *shoot 24 attempts and then stop* and count the number of successful attempts. Identify the likelihood function and the posterior distribution of $\theta$.
 1. Now suppose the coach takes a Bayesian approach and assumes a Beta($\alpha$, $\beta$) prior distribution for $\theta$.  Suppose the coach told Tamika to *shoot until she makes 7 three pointers and then stop* and count the number of total attempts. Identify the likelihood function and the posterior distribution of $\theta$.
 1. Compare the Bayesian and frequentist approaches in this example.  Does the "strength of the evidence" depend on how the data were collected?
@@ -89,7 +158,7 @@ The prior distribution quantifies the researcher's uncertainty about parameters 
 
 
 
-For those initially skeptical of prior distributions at all, the strategy of always choosing an informative or flat prior might be appealing.  Flat priors are common, but are rarely ever the best choices from a modeling perspective. Just like you would not want to assume a Normal distribution for the likelihood in every problem, you would not to use a flat prior in every problem.
+For those initially skeptical of prior distributions at all, the strategy of always choosing an noninformative or flat prior might be appealing.  Flat priors are common, but are rarely ever the best choices from a modeling perspective. Just like you would not want to assume a Normal distribution for the likelihood in every problem, you would not to use a flat prior in every problem.
 
 Furthermore, there are some subtle issues that arise when attempting to choose a noninformative prior.
 

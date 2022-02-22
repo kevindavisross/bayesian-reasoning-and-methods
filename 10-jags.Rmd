@@ -1,0 +1,501 @@
+# Introduction to Posterior Simulation and JAGS  {#jags}
+
+
+
+In the Beta-Binomial model there is a simple expression for the posterior distribution.
+However, in most problems it is not possible to find the posterior distribution analytically, and therefore we must approximate it.
+
+```{example, left-handed-normal-prior}
+
+Consider Example \@ref(exm:choose-beta-prior) again, in which we wanted to estimate the proportion of Cal Poly students that are left-handed. In that example we specifed a prior by first specifying a prior mean of 0.15 and a prior SD of 0.08 and then we found the corresponding Beta prior.  However, when dealing with means and SDs, it is natural --- but by no means necessary --- to work with Normal distributions.  Suppose we want to assume a Normal distribution prior for $\theta$ with mean 0.15 and SD 0.08.  Also suppose that in a sample of 25 Cal Poly students 5 are left-handed. We want to find the posterior distribution.
+
+Note: the Normal distribution prior assigns positive (but small) density outside of (0, 1). So we can either truncate the prior to 0 outside of (0, 1) or just rely on the fact that the likelihood will be 0 for $\theta$ outside of (0, 1) to assign 0 posterior density outside (0, 1).
+
+```
+
+1. Write an expression for the shape of the posterior density.  Is this a recognizable probability distribution?
+1. We have seen one method for approximating a posterior distribution.  How could you employ it here?
+
+```{solution}
+to Example \@ref(exm:left-handed-normal-prior)
+```
+
+1. As always, the posterior density is proportional to the product of the prior density and the likelihood function.
+\begin{align*}
+\text{Prior:} & & \pi(\theta) & \propto \frac{1}{0.08}\exp\left(-\frac{\left(\theta - 0.15\right)^2}{2(0.08^2)}\right)\\
+\text{Likelihood:} & & f(y|\theta) & \propto \theta^5(1-\theta)^{20}\\
+\text{Posterior:} & & \pi(\theta | y) & \propto \left(\theta^5(1-\theta)^{20}\right)\left(\frac{1}{0.08}\exp\left(-\frac{\left(\theta - 0.15\right)^2}{2(0.08^2)}\right)\right)
+\end{align*}
+    This is not a recognizable probability density.
+
+1. We can use grid approximation and treat the continuous parameter $\theta$ as discrete.
+
+```{r}
+
+theta = seq(0, 1, 0.0001)
+
+# prior
+prior = dnorm(theta, 0.15, 0.08)
+prior = prior / sum(prior)
+
+# data
+n = 25 # sample size
+y = 5 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# plot
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+par(new=T) 
+plot(theta, likelihood / sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topright", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+```
+
+    
+
+Grid approximation is one method for approximating a posterior distribution.
+However, finding a sufficiently fine grid approximation suffers from the "curse of dimensionality" and does not work well in multi-parameter problems.
+For example, suppose you use a grid of 1000 points to approximate the distribution of any single parameter.
+Then you would need a grid of $1000^2$ points to approximate the joint distribution of any two parameters, $1000^3$ points for three parameters, and so on.
+The size of the grid increases exponentially with the number of parameters and becomes computationally infeasible in problems with more than a few parameters.  (And later we'll see some examples that include *hundreds* of parameters.)
+Furthermore, if the posterior density changes very quickly over certain regions, then even finer grids might be needed to provide reliable approximations of the posterior in these regions.
+(Though if the posterior density is relative smooth over some regions, then we might be able to get away with a coarser grid in these regions.)
+
+The most common way to approximate a posterior distribution is via simulation.  The inputs to the simulation are
+
+- Observed data $y$
+- Model for the data, $f(y|\theta)$ which depends on parameters $\theta$. (This model determines the likelihood function.)
+- Prior distribution for parameters $\pi(\theta)$
+
+
+We then employ some simulation algorithm to approximate the posterior distribution of $\theta$ given the observed data $y$, $\pi(\theta|y)$, *without computing the posterior distribution.*
+
+Careful: we have already used simulation to approximate predictive distributions.  Here we are primarily focusing on using simulation to approximate the posterior distribution of parameters.
+
+Let's consider a discrete example first.
+
+```{example, kissing-posterior-sim}
+
+Continuing the kissing study in Example \@ref(exm:kissing-discrete1) where $\theta$ can only take values 0.1, 0.3, 0.5, 0.7, 0.9.
+Consider a prior distribution which places probability 1/9, 2/9, 3/9, 2/9, 1/9 on the values 0.1, 0.3, 0.5, 0.7, 0.9, respectively. Suppose that $y=8$ couples in a sample of size $n=12$ lean right.
+
+```
+
+1. Describe in detail how you could use simulation to approximate the posterior distribution of $\theta$, without first computing the posterior distribution.
+1. Code and run the simulation.  Compare the simulation-based approximation to the true posterior distribution from Example \@ref(exm:kissing-discrete1).
+1. How would the simulation/code change if $\theta$ had a Beta prior distribution, say Beta(3, 3)?
+1. Suppose that $n = 1200$ and $y = 800$.  What would be the problem with running the above simulation in this situation?  Hint: compute the probability that $Y$ equals 800 for a Binomial distribution with parameters 1200 and 0.667.
+
+```{solution}
+to Example \@ref(exm:kissing-posterior-sim)
+```
+
+1. Remember that the posterior distribution is the *conditional distribution of parameters $\theta$ given the observed data $y$*.
+Therefore, we need to approximate the conditional distribution of $\theta$ given $y=8$ successes in a sample of size $n=12$.
+
+    - Simulate a value of $\theta$ from the prior distribution.
+    - Given $\theta$, simulate a value of $Y$ from the Binomial distribution with parameters $n=12$ and $\theta$.
+    - Repeat the above steps many times, generating many $(\theta, Y)$ pairs.
+    - To condition on $y=8$, discard any $(\theta, Y)$ pairs for which $Y$ is not 8.  Summarize the $\theta$ values for the remaining pairs to approximate the posterior distribution of $\theta$.  For example, to approximate the posterior probability that $\theta$ equals 0.7, count the number of repetitions in which $\theta$ equals 0.7 and $Y$ equals 8 and divide by the count of repetitions in which $Y$ equals 8.
+
+1. See code below. The simulation approximates the posterior distribution fairly well in this case. Notice that we simulate 100,000 $(\theta, Y)$ pairs, but only around 10,000 or so yield a value of $Y$ equal to 8.  Therefore, the posterior approximation is based on roughly 10,000 values, not 100,000.
+
+    ```{r}
+
+n_sim = 100000
+
+theta_prior_sim = sample(c(0.1, 0.3, 0.5, 0.7, 0.9), 
+                         size = n_sim,
+                         replace = TRUE,
+                         prob = c(1, 2, 3, 2, 1) / 9)
+
+y_sim = rbinom(n_sim, 12, theta_prior_sim)
+
+kable(head(data.frame(theta_prior_sim, y_sim), 20))
+
+theta_post_sim = theta_prior_sim[y_sim == 8]
+
+table(theta_post_sim)
+     
+plot(table(theta_post_sim) / length(theta_post_sim),
+     xlab = "theta",
+     ylab = "Relative frequency")
+
+# true posterior for comparison
+par(new = T)
+plot(c(0.3, 0.5, 0.7, 0.9), c(0.0181, 0.4207, 0.5365, 0.0247),
+     col = "orange", type = "o",
+     xaxt = 'n', yaxt = 'n', xlab = "", ylab = "")
+
+    ```
+
+1. The only difference is that we would first simulate a value of $\theta$ from its Beta(3, 3) prior distribution (using `rbeta`).  Now any value between 0 and 1 is a possible value of $\theta$.  But we would still approximate the posterior distribution by discarding any $(\theta, Y)$ pairs for which $Y$ is not equal to 8.  Since $\theta$ is continuous, we could summarize the simulated values with a histogram or density plot.
+
+    ```{r}
+
+n_sim = 100000
+
+theta_prior_sim = rbeta(n_sim, 3, 3)
+
+y_sim = rbinom(n_sim, 12, theta_prior_sim)
+
+kable(head(data.frame(theta_prior_sim, y_sim), 20))
+
+theta_post_sim = theta_prior_sim[y_sim == 8]
+     
+hist(theta_post_sim, freq = FALSE,
+     xlab = "theta",
+     ylab = "Density")
+lines(density(theta_post_sim))
+
+# true posterior for comparison
+lines(density(rbeta(100000, 3 + 8, 3 + 4)), col = "orange")
+
+    ```
+
+
+
+1. Now we need to approximate the conditional distribution of $\theta$ given 800 successes in a sample of size $n=1200$.
+The probability that $Y$ equals 800 for a Binomial distribution with parameters 1200 and 2/3 is about 0.024 (`dbinom(800, 1200, 2 / 3)`).
+Since the sample proportion 800/1200 = 2/3 maximizes the likelihood of $y=800$, the probability is even smaller for the other values of $\theta$.  
+Therefore, if we generate 100,000 ($\theta, Y$) pairs, only a few hundred or so of them would yield $y=800$ and so the posterior approximation would be unreliable.
+If we wanted the posterior approximation to be based on 10,000 simulated values from the conditional distribution of $\theta$ given $y=8$, we would first have to general about 10 million $(\theta, Y)$ pairs.
+
+
+In principle, the posterior distribution $\pi(\theta|y)$ given observed data $y$ can be found by
+
+- simulating many $\theta$ values from the prior distribution
+- simulating, for each simulated value of $\theta$, a $Y$ value from the corresponding conditional distribution of $Y$ given $\theta$ ($Y$ could be a sample or the value of a sample statistic)
+- discarding $(\theta, Y)$ pairs for which the simulated $Y$ value is not equal to the observed $y$ value
+- Summarizing the simulated $\theta$ values for the remaining pairs with $Y=y$.
+
+However, this is a very computationally inefficient way of approximating the posterior distribution.  Unless the sample size is really small, the simulated sample statistic $Y$ will only match the observed $y$ value in relatively few samples, simply because in large samples there are just many more possibilities.  For example, in 1000 flips of a fair coin, the most likely value of the number of heads is 500, but the probability of *exactly* 500 heads in 1000 flips is only 0.025.  When there are many possibilities, the probability gets stretched fairly thin.  Therefore, if we want say 10000 simulated values of $\theta$ given $y$, we would have first simulate many, many more values.
+
+The situation is even more extreme when the data is continuous, where the probably of replicating the observed sample is essentially 0.
+
+
+Therefore, we need more efficient simulation algorithms for approximating posterior distributions. **Markov chain Monte Carlo (MCMC)** methods^[For some history, and an origin of the use of "Monte Carlo", see [Wikipedia](https://en.wikipedia.org/wiki/Monte_Carlo_method).]
+provide powerful and widely applicable algorithms for simulating from probability distributions, including complex and high-dimensional distributions. These algorithms include Metropolis-Hastings, Gibbs sampling, Hamiltonian Monte Carlo, among others.
+We will see later some of the ideas behind MCMC algorithms.  However, we will rely on software to carry out MCMC simulations.
+
+## Introduction to JAGS
+
+JAGS^[If you've ever heard of BUGS (or WinBUGS) JAGS is very similar but with a few nicer features.] ("Just Another Gibbs Sampler") is a stand alone program for performing MCMC simulations.  JAGS takes as input a Bayesian model description --- prior plus likelihood --- and data and returns an MCMC sample from the posterior distribution.  JAGS uses a combination of Metropolis sampling, Gibbs sampling, and other MCMC algorithms.   
+
+A few JAGS resources:
+
+- [JAGS User Manual](https://sourceforge.net/projects/mcmc-jags/files/Manuals/4.x/jags_user_manual.pdf/download)
+- [JAGS documentation](https://cran.r-project.org/web/packages/rjags/rjags.pdf)
+- [Some notes about JAGS error messages](https://www4.stat.ncsu.edu/~bjreich/BSMdata/errors.html)
+- [*Doing Bayesian Data Analysis* textbook website](https://sites.google.com/site/doingbayesiandataanalysis/)
+
+
+
+The basic steps of a JAGS program are:
+
+1. Load the data
+1. Define the model: likelihood and prior
+1. Compile the model in JAGS
+1. Simulate values from the posterior distribution
+1. Summarize simulated values and check diagnostics
+
+This section introduces a brief introduction to JAGS in some relatively simple situations.
+
+
+Using the `rjags` package, one can interact with JAGS entirely within R. 
+
+```{r}
+library(rjags)
+```
+
+
+
+
+### Load the data
+
+We'll use the "data is singular" context as an example.  Compare the results of JAGS simulations to the results in Chapter 7.
+
+The data could be loaded from a file, or specified via sufficient summary statistics.  Here we'll just load the summary statistics and in later examples we'll show how to load individual values.
+
+```{r}
+n = 35 # sample size
+y = 31 # number of successes
+```
+
+
+### Specify the model: likelihood and prior
+
+A JAGS model specification starts with `model`.  The model provides a *textual* description of likelihood and prior.  This text string will then be passed to JAGS for translation.
+
+Recall that for the Beta-Binomial model, the prior distribution is $\theta\sim$ Beta$(\alpha, \beta)$ and the likelihood for the total number of successes $Y$ in a sample of size $n$ corresponds to $(Y|\theta)\sim$ Binomial$(n, \theta)$.  Notice how the following text reflects the model (prior & likelihood).
+
+**Note:** JAGS syntax is similar to, but not the same, as R syntax.  For example, compare `dbinom(y, n, theta)` in R versus `y ~ dbinom(theta, n)` in JAGS. See the JAGS user manual for more details. You can use comments with # in JAGS models, similar to R.
+
+```{r}
+
+model_string <- "model{
+
+  # Likelihood
+  y ~ dbinom(theta, n)
+
+  # Prior
+  theta ~ dbeta(alpha, beta)
+  alpha <- 3 # prior successes
+  beta <- 1 # prior failures
+
+}"
+
+```
+
+Again, the above is just a text string, which we'll pass to JAGS for translation.
+
+
+### Compile in JAGS
+
+We pass the model (which is just a text string) and the data to JAGS to be compiled via `jags.model`.  The model is defined by the text string via the `textConnection` function. The model can also be saved in a separate file, with the file name being passed to JAGS. The data is passed to JAGS in a list.  In `dataList` below `y = y, n = n` maps the data defined by `y=31, n=35` to the terms `y, n` specified in the `model_string`.
+
+```{r}
+
+dataList = list(y = y, n = n)
+
+model <- jags.model(file = textConnection(model_string), 
+                    data = dataList)
+
+```
+ 
+### Simulate values from the posterior distribution
+
+Simulating values in JAGS is completed in essentially two steps.  The `update` command runs the simulation for a "burn-in" period.  The `update` function merely "warms-up" the simulation, and the values sampled during the update phase are not recorded. (We will discuss "burn-in" in more detail later.)
+
+```{r}
+update(model, n.iter = 1000)
+```
+
+After the update phase, we simulate values from the posterior distribution that we'll actually keep using `coda.samples`.  Using `coda.samples` arranges the output in a format conducive to using `coda`, a package which contains helpful functions for summarizing and diagnosing MCMC simulations.  The variables to record simulated values for are specified with the `variable.names` argument.  Here there is only a single parameter theta, but we'll see multi-parameter examples later.
+
+```{r}
+
+Nrep = 10000 # number of values to simulate
+
+posterior_sample <- coda.samples(model,
+                       variable.names = c("theta"),
+                       n.iter = Nrep)
+
+```
+
+
+### Summarizing simulated values and diagnostic checking
+
+Standard R functions like `summary` and `plot` can be used to summarize results from `coda.samples`.  We can summarize the simulated values of theta to approximate the posterior distribution.
+
+```{r}
+summary(posterior_sample)
+plot(posterior_sample)
+```
+
+The **Doing Bayesian Data Analysis (DBDA2E)** textbook package also has some nice functions built in, in particular in the `DBD2AE-utilities.R` file.
+
+For example, the `plotPost` functions creates an annotated plot of the posterior distribution along with some summary statistics. (See the DBDA2E documentation for additional arguments.)
+
+```{r}
+source("DBDA2E-utilities.R")
+plotPost(posterior_sample)
+```
+
+The [`bayesplot`](https://mc-stan.org/bayesplot/index.html) R package also provides lots of nice plotting functionality.
+
+
+```{r}
+library(bayesplot)
+mcmc_hist(posterior_sample)
+```
+
+```{r}
+mcmc_dens(posterior_sample)
+```
+
+
+```{r}
+mcmc_trace(posterior_sample)
+```
+
+
+
+
+### Posterior prediction
+
+The output from `coda.samples` is stored as an mcmc.list format. The simulated values of the variables identified in the `variable.names` argument can be extracted as a matrix (or array) and then manipulated as usual R objects.
+
+```{r}
+thetas = as.matrix(posterior_sample)
+head(thetas)
+
+hist(thetas)
+```
+
+
+The matrix would have one column for each variable named in `variable.names`; in this case, there is only one column corresponding to the simulated values of theta.
+
+We can now use the simulated values of theta to simulate replicated samples to approximate the posterior predictive distribution.  To be clear, the code below is running R commands within R (not JAGS). 
+
+(There is a way to simulate predictive values within JAGS itself, but I think it's more straightforward in R.  Just use JAGS to get a simulated sample from the posterior distribution. On the other hand, if you're using Stan there are functions for simulating and summarizing posterior predicted values.)
+
+```{r}
+
+ynew = rbinom(Nrep, n, thetas)
+
+plot(table(ynew),
+     main = "Posterior Predictive Distribution for samples of size 35",
+     xlab = "y")
+
+```
+
+
+### Loading data as individual values rather than summary statistics
+
+Instead of the total count (modeled by a Binomial likelihood), the individual data values (1/0 = S/F) can be provided, which could be modeled by a Bernoulli (i.e. Binomial(trials=1)) likelihood.  That is, $(Y_1, \ldots, Y_n|\theta)\sim$ i.i.d. Bernoulli($\theta$), rather than $(Y|\theta)\sim$ Binomial$(n, \theta)$.  The vector y below represents the data in this format.  Notice how the likelihood in the model specification changes in response; the n observations are specified via a `for` loop.
+
+```{r}
+# Load the data
+y = c(rep(1, 31), rep(0, 4)) # vector of 31 1s and 4 0s
+n = length(y)
+
+model_string <- "model{
+
+  # Likelihood
+  for (i in 1:n){
+    y[i] ~ dbern(theta)
+  }
+
+  # Prior
+  theta ~ dbeta(alpha, beta)
+  alpha <- 3 
+  beta <- 1
+
+}"
+
+```
+
+### Simulating multiple chains
+
+The Bernoulli model can be passed to JAGS similar to the Binomial model above.  Below, we have also introduced the `n.chains` argument, which simulates multiple Markov chains and allows for some additional diagnostic checks.  Simulating multiple chains helps assess convergence of the Markov chain to the target distribution.  (We'll discuss more details later.) Initial values for the chains can be provided in a list with the `inits` argument; otherwise initial values are generated automatically.
+
+```{r}
+# Compile the model
+dataList = list(y = y, n = n)
+
+model <- jags.model(textConnection(model_string), 
+                    data = dataList,
+                    n.chains = 5)
+
+# Simulate
+update(model, 1000, progress.bar = "none")
+
+Nrep = 10000
+
+posterior_sample <- coda.samples(model, 
+                                 variable.names = c("theta"), 
+                                 n.iter = Nrep,
+                                 progress.bar = "none")
+
+# Summarize and check diagnostics
+summary(posterior_sample)
+plot(posterior_sample)
+
+```
+
+
+If multiple chains are simulated, the DBDA2E function `diagMCMC` can be used for diagnostics.
+
+**Note:** Some of the DBDA2E output, in particular from `diagMCMC`, isn't always displayed when the RMarkdown file is knit.  You might need to manually run these cells within RStudio. I'm not sure why; please let me know if you figure it out.
+
+```{r}
+plotPost(posterior_sample)
+```
+
+```{r}
+diagMCMC(posterior_sample)
+```
+
+```{r, echo = FALSE}
+knitr::include_graphics("_graphics/dbda-plots.png")
+```
+
+
+
+### ShinyStan
+
+
+We can use regular R functionality for plotting, or functions from packages likes DBDA2E or bayesplot.  Another nice tool is [ShinyStan](https://mc-stan.org/users/interfaces/shinystan), which provides an interactive utility for exploring the results of MCMC simulations.  While ShinyStan was developed for the Stan package, it can use output from JAGS and other MCMC packages.  You'll need to install the `shinystan` package and its dependencies.
+
+The code below will launch in a browser the ShinyStan GUI for exploring the results of the JAGS simulation.  The `as.shinystan` command takes coda.samples output (stored as an mcmc-list) and puts it in the proper format for ShinyStan. (Note: this code won't display anything in the notes.  You'll have to actually run it to see what happens.)
+
+```{r, eval=FALSE}
+library(shinystan)
+my_sso <- launch_shinystan(as.shinystan(posterior_sample,
+                                        model_name = "Bortles!!!"))
+```
+
+### Back to the left-handed problem
+
+Let's return again to the problem in Example \@ref(exm:left-handed-normal-prior),  in which we wanted to estimate the proportion of Cal Poly students that are left-handed. Assume a Normal distribution prior for $\theta$ with mean 0.15 and SD 0.08.  Also suppose that in a sample of 25 Cal Poly students 5 are left-handed. We will use JAGS to find the (approximate) posterior distribution.
+
+
+Important note: in JAGS a Normal distribution is parametrized by its *precision*,  which is the reciprocal of the variance: `dnorm(mean, precision)`. That is, for a $N(\mu,\sigma)$ distribution, the precision, often denoted $\tau$, is $\tau = 1/\sigma^2$. For example, in JAGS `dnorm(0, 1 / 4)` corresponds to a precision of 1/4, a variance of 4, and a standard deviation of 2.
+
+
+```{r}
+
+# Data
+n = 25
+y = 5
+
+# Model
+model_string <- "model{
+
+  # Likelihood
+  y ~ dbinom(theta, n)
+
+  # Prior
+  theta ~ dnorm(mu, tau)
+  mu <- 0.15 # prior mean
+  tau <- 1 / 0.08 ^ 2 # prior precision; prior SD = 0.08
+
+}"
+
+dataList = list(y = y, n = n)
+
+# Compile
+model <- jags.model(file = textConnection(model_string), 
+                    data = dataList)
+
+model <- jags.model(textConnection(model_string), 
+                    data = dataList,
+                    n.chains = 5)
+
+# Simulate
+update(model, 1000, progress.bar = "none")
+
+Nrep = 10000
+
+posterior_sample <- coda.samples(model, 
+                                 variable.names = c("theta"), 
+                                 n.iter = Nrep,
+                                 progress.bar = "none")
+
+# Summarize and check diagnostics
+summary(posterior_sample)
+plot(posterior_sample)
+```
+
+
+The posterior density is similar to what we computed with the grid approximation.

@@ -1,0 +1,850 @@
+# Interpretations of Probability and Statistics {#interpretations}
+
+You have some familiarity with "probability" or "chance" or "odds".
+But what do we really mean when talk about "probability"?
+It turns out there are two main interpretations: relative frequency and "subjective" probability.
+These two interpretations provide the philosophical foundation for two schools of statistics: frequentist (hypothesis tests and confidence intervals that you've seen before) and Bayesian (what this book is about).
+This chapter introduces the two interpretations.
+
+
+
+
+
+
+## Instances of randomness {#randomness}
+
+A wide variety of situations involve probability. Consider just a few examples.
+
+1. The probability that you roll doubles in a turn of a board game.
+1. The probability you win the next [Powerball lottery](https://www.powerball.com/) if you purchase a single ticket, 4-8-15-16-42, plus the Powerball number, 23.
+1. The probability that a “randomly selected” Cal Poly student is a California resident.
+1. The probability that the high temperature in San Luis Obispo tomorrow is above 90 degrees F.
+1. The probability that Hurricane Peter makes landfall in the U.S.
+1. The probability that the San Francisco 49ers win the next Superbowl.
+1. The probability that President Biden wins the 2024 U.S. Presidential Election.
+1. The probability that extraterrestrial life currently exists somewhere in the universe.
+1. The probability that Alexander Hamilton actually wrote [51](https://www.youtube.com/watch?v=DPgE7PNzXag) of the [Federalist Papers](https://en.wikipedia.org/wiki/The_Federalist_Papers). (The papers were published under a common pseudonym and authorship of some of the papers is disputed.)
+1. The probability that you ate an apple on April 17, 2009.
+
+
+```{example randomness}
+
+How are the situations above similar, and how are they different?  What is one feature that all of the situations have in common? Is the interpretation of "probability" the same in all situations?  Take some time to consider these questions before looking at the solution. The goal here is to just think about these questions, and not to compute any probabilities (or to even think about how you would).
+
+```
+
+```{solution randomness-sol}
+to Example \@ref(exm:randomness)
+```
+
+```{asis, fold.chunk = TRUE}
+
+This exercise is intended to motivate discussion, so you might have thought of some other ideas we don't address here.  That's good! And some of the things you considered might come up later in the book.  But here are a few thoughts we specifically want to mention now.
+
+The one feature that all of the situations have in common is *uncertainty*.  Sometimes the uncertainty arises from a repeatedable physical phenomenon that can result in multiple potential outcomes, like rolling dice or drawing the winning Powerball number.  In other cases, there is uncertainty because the probability concerns the future, like tomorrow's high temperature or the result of the next Superbowl.  But there can also be uncertainty about the past: there are some Federalist papers for which the author is unknown, and you probably don't know for sure whether or not you ate an apple on April 17, 2009.
+
+Whenever there is uncertainty, it is reasonable to consider relative likelihoods of potential outcomes.  For example, even though you don't know for certain whether you ate an apple on April 17, 2009, if you're usually an apple-a-day person (or were when you were younger) you might think the probability is high.  We don't know for sure what team will win the next Superbowl, but we might think that the 49ers are more likely than the Eagles to be the winner.
+
+While all of the situations in the example involve uncertainty, it seems that there are different "types" of uncertainty.  Even though we don't know which side a die will land on, the notion of "fairness" implies that the sides are "equally likely".   Likewise, there are some rules to how the Powerball drawing works, and it seems like these rules should determine the probability of drawing that particular winning number.
+
+However, there aren't any specific "rules of uncertainty" that govern whether or not you ate an apple on April 17, 2009.  You either did or you didn't, but that doesn't mean the two outcomes are necessarily equally likely.  Regarding the Superbowl, of course there are rules that govern the NFL season and playoffs, but there are no "rules of uncertainty" that tell us precisely how likely any particular team is to win any particular game, let alone how likely a team is to advance to and win the Superbowl.
+
+
+It also seems that there are different interpretations of probability. Given that a six-sided die is fair, we might all agree that the probability that it lands on any particular side is 1/6.
+Similarly, given the rules of the Powerball lottery, we might all agree on the probability that a drawing results in a particular winning number.  However, there isn't necessarily consensus about what the high temperature will be in San Luis Obispo tomorrow.  Different weather prediction models, forecasters, or websites might provide different values for the probability that the high temperature will be above 90 degrees Fahrenheit.
+Similarly, Superbowl odds might vary by source.
+Situations like tomorrow's weather or the Superbowl where there is no consensus about the "rules of uncertainty" require some subjectivity in determining probabilities.
+
+Finally, some of these situations are repeatedable. We could (in principle) roll a pair of dice many times and see how often we get doubles, or repeat the Powerball drawing over and over to see how the winning numbers behave.
+However, many of these situations involve something that only happens once, like tomorrow or April, 17, 2009 or the next Superbowl.
+Even when the phenomenon happens only once in reality, we can still develop models of what might happen if we were to hypothetically repeat the phenomenon many times.
+For example, meteorologists use historical data and meteorological models to forecast [potential paths of a hurricane](https://www.nhc.noaa.gov/cone_usage.php).
+
+
+
+```
+	
+
+
+
+
+The subject of probability concerns *random* phenomena. A phenomenon is **random**^[In this book, "random" and "uncertain" are synonyms; the opposite of "random" is "certain". (Later we will encounter random variables; "constant" is an antonym of "random variable".)  The word "random" has many uses in everyday life, which have [evolved over time](https://www.npr.org/2012/11/30/166240531/thats-so-random-the-evolution-of-an-odd-word).  Unfortunately, some of the everyday meanings of "random", like "haphazard" or "unexpected", are contrary to what we mean by "random" in this book.  For example, we would consider Steph Curry shooting a free throw to be a random phenomenon because we're not certain if he'll make it or miss it; but we would not consider this process to be haphazard or unexpected.] if there are multiple potential outcomes, and there is **uncertainty** about which outcome will occur. Uncertainty is understood in broad terms, and in particular does not only concern future occurrences.
+
+Some phenomena involve physical randomness^[We will refer to as "random" any scenario that involves a reasonable degree of uncertainty.  We're avoiding philosophical questions about what is "true" randomness, like the following.  Is a coin flip really random? If all factors that affect the trajectory of the coin were known precisely, then wouldn't the outcome be determined?  Does true randomness only exist in quantum mechanics?], like flipping coins, rolling dice, drawing Powerballs at random from a bin, or randomly selecting Cal Poly students.  In many other situations randomness just vaguely reflects uncertainty.
+
+Contrary to colloquial uses of the word, random does *not* mean haphazard. In a random phenomenon, while
+individual outcomes are uncertain, we will see that there is a *regular distribution of
+outcomes over a large number of (hypothetical) repetitions*. For example,
+
+- In two flips of a fair coin we wouldn't necessarily see one head and one tail. But in 10000 flips of a fair coin, we might expect to see close to 5000 heads and 5000 tails. 
+- We don't know who will win the next Superbowl, but we can and should consider some teams as more likely to win than others.  We could imagine a large number of hypothetical 2021-2022 seasons; how often would we expect the 49ers to win? The Eagles?
+<!-- (Hopefully a lot for the Eagles; probably not much for the Raiders). -->
+
+
+Random also does *not* necessarily mean equally likely. In a random
+phenomenon, certain outcomes or events might be more or less likely than
+others.
+For example,
+
+- It's much more likely than not that a randomly selected Cal Poly student is a California resident.
+- Not all NFL teams are equally likely to win the next Superbowl.
+
+Finally, randomness is also not necessarily undesirable.  In particular, many statistical applications often employ the planned use of randomness with the goal of collecting "good" data.
+For example,
+
+- *Random selection* involves selecting a sample of individuals "at random" from a population (e.g., via random digit dialing), with the goal of selecting a representative sample.  
+- *Random assignment* involves assigning individuals at random to groups (e.g., in a randomized experiment), with the goal of constructing groups that are similar in all aspects so that the effect of a treatment (like a new vaccine) can be isolated.
+
+The **probability** of an event associated with a random phenomenon is a number in the interval $[0, 1]$ measuring the event's likelihood or degree of uncertainty. A probability can take any values in the continuous scale from 0% to 100%^[Probabilities are usually defined as decimals, but are often colloquially referred to as percentages.  We're not sticklers; we'll refer to probabilities both as decimals and as percentages.]. In particular, a probability requires much more interpretation than "is the probability greater than, less than, or equal to 50%?" As Example \@ref(exm:randomness) suggests, there can be different interpretations of "probability", which we'll start to explore in the next section.
+
+
+
+## Interpretations of probability {#interpretations-of-probability}
+
+
+In the previous section we encountered a variety of scenarios which involved uncertainty, a.k.a. randomness.  Just as there are a few "types" of randomness, there are a few ways of interpreting probability, most notably, *long run relative frequency* and *subjective probability*.
+
+
+
+
+
+
+
+
+### Long run relative frequency {#rel-freq}
+
+```{r, echo = FALSE}
+
+N = 1000000
+
+roll_sums = apply(matrix(sample(1:6, 3 * N, replace = TRUE),
+                         nrow = N), 1, sum)
+
+sim_freqs = table(roll_sums)
+
+```
+
+
+One of the oldest documented^[The Grand Duke of Tuscany posed this problem to Galileo, who published his solution in 1620.  However, unbeknownst to Galileo, the same problem had been solved almost 100 years earlier by [Gerolamo Cardano, one of the first mathematicians to study probability](http://www.columbia.edu/~pg2113/index_files/Gorroochurn-Some%20Laws.pdf).] problems in probability is the following: If three fair six-sided dice are rolled, what is more likely: a sum of 9 or a sum of 10?
+Let's try to answer this question by simply rolling dice and seeing if a sum of 9 or 10 happens more frequently.
+Roll three fair six-sided dice, find the sum, repeat many times, and see how often we get a sum of 9 versus a sum of 10.
+Of course, this would be a time consuming process by hand, but it's quick and easy on a computer.
+Figure \@ref(fig:fig-dice-galileo) displays the result of one million repetitions of this process, each repetition resulting in the sum of three rolls.
+A sum of 9 occurred in `r sim_freqs[[9 - 2]]` repetitions and a sum of 10 occurred in `r sim_freqs[[10 - 2]]` repetitions.
+Comparing these frequencies, our results suggest that a sum of 10 is more likely than a sum of 9.
+
+(ref:cap-dice-galileo) Results of one million sets of three rolls of fair six-sided dice. Sets in which the sum of the dice is 9 (10) are represented by orange (blue) spike.
+
+
+
+
+```{r fig-dice-galileo, echo = FALSE, fig.cap="(ref:cap-dice-galileo)"}
+
+bar_cols = c(rep("gray", 6), "orange", "skyblue", rep("gray", 8))
+
+plot(sim_freqs,
+     xlab = "Sum of three rolls of six-sided dice",
+     ylab = "Number of sets of three rolls",
+     col = bar_cols,
+     lwd = 3)
+
+```
+
+In the previous problem we assessed relative likelihoods by repeating the process many times.
+This is the idea behind the relative frequency interpretation of probability.
+We'll investigate this idea further in the context of what is probably the most iconic random process: coin flipping.
+
+
+
+We might all agree that the probability that a single flip of a fair coin lands on heads is 1/2, a.k.a., 0.5, a.k.a, 50%.  After all, the notion of "fairness" implies that the two outcomes, heads and tails, should be equally likely, so we have a "50/50 chance" of heads.  But how else can we interpret this 50%?  As in the dice rolling problem, we can consider *what would happen if we flipped the coin main times*.  Now, if we would flipped the coin twice, we wouldn't expect to necessarily see one head and one tail.  But in many flips, we might expect to see heads on something close to 50\% of flips.
+
+```{r, echo = FALSE}
+
+n = 1000
+i = 1:n
+x = sample(c("H", "T"), size = n, replace = TRUE)
+x_n = cumsum(x == "H")
+phat_n = x_n / i
+
+x2 = cbind(as.numeric(x == "H"),
+           matrix(rbinom(3 * n, 1, 0.5), ncol = 3))
+phat_n2 = sweep(apply(x2, 2, cumsum), 1, i, FUN = '/')
+
+n1 = 10
+
+n2 = 100
+
+n3 = 1000
+
+```
+
+
+Let's try this out. Table \@ref(tab:coin-flips) displays the results of 10 flips of a fair coin. The first column is the flip number and the second column is the result of the flip.  The third column displays the *running proportion of flips that result in H*. For example, the first flip results in `r x[1]` so the running proportion of H after 1 flip is `r sum(x[1] == "H")`/1; the first two flips result in (`r x[1]`, `r x[2]`) so the running proportion of H after 2 flips is `r sum(x[1:2] == "H")`/2; and so on. Figure \@ref(fig:coin-flips-plot) plots the running proportion of H by the number of flips.  We see that with just a small number of flips, the proportion of H fluctuates considerably and is not guaranteed to be close to 0.5.  Of course, the results depend on the particular sequence of coin flips.  We encourage you to flip a coin 10 times and compare your results.
+
+
+(ref:cap-coin-flips) Results and running proportion of H for 10 flips of a fair coin.
+
+```{r, coin-flips, echo = FALSE}
+
+
+knitr::kable(
+  data.frame(i[1:n1], x[1:n1], x_n[1:n1], phat_n[1:n1]),
+  align = "r",
+  col.names = c("Flip", "Result",
+                "Running count of H",
+                "Running proportion of H"),
+  booktabs = TRUE,
+  caption = "(ref:cap-coin-flips)",
+  digits = 3
+)
+
+```  
+
+
+
+(ref:cap-coin-flips-plot) Running proportion of H versus number of flips for the 10 coin flips in Table \@ref(tab:coin-flips).
+
+
+```{r coin-flips-plot, echo=FALSE, warning=FALSE, message=FALSE, fig.cap="(ref:cap-coin-flips-plot)"}
+
+plot(i[1:n1], phat_n[1:n1], type = "o",
+     xlab = "Flip number",
+     ylab = "Running proportion of H",
+     ylim = c(0, 1),
+     col = "blue",
+     xaxt = "n")
+axis(1, i[1:n1])
+abline(h = 0.5, lty = 2)
+
+```
+
+
+Now we'll flip the coin 90 more times for a total of 100 flips.  The plot on the left in Figure \@ref(fig:coin-flips-plot2) summarizes the results, while the plot on the right also displays the results for 3 additional sets of 100 flips. The running proportion fluctuates considerably in the early stages, but settles down and tends to get closer to 0.5 as the number of flips increases.  However, each of the fours sets results in a different proportion of heads after 100 flips: `r phat_n2[n2, 1]` (blue), `r phat_n2[n2, 2]` (orange), `r phat_n2[n2, 3]` (green), `r phat_n2[n2, 4]` (purple).  Even after 100 flips the proportion of flips that result in H isn't guaranteed to be very close to 0.5.  
+
+
+(ref:cap-coin-flips-plot2) Running proportion of H versus number of flips for four sets of 100 coin flips.
+
+
+```{r coin-flips-plot2, echo=FALSE, warning=FALSE, message=FALSE, fig.show="hold", out.width="50%", fig.cap="(ref:cap-coin-flips-plot2)"}
+
+plot(i[1:n2], phat_n[1:n2], type = "o",
+     xlab = "Flip number",
+     ylab = "Running proportion of H",
+     ylim = c(0, 1),
+     col = "blue",
+     xaxt = "n")
+axis(1, seq(0, n2, n2 / 10))
+abline(h = 0.5, lty = 2)
+
+
+
+matplot(cbind(i, i, i, i)[1:n2, ], phat_n2[1:n2, ], type = "l",
+     xlab = "Flip number",
+     ylab = "Running proportion of H",
+     ylim = c(0, 1),
+     col = c("blue", "orange", "seagreen", "purple"),
+     xaxt = "n")
+axis(1, seq(0, n2, n2 / 10))
+abline(h = 0.5, lty = 2)
+
+
+
+```
+
+
+Now for each set of 100 flips, we'll flip the coin 900 more times for a total of 1000 flips in each of the four sets.  The plot on the left in Figure \@ref(fig:coin-flips-plot3) summarizes the results for our original set, while the plot on the right also displays the results for the three additional sets from Figure \@ref(fig:coin-flips-plot3). Again, the running proportion fluctuates considerably in the early stages, but settles down and tends to get closer to 0.5 as the number of flips increases.  Compared to the results after 100 flips, there is less variability between sets in the proportion of H after 1000 flips: `r phat_n2[n3, 1]` (blue), `r phat_n2[n3, 2]` (orange), `r phat_n2[n3, 3]` (green), `r phat_n2[n3, 4]` (purple).  Now, even after 1000 flips the proportion of flips that result in H isn't guaranteed to be exactly 0.5, but we see a tendency for the proportion to get closer to 0.5 as the number of flips increases.
+
+
+(ref:cap-coin-flips-plot3) Running proportion of H versus number of flips for four sets of 1000 coin flips.
+
+
+```{r coin-flips-plot3, echo=FALSE, warning=FALSE, message=FALSE, fig.show="hold", out.width="50%", fig.cap="(ref:cap-coin-flips-plot3)"}
+
+
+plot(i[1:n3], phat_n[1:n3], type = "l",
+     xlab = "Flip number",
+     ylab = "Running proportion of H",
+     ylim = c(0, 1),
+     col = "blue",
+     xaxt = "n")
+axis(1, seq(0, n3, n3 / 10))
+abline(h = 0.5, lty = 2)
+
+matplot(cbind(i, i, i, i)[1:n3, ], phat_n2[1:n3, ], type = "l",
+     xlab = "Flip number",
+     ylab = "Running proportion of H",
+     ylim = c(0, 1),
+     col = c("blue", "orange", "seagreen", "purple"),
+     xaxt = "n")
+axis(1, seq(0, n3, n3 / 10))
+abline(h = 0.5, lty = 2)
+
+
+
+```
+
+In summary, in a large number of flips of a fair coin we expect about 50% of flips to result in H.  That is, the probability that a flip of a fair coin results in H can be interpreted as the *long run proportion of flips that result in H*, or in other words, the *long run relative frequency of H*.
+
+In general, the probability of an event associated with a random phenomenon can be interpreted as a **long run proportion** or **long run relative frequency**: the probability of the event is the proportion of times that the event would occur in a very large number^[A natural question is: "how many repetitions are required to represent the long run?"  We'll consider this question when we discuss MCMC methods.] of hypothetical repetitions of the random phenomenon. 
+
+
+The long run relative frequency interpretation of probability can be applied when a situation can be repeated numerous times, at least conceptually, and an outcome can be observed for each repetition. One benefit of the relative frequency interpretation is that the probability of an event can be *approximated by simulating* the random phenomenon a large number of times and determining the proportion of simulated repetitions on which the event occurred out of the total number of repetitions in the simulation. A **simulation** involves an artificial recreation of the random phenomenon, usually using a computer.  After many repetitions the relative frequency of the event will settle down to a single constant value, and that value is the approximately the probability of the event.
+
+Of course, the accuracy of simulation-based approximations of probabilities depends on how well the simulation represents the actual random phenomenon. Conducting a simulation can involve many assumptions which influence the results. Simulating many flips of a fair coin is one thing; simulating an entire NFL season and the winner of the Superbowl is an entirely different story.
+
+
+
+### Subjective probability {#subjective-probability}
+
+The long run relative frequency interpretation is natural in  repeatable situations like flipping coins, rolling dice, drawing Powerballs, or randomly selecting Cal Poly students.
+
+On the other hand, it is difficult to conceptualize some scenarios in the long run.  The next Superbowl will only be played once, the 2024 U.S. Presidential Election will only be conducted once (we hope), and there was only one April 17, 2009 on which you either did or did not eat an apple.  But while these situations are not naturally repeatable they still involve randomness (uncertainty) and it is still reasonable to assign probabilities.  At this point in time we might think that the Kansas City Chiefs are more likely than the Philadelphia Eagles to win Superbowl 2022 and that President Biden is more likely than Dwayne Johnson to win the U.S. 2024 Presidential Election. If you've always been an apple-a-day person, you might think there's a good chance you ate one on April 17, 2009.
+It is still reasonable to assign probabilities to quantify such assessments even when an uncertain phenomenon is not repeated.
+
+However, the *meaning* of probability does seem different in a physically repeatable situations like coin flips than in single occurrences like the 2022 Superbowl.  For example, as of Dec 30, 2021,
+
+- According to [FiveThirtyEight](https://projects.fivethirtyeight.com/2021-nfl-predictions/), the Kansas City Chiefs have a 26% chance of winning the 2022 Superbowl, and the Green Bay Packers have a 24% chance.
+- According to [Football Outsiders](https://www.footballoutsiders.com/stats/nfl/playoff-odds), the Kansas City Chiefs have a 19.4% chance of winning the 2022 Superbowl, and the Green Bay Packers have a 14% chance.
+- As reported by [CBS Sports](https://www.cbssports.com/nfl/news/super-bowl-2022-odds-packers-break-tie-with-chiefs-now-favorites-to-win-super-bowl-lvi/), the Kansas City Chiefs have a 20% chance of winning the 2022 Superbowl, and the Green Bay Packers have a 21% chance.
+
+
+Each source, as well as many others, assigns different probabilities to the Chiefs and Packers winning. Which source, if any, is "correct"?
+
+When the situation involves a fair coin flip, we could perform a simulation to see that the long run proportion of flips that land on H is 0.5, and so the probability that a fair coin flip lands on H is 0.5.  Even though the actual 2022 Superbowl will only happen once, we could still perform a simulation involving hypothetical repetitions. However, simulating the Superbowl involves first simulating the 2021-2022 season to determine the playoff matchups, then simulating the playoffs to see which teams make the Superbowl, then simulating the Superbowl matchup itself.  And simulating the season involves simulating all the individual games. Even just simulating a single game involves many assumptions; differences in opinions with regards to these assumptions can lead to different probabilities.   For example, on Dec 30, according to [FiveThirtyEight](https://projects.fivethirtyeight.com/2021-nfl-predictions/games/) the Eagles had a 55% chance of beating the Washington Football Team in their game on Jan 2, but according to [numberFire](https://live.numberfire.com/nfl?week=17) it was 65%.  (Let's hope the Eagles won.)  Even though  the differences in probabilities between sources are often small, many small differences over the course of the season could result in large differences in predictions for the Superbowl champion.
+
+Unlike physically repeatable situations such as flipping a coin, there is no single set of "rules" for conducting a simulation of a season of football games or the Superbowl champion. Therefore, there is no single long run relative frequency that determines the probability.  Instead we consider *subjective probability*.
+
+A **subjective (a.k.a. personal) probability** describes the degree of likelihood a given individual assigns to a certain event. As the name suggests, different individuals (or probabilistic models) might have different subjective probabilities for the same event.  In contrast, in the long run relative frequency interpretation the probability is agreed to be defined as the long run relative frequency, a single  number.
+
+**Think of subjective probabilities as measuring *relative degrees of likelihood, uncertainty, or plausibility* ** rather than long run relative frequencies.  For example, in the FiveThirtyEight forecast (as of Dec 30), the Chiefs (26% chance) are about *3.25 times more likely* to win the 2022 Superbowl than the Cowboys (8% chance); $3.25 = 26 / 8$.  Relative likelihoods can also be compared across different forecasts or scenarios. For example, FiveThirtyEight believes that the Packers are about 1.7 times more likely to win the Superbowl than Football Outsiders does (24% versus 14%).  Also, FiveThirtyEight believes that the likelihood that a fair coin lands on H is about 1.92 times larger than the likelihood that the Chiefs win the 2022 Superbowl.
+
+The [FiveThirtyEight NFL predictions](https://projects.fivethirtyeight.com/2021-nfl-predictions/) are the output of a probabilistic forecast. A **probabilistic forecast** combines observed data and statistical models to make predictions. Rather than providing a single prediction (such as "the Chiefs will win the 2022 Superbowl"), probabilistic forecasts provide a range of scenarios and their relative likelihoods.  Such forecasts are subjective in nature, relying upon the data used and assumptions of the model. Changing the data or assumptions can result in different forecasts and probabilities.  In particular, probabilistic forecasts are usually revised over time as more data becomes available.
+
+
+Simulations can also be based on subjective probabilities.  If we were to conduct a simulation consistent with FiveThirtyEight's model (as of Dec 30), then in about 26% of repetitions the Chiefs would win the Superbowl, and in about 8% of repetitions the Cowboys would win.  Of course, different sets of subjective probabilities correspond to different assumptions and different ways of conducting the simulation.  
+
+Subjective probabilities can be calibrated by weighing the relative favorability of different bets, as in the following example.
+
+
+```{example subjective-bet}
+
+What is your subjective probability that Professor Ross has a TikTok account? Consider the following two bets, and suppse you must choose only one^[We do not advocate gambling.  We merely use gambling contexts to motivate probability concepts.].
+
+A)  You win $100 if Professor Ross has a TikTok account, and you win nothing otherwise.
+A)  A box contains 40 green and 60 gold marbles that are otherwise identical.  The marbles are thoroughly mixed and one marble is selected at random. You win $100 if the selected marble is green, and you win nothing otherwise.
+
+1. Which of the above bets would you prefer?  Or are you completely indifferent? What does this say about your subjective probability that Professor Ross has a Tik Tok account?
+1. If you preferred bet B to bet A, consider bet C which has a similar setup to B but now there are 20 green and 80 gold marbles. Do you prefer bet A or bet C? What does this say about your subjective probability that Professor Ross has a Tik Tok account? 
+1. If you preferred bet A to bet B, consider bet D which has a similar setup to B but now there are 60 green and 40 gold marbles. Do you prefer bet A or bet D? What does this say about your subjective probability that Professor Ross has a Tik Tok account?
+1. Continue to consider different numbers of green and gold marbles.  Can you zero in on your subjective probability?
+  
+```
+
+
+```{solution subjective-bet-sol}
+
+to Example \@ref(exm:subjective-bet)
+
+```
+
+```{asis, fold.chunk = TRUE}
+
+1. Since the two bets have the same payouts, you should prefer the one that gives you a greater chance of winning! If you choose bet B you have a 40% chance of winning.
+    - If you prefer bet B to bet A, then your subjective probability that Professor Ross has a TikTok account is less than 40%.
+    - If you prefer bet A to bet B, then your subjective probability that Professor Ross has a TikTok account is greater than 40%.
+    - If you're indifferent between bets A and B, then your subjective probability that Professor Ross has a TikTok account is equal to 40%.  
+1. If you choose bet C you have a 20% chance of winning.
+    - If you prefer bet C to bet A, then your subjective probability that Professor Ross has a TikTok account is less than 20%.
+    - If you prefer bet A to bet C, then your subjective probability that Professor Ross has a TikTok account is greater than 20%.
+    - If you're indifferent between bets A and C, then your subjective probability that Professor Ross has a TikTok account is equal to 20%.  
+1. If you choose bet D you have a 60% chance of winning.
+    - If you prefer bet D to bet A, then your subjective probability that Professor Ross has a TikTok account is less than 60%.
+    - If you prefer bet A to bet D, then your subjective probability that Professor Ross has a TikTok account is greater than 60%.
+    - If you're indifferent between bets A and D, then your subjective probability that Professor Ross has a TikTok account is equal to 60%.  
+1. Continuing in this way you can narrow down your subjective probability. For example, if you prefer bet B to bet A and bet A to bet C, your subjective probability is between 20% and 40%.  Then you  might consider bet E corresponding to 30 gold marbles and 70 green to determine if you subjective probability is greater than or less than 30%.  At some point it will be hard to choose, and you will be in the ballpark of your subjective probability.  (Think of it like going to the eye doctor: "which is better: 1 or 2?"  At some point you can't really see a difference.)
+
+```
+
+(ref:cap-subjective-bet) The three marble bins in Example \@ref(exm:subjective-bet). Left: Bet A, 40% chance of selecting green. Middle: Bet B, 20% chance of selecting green. Left: Bet C, 60% chance of selecting green.
+
+
+```{r subjective-bet-fig, echo = FALSE, fig.cap = "(ref:cap-subjective-bet)", fig.show = "hold", out.width = "33%"}
+
+library(waffle)
+
+
+waffle(c(40, 60), rows = 10,
+       legend_pos = "none",
+       colors = c("#154734", "#BD8B13"),
+       title = "40 green, 60 gold")
+
+waffle(c(20, 80), rows = 10,
+       legend_pos = "none",
+       colors = c("#154734", "#BD8B13"),
+       title = "20 green, 80 gold")
+
+waffle(c(60, 40), rows = 10,
+       legend_pos = "none",
+       colors = c("#154734", "#BD8B13"),
+       title = "60 green, 40 gold")
+
+```
+
+Of course, the strategy in the above example isn't an exact science, and there is a lot of behavioral psychology behind how people make choices in situations like this, especially when betting with real money.
+But the example provides a very rough idea of how you might discern a subjective probability of an event.
+The example also illustrates that probabilities can be "personal"; *your* information or assumptions will influence your assessment of the likelihood.
+
+We close this section with some brief comments about subjectivity. Subjectivity is not bad; "subjective" is not a "dirty" word.
+Any probability model involves some subjectivity, even when probabilities can be interpreted naturally as long run relative frequencies.
+For example, assuming a die is fair does not codify an objective truth about the die.
+Instead, "fairness" reflects a reasonable and tractable mathematical model.
+In the real world, any "fair" six-sided die has small physical imperfections that cause the six faces to have different probabilities.
+However, the differences are usually small enough to be ignored for most practical purposes.
+Assuming that the probability that the die lands on each side is 1/6 is much more tractable than assuming the probability of a 1 is 0.1666666668, the probability of a 2 is 0.1666666665, etc.
+(Furthermore, measuring the probability of each side so precisely would be extremely difficult.)
+But assuming that the probability that the die lands on each side is 1/6 is also subjective.
+We might readily agree to assume that the probability that a six-sided die lands on 1 is 1/6, but we might not reach a concensus on the probability that the Chiefs win the Superbowl.
+But the fact that there cam be many reasonable probability models for a situation like the 2022 Superbowl does not make the corresponding subjective probabilities any less valid than long run relative frequencies.
+
+
+
+
+## Working with probabilities {#consistency}
+
+
+In the previous section we encountered two interpretations of probability: long run relative frequency and subjective.
+We will use these interpretations interchangeably.
+With subjective probabilities it is often helpful to consider what might happen in a simulation.
+It is also useful to consider long run relative frequencies in terms of relative degrees of likelihood.
+Fortunately, the mathematics of probability work the same way regardless of the interpretation.
+
+### Consistency requirements
+
+With either the long run relative frequency or subjective probability interpretation there are some basic logical consistency requirements which probabilities need to satisfy. Roughly, probabilities cannot be negative and the sum of probabilities over all possible outcomes must be 100%.
+
+
+
+```{example worldseries}
+
+As of Dec 30, [FiveThirtyEight](https://projects.fivethirtyeight.com/2021-nfl-predictions//) listed the following probabilities for who will 
+win the 2022 Superbowl.
+
+```
+
+| Team                 | Probability |
+|----------------------|------------:|
+| Kansas City Chiefs   |         26% |
+| Green Bay Packers    |         24% |
+| Tampa Bay Buccaneers |          9% |
+| Dallas Cowboys       |          8% |
+| Other                |             |
+
+According to FiveThirtyEight (as of Dec 30):
+
+1. What would you expect the results of 10000 repetitions of a simulation of the Superbowl champion to look like?  Construct a table summarizing what you expect. Is this necessarily what would happen? 
+1. What must be the probability that the Chiefs do *not* win the 2022 Superbowl?
+1. What must be the probability that one of the above four teams is the Superbowl champion?
+1. What must be the probability that a team other than the above four teams is the Superbowl champion?  That is, what value goes in the "Other" row in the table?
+
+```{solution worldseries-sol}
+
+to Example \@ref(exm:worldseries)
+
+```
+
+```{asis, fold.chunk = TRUE}
+
+
+1. While these particular probabilities are subjective, imagining probabilities as relative frequencies often helps our intuition.  If we think of this as a simulation, each repetition results in a World Series champion and in the long run we would expect the Dodgers would be the champion in 22%, or 2200, of the 10000 repetitions.  We would expect the simulation results to look like
+
+    | Team                 | Repetitions as winner |
+    |----------------------|----------------------:|
+    | Kansas City Chiefs   |                  2600 |
+    | Green Bay Packers    |                  2400 |
+    | Tampa Bay Buccaneers |                   900 |
+    | Dallas Cowboys       |                   800 |
+    | Other                |                  3300 |
+  
+    Of course, there would be some variability from simulation to simulation, just like in the sets of 1000 coin flips in Figure \@ref(fig:coin-flips-plot3).  But the above counts represent about what we would expect.  
+
+1. 74%. Either the Chiefs win or they don't; if there's a 26% chance that the Chiefs win, there must be a 74% chance that they do not win. If we think of this as a simulation with 10000 repetitions, each repetition results in either the Chiefs winning or not, so if they win in 2600 of repetitions then they must not win in the other 7400.
+1. 67%. There is only one Superbowl champion, so if say the Chiefs win then no other team can win.  Thinking again of the simulation, the repetitions in which the Chiefs win are distinct from those in which the Cowboys win.  So if the Chiefs win in 2600 repetitions and the Cowboys win in 800 repetitions, then on a total of 3400 repetitions either the Chiefs or Cowboys win.  Adding the four probabilities, we see that the probability that one of the four teams above wins must be 67%.
+1. 33%. Either one of the four teams above wins, or some other team wins.  If one of the four teams above wins in 6700 repetitions, then in 3300 repetitions the winner is not one of these four teams.
+
+``` 
+
+
+```{example worldseries-proportional}
+
+Suppose your subjective probabilities for the 2022 Superbowl champion satisfy the following conditions.
+
+- The Cowboys and Buccaneers are equally likely to win
+- The Packers are 1.5 times more likely than the Cowboys to win
+- The Chiefs are 2 times more likely than the Packers to win
+- The winner is as likely to be among these four teams --- Chiefs, Packers, Buccaneers, Cowboys --- as not
+
+
+Construct a table of your subjective probabilities like the one in Example \@ref(exm:worldseries). 
+
+```
+
+
+```{solution worldseries-proportional-sol}
+
+to Example \@ref(exm:worldseries-proportional)
+
+```
+
+```{asis, fold.chunk = TRUE}
+
+Here, probabilities are specified indirectly via relative likelihoods.  We need to find probabilities that are in the given ratios and add up to 100%.  It helps to designate one outcome as the "baseline".  It doesn't matter which one; we'll choose the Cowboys.
+
+- Suppose the Cowboys account for 1 "unit".  It doesn't really matter what a unit is, but let's say it corresponds to 1000 repetitions of the simulation.  That is, the Cowboys win in 1000 repetitions.  Careful: we haven't yet specified how many total repetitions we have done, or how many units the entire simulation accounts for.  We're just starting with a baseline of what happens for the Cowboys.
+- The Cowboys and Buccaneers are equally like to win, so the Buccaneers also account for 1 unit.
+- The Packers are 1.5 times more likely than the Cowboys to win, so the Packers account for 1.5 units.  If 1 unit is 1000 repetitions, then the Packers win in 1500 repetitions, 1.5 times more often than the Cowboys.
+- The Chiefs are 2 times more likely than the Packers to win, so the Chiefs account for $2\times 1.5=3$ units. If 1 unit is 1000 repetitions, then the Chiefs win in 3000 repetitions.
+- The four teams account for a total of $1+1+1.5+3 = 6.5$ units. Since the winner is as likely to among these four teams as not, then "Other" also accounts for 6.5 units.
+- In total, there are 13 units which account for 100% of the probability.  The Cowboys account for 1 unit, so their probability of winning is $1/13$ or about 7.7%.  Likewise, the probability that the Chiefs win is $3/13$ or about 23.1%.
+
+
+| Team                 | Units | Repetitions | Probability |
+|----------------------|------:|------------:|------------:|
+| Kansas City Chiefs   |   3.0 |        3000 |       23.1% |
+| Green Bay Packers    |   1.5 |        1500 |       11.5% |
+| Tampa Bay Buccaneers |   1.0 |        1000 |        7.7% |
+| Dallas Cowboys       |   1.0 |        1000 |        7.7% |
+| Other                |   6.5 |        6500 |       50.0% |
+| Total                |  13.0 |       13000 |      100.0% |
+  
+You should verify that all of the probabilities are in the specified ratios.  For example, the Chiefs are 2 times more likely ($2 = 23.1 / 11.5$) than the Packers to win, and the Packers are 1.5 times more likely $(1.5 \approx 11.5 / 7.7)$ than the Cowboys to win.
+
+We could have also solved this problem using algebra.  Let $x$ be the probability, as a decimal, that the Cowboys are the winner.  (Again, it doesn't matter which team is the baseline.) Then $x$ is also the probability that the Buccaneers are the winner, $1.5x$ for the Packers, and $3x$ for the Chiefs.  The probability that one of the four teams wins is $x + x + 1.5x + 3x = 6.5x$, so the probability of Other is also  $6.5x$.  The probabilities in decimal form must sum to 1 (that is, 100%), so $1 = x + x + 1.5x + 3x + 6.5x = 13x$.  Solve for $x=1/13$ and then plug in $x=1/13$ to find the other probabilities.
+
+
+``` 
+
+
+Example \@ref(exm:worldseries-proportional) illustrates one way of formulating probabilities.  We start by specifying probabilities in relative terms, and then "normalize" these probabilities so that they add up to 100% while maintaining the ratios. As in the example, it helps to consider one outcome as a "baseline" and to specify all likelihoods relative to the baseline. 
+
+Figure \@ref(fig:fig-worldseries-proportional) provides a visual representation of Example \@ref(exm:worldseries-proportional).
+The ratios provided in the problem setup are enough to draw the shape of the plot, represented by the plot on the left without a scale on the vertical axis.
+The heights are equal for the Cowboys and Buccaneers, the height for the Packers is 1.5 times higher, etc.
+The plot on the right simply adds a probability axis to ensure the values add to 1.
+The plot on the right represents the "normalization" step, but it does not affect the shape of the plot or the relative heights of the bars.
+
+(ref:cap-worldseries-proportional) Bar chart representation of the subjective probabilities in Example \@ref(exm:worldseries-proportional). Left: Relative heights without absolute scale. Right: Heights scaled to sum to 1 to represent probabilities.
+
+
+
+
+```{r fig-worldseries-proportional, echo = FALSE, fig.cap="(ref:cap-worldseries-proportional)", fig.show="hold", out.width="50%"}
+
+df <- data.frame(team = c("Chiefs",
+                          "Packers",
+                          "Buccaneers",
+                          "Cowboys",
+                          "Other"),
+                 freq = c(3, 1.5, 1, 1, 6.5)) %>%
+  mutate(team = fct_reorder(team, freq, .desc = TRUE),
+         rel_freq = freq / sum(freq))
+
+ggplot(df, aes(x = team, y = rel_freq)) +
+  geom_col(color = "skyblue", fill = "skyblue") +
+  theme_classic() +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) +
+  labs(x = "Team")
+
+ggplot(df, aes(x = team, y = rel_freq)) +
+  geom_col(color = "skyblue", fill = "skyblue") +
+  theme_classic() +
+  labs(x = "Team",
+       y = "Subjective Probability")
+
+```
+
+
+
+
+
+
+
+## Interpretations of Statistics {#interpretations-of-statistics}
+
+In the previous sections we have seen two interpretations of statistics: relative frequency and subjective. These two interpretations provide the philosophical foundation for two schools of statistics: *frequentist* (hypothesis tests and confidence intervals that you've seen before) and *Bayesian*.  This section provides a very brief introduction to some of the main ideas in Bayesian statistics.  The examples in this section only motivate ideas.  We will fill in lots more details throughout the book.
+
+
+
+```{example instructor-age}
+
+How old do you think your instructor (Professor Ross) currently is^[You could probably get a pretty good idea by searching online, but don't do that.  Instead, answer the questions based on what you already know about me.]? Consider age on a
+continuous scale, e.g., you might be 20.73 or 21.36 or 19.50.
+
+In this example, you will use probability to quantify your uncertainty about your instructor's age.  You only need to give ballpark estimates of your subjective probabilities, but you might consider what kinds of bets you would be willing to accept like in Example \@ref(exm:subjective-bet).  (This exercise just motivates some ideas.  We'll fill in lots of details later.)
+
+```
+
+
+
+1.  What is your subjective probability that your instructor is at most 30 years old? More than 30 years old? (What must be true about these two probabilities?)
+1.  What is your subjective probability that your instructor is at most 60 years old? More than 60 years old?
+1.  What is your subjective probability that your instructor is at most 40 years old? More than 40 years old?
+1.  What is your subjective probability that your instructor is at most 50 years old? More than 50 years old?
+1. Fill in the blank: your subjective probability that your instructor is at most [blank] years old is equal to 50%.
+1. Fill in the blanks: your subjective probability that your instructor is between [blank] and [blank] years old is equal to 95%.
+1.  Let $\theta$ represent your instructor's age at noon on Jan 6, 2022. Use your answers to the previous parts to sketch a
+    continuous probability density function to represent your
+    *subjective probability distribution* for $\theta$.
+1.  If you ascribe a probability distribution to $\theta$, then are you treating $\theta$ as a constant or a random variable?
+    
+
+
+
+```{solution intructor-age-sol}
+
+to Example \@ref(exm:instructor-age)
+
+```
+
+
+
+```{asis, fold.chunk = TRUE}
+
+Even though in  reality your instructor's current age is a fixed number, its value is unknown or uncertain to you, and you can use probability to quantify this uncertainty.  You would probably be willing to bet any amount of money that your instructor is over 20 years old, so you would assign a probability of 100% to that event, and 0% to the event that he's at most 20 years old.  Let's say you're pretty sure that he's over 30, but you don't know that for a fact, so you assign a probability of 99% to that event (and 1% to the event that he's at most 30).  You think he's over 40, but you're even less sure about that, so maybe you assign the event that he's over 40 a probability of 67% (say you'd accept a bet at 2 to 1 odds.)  You think there's a 50/50 chance that he's over 50.  You're 95% sure that he's between 35 and 60.  And so on.  Continuing in this way, you can start to determine a probability distribution to represent your beliefs about the instructor's age.  Your distribution should correspond to your subjective probabilities.  For example, the distribution should assign a probability of 67% to values over 40.
+
+This is just one example.  Different students will have different distributions depending upon (1) how much information you know about the instructor, and (2) how that information informs your beliefs about the instructor's age.  We'll see some example plots in the next exercise.
+
+Regarding the last question, since we are using a probability distribution to quantify our uncertainty about $\theta$, we are treating $\theta$ as a *random variable*.  
+
+```
+
+
+
+Recall that a **random variable** is a numerical quantity whose value is determined by the outcome of a random or uncertain phenomenon.
+The random phenomenon might involve physically repeatable randomness, as in "flip a coin 10 times and count the number of heads." But remember that "random" just means "uncertain" and there are lots of different kinds of uncertainty.  For example, the total number of points scored in the 2022 Superbowl will be one and only one number, but since we don't know what that number is we can treat it as a random variable.  Treating the number of points as a random variable allows us to quantify our uncertainty about it through probability statements like "there is a 60% chance that fewer than 45 points will be scored in Superbowl 2022".
+
+The **(probability) distribution** of a random variable specifies the possible values of the random variable and a way of determining corresponding probabilities. Like probabilities themselves, probability distributions of random variables can also be interpreted as:
+
+- *relative frequency distributions*, e.g., what pattern would emerge if I simulated many values of the random variable? or as
+- *subjective probability distributions*, e.g., which potential values of this uncertain quantity are relatively more plausible than others?
+
+As the name suggests, different individuals might have different subjective probability distributions for the same random variable.
+
+```{example instructor-age2}
+
+Continuing Example \@ref(exm:instructor-age), Figure \@ref(fig:plot-instructor-age) displays the subjective probability distribution of the instructor's age for four students.  
+
+```
+
+
+
+
+(ref:cap-instructor-age) Subjective probability distributions of instructor age for four students in Example \@ref(exm:instructor-age2).
+
+```{python, plot-instructor-age, fig.cap='(ref:cap-instructor-age)', echo=FALSE}
+
+
+Uniform(25, 75).plot()
+Normal(45, 3).plot()
+(25 + 50 * RV(Beta(3, 6))).sim(10000).plot('density')
+(25 + 50 * RV(Beta(3, 3))).sim(10000).plot('density')
+
+plt.xlabel('Instructor age');
+plt.ylabel('Density');
+plt.legend(['Ariana', 'Billie', 'Cardi', 'Dua']);
+plt.show();
+
+```
+
+1. Since age is treated as a continuous random variable, each of the above plots is a probability "density".  Explain briefly what this means.  How is probability represented in density plots like these?
+1. Rank the students in terms of their subjective probability that the instructor is at most 40 years old.
+1. Rank the students in terms of their answers to the question: your subjective probability that your instructor is at most [blank] years old is equal to 50%.
+1. Rank the students in terms of their uncertainty about the instructor's age.  Who is the most uncertain?  The least?
+
+```{solution intructor-age2-sol}
+
+to Example \@ref(exm:instructor-age2)
+
+```
+
+
+
+```{asis, fold.chunk = TRUE}
+
+1. In a density plot, probability is represented by area under the curve.  The total area under each curve is 1, corresponding to 100% probability.  The density height at any particular value $x$ represents the relative likelihood that the random variable takes a value "close to" $x$.  (We'll consider densities in more detail later.)
+1. Each student's subjective probability that the instructor is at most 40 is equal to the area under her subjective probability density over the range of values less than 40. Billie has the smallest probability, then Dua, then Ariana, then Cardi has the largest probability.
+1. Now we want to find the "equal areas point" of each distribution.  From smallest to largest: Cardi then Billie, and Ariana and Dua appear to be about the same.  The equal areas point appears to be around 40 or so for Cardi.  It's definitely less than 45, which appears to the equal areas point for Billie.  The equal areas point for Ariana is 50 (halfway between 25 and 75), and Dua's appears to be about 50 also.
+1. Ariana is most uncertain, then Dua, then Cardi, then Billie is the least uncertain. Each distribution represents 100% probability, but Ariana stretches this probability over the largest range of possible values, while Billie stretches this over the shortest.  Ariana is basically saying the instructor can be any age between 25 and 75.  Billie is fairly certain that the instructor is close to 45, and she's basically 100% certain that the instructor is between 35 and 55.
+
+```
+
+    
+
+```{example instructor-age3}
+
+Consider Ariana's subjective probability distribution in Figure \@ref(fig:plot-instructor-age). 
+Ariana learns that her instructor received a Ph.D. in 2006.
+How would her subjective probability distribution change?
+
+
+```
+
+
+```{solution intructor-age3-sol}
+
+to Example \@ref(exm:instructor-age3)
+
+```
+
+
+```{asis, fold.chunk = TRUE}
+
+Ariana's original subjective probability distribution reflects very little knowledge about her instructor.
+Ariana now reasons that her instructor was probably between 25 and 35 when he received his Ph.D. in 2006, so she revises her subjective probability distribution to place almost 100% probability on ages between 40 and 50.
+Ariana's subjective probability distribution now looks more like Billie's in Figure \@ref(fig:plot-instructor-age). 
+
+
+```
+
+
+The previous examples introduce how probability can be used to quantify uncertainty about unknown numbers.
+One key aspect of Bayesian analyses is applying a subjective probability distribution to a *parameter* in a statistical model.
+
+
+```{example, harry-potter}
+
+Let $\theta_b$ represent the proportion of current Cal Poly students who have ever read any of the books in the *Harry Potter* series.  Let $\theta_m$ represent the proportion of current Cal Poly students who have ever seen any of the movies in the *Harry Potter* series.
+
+```
+
+
+1. Are $\theta_b$ and $\theta_m$ parameters or statistics?  Why?
+1. Are the values of $\theta_b$ and $\theta_m$ known or unknown, certain or uncertain?
+1. What are the possible values of $\theta_b$ and $\theta_m$?
+1. Sketch a probability distribution representing what you think are more/less credible values of $\theta_b$.  Repeat for $\theta_m$.
+1. Are you more certain about the value of $\theta_b$ or $\theta_m$? How is this reflected in your distributions?
+1. Suppose that in a class of 35 Cal Poly students, 21 have read a Harry Potter book, and 30 have seen a Harry Potter movie.  Now that we have observed some data, sketch a probability distribution representing what you think are more/less credible values of $\theta_b$.  Repeat for $\theta_m$. How do your distributions after observing data compare to the distributions you sketched before? 
+
+
+
+```{solution harry-potter-sol}
+
+to Example \@ref(exm:harry-potter)
+
+```
+
+
+
+```{asis, fold.chunk = TRUE}
+
+1. The population of interest is current Cal Poly students, so $\theta_b$ and $\theta_m$ are *parameters*.  We don't have relevant data for the entire population, but we could collect data on a sample.
+1. Since we don't have data on the entire population, the values of $\theta_b$ and $\theta_m$ are unknown, uncertain.
+1. $\theta_b$ and $\theta_m$ are proportions so they take values between 0 and 1.  Any value on the continuous scale between 0 and 1 is theoretically possible, though the values are not equally plausible.
+1. Results will vary, but here's my thought process.  I think that a strong majority of Cal Poly students have seen at least one Harry Potter movie, maybe 80% or so. I wouldn't be that surprised if it were even close to 100%, but I would be pretty surprised if it were less than 60%.  
+
+    However, I'm less certain about $\theta_b$.  I suspect that fewer than 50% of students have read at least one Harry Potter book, but I'm not very sure and I wouldn't be too surprised if it were actually more than 50%.  
+    
+    See Figure \@ref(fig:plot-harry-potter-prior) for what my subjective probability distributions might look like.  
+    
+1. I'm less certain about $\theta_b$, so its density is "spread out" over a wider range of values.
+1. The values of $\theta_b$ and $\theta_m$ are still unknown, but I am less uncertain about their values now that I have observed some data.  The sample proportion who have watched a Harry Potter movie is $30/35 = 0.857$, which is pretty consistent with my initial beliefs.  But now I update my subjective distribution to concentrate even more of my subjective probability on values in the 80 percent range.  
+
+    I had suspected that $\theta_b$ was less than 0.5, so the observed sample proportion of $21/35 = 0.6$ goes against my expectations.  However, I was fairly uncertain about the value of $\theta_m$ prior to observing the data, so 0.6 is not too surprising to me.  I update my subjective distribution so that it's centered closer to 0.6, while still allowing for my suspicion that $\theta_b$ is less than 0.5.  
+    
+    See Figure \@ref(fig:plot-harry-potter-post) for what my subjective probability distributions might look like after observing the sample data. Of course, the sample proportions are not necessarily equal to the population proportions.  But if the samples are reasonably representative, I would hope that the observed sample proportions are close to the respective population proportions.  Even after observing data, there is still uncertainty about the parameters $\theta_b$ and $\theta_m$, and my subjective distributions quantify this uncertainty.
+  
+```
+
+(ref:cap-harry-potter-prior) Example subjective distributions in Example \@ref(exm:harry-potter), prior to observing sample data.
+
+```{r, plot-harry-potter-prior, fig.cap='(ref:cap-harry-potter-prior)', echo=FALSE}
+
+theta <- seq(0, 1, length = 10000)
+
+# prior
+
+a_m = 15
+b_m = 4
+pi_m = dbeta(theta, a_m, b_m)
+
+a_b = 3
+b_b = 3.6
+pi_b = dbeta(theta, a_b, b_b)
+
+plot(theta, pi_m, type = "l", lty = 1, lwd = 2, col = "orange",
+     xlab = "Population proportion",
+     ylab = "Density",
+     yaxt = "n",
+     main = "Prior distributions")
+
+lines(theta, pi_b, lwd = 2, col = "skyblue")
+
+legend("topleft", c("movie", "book"), lty = c(1, 1), lwd = c(2, 2),
+       col = c("orange", "skyblue"))
+
+
+```
+
+
+(ref:cap-harry-potter-post) Example subjective distributions in Example \@ref(exm:harry-potter), after observing sample data.
+
+```{r, plot-harry-potter-post, fig.cap='(ref:cap-harry-potter-post)', echo=FALSE}
+
+theta <- seq(0, 1, length = 10000)
+
+# posterior
+n = 35
+y_b = 21
+y_m = 30
+
+a_b1 = a_b + y_b
+b_b1 = b_b + n - y_b
+pi_b1 = dbeta(theta, a_b1, b_b1)
+
+a_m1 = a_m + y_m
+b_m1 = b_m + n - y_m
+pi_m1 = dbeta(theta, a_m1, b_m1)
+
+plot(theta, pi_m1, type = "l", lty = 1, lwd = 2, col = "orange",
+     xlab = "Population proportion",
+     ylab = "Density",
+     yaxt = "n",
+     main = "Posterior distributions")
+
+lines(theta, pi_b1, lwd = 2, col = "skyblue")
+lines(theta, pi_m, lwd = 1, lty = 2, col = "orange")
+lines(theta, pi_b, lwd = 1, lty = 2, col = "skyblue")
+
+legend("topleft",
+       c("movie (posterior)", "book (posterior)", "movie (prior)", "book (prior)"),
+       lty = c(1, 1, 2, 2), lwd = c(2, 2, 1, 1),
+       col = rep(c("orange", "skyblue"), 2))
+
+abline(v = c(y_m / n, y_b / n), lty = 3, col = c("orange", "skyblue"))
+
+```
+
+
+Recall some statistical terminology.
+
+- **Observational units** (a.k.a., cases, individuals, subjects) are the people, places, things, etc we collect information on.
+- A **variable** is any characteristic of an observational unit that we can measure.
+- **Statistical inference** involves using data collected on a *sample* to make conclusions about a *population*.  
+- Inference often concerns specific numerical summaries, using values of *statistics* to make conclusions about *parameters*.
+- A **parameter** is a number that describes the **population**, e.g., *population mean*, *population proportion*.  The actual value of a parameter is almost always *unknown*.
+    - Parameters are often denoted with Greek letters.  We'll often use the Greek letter $\theta$ ("theta") to denote a generic parameter.
+- A **statistic** is a number that describes  the **sample**, e.g., *sample mean*, *sample proportion*.
+
+
+
+Parameters are unknown numbers.  In "traditional", *frequentist* statistical analysis, parameters are treated as *fixed --- that is, not random --- constants*.  Any randomness in a frequentist analysis arises from how the data were collected, e.g., via random sampling or random assignment. In a frequentist analysis, statistics are random variables; parameters are fixed numbers.
+
+For example, a frequentist 95% confidence interval for $\theta_b$ in the previous example is [0.434, 0.766].  We estimate with 95% confidence that the proportion of Cal Poly students that have read any of the books in the Harry Potter series is between 0.434 and 0.766.  Does this mean that there is a 95% probability that $\theta_b$ is between 0.434 and 0.766?  No!  In a frequentist analysis, the parameter $\theta_b$ is treated like a fixed constant.  That constant is either between 0.434 and 0.766 or it's not; we don't know which it is, but there's no probability to it.  In a frequentist analysis, it doesn't make sense to say "what is the probability that $\theta_b$ (a number) is between 0.434 and 0.766?" just like it doesn't make sense to say "what is the probability that 0.5 is between 0.434 and 0.766?"  Remember that 95% confidence derives from the fact that for 95% *of samples* the procedure that was used to produce the interval [0.434, 0.766] will produce intervals that contain the true parameter $\theta_b$.  It is the samples and the intervals that are changing from sample to sample; $\theta_b$ stays constant at its fixed but unknown value.  In a frequentist analysis, probability quantifies the *randomness in the sampling procedure*.
+
+On the other hand, in a Bayesian statistical analysis, since a parameter $\theta$ is unknown --- that is, it's value is *uncertain* to the observer --- $\theta$ is treated as a *random variable*.  That is, **in Bayesian statistical analyses unknown parameters are random variables that have probability distributions.**  The probability distribution of a parameter quantifies the degree of uncertainty about the value of the parameter.  Therefore, the Bayesian perspective allows for probability statements about parameters. For example, a Bayesian analysis of the previous example might conclude that there is a 95% chance that $\theta_b$ is between 0.426 and 0.721.  Such a statement is valid in the Bayesian context, but nonsensical in the frequentist context.
+
+In the previous example, we started with distributions that represented our uncertainty about $\theta_b$ and $\theta_m$ based on our "beliefs", then we revised these distributions after observing some data.  If we were to observe more data, we could revise again.  In this course we will see (among other things) (1) how to quantify uncertainty about parameters using probability distributions, and (2) how to update those distributions to reflect new data.
+
+
+Throughout these notes we will focus on Bayesian statistical analyses.  We will occasionally compare Bayesian and frequentist analyses and viewpoints. But we want to make clear from the start: Bayesian versus frequentist is NOT a question of right versus wrong.  Both Bayesian and frequentist are valid approaches to statistical analyses, each with advantages and disadvantages.  We'll address some of the issues along the way.  But at no point in your career do you need to make a definitive decision to be a Bayesian or a frequentist; a good modern statistician is probably a [bit of both](https://tenor.com/view/star-lord-bit-of-both-chris-pratt-guardians-of-the-galaxy-peter-quill-gif-11821953).

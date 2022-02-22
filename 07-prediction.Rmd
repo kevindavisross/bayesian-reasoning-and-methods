@@ -1,0 +1,914 @@
+# Introduction to Prediction {#prediction}
+
+A Bayesian analysis leads directly and naturally to making predictions about future observations from the random process that generated the data.
+Prediction is also useful for checking if model assumptions seem reasonable in light of observed data.
+
+
+
+```{example, data-singular}
+
+Do people prefer to use the word "data" as singular or plural?  Data journalists at [FiveThirtyEight conducted a poll](https://fivethirtyeight.com/features/elitist-superfluous-or-popular-we-polled-americans-on-the-oxford-comma/) to address this question (and others). Rather than simply ask whether the respondent considered "data" to be singular or plural, they asked which of the following sentences they prefer:
+
+a. Some experts say it's important to drink milk, but the data is inconclusive.
+a. Some experts say it's important to drink milk, but the data are inconclusive.
+
+Suppose we wish to study the opinions of students in Cal Poly statistics classes regarding this issue.  That is, let $\theta$ represent the population proportion of students in Cal Poly statistics classes who prefer to consider data as a *singular* noun, as in option a) above.
+
+To illustrate ideas, we'll start with a prior distribution which places probability 0.01, 0.05, 0.15, 0.30, 0.49 on the values 0.1, 0.3, 0.5, 0.7, 0.9, respectively.
+
+```
+
+1. Before observing any data, suppose we plan to randomly select a single Cal Poly statistics student.  Consider the *unconditional* prior probability that the selected student prefers data as singular.  (This is called a *prior predictive probability*.)  Explain how you could use simulation to approximate this probability.
+1. Compute the prior predictive probability from the previous part.
+1. Before observing any data, suppose we plan to randomly select a sample of 35 Cal Poly statistics students.  Consider the *unconditional* prior distribution of the number of students in the sample who prefer data as singular.  (This is called a *prior predictive distribution*.)  Explain how you could use simulation to approximate this distribution.  In particular, how could you use simulation to approximate the prior predictive probability that at least 34 students in the sample prefer data as singular?
+1. Compute and interpret the prior predictive probability that at least 34 students in a sample of size 35 prefer data as singular.
+
+    **For the remaining parts, suppose that 31 students in a sample of 35 Cal Poly statistics students prefer data as singular.**
+    
+1. Find the posterior distribution of $\theta$.
+1. Now suppose we plan to randomly select an additional Cal Poly statistics student. Consider the *posterior predictive probability* that this student prefers data as singular. Explain how you could use simulation to estimate this probability.
+1. Compute the posterior predictive probability from the previous part.
+1. Suppose we plan to collect data on another sample of $35$ Cal Poly statistics students.  Consider the *posterior predictive distribution* of the number of students in the new sample who prefer data as singular.  Explain how you could use simulation to approximate this distribution.
+In particular, how could you use simulation to approximate the prior predictive probability that at least 34 students in the sample prefer data as singular? (Of course, the sample size of the new sample does not have to be 35.  However, we're keeping it the same so we can compare the prior and posterior predictions.)
+1. Compute and interpret the posterior predictive probability that at least 34 students in a sample of size 35 prefer data as singular.
+
+
+```{solution}
+to Example \@ref(exm:data-singular)
+```
+
+
+1. If we knew what $\theta$ was, this probability would just be $\theta$.  For example, if $\theta=0.9$, then there is a probability of 0.9 that a randomly selected student prefers data singular.  If $\theta$ were 0.9, we could approximate the probability by constructing a spinner with 90% of the area marked as "success", spinning it many times, and recording the proportion of spins that land on success, which should be roughly 90%.
+However, 0.9 is only one possible value of $\theta$.
+Since we don't know what $\theta$ is, we need to first simulate a value of it, giving more weight to $\theta$ values with high prior probability.
+Therefore, we 
+
+    1. Simulate a value of $\theta$ from the prior distribution.
+    1. Given the value of $\theta$, construct a spinner that lands on success with probability $\theta$.  Spin the spinner once and record the result, success or not.
+    1. Repeat steps 1 and 2 many times, and find the proportion of repetitions which result in success.  This proportion approximates the unconditional prior probability of success.
+    
+1. Use the law of total probability, where the weights are given by the prior probabilities.
+    \[
+    0.1(0.01) + 0.3(0.05) + 0.5(0.15) + 0.7(0.30) + 0.9(0.49) = 0.742 
+    \]
+    (This calculation is equivalent to the expected value of $\theta$ according to its prior distributon, that is, the prior mean.)
+1. If we knew what $\theta$ was, we could construct a spinner than lands on success with probability $\theta$, spin it 35 times, and count the number of successes.
+Since we don't know what $\theta$ is, we need to first simulate a value of it, giving more weight to $\theta$ values with high prior probability.
+Therefore, we 
+
+    1. Simulate a value of $\theta$ from the prior distribution.
+    1. Given the value of $\theta$, construct a spinner that lands on success with probability $\theta$.  Spin the spinner 35 times and count $y$, the number of spins that land on success.
+    1. Repeat steps 1 and 2 many times, and record the number of successes (out of 35) for each repetition.  Summarize the simulated $y$ values to approximate the prior predictive distribution.  To approximate the prior predictive probability that at least 34 students in a sample of size 35 prefer data as singular, count the number of simulated repetitions that result in at least 34 successes ($y \ge 34$) and divide by the total number of simulated repetitions.
+
+1. If we knew $\theta$, the probability of at least 34 (out of 35) successes is, from a Binomial distribution,
+\[
+35\theta^{34}(1-\theta) + \theta^{35}
+\]
+    Use the law of total probability again.
+\begin{align*}
+    & \left(35(0.1)^{34}(1-0.1) + 0.1^{35}\right)(0.01) + \left(35(0.3)^{34}(1-0.3) + 0.3^{35}\right)(0.05)\\
+    & + \left(35(0.5)^{34}(1-0.5) + 0.5^{35}\right)(0.15) + \left(35(0.7)^{34}(1-0.7) + 0.7^{35}\right)(0.30)\\
+    & + \left(35(0.9)^{34}(1-0.9) + 0.9^{35}\right)(0.49) = 0.06
+\end{align*}
+
+
+    According to this model, about 6% of samples of size 35 would result in at least 34 successes.
+    The value 0.06 accounts for both (1) our prior uncertainty about $\theta$, (2) sample-to-sample variability in the number of successes $y$.
+    
+1. The likelihood is $\binom{35}{31}\theta^{31}(1-\theta)^{4}$, a function of $\theta$; `dbinom(31, 35, theta)`. The posterior places almost all probability on $\theta = 0.9$, due to both its high prior probability and high likelihood.
+
+    ```{r}
+
+theta = seq(0.1, 0.9, 0.2)
+
+# prior
+prior = c(0.01, 0.05, 0.15, 0.30, 0.49)
+
+# data
+n = 35 # sample size
+y = 31 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+bayes_table %>%
+  adorn_totals("row") %>%
+  kable(digits = 4, align = 'r')
+
+```
+    
+1. The simulation would be similar to the prior simulation, but now we simulate $\theta$ from its posterior distribution rather than the prior distribution.
+
+    1. Simulate a value of $\theta$ from the posterior distribution.
+    1. Given the value of $\theta$, construct a spinner that lands on success with probability $\theta$.  Spin the spinner once and record the result, success or not.
+    1. Repeat steps 1 and 2 many times, and find the proportion of repetitions which result in success.  This proportion approximates the unconditional posterior probability of success.
+    
+1. Use the law of total probability, where the weights are given by the posterior probabilities.
+    \[
+    0.1(0.0000) + 0.3(0.0000) + 0.5(0.0000) + 0.7(0.0201) + 0.9(0.9799) = 0.8960 
+    \]
+    (This calculation is equivalent to the expected value of $\theta$ according to its posterior distributon, that is, the posterior mean.)
+1. The simulation would be similar to the prior simulation, but now we simulate $\theta$ from its posterior distribution rather than the prior distribution.
+
+    1. Simulate a value of $\theta$ from the posterior distribution.
+    1. Given the value of $\theta$, construct a spinner that lands on success with probability $\theta$.  Spin the spinner 35 times and count the number of spins that land on success.
+    1. Repeat steps 1 and 2 many times, and record the number of successes (out of 35) for each repetition.  Summarize the simulated values to approximate the posterior predictive distribution.  To approximate the posterior predictive probability that at least 34 students in a sample of size 35 prefer data as singular, count the number of simulated repetitions that result in at least 34 successes and divide by the total number of simulated repetitions.
+
+
+    Since the posterior probability that $\theta$ equals 0.9 is close to 1, the posterior predictive distribution would be close to, but not quite, the Binomial(35, 0.9) distribution.
+
+1.  Use the law of total probability again, but with the posterior probabilities rather than the prior probabilities as the weights.
+\begin{align*}
+    & \left(35(0.1)^{34}(1-0.1) + 0.1^{35}\right)(0.0000) + \left(35(0.3)^{34}(1-0.3) + 0.3^{35}\right)(0.0000)\\
+    & + \left(35(0.5)^{34}(1-0.5) + 0.5^{35}\right)(0.0000) + \left(35(0.7)^{34}(1-0.7) + 0.7^{35}\right)(0.0201)\\
+    & + \left(35(0.9)^{34}(1-0.9) + 0.9^{35}\right)(0.9799) = 0.1199
+\end{align*}
+    According to this posterior model, about 12% of samples of size 35 would result in at least 34 successes.
+    The value 0.12 accounts for both (1) our posterior uncertainty about $\theta$, after observing the sample data, (2) sample-to-sample variability in the number of successes $y$ for the yet-to-be-observed sample.
+
+
+The  plots below illustrate the distributions from the previous example.
+
+    
+The first plot below illustrates the conditional distribution of $Y$ given each value of $\theta$.
+
+(ref:cap-predictive-discrete-prior-cases) Sample-to-sample distribution of $Y$, the number of successes in samples of size $n=35$ for different values of $\theta$ in Example \@ref(exm:data-singular). Color represents the prior probability of $\theta$, with darker colors corresponding to higher prior probability.
+
+```{r, plot-predictive-discrete-prior-cases, message = FALSE, fig.cap='(ref:cap-predictive-discrete-prior-cases)', echo=FALSE}
+
+predict_table = expand_grid(theta,
+                            y = 0:n)
+
+prior_table = data.frame(theta, prior)
+
+predict_table = predict_table %>%
+  left_join(prior_table) %>%
+  mutate(prob = dbinom(y, n, theta),
+         theta = factor(theta))
+
+
+ggplot(predict_table,
+       aes(x = y,
+           ymax = prob,
+           ymin = 0,
+           col = prior)) +
+  # geom_linerange(aes(alpha = prior)) +
+  geom_linerange() +
+  scale_color_viridis(direction = -1) +
+  labs(y = "p(y|theta)",
+       x = "y",
+       col = "Prior(theta)") +
+  facet_wrap(vars(theta), labeller = "label_both") +
+  theme_bw()
+
+
+```
+
+
+In the plot above, the prior distribution of $\theta$ is represented by color.
+The prior predictive distribution of $Y$ mixes the five conditional distributions in the previous plot, weighting by the prior distribution of $\theta$, to obtain the unconditional prior predictive distribution of $Y$.
+
+(ref:cap-predictive-discrete-prior) Prior predictive distribution of $Y$, the number of successes in samples of size $n=35$, in Example \@ref(exm:data-singular).
+
+```{r, plot-predictive-discrete-prior, message = FALSE, fig.cap='(ref:cap-predictive-discrete-prior)', echo=FALSE}
+
+predict_total = predict_table %>%
+  group_by(y) %>%
+  summarize(prob = sum(prob * prior))
+
+ggplot(predict_total,
+       aes(x = y,
+           ymax = prob,
+           ymin = 0)) +
+  # geom_linerange(aes(alpha = prior)) +
+  geom_linerange(col = "#CC79A7") +
+  labs(y = "p(y)",
+       x = "y") +
+  theme_bw()
+
+```
+
+
+The prior predictive distribution reflects the sample-to-sample variability of the number of successes over many samples of size $n=35$, accounting for the prior uncertainty of $\theta$.
+
+
+After observing a sample, we compute the posterior distribution of $\theta$ as usual.
+The following plot is similar to Figure \@ref(fig:plot-predictive-discrete-prior-cases), with the colors revised to reflect the posterior probabilities of the values of $\theta$.
+
+(ref:cap-predictive-discrete-posterior-cases) Sample-to-sample distribution of $Y$, the number of successes in samples of size $n=35$ for different values of $\theta$ in Example \@ref(exm:data-singular). Color represents the posterior probability of $\theta$, after observing data from a different sample of size 35, with darker colors corresponding to higher posterior probability.
+
+```{r, plot-predictive-discrete-posterior-cases, message = FALSE, fig.cap='(ref:cap-predictive-discrete-posterior-cases)', echo=FALSE}
+
+post_predict_table = expand_grid(theta,
+                                 y = 0:n)
+
+posterior_table = data.frame(theta, posterior)
+
+post_predict_table = post_predict_table %>%
+  left_join(posterior_table) %>%
+  mutate(prob = dbinom(y, n, theta),
+         theta = factor(theta))
+
+ggplot(post_predict_table,
+       aes(x = y,
+           ymax = prob,
+           ymin = 0,
+           col = posterior)) +
+  # geom_linerange(aes(alpha = prior)) +
+  geom_linerange() +
+  scale_color_viridis(direction = -1) +
+  labs(y = "p(y|theta)",
+       x = "y",
+       col = "Prior(theta)") +
+  facet_wrap(vars(theta), labeller = "label_both") +
+  theme_bw()
+
+```
+
+
+
+The posterior predictive distribution of $Y$ mixes the five conditional distributions in the previous plot, weighting by the posterior distribution of $\theta$, to obtain the unconditional posterior predictive distribution of $Y$.
+Since the posterior distribution of $\theta$ places almost all posterior probability on the value 0.9, the posterior predictive distribution of $Y$ is very similar to the conditional distribution of $Y$ given $\theta = 0.9$.
+
+
+
+(ref:cap-predictive-discrete-posterior) Posterior predictive distribution of $Y$, the number of successes in samples of size $n=35$, in Example \@ref(exm:data-singular) after observing data from a different sample of size 35.
+
+```{r, plot-predictive-discrete-posterior, message = FALSE, fig.cap='(ref:cap-predictive-discrete-posterior)', echo=FALSE}
+
+post_predict_total = post_predict_table %>%
+  group_by(y) %>%
+  summarize(prob = sum(prob * posterior))
+
+ggplot(post_predict_total,
+       aes(x = y,
+           ymax = prob,
+           ymin = 0)) +
+  # geom_linerange(aes(alpha = prior)) +
+  geom_linerange(col = "#CC79A7") +
+  labs(y = "p(y)",
+       x = "y") +
+  theme_bw()
+
+```
+
+
+
+
+The **predictive distribution** of a random variable is the marginal distribution (of the
+unobserved values) after accounting for the uncertainty in the parameters. A **prior predictive distribution** is calculated using the prior distribution of the
+parameters. A **posterior predictive distribution** is calculated using the posterior distribution
+of the parameters, conditional on the observed data.
+
+Be sure to carefully distinguish between posterior distributions and posterior predictive distributions (or between prior distributions and prior predictive distributions.)
+
+Prior and posterior distributions are distributions on values of the *parameters*.  These distributions quantify the degree of uncertainty about the unknown parameter $\theta$ (before and after observing data).
+
+On the other hand, prior and posterior *predictive* distributions are distribution on potential values of the *data*.  Predictive distributions reflect sample-to-sample variability of the sample data, while accounting for the uncertainty in the parameters.
+
+Predictive probabilities can be computed via the law of total probability, as weighted averages over possible values of $\theta$. However, even when conditional distributions of data given the parameters are well known (e.g., Binomial($n$, $\theta$)), marginal distributions of the data are often not.  Simulation is an effective tool in approximating predictive distributions. 
+
+- Step 1: Simulate a value of $\theta$ from its posterior distribution (or prior distribution).
+- Step 2: Given this value of $\theta$ simulate a value of $y$ from $f(y|\theta)$, the data model conditional on $\theta$.
+- Repeat many times to simulate many $(\theta, y)$ pairs, and summarize the values of $y$ to approximate the posterior predictive distribution (or prior predictive distribution).
+
+
+```{example, data-singular2}
+Continuing the previous example. We'll use a grid approximation and assume that any multiple of 0.0001 is a possible value of $\theta$: $0, 0.0001, 0.0002, \ldots, 0.9999, 1$.
+  
+```
+
+1. Consider the context of this problem and sketch your prior distribution for $\theta$. What are the main features of your prior?
+1. Assume the prior distribution for $\theta$ is proportional to $\theta^2$. Plot this prior distribution and describe its main features.
+1. Given the shape of the prior distribution, explain why we might not want to compute *central* prior credible intervals.
+Suggest an alternative approach, and compute and interpret 50%, 80%, and 98% prior credible intervals for $\theta$.
+1. Before observing any data, suppose we plan to randomly select a sample of 35 Cal Poly statistics students.  Let $Y$ represent the number of students in the selected sample who prefer data as singular. Use simulation to approximate the prior predictive distribution of $Y$ and plot it.
+1. Use software to compute the prior predictive distribution of $Y$.  Compare to the simulation results.
+1. Find a 95% prior *prediction* interval for $Y$.  Write a clearly worded sentence interpreting this interval in context.
+
+    **For the remaining parts, suppose that 31 students in a sample of 35 Cal Poly statistics students prefer data as singular.**
+    
+1. Use software to plot the prior distribution and the (scaled) likelihood, then find the posterior distribution of $\theta$ and plot it and describe its main features.
+1. Find and interpret 50%, 80%, and 98% central posterior credible intervals for $\theta$.
+1. Suppose we plan to randomly select another sample of 35 Cal Poly statistics students.  Let $\tilde{Y}$ represent the number of students in the selected sample who prefer data as singular. Use simulation to approximate the posterior predictive distribution of $\tilde{Y}$ and plot it.
+(Of course, the sample size of the new sample does not have to be 35.  However, we're keeping it the same so we can compare the prior and posterior predictions.)
+1. Use software to compute the posterior predictive distribution of $\tilde{Y}$.  Compare to the simulation results.
+1. Find a 95% posterior *prediction* interval for $\tilde{Y}$.  Write a clearly worded sentence interpreting this interval in context.
+1. Now suppose instead of using the Cal Poly sample data (31/35) to form the posterior distribution of $\theta$, we had used the [data from the FiveThirtyEight study ](https://github.com/fivethirtyeight/data/tree/master/comma-survey) in which 865 out of 1093 respondents preferred data as singular.  Use software to plot the prior distribution and the (scaled) likelihood, then find the posterior distribution of $\theta$ and plot it and describe its main features.  In particular, find and interpret a 98% central posterior credible interval for $\theta$.  How does the posterior based on the FiveThirtyEight data compare to the posterior distribution based on the Cal Poly sample data (31/35)? Why?
+1. Again, suppose we use the FiveThirtyEight data to form the posterior distribution of $\theta$. Suppose we plan to randomly select a sample of 35 Cal Poly statistics students. Let $\tilde{Y}$ represent the number of students in the selected sample who prefer data as singular. Use simulation to approximate the posterior predictive distribution of $\tilde{Y}$ and plot it. In particular, find and interpret a 95% posterior *prediction* interval for $\tilde{Y}$.  How does the predictive distribution which uses the posterior distribution based on the FiveThirtyEight data compare to the one based on the Cal Poly sample data (31/35)? Why?
+
+
+```{solution}
+to Example \@ref(exm:data-singular2)
+```
+
+
+1. Results will of course vary, but do consider what your prior would look like.
+1. We believe a majority, and probably a strong majority, of students will prefer data as singular. The prior mode is 1, the prior mean is 0.75, and the prior standard deviation is 0.19.
+
+
+    ```{r}
+
+theta = seq(0, 1, 0.0001)
+
+# prior
+prior = theta ^ 2
+prior = prior / sum(prior)
+
+ylim = c(0, max(prior))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+
+# prior mean
+prior_ev = sum(theta * prior)
+prior_ev
+
+# prior variance
+prior_var = sum(theta ^ 2 * prior) - prior_ev ^ 2
+
+# prior sd
+sqrt(prior_var)
+
+```
+
+1. Central credibles would exclude $\theta$ values near 1, but these are the values with highest prior probability.
+For example, a central 50% prior credible interval is [0.630, 0.909], but this excludes values of $\theta$ with the highest prior probability.
+An alternative is to use highest prior probability intervals.
+For this prior, it seems reasonable to just fix the upper endpoint of the credible intervals to be 1, and to find the lower endpoint corresponding to the desired probability.
+The lower bound of such a 50% credible interval is the 50th percentile; of an 80% credible interval is the 20th percentile; of a 98% credible interval is the 2nd percentile.
+There is a prior probability of 50% that at least 79.4% of Cal Poly students prefer data as singular; it's equally plausible that $\theta$ is above 0.794 as below.  
+There is a prior probability of 80% that at least 58.5% of Cal Poly students prefer data as singular; it's four times more plausible that $\theta$ is above 0.585 than below.
+There is a prior probability of 98% that at least 27.1% of Cal Poly students prefer data as singular; it's 49 times more plausible that $\theta$ is above 0.271 than below.
+
+
+
+    ```{r}
+
+prior_cdf = cumsum(prior)
+
+# 50th percentile
+theta[max(which(prior_cdf <= 0.5))]
+
+# 10th percentile
+theta[max(which(prior_cdf <= 0.2))]
+
+# 2nd percentile
+theta[max(which(prior_cdf <= 0.02))]
+
+```
+
+
+1. We use the `sample` function with the `prob` argument to simulate a value of $\theta$ from its prior distribution, and then use `rbinom` to simulate a sample.
+The table below displays the results of a few repetitions of the simulation.
+
+    ```{r}
+    
+    n = 35
+
+    n_sim = 10000
+    
+    theta_sim = sample(theta, n_sim, replace = TRUE, prob = prior)
+    
+    y_sim = rbinom(n_sim, n, theta_sim)
+    
+    data.frame(theta_sim, y_sim) %>%
+      head(10) %>%
+      kable(digits = 5)
+    
+    ```
+
+1. We program the law of total probability calculation for each possible value of $y$.  (There are better ways of doing this than a for loop, but it's good enough.)
+
+
+    ```{r}
+# Predictive distribution
+    y_predict = 0:n
+    
+    py_predict = rep(NA, length(y_predict))
+    
+    for (i in 1:length(y_predict)) {
+      py_predict[i] = sum(dbinom(y_predict[i], n, theta) * prior) # prior
+    }
+```
+
+
+    ```{r, echo = FALSE}
+plot(y_predict, py_predict, type = "o", col = "black",
+         xlim = range(y_predict), ylim = c(0, max(py_predict)),
+         xlab = "y", ylab = "Probability", main = "Prior Predictive Distribution")
+    par(new = T)
+    plot(table(y_sim) / n_sim, type = "h", col = "#CC79A7",
+         xlim = range(y_predict), ylim = c(0, max(py_predict)),
+         xlab = "", ylab = "")
+    legend("topleft", c("Theoretical", "Simulation"),
+           col = c("black", "#CC79A7"), lty = c(4, 1))
+```
+
+
+    ```{r}
+# Prediction interval
+    py_predict_cdf = cumsum(py_predict)
+    c(y_predict[max(which(py_predict_cdf <= 0.025))], y_predict[min(which(py_predict_cdf >= 0.975))])
+    
+    ```
+
+
+1. There is prior predictive probability of 95% that between 8 and 35 students in a sample of 35 students will prefer data as singular.
+
+    **For the remaining parts, suppose that 31 students in a sample of 35 Cal Poly statistics students prefer data as singular.**
+    
+1. The observed sample proportion is 31/35=0.886. The posterior distribution is slightly skewed to the left with a posterior mean of 0.872 and a posterior standard deviation of 0.053.
+
+    ```{r}
+# data
+n = 35 # sample size
+y = 31 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# posterior mean
+posterior_ev = sum(theta * posterior)
+posterior_ev
+
+# posterior variance
+posterior_var = sum(theta ^ 2 * posterior) - posterior_ev ^ 2
+
+# posterior sd
+sqrt(posterior_var)
+
+# posterior cdf
+posterior_cdf = cumsum(posterior)
+
+# posterior 50% central credible interval
+c(theta[max(which(posterior_cdf <= 0.25))], theta[min(which(posterior_cdf >= 0.75))])
+
+# posterior 80% central credible interval
+c(theta[max(which(posterior_cdf <= 0.1))], theta[min(which(posterior_cdf >= 0.9))])
+
+# posterior 98% central credible interval
+c(theta[max(which(posterior_cdf <= 0.01))], theta[min(which(posterior_cdf >= 0.99))])
+
+```
+
+
+    ```{r, echo = FALSE}
+
+# plots
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+par(new=T) 
+plot(theta, likelihood/sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+
+    ```
+
+
+1. There is a posterior probability of 50% that between 84.0% and 91.1% of Cal Poly students prefer data as singular; after observing the sample data, it's equally plausible that $\theta$ is inside [0.840, 0.911] as outside.
+There is a posterior probability of 80% that between 80.0% and 93.5% of Cal Poly students prefer data as singular; after observing the sample data, it's four times mores plausible that $\theta$ is inside [0.800, 0.935] as outside.
+There is a posterior probability of 98% that between 72.4% and 96.5% of Cal Poly students prefer data as singular; after observing the sample data, it's 49 times mores plausible that $\theta$ is inside [0.724, 0.965] as outside.
+
+    
+1. Similar to the prior simulation, but now we simulate $\theta$ based on its posterior distribution.
+The table below displays the results of a few repetitions of the simulation.
+
+    ```{r}
+    
+    theta_sim = sample(theta, n_sim, replace = TRUE, prob = posterior)
+    
+    y_sim = rbinom(n_sim, n, theta_sim)
+    
+      data.frame(theta_sim, y_sim) %>%
+      head(10) %>%
+      kable(digits = 5)
+    
+    ```
+    
+1. Similar to the prior calculation, but now we use the posterior probabilities as the weights in the law of total probability calculation.
+
+    ```{r}
+# Predictive distribution
+    y_predict = 0:n
+    
+    py_predict = rep(NA, length(y_predict))
+    
+    for (i in 1:length(y_predict)) {
+      py_predict[i] = sum(dbinom(y_predict[i], n, theta) * posterior) # posterior
+    }
+```
+
+
+    ```{r, echo = FALSE}
+plot(y_predict, py_predict, type = "o", col = "black",
+         xlim = range(y_predict), ylim = c(0, max(py_predict)),
+         xlab = "y", ylab = "Probability", main = "Posterior Predictive Distribution")
+    par(new = T)
+    plot(table(y_sim) / n_sim, type = "h", col = "#CC79A7",
+         xlim = range(y_predict), ylim = c(0, max(py_predict)),
+         xlab = "", ylab = "")
+    legend("topleft", c("Theoretical", "Simulation"),
+           col = c("black", "#CC79A7"), lty = c(4, 1))
+```
+
+
+    ```{r}
+# Prediction interval
+    py_predict_cdf = cumsum(py_predict)
+    c(y_predict[max(which(py_predict_cdf <= 0.025))], y_predict[min(which(py_predict_cdf >= 0.975))])
+    
+    ```
+    
+1. There is posterior predictive probability of 95% that between 23 and 35 students in a sample of 35 students will prefer data as singular.
+1. The observed sample proportion is 865/1093=0.791. The posterior mean is 0.791, and the posterior standard deviation is 0.012. There is a posterior probability of 98% that between 76.2% and 81.9% of Cal Poly students prefer data as singular. The posterior SD is much smaller and the 98% credible interval is narrower based on the FiveThirtyEight due to the much larger sample size.
+(The posterior means and location of the credible intervals are also different due to the difference in sample proportions.)
+
+    ```{r}
+# data
+n = 1093 # sample size
+y = 865 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# posterior mean
+posterior_ev = sum(theta * posterior)
+posterior_ev
+
+# posterior variance
+posterior_var = sum(theta ^ 2 * posterior) - posterior_ev ^ 2
+
+# posterior sd
+sqrt(posterior_var)
+
+# posterior 98% credible interval
+posterior_cdf = cumsum(posterior)
+c(theta[max(which(posterior_cdf <= 0.01))], theta[min(which(posterior_cdf >= 0.99))])
+```
+
+
+    ```{r, echo = FALSE}
+# plots
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+par(new=T) 
+plot(theta, likelihood/sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+
+    ```
+1. There is posterior predictive probability of 95% that between 23 and 35 students in a sample of 35 students will prefer data as singular.  Despite the fact that the posterior distributions of $\theta$ are different in the two scenarios, the posterior predictive distributions are fairly similar.  Even though there is less uncertainty about $\theta$ in the FiveThirtyEight case, the predictive distribution reflects the sample-to-sample variability of the number of students who prefer data as singular, which is mainly impacted by the size of the sample being "predicted".
+    The table below displays a few repetitions of the posterior predictive simulation. Notice that all the $\theta$ values are around 0.79 or so, but there is still sample-to-sample variability in the $Y$ values.
+
+    ```{r}
+n = 35
+    
+    # Predictive simulation
+    theta_sim = sample(theta, n_sim, replace = TRUE, prob = posterior)
+    
+    y_sim = rbinom(n_sim, n, theta_sim)
+    
+      data.frame(theta_sim, y_sim) %>%
+      head(10) %>%
+      kable(digits = 5)
+    
+    # Predictive distribution
+    y_predict = 0:n
+    
+    py_predict = rep(NA, length(y_predict))
+    
+    for (i in 1:length(y_predict)) {
+      py_predict[i] = sum(dbinom(y_predict[i], n, theta) * posterior) # posterior
+    }
+    
+    # Prediction interval
+    py_predict_cdf = cumsum(py_predict)
+    c(y_predict[max(which(py_predict_cdf <= 0.025))], y_predict[min(which(py_predict_cdf >= 0.975))])
+
+```
+
+
+    ```{r, echo = FALSE}
+plot(y_predict, py_predict, type = "o", col = "black",
+         xlim = range(y_predict), ylim = c(0, max(py_predict)),
+         xlab = "y", ylab = "Probability", main = "Posterior Predictive Distribution")
+    par(new = T)
+    plot(table(y_sim) / n_sim, type = "h", col = "#CC79A7",
+         xlim = range(y_predict), ylim = c(0, max(py_predict)),
+         xlab = "", ylab = "")
+    legend("topleft", c("Theoretical", "Simulation"),
+           col = c("black", "#CC79A7"), lty = c(4, 1))
+    
+    ```
+
+
+Be sure to distinguish between a prior/posterior *distribution* and a prior/posterior *predictive distribution*.
+
+- A prior/posterior *distribution* is a distribution on potential values of the *parameters* $\theta$. These distributions quantify the degree of uncertainty about the unknown parameter $\theta$ (before and after observing data).
+- A prior/posterior *predictive distribution* is a distribution on potential values of the *data* $y$. Predictive distributions reflect sample-to-sample variability of the sample data, while accounting for the uncertainty in the parameters.
+
+
+Even if parameters are essentially "known" --- that is, even if the prior/posterior variance of parameters is small --- there will still be sample-to-sample variability reflected in the predictive distribution of the data, mainly influenced by the size $n$ of the sample being "predicted".
+
+## Posterior predictive checking
+
+```{example, data-singular3}
+
+Continuing the previous example, suppose that before collecting data for our sample of Cal Poly students, we had based our prior distribution off the FiveThirtyEight data.  Suppose we assume a prior distribution that is proportional to $\theta^{864}(1-\theta)^{227}$ for $\theta$ values in the grid.  (We will see where such a distribution might come from later.) 
+```
+
+1. Plot the prior distribution.  What does this say about our prior beliefs?
+1. Now suppose we randomly select a sample of 35 Cal Poly students and 21 students prefer data as singular.  Plot the prior and likelihood, and find the posterior distribution and plot it.  Have our beliefs about $\theta$ changed?  Why?
+1. Find the posterior predictive distribution corresponding to samples of size 35.  Compare the observed sample value of 21/35 with the posterior predictive distribution. What do you notice? Does this indicate problems with the model?
+
+
+```{solution}
+to Example \@ref(exm:data-singular3)
+```
+
+
+1. We have a very strong prior belief that $\theta$ is close to 0.79; the prior SD is only 0.012. There is a prior probability of 98% that between 76% and 82% of Cal Poly students prefer data as singular.
+
+    ```{r}
+# prior
+theta = seq(0, 1, 0.0001)
+prior = theta ^ 864 * (1 - theta) ^ 227
+prior = prior / sum(prior)
+
+ylim = c(0, max(prior))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+
+# prior mean
+prior_ev = sum(theta * prior)
+prior_ev
+
+# prior variance
+prior_var = sum(theta ^ 2 * prior) - prior_ev ^ 2
+
+# prior sd
+sqrt(prior_var)
+
+# prior 98% credible interval
+prior_cdf = cumsum(prior)
+c(theta[max(which(prior_cdf <= 0.01))], theta[min(which(prior_cdf >= 0.99))])
+
+
+    ```
+
+1. Our posterior distribution has barely changed from the prior. Even though the sample proportion is 21/35 = 0.61, our prior beliefs were so strong (represented by the small prior SD) that a sample of size 35 isn't very convincing.
+
+    ```{r}
+# data
+n = 35 # sample size
+y = 21 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# posterior mean
+posterior_ev = sum(theta * posterior)
+posterior_ev
+
+# posterior variance
+posterior_var = sum(theta ^ 2 * posterior) - posterior_ev ^ 2
+
+# posterior sd
+sqrt(posterior_var)
+
+# posterior 98% credible interval
+posterior_cdf = cumsum(posterior)
+c(theta[max(which(posterior_cdf <= 0.01))], theta[min(which(posterior_cdf >= 0.99))])
+```
+
+
+    ```{r, echo = FALSE}
+# plots
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+par(new=T) 
+plot(theta, likelihood/sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+
+    ```
+
+1. According to the posterior predictive distribution, it is very unlikely to observe a sample with only 21 students preferring data as singular; only about 1% of examples are this extreme.  However, remember that the posterior predictive distribution is based on the observed data.  So we're saying that based on the fact that we observed 21 students in a sample of 35 preferring data as singular it would be unlikely to observe 21 students in a sample of 35 preferring data as singular?????  Seems problematic. In this case, the problem is that the prior is way too strict, and it doesn't give the data enough say.
+
+    ```{r}
+n = 35
+    
+    # Predictive simulation
+    theta_sim = sample(theta, n_sim, replace = TRUE, prob = posterior)
+    
+    y_sim = rbinom(n_sim, n, theta_sim)
+    
+    # Predictive distribution
+    y_predict = 0:n
+    
+    py_predict = rep(NA, length(y_predict))
+    
+    for (i in 1:length(y_predict)) {
+      py_predict[i] = sum(dbinom(y_predict[i], n, theta) * posterior) # posterior
+    }
+    
+        # Prediction interval
+    sum(py_predict[y_predict <= y])
+
+```
+
+
+    ```{r, echo = FALSE}
+plot(y_predict, py_predict, type = "o", col = "black",
+         xlim = range(y_predict), ylim = c(0, max(py_predict)),
+         xlab = "y", ylab = "Probability", main = "Posterior Predictive Distribution")
+    par(new = T)
+    plot(table(y_sim) / n_sim, type = "h", col = "#CC79A7",
+         xlim = range(y_predict), ylim = c(0, max(py_predict)),
+         xlab = "", ylab = "")
+    legend("topleft", c("Theoretical", "Simulation"),
+           col = c("black", "#CC79A7"), lty = c(4, 1))
+    
+    ```
+
+    
+
+
+
+A Bayesian model is composed of both a model for the data (likelihood) and a prior distribution on model parameters.
+
+Predictive distributions can be used as tools in model checking.
+**Posterior predictive checking** involves comparing the observed data to simulated samples (or some summary statistics) generated from the posterior predictive distribution.
+We'll focus on graphical checks: Compare plots for the observed data with those for simulated samples. Systematic differences between simulated samples and observed data indicate potential shortcomings of the model.
+
+If the model fits the data, then replicated data generated under the model should look similar to the observed data.
+If the observed data is not plausible under the posterior predictive distribution, then this could indicate that the model is not a good fit for the data.  ("Based on the data we observed, we conclude that it would be unlikely to observe the data we observed???")
+
+
+However, a problematic model isn't necessarily due to the prior. Remember that a Bayesian model consists of both a prior and a likelihood, so model mis-specification can occur in the prior or likelihood or both.  The form of the likelihood is also based on subjective assumptions about the variables being measured and how the data are collected.  Posterior predictive checking can help assess whether these assumptions are reasonable in light of the observed data.
+
+
+
+
+
+```{example, independence-check}
+
+A basketball player will attempt a sequence of 20 free throws.
+Our model assumes
+
+- The probability that the player successfully makes any particular free throw attempt is $\theta$.
+- A Uniform prior distribution for $\theta$ values in a grid from 0 to 1.
+- Conditional on $\theta$, the number of successfully made attempts has a Binomial(20, $\theta$) distribution.  (This determines the likelihood.)
+
+```
+
+1. Suppose the player misses her first 10 attempts and makes her second 10 attempts. Does this data seem consistent with the model?
+1. Explain how you could use posterior predictive checking to check the fit of the model.
+
+```{solution}
+to Example \@ref(exm:independence-check)
+```
+
+
+1. Remember that one condition of a Binomial model is independence of trials: the probability of success on a shot should not depend on the results of previous shots.  However, independence seems to be violated here, since the shooter has a long hot streak followed by a long cold streak.  So a Binomial model might not be appropriate.
+1. We're particularly concerned about the independence assumption, so how could we check that?  For example, the data seems consistent with a value of $\theta=0.5$, but if the trials were independent, you would expect to see more alterations between makes and misses.  So one way to measure degree of dependence is to count the number of "switches" between makes and misses.  For the observed data there is only 1 switch. We can use simulation to approximate the posterior predictive distribution of the number of switches assuming the model is true, and then we can see if a value of 1 (the observed number of switches) would be consistent with the model.
+
+    1. Find the posterior distribution of $\theta$. Simulate a value of $\theta$ from its posterior distribution.
+    1. Given $\theta$, simulate a sequence of 20 independent success/failure trials with probability of success $\theta$ on each trial.  Compute the number of switches for the sequence.  (Since we're interested in the number of switches, we have to generate the individual success/failure results, and not just the total number of successes).
+    1. Repeat many times, recording the total number of switches each time.  Summarize the values to approximate the posterior predictive distribution of the number of switches.
+    
+    See the simulation results below.  It would be very unlikely to observe only 1 switch in 20 independent trials.  Therefore, the proposed model does not fit the observed data well.  There is evidence that the assumption of independence is violated.
+
+    ```{r}
+
+theta = seq(0, 1, 0.0001)
+
+# prior
+prior = rep(1, length(theta))
+prior = prior / sum(prior)
+
+# data
+n = 20 # sample size
+y = 10 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# predictive simulation
+
+n_sim = 10000
+
+switches = rep(NA, n_sim)
+
+for (r in 1:n_sim){
+  theta_sim = sample(theta, 1, replace = TRUE, prob = posterior)
+  trials_sim = rbinom(n, 1, theta_sim)
+  switches[r] = length(rle(trials_sim)$lengths) - 1 # built in function
+}
+
+plot(table(switches) / n_sim,
+     xlab = "Number of switches",
+     ylab = "Posterior predictive probability",
+     panel.first = rect(0, 0, 1, 1, col='gray', border=NA))
+
+sum(switches <= 1) / n_sim
+
+    ```
+
+## Prior predictive tuning
+
+Prior distributions of parameters quantify uncertainty about parameters before observing data.
+Considering prior predictive distributions of possible samples under the proposed model can help tune prior distributions of parameters.
+
+```{example, sleep-prior-predictive}
+
+Suppose we want to estimate $\theta$, the population mean hours of sleep on a typical night for Cal Poly students.
+Assume that sleep hours for individual students follow a Normal distribution with unknown mean $\theta$ and known standard deviation 1.5 hours.
+(Known population SD is an unrealistic assumption that we use for simplicity here.)
+
+Suppose we want to use a fairly uninformative prior for $\theta$, so we choose a Uniform distribution on the interval [4, 12].
+
+
+```
+
+1. Simulate sleep hours for 10000 Cal Poly students under this model and make a histogram of the simulated values.
+1. According to this model, (approximately) what percent of students sleep less than 5 hours a night?
+More than 11?
+Do these values seem reasonable?
+
+
+```{solution, sleep-prior-predictive-sol}
+to Example \@ref(exm:sleep-prior-predictive)
+```
+
+1. First simulate a value $\theta$ from the Uniform(4, 12) distribution.
+Then given $\theta$ simulate a value $y$ from a Normal($\theta$, 1.5) distribution.
+Repeat many times to get many $(\theta, y)$ pairs and summarize the $y$ values.
+
+    ```{r}
+
+N_sim = 10000
+
+theta = runif(N_sim, 4, 12)
+
+sigma = 1.5
+y = rnorm(N_sim, theta, sigma)
+
+hist(y, xlab = "Sleep hours")
+
+sum(y < 5) / N_sim
+
+sum(y > 11) / N_sim
+
+```
+
+1. According to this model, about `r round(100 * sum(y < 5) / N_sim, 0)` percent of students sleep fewer than 5 hours on a typical night, and about `r round(100 * sum(y > 11) / N_sim, 0)` percent of students sleep more than 11 hours on a typical night.
+These values seem to be overestimates, indicating that perhaps the model isn't the greatest.  
+It could be that the prior distribution is too uninformative.
+But it could also be that the assumptions of the data model are inadequate; perhaps a Normal distribution isn't appropriate for sleep times.
+(Of course, the value $\sigma$ could be also wrong, but here we're assuming it's known.)
+
+In the previous example, it was helpful to think about the distribution of sleep hours for individual students when formulating prior beliefs about the population mean.
+In general, it is often easier to think in terms of the scale of the data (individual sleep hours) rather than the scale of the parameters (*mean* sleep hours).
+
+
+Prior predictive distributions "live" on the scale of the data, and are sometimes easier to interpret than prior distributions themselves.
+It is often helpful to tune prior distributions indirectly via prior predictive distributions rather than directly.
+We can choose a prior distribution for parameters, simulate a prior predictive distribution for the data given this prior, and consider if the distribution of possible data values seems reasonable given our background knowledge about the variable and context.
+If not, we can choose another prior and repeat the process until we have suitably "tuned" the prior.
+
+
+Remember, the prior does not have to be perfect; there is no perfect prior.
+However, if a particular prior gives rise to obviously unreasonable data values (e.g., negative sleep hours) we should try to improve it.
+It's always a good idea to consider prior predictive distributions when formulating a prior distribution for parameters.

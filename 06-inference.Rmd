@@ -1,0 +1,697 @@
+# Introduction to Inference {#inference}
+
+
+
+
+
+In a Bayesian analysis, the posterior distribution contains all relevant information about parameters after observing sample data.
+We can use the posterior distribution to make inferences about parameters.
+
+```{example, read-book-sd}
+
+Suppose we want to estimate $\theta$, the population proportion of American adults who have read a book in the last year.
+
+```
+
+
+1. Sketch your prior distribution for $\theta$.
+Make a guess for your prior mode.
+1. Suppose Henry formulates a Normal distribution prior for $\theta$.
+Henry's prior mean is 0.4 and prior standard deviation is 0.1.
+What does Henry's prior say about $\theta$?
+1. Suppose Mudge formulates a Normal distribution prior for $\theta$.
+Mudge's prior mean is 0.4 and prior standard deviation is 0.05.
+Who has more prior certainty about $\theta$? Why?
+
+
+
+```{solution, read-book-sd-sol}
+to Example \@ref(exm:read-book-sd)
+```
+
+```{asis, fold.chunk = TRUE}
+
+1. Your prior distribution is whatever it is and represents your assessment of the degree of uncertainty of $\theta$.
+1. The posterior mean, median, and mode are all 0.4.
+A Normal distribution follows the empirical rule.
+In particular, the interval [0.3, 0.5] accounts for 68% of prior plausibility, [0.2, 0.6] for 95%, and [0.1, 0.7] for 99.7% of prior plausibility.
+Henry thinks $\theta$ is around 0.4, about twice as likely to lie inside the interval [0.3, 0.5] than to lie outside, and he would be pretty surprised if $\theta$ were outside of [0.1, 0.7].
+1. Mudge has more prior certainty about $\theta$ due to the smaller prior standard deviation.
+The interval [0.3, 0.5] accounts for 95% of Mudge's plausibility, versus 68% for Henry.
+
+
+```
+
+
+
+The previous section discussed Bayesian point estimates of parameters, including the posterior mean, median, and mode.
+In some sense these values provide a single number "best guess" of the value of $\theta$.
+However, reducing the posterior distribution to a single-number point estimate loses a lot of the information the posterior distribution provides.
+In particular, the posterior distribution quantifies the uncertainty about $\theta$ after observing sample data.
+The **posterior standard deviation** summarizes in a single number the degree of uncertainty about $\theta$ after observing sample data.
+The smaller the posterior standard deviation, the more certainty we have about the value of the parameter after observing sample data.
+(Similar considerations apply for the prior distribution. The **prior standard deviation** summarizes in a single number the degree of uncertainty about $\theta$ before observing sample data.)
+
+
+Recall that the **variance** of a random variable $U$ is its probability-weighted average squared distance from its expected value
+\[
+\text{Var}(U) = \text{E}\left[\left(U - \text{E}(U)\right)^2\right] 
+\]
+The following is an equivalent "shortcut" formula for variance: "expected value of the square minus the square of the expected value."
+\[
+\text{Var}(U) = \text{E}(U^2) - \left(\text{E}(U)\right)^2
+\]
+The **standard deviation** of a random variable is the square root of its variance is $\text{SD}(U)=\sqrt{\text{Var}(U)}$.
+Standard deviation is measured in the same measurement units as the variable itself, while variance is measured in squared units.
+
+In the calculation of a posterior standard deviation, $\theta$ plays the role of the variable $U$ and the posterior distribution provides the probability-weights.
+
+
+
+
+```{example, read-book-interval}
+
+Continuing Example \@ref(exm:read-book-sd), we'll assume a Normal prior distribution for $\theta$ with prior mean 0.4 and prior standard deviation 0.1.
+
+```
+
+1. Compute and interpret the prior probability that $\theta$ is greater than 0.7. 
+1. Find the 25th and 75th percentiles of the prior distribution.
+What is the prior probability that $\theta$ lies in the interval with these percentiles as endpoints?
+According to the prior, how plausible is it for $\theta$ to lie inside this interval relative to outside it? (Hint: use `qnorm`)
+1. Repeat the previous part with the 10th and 90th percentiles of the prior distribution.
+1. Repeat the previous part with the 1st and 99th percentiles of the prior distribution.
+
+
+
+    In a sample of 150 American adults, 75% have read a book in the past year. (The 75% value is motivated by a real sample we'll see in a later example.)
+
+1. Find the posterior distribution based on this data, and make a plot of prior, likelihood, and posterior.
+1. Compute the posterior standard deviation.
+How does it compare to the prior standard deviation? Why?
+1. Compute and interpret the posterior probability that $\theta$ is greater than 0.7.
+Compare to the prior probability.
+1. Find the 25th and 75th percentiles of the posterior distribution.
+What is the posterior probability that $\theta$ lies in the interval with these percentiles as endpoints?
+According to the posterior, how plausible is it for $\theta$ to lie inside this interval relative to outside it?
+Compare to the prior interval.
+1. Repeat the previous part with the 10th and 90th percentiles of the posterior distribution.
+1. Repeat the previous part with the 1st and 99th percentiles of the posterior distribution.
+
+
+
+
+```{solution, read-book-interval-sol}
+to Example \@ref(exm:read-book-interval)
+```
+
+```{asis, fold.chunk = TRUE}
+
+1. We can use software (`1 - pnorm(0.7, 0.4, 0.1)`) but we can also use the empirical rule.
+For a Normal(0.4, 0.1) distribution, the value 0.7 is $\frac{0.7-0.4}{0.1} = 3$ SDs above the mean, so the probability is about 0.0015 (since about 99.7% of values are within 3 SDs of the mean).
+According to the prior, there is about a 0.1% chance that more than 70% of Americans adults have read a book in the last year.
+1. We can use `qnorm(0.75)` = 0.6745 to find that the 75th percentile of a Normal distribution is about 0.67 SDs above the mean, so the 25th percentile is about 0.67 SDs below the mean.
+For the prior distribution, the 25th percentile is about 0.33 and the 75th percentile is about 0.47.
+The prior probability that $\theta$ lies in the interval [0.33, 0.47] is about 50%.
+According to the prior, it is equally plausible for $\theta$ to lie inside the interval [0.33, 0.47] as to lie outside this interval.
+1. We can use `qnorm(0.9)` = 1.28 to find that the 90th percentile of a Normal distribution is about 1.28 SDs above the mean, so the 10th percentile is about 1.28 SDs below the mean.
+For the prior distribution, the 10th percentile is about 0.27 and the 90th percentile is about 0.53.
+The prior probability that $\theta$ lies in the interval [0.27, 0.53] is about 80%.
+According to the prior, it is four times more plausible for $\theta$ to lie inside the interval [0.27, 0.53] than to lie outside this interval.
+1. We can use `qnorm(0.99)` = 2.33 to find that the 99th percentile of a Normal distribution is about 2.33 SDs above the mean, so the 1st percentile is about 2.33 SDs below the mean.
+For the prior distribution, the 1st percentile is about 0.167 and the 99th percentile is about 0.633.
+The prior probability that $\theta$ lies in the interval [0.167, 0.633] is about 98%.
+According to the prior, it is 49 times more plausible for $\theta$ to lie inside the interval [0.167, 0.633] than to lie outside this interval.
+1. See below for a plot.
+Our prior gave very little plausibility to a sample like the one we actually observed.
+However, given our sample data, the likelihood corresponding to the values of $\theta$ we initially deemed most plausible is very low.
+Therefore, our posterior places most of the plausibility on values in the neighborhood of the observed sample proportion, even though the prior probability for many of these values was low.
+The prior does still have some influence; the posterior mean is 0.709 so we haven't shifted all the way towards the sample proportion yet.
+1. Compute the posterior variance first using either the definition or the shortcut version, then take the square root; see code below. 
+The posterior SD is 0.036, almost 3 times smaller than the prior SD.
+After observing data we have more certainty about the value of the parameter, resulting in a smaller posterior SD.
+The posterior distribution is approximately Normal with posterior mean 0.709 and posterior SD 0.036.
+1. We can use the grid approximation; just sum the posterior probabilities for $\theta > 0.7$ to see that the posterior probability is about 0.603.
+Since the posterior distribution is approximately Normal, we can also use the empirical rule: the standardized value for 0.7  is $\frac{0.7 - 0.709}{0.036}=-0.24$, or 0.24 SDs below the mean.
+Using the empirical rule (or software `1 - pnorm(-0.24)`) gives about 0.596, similar to the grid calculation.
+
+    We started with a very low prior probability that more than 70% of American adults have read at least one book in the last year.
+But after observing a sample in which more than 70% have read at least one book in the last year, we assign a much higher plausibility to more than 70% of *all American adults* having read at least one book in the last year.
+Seeing is believing.
+
+1. See code below for calculations based on the grid approximation.
+But we can also use the fact the posterior distribution is approximately Normal; e.g., the 25th percentile is about 0.67 SDs below the mean: $0.709 - 0.67 \times 0.036=0.684.$ 
+For the posterior distibution, the 25th percentile is about 0.684 and the 75th percentile is about 0.733.
+The posterior probability that $\theta$ lies in the interval [0.684, 0.733] is about 50%.
+According to the posterior, it is equally plausible for $\theta$ to lie inside the interval [0.684, 0.733] as to lie outside this interval.
+This 50% interval is both (1) narrower than the prior interval, due to the smaller posterior SD, and (2) shifted towards higher values of $\theta$ relative to the prior interval, due to the larger posterior mean.
+1. For the posterior distibution, the 10th percentile is about 0.662 and the 90th percentile is about 0.754.
+The posterior probability that $\theta$ lies in the interval [0.662, 0.754] is about 80%.
+According to the posterior, it is four times more plausible for $\theta$ to lie inside the interval [0.662, 0.754] as to lie outside this interval.
+This 80% interval is both (1) narrower than the prior interval, due to the smaller posterior SD, and (2) shifted towards higher values of $\theta$ relative to the prior interval, due to the larger posterior mean.
+1. For the posterior distibution, the 1st percentile is about 0.622 and the 99th percentile is about 0.789.
+The posterior probability that $\theta$ lies in the interval [0.622, 0.789] is about 98%.
+According to the posterior, it is 49 times more plausible for $\theta$ to lie inside the interval [0.622, 0.789] as to lie outside this interval.
+This interval is both (1) narrower than the prior interval, due to the smaller posterior SD, and (2) shifted towards higher values of $\theta$ relative to the prior interval, due to the larger posterior mean.
+
+```
+
+
+```{r, echo = TRUE}
+
+theta = seq(0, 1, 0.0001)
+
+# prior
+prior = dnorm(theta, 0.4, 0.1) # shape of prior
+prior = prior / sum(prior) # scales so that prior sums to 1
+
+# data
+n = 150 # sample size
+y = round(0.75 * n, 0) # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# posterior mean
+posterior_mean = sum(theta * posterior)
+posterior_mean
+
+# posterior_variance - "shortcut" formula
+posterior_var = sum(theta ^ 2 * posterior) - posterior_mean ^ 2
+posterior_sd = sqrt(posterior_var)
+posterior_sd
+
+# posterior probability that theta is greater than 0.7
+sum(posterior[theta > 0.7])
+
+# posterior percentiles - central 50% interval
+theta[max(which(cumsum(posterior) < 0.25))]
+theta[max(which(cumsum(posterior) < 0.75))]
+
+# posterior percentiles - central 80% interval
+theta[max(which(cumsum(posterior) < 0.1))]
+theta[max(which(cumsum(posterior) < 0.9))]
+
+# posterior percentiles - central 98% interval
+theta[max(which(cumsum(posterior) < 0.01))]
+theta[max(which(cumsum(posterior) < 0.99))]
+
+
+```
+
+```{r, echo = FALSE}
+
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+par(new=T)
+plot(theta, likelihood/sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+```
+
+
+Bayesian inference for a parameter is based on its posterior distribution.
+Since a Bayesian analysis treats parameters as random variables, *it is possible to make probability statements about a parameter*.
+
+
+A Bayesian **credible interval** is an interval of values for the parameter that has at least the specified probability, e.g., 50%, 80%, 98%.
+Credible intervals can be computed based on both the prior and the posterior distribution, though we are primarily interested in intervals based on the posterior distribution.
+For example,
+
+- With a 50% credible interval, it is equally plausible that the parameter lies inside the interval as outside  
+- With an 80% credible interval, it is 4 times more plausible that the parameter lies inside the interval than outside
+- With a 98% credible interval, it is 49 times more plausible that the parameter lies inside the interval than outside
+
+
+**Central credible intervals** split the complementary probability evenly between the two tails.
+For example,
+
+- The endpoints of a 50% central posterior credible interval are the 25th and the 75th percentiles of the posterior distribution.
+- The endpoints of an 80% central posterior credible interval are the 10th and the 90th percentiles of the posterior distribution.
+- The endpoints of a 98% central posterior credible interval are the 1st and the 99th percentiles of the posterior distribution.
+
+There is nothing special about the values 50%, 80%, 98%.
+These are just a few convenient choices^[In Section 3.2.2 of *Statistical Rethinking* (@statrethinkingbook), the author suggests 67%, 89%, and 97%: "a series of nested intervals may be more useful than any one interval. For example, why not present 67%, 89%, and 97% intervals, along with the median? Why these values? No reason. They are prime numbers, which makes them easy to remember. But all that matters is they be spaced enough to illustrate the shape of the posterior. And these values avoid 95%, since conventional 95% intervals encourage many readers to conduct unconscious hypothesis tests."] whose endpoints correspond to "round number" percentiles (1st, 10th, 25th, 75th, 90th, 99th) and inside/outside ratios (1-to-1, 4-to-1, about 50-to-1).
+You could also throw in, say 70% (15th and 85th percentiles, about 2-to-1) or 90% (5th and 95th percentiles, about 10-to-1), if you wanted. 
+As the previous example illustrates, it's not necessary to just select a single credible interval (e.g., 95%).
+Bayesian inference is based on the full posterior distribution.
+Credible intervals simply provide a summary of this distribution.
+Reporting a few credible intervals, rather than just one, provides a richer picture of how the posterior distribution represents the uncertainty in the parameter.
+
+In many situations, the posterior distribution of a single parameter is approximately Normal, so posterior probabilities can be approximated with Normal distribution calculations --- [standardizing and using the empirical rule](https://bookdown.org/kevin_davisross/probsim-book/normal-distributions.html).
+In particular, an approximate central credible interval has endpoints
+\[
+\text{posterior mean} \pm z^* \times \text{posterior SD}
+\]
+where $z^*$ is the appropriate multiple for a standard Normal distribution corresponding to the specified probability.
+For example,
+
+| Central credibility   |  50% |  80% |  95% |  98% |
+|-----------------------|-----:|-----:|-----:|-----:|
+| Normal $z^*$ multiple | 0.67 | 1.28 | 1.96 | 2.33 |
+
+
+
+
+
+
+Central credible intervals are easier to compute, but are not the only or most widely used credible intervals.
+A **highest posterior density interval** is the interval of values that has the specified posterior probability and is such that the posterior density within the interval is never lower than the posterior density outside the interval.
+If the posterior distribution is relatively symmetric with a single peak, central posterior credible intervals and highest posterior density intervals are similar.
+
+
+
+
+```{example, read-book-full-sample}
+
+Continuing Example \@ref(exm:read-book-sd), we'll assume a Normal prior distribution for $\theta$ with prior mean 0.4 and prior standard deviation 0.1.
+
+In a [recent survey of 1502 American adults conducted by the Pew Research Center](https://www.pewresearch.org/fact-tank/2022/01/06/three-in-ten-americans-now-read-e-books/), 75% of those surveyed said thay have read a book in the past year.
+
+```
+
+1. Find the posterior distribution based on this data, and make a plot of prior, likelihood, and posterior.
+Describe the posterior distribution.
+How does this posterior compare to the one based on the smaller sample size ($n=150$)?
+1. Compute and interpret the posterior probability that $\theta$ is greater than 0.7.
+Compare to the prior probability.
+1. Compute and interpret in context 50%, 80%, and 98% central posterior credible intervals.
+1. Here is [how the survey question was worded](https://www.pewresearch.org/wp-content/uploads/2022/01/Book-Reading-2021-Methodology.pdf): "During the past 12 months, about how many BOOKS did you read either all or part of the way through? Please include any print, electronic, or audiobooks you may have read or listened to."
+Does this change your conclusions? Explain.
+
+
+```{solution, read-book-interval-full-sample-sol}
+to Example \@ref(exm:read-book-full-sample)
+```
+
+```{asis, fold.chunk = TRUE}
+
+1. See below for code and plots.
+The posterior distribution is approximately Normal with posterior mean 0.745 and posterior SD 0.011.
+Despite our prior beliefs that $\theta$ was in the 0.4 range, enough data has convinced us otherwise.
+With a large sample size, the prior has little influence on the posterior; much less than with the smaller sample size.
+Compared to the posterior based on the small sample size, the posterior now (1) has shifted to the neighborhood of the sample data, (2) exhibits a smaller degree of uncertainty about the parameter.
+1. The posterior probability that $\theta$ is greater than 0.7 is about 0.9999.
+We started with only a 0.1% chance that more than 70% of American adults have read a book in the last year, but the large sample has convinced us otherwise.
+1. There is a posterior probability of:
+  
+    - 50% that the population proportion of American adults who have read a book in the past year is between 0.737 and 0.753. We believe that the population proportion is as likely to be inside this interval as outside.
+    - 80% that the population proportion of American adults who have read a book in the past year is between 0.730 and 0.759. We believe that the population proportion is four times more likely to be inside this interval than to be outside it.
+    - 98% that the population proportion of American adults who have read a book in the past year is between 0.718 and 0.771. We believe that the population proportion is 49 times more likely to be inside this interval than to be outside it.
+
+    In short, our conclusion is that somewhere-in-the-70s percent of American adults have read a book in the past year.
+    But see the next part...
+
+1. It depends on what our goal is.
+Do we want to only count completed books?
+Does there have to be a certain word count?
+Does it count if the adult read a children's book?
+Does listening to an audiobook count?
+Does it have to be for "fun" or does reading books for work count?
+If our goal is to estimate the population proportion of Americans who *have read completely a 100,000 word non-audiobook book in the last year*, then this particular sample data would be fairly biased from our perspective.
+
+
+
+```
+
+```{r, echo = TRUE}
+
+theta = seq(0, 1, 0.0001)
+
+# prior
+prior = dnorm(theta, 0.4, 0.1) # shape of prior
+prior = prior / sum(prior) # scales so that prior sums to 1
+
+# data
+n = 1502 # sample size
+y = round(0.75 * n, 0) # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# posterior mean
+posterior_mean = sum(theta * posterior)
+posterior_mean
+
+# posterior_variance - "shortcut" formula
+posterior_var = sum(theta ^ 2 * posterior) - posterior_mean ^ 2
+posterior_sd = sqrt(posterior_var)
+posterior_sd
+
+# posterior probability that theta is greater than 0.7
+sum(posterior[theta > 0.7])
+
+# posterior percentiles - central 50% interval
+theta[max(which(cumsum(posterior) < 0.25))]
+theta[max(which(cumsum(posterior) < 0.75))]
+
+# posterior percentiles - central 80% interval
+theta[max(which(cumsum(posterior) < 0.1))]
+theta[max(which(cumsum(posterior) < 0.9))]
+
+# posterior percentiles - central 98% interval
+theta[max(which(cumsum(posterior) < 0.01))]
+theta[max(which(cumsum(posterior) < 0.99))]
+
+
+```
+
+```{r, echo = FALSE}
+
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+par(new=T)
+plot(theta, likelihood/sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+```
+
+
+The quality of any statistical analysis depends very heavily on the quality of the data.
+Always investigate how the data were collected to determine what conclusions are appropriate.
+Is the sample reasonably representative of the population?
+Were the variables reliably measured?
+
+
+
+```{example, read-book-priors}
+
+Continuing Example \@ref(exm:read-book-full-sample), we'll use the same sample data ($n=1502$, 75%) but now we'll consider different priors.
+
+For each of the priors below, plot prior, likelihood, and posterior, and compute the posterior probability that $\theta$ is greater than 0.7.
+Compare to Example \@ref(exm:read-book-full-sample).
+
+```
+
+
+1. Normal distribution prior with prior mean 0.4 and prior SD 0.05.
+1. Uniform distribution prior on the interval [0, 0.7]
+
+
+```{solution, read-book-priors-sol}
+to Example \@ref(exm:read-book-priors)
+```
+
+```{asis, fold.chunk = TRUE}
+
+1. The Normal(0.4, 0.05) prior concentrates almost all prior plausibility in a fairly narrow range of values (0.25 to 0.55 or so) and represents more prior certainty about $\theta$ than the Normal(0.4, 0.1) prior.
+Even with the large sample size, we see that the Normal(0.4, 0.05) prior has more influence on the posterior than the Normal(0.4, 0.1).
+However, the two posterior distributions are not that different: Normal(0.73, 0.011) here compared with Normal(0.745, 0.011) from the previous problem.
+Both posteriors assign almost all posterior credibility to values in the low to mid 70s percent.
+In particular, the posterior probability that $\theta$ is greater than 0.7 is 0.997 (compared with 0.9999 from the previous problem).
+1. The Uniform prior distribution spreads prior plausibility over a fairly wide range of values, [0, 0.7].
+However, the prior probability that $\theta$ is greater than 0.7 is 0.
+Even when we observed a large sample with a sample proportion greater than 0.7, the posterior probability that $\theta$ is greater than 0.7 remains 0.
+See the plot below; the posterior distribution is basically a spike that puts almost all of the posterior credibility on the value 0.7.
+Assigning 0 prior probability for $\theta$ values greater than 0.7 has essentially identified such $\theta$ values as impossible, and no amount of data can make the impossible possible.
+
+
+```
+
+
+```{r, echo = FALSE}
+
+theta = seq(0, 1, 0.0001)
+
+# prior
+prior = dnorm(theta, 0.4, 0.05) # shape of prior
+prior = prior / sum(prior) # scales so that prior sums to 1
+
+# data
+n = 1502 # sample size
+y = round(0.75 * n, 0) # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# # posterior mean
+# posterior_mean = sum(theta * posterior)
+# posterior_mean
+# 
+# # posterior_variance - "shortcut" formula
+# posterior_var = sum(theta ^ 2 * posterior) - posterior_mean ^ 2
+# posterior_sd = sqrt(posterior_var)
+# posterior_sd
+# 
+# # posterior probability that theta is greater than 0.7
+# sum(posterior[theta > 0.7])
+# 
+# # posterior percentiles - central 50% interval
+# theta[max(which(cumsum(posterior) < 0.25))]
+# theta[max(which(cumsum(posterior) < 0.75))]
+# 
+# # posterior percentiles - central 80% interval
+# theta[max(which(cumsum(posterior) < 0.1))]
+# theta[max(which(cumsum(posterior) < 0.9))]
+# 
+# # posterior percentiles - central 98% interval
+# theta[max(which(cumsum(posterior) < 0.01))]
+# theta[max(which(cumsum(posterior) < 0.99))]
+
+
+```
+
+```{r, echo = FALSE}
+
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+par(new=T)
+plot(theta, likelihood/sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+```
+
+
+
+
+```{r, echo = FALSE}
+
+theta = seq(0, 1, 0.0001)
+
+# prior
+prior = dunif(theta, 0, 0.7) # shape of prior
+prior = prior / sum(prior) # scales so that prior sums to 1
+
+# data
+n = 1502 # sample size
+y = round(0.75 * n, 0) # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# # posterior mean
+# posterior_mean = sum(theta * posterior)
+# posterior_mean
+# 
+# # posterior_variance - "shortcut" formula
+# posterior_var = sum(theta ^ 2 * posterior) - posterior_mean ^ 2
+# posterior_sd = sqrt(posterior_var)
+# posterior_sd
+# 
+# posterior probability that theta is greater than 0.7
+# sum(posterior[theta > 0.7])
+# 
+# # posterior percentiles - central 50% interval
+# theta[max(which(cumsum(posterior) < 0.25))]
+# theta[max(which(cumsum(posterior) < 0.75))]
+# 
+# # posterior percentiles - central 80% interval
+# theta[max(which(cumsum(posterior) < 0.1))]
+# theta[max(which(cumsum(posterior) < 0.9))]
+# 
+# # posterior percentiles - central 98% interval
+# theta[max(which(cumsum(posterior) < 0.01))]
+# theta[max(which(cumsum(posterior) < 0.99))]
+
+
+```
+
+```{r, echo = FALSE}
+
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+par(new=T)
+plot(theta, likelihood/sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+```
+
+
+
+
+
+You have a great deal of flexibility in choosing a prior, and there are many reasonable approaches.
+However, do NOT choose a prior that assigns 0 probability/density to possible values of the parameter regardless of how initially implausible the values are.
+Even very stubborn priors can be overturned with enough data, but no amount of data can turn a prior probability of 0 into a positive posterior probability.
+Always consider the range of *possible* values of the parameter, and be sure the prior density is non-zero over the entire range of possible values.
+
+
+<!-- more certain prior, both large and small sample size -->
+
+
+
+## Comparing Bayesian and frequentist interval estimates
+
+
+The most widely used elements of "traditional" frequentist inference are confidence intervals and hypothesis tests (a.k.a, null hypothesis significance tests).
+The numerical results of Bayesian and frequentist analysis are often similar.
+However, the interpretations are very different.
+
+```{example, read-book-freq-interval}
+
+We'll now compare the Bayesian credible intervals in Example \@ref(exm:read-book-priors) to frequentist confidence intervals.
+Recall the actual study data in which 75% of the 1502 American adults surveyed said they read a book in the last year.
+
+```
+
+1. Compute a 98% confidence interval for $\theta$.
+1. Write a clearly worded sentence reporting the confidence interval in context.
+1. Explain what "98% confidence" means.
+1. Compare the *numerical results* of the Bayesian and frequentist analysis. Are they similar or different?
+1. How does the *interpretation* of these results differ between the two approaches?
+
+
+```{solution, read-book-freq-interval-sol}
+to Example \@ref(exm:read-book-freq-interval)
+```
+
+```{asis, fold.chunk = TRUE}
+
+1. The observed sample proportion is $\hat{p} = 0.75$ and its standard error is $\sqrt{\hat{p}(1-\hat{p})/n} = \sqrt{0.75(1-0.75)/1502} =0.011$.  The usual formula for a confidence interval for a population prportion is 
+\[
+\hat{p} \pm z^*\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\]
+where $z^*$ is the multiple from a standard Normal distribution corresponding to the level of confidence (e.g., $z^* = 2.33$ for 98% confidence).
+A 98% confidence interval for $\theta$ is [0.724, 0.776].
+1. We estimate with 98% confidence that the population proportion of American adults who have read a book in the last year is between 0.724 and 0.776.
+1. Confidence is in the estimation procedure.
+Over many samples, 98% of samples will yield confidence intervals, computed using the above formula, that contain the true parameter value (a fixed number)
+The intervals change from sample to sample; the parameter is fixed.
+1. The numerical results are similar: the 98% posterior credible interval is similar to the 98% confidence interval.
+Both reflect a conclusion that we think that somewhere-in-the-70s percent of American adults have read at least one book in the past year.
+1. However, the *interpretation* of these results is very different between the two approaches.
+
+    The Bayesian approach provides *probability statements about the parameter*: There is a 98% chance that $\theta$ is between 0.718 and 0.771;  our assessment is that $\theta$ is 49 times more likely to lie inside the interval [0.718, 0.771] than outside.
+    
+    In the frequestist approach such a probability statement makes no sense. From the frequentist perspective, $\theta$ is an unknown *number*: either that number is in the interval [0.724, 0.776] or it's not; there's no probability to it. Rather, the frequentist approach develops procedures based on the probability of what might happen over many samples. Notice that in the interpretation of what 98% confidence means above, 
+the actual numbers [0.724, 0.776] did not appear. The confidence is in the procedure that produced the interval, and not in the interval itself.
+
+```
+
+
+
+```{example, read-book-freq-test}
+
+Have more than 70% of Americans read a book in the last year?
+We'll now compare the Bayesian analysis in Example \@ref(exm:read-book-priors) to a frequentist (null) hypothesis (significance) test.
+Recall the actual study data in which 75% of the 1502 American adults surveyed said they read a book in the last year.
+
+```
+
+1. Conduct an appropriate hypothesis test.
+1. Write a clearly worded sentence reporting the conclusion of the hypothesis test in context.
+1. Write a clearly worded sentence interpreting the p-value in context.
+1. Now back to the Bayesian analysis of Example \@ref(exm:read-book-priors).
+Compute the posterior probability that $\theta$ is less than or equal to 0.70.
+1. Compare the *numerical values* of the posterior probability and the p-value. Are they similar or different?
+1. How does the *interpretation* of these results differ between the two approaches?
+
+
+```{solution, read-book-freq-test-sol}
+to Example \@ref(exm:read-book-freq-test)
+```
+
+
+
+
+```{asis, fold.chunk = TRUE}
+
+1. The null hypothesis is $H_0:\theta = 0.7$.
+The alternative hypothesis is $H_a:\theta>0.7$.
+The standard deviation of the null distribution is $\sqrt{0.7(1-0.7)/1502} = 0.0118$.
+The standardized (test) statistic is $(0.75 - 0.7) / 0.0118 = 4.23$.
+With such a large sample size, the null distribution of sample proportions is approximately Normal, so the p-value is approximately `1 - pnorm(4.23)` = 0.000012.
+1. With a p-value of 0.000012 we have extremely strong evidence to reject the null hypothesis and conclude that more than 70% of Americans have read a book in the last year.
+1. Interpreting the p-value
+
+    - If the population proportion of Americans who have read a book in the last year is equal to 0.7,
+    - Then we would observe a sample proportion of 0.75 or more in about 0.0012% (about 1 in 100,000) of random samples of size 1502.
+    - Since we actually observed a sample proportion of 0.75, which would be extremely unlikely if the population proportion were 0.7,
+    - The data provide evidence that the population proportion is not 0.7.
+
+1. See Example \@ref(exm:read-book-priors) where we computed the posterior probability that $\theta$ is greater than 0.7.
+The posterior probability that $\theta$ is less than or equal to 0.7 is 0.000051.
+
+    Note: in the frequentist hypothesis test, the null hypothesis $H_0:\theta=0.7$ is operationally the same as $H_0:\theta \le 0.7$; the test is conducted the same way and results in the same p-value.
+    Computing the posterior probability that $\theta\le 0.7$ is like computing the probability that the null hypothesis is true.
+    Now, the p-value is *not* the probability that the null hypothesis is true, even though that is a common misinterpretation.
+    But there is no direct Bayesian analog of a p-value, so this will have to do.
+
+1. The numerical results are similar; both the p-value and the posterior probability are on the order of 1/100000.
+Both reflect a strong endorsement of the conclusion that more than 70% of Americans have read a book in the past year.
+1. However, the *interpretation* of these results is very different between the two approaches.
+
+    The Bayesian analysis computes a probability that $\theta <0.7$: there's an extremely small probability that $\theta$ is less than 0.7, so we'd be willing to bet a very large amount of money that it's not.
+    
+    But such a probability make no sense from a frequentist perspective.
+    From the frequentist perspective, the unknown parameter $\theta$ is a *number*: either than number is greater than 0.7 or it's not; there's no probability to it.
+    The p-value is a probability referring to what would happen over many samples.
+
+
+```
+
+
+Since a Bayesian analysis treats parameters as random variables, it is possible to make probability statements about parameters.
+In contrast, a frequentist analysis treats unknown parameters  as fixed --- that is, not random --- so probability statements do not apply to parameters.
+In a frequentist approach, probability statements (like "95% confidence") are based on how the sample data would behave over many hypothetical samples.
+
+
+In a Bayesian approach
+
+- Parameters are random variables and have distributions.
+- Observed data are treated as fixed, not random.
+- All inference is based on the posterior distribution of parameters which quantifies our uncertainty about the parameters.
+- The posterior distribution quantifies our uncertainty in the parameters, after observing the sample data.
+- The posterior (or prior) distribution can be used to make probability statements about parameters.
+- For example, "95% credible" quantifies our assessment that the parameter is 19 times more likely to lie inside the credible interval than outside.
+(Roughly, we'd be willing to bet at 19-to-1 odds on whether $\theta$ is inside the interval [0.718, 0.771].)
+
+
+In a frequentist approach
+
+- Parameters are treated as fixed (not random), but unknown numbers
+- Data are treated as random
+- All inference is based on the sampling distribution of the data which quantifies how the data behaves over many hypothetical samples.
+- For example, "95% confidence" is confidence in the procedure: confidence intervals vary from sample-to-sample; over many samples 95% of confidence intervals contain the parameter being estimated.
+
+
+
+
+
+
+
+

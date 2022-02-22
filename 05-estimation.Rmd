@@ -1,0 +1,1152 @@
+# Introduction to Estimation {#estimation}
+
+A parameter is a number that describes the population, e.g., population mean, population proportion.
+The actual value of a parameter is almost always unknown.
+
+A statistic is a number that describes the sample, e.g., sample mean, sample proportion.
+We can use observed sample statistics to estimate unknown population parameters.
+
+```{example, kissing-mle}
+
+Most people are right-handed, and even the right eye is dominant for most people.
+In a [2003 study reported in *Nature*](http://www.nature.com/news/2003/030213/full/news030210-7.html), a German bio-psychologist conjectured that this preference for the right side manifests itself in other ways as well.
+In particular, he investigated if people have a tendency to lean their heads to the right when kissing.
+The researcher observed kissing couples in public places and recorded whether the couple leaned their heads to the right or left.
+(We'll assume this represents a randomly selected representative sample of kissing couples.)
+	
+The parameter of interest in this study is the population proportion of kissing couples who lean their heads to the right. Denote this unknown parameter $\theta$; our goal is to estimate $\theta$ based on sample data.
+
+Let $Y$ be the number of couples in a random sample of $n$ kissing couples that lean to right.
+Suppose that in a sample of $n=12$ couples $y=8$ leaned to the right.
+We'll start with a non-Bayesian analysis.
+
+```
+
+1. If you were to estimate $\theta$ with a single number based on this sample data alone, intuitively what number would you pick? 
+1. For a general $n$ and $\theta$, what is the distribution of $Y$?
+1. For the next few parts suppose $n=12$. For a moment we'll only consider these potential values for $\theta$: $0.1, 0.3, 0.5, 0.7, 0.9$.  If $\theta=0.1$ what is the distribution of $Y$?  Compute and interpret the probability that $Y=8$ if $\theta = 0.1$.
+1. If $\theta=0.3$ what is the distribution of $Y$?  Compute and interpret the probability that $Y=8$ if $\theta = 0.3$.
+1. If $\theta=0.5$ what is the distribution of $Y$?  Compute and interpret the probability that $Y=8$ if $\theta = 0.5$.
+1. If $\theta=0.7$ what is the distribution of $Y$?  Compute and interpret the probability that $Y=8$ if $\theta = 0.7$.
+1. If $\theta=0.9$ what is the distribution of $Y$?  Compute and interpret the probability that $Y=8$ if $\theta = 0.9$.
+1. Now remember that $\theta$ is unknown.  If you had to choose your estimate of $\theta$ from the values $0.1, 0.3, 0.5, 0.7, 0.9$, which one of these values would you choose based on of observing $y=8$ couples leaning to the right in a sample of 12 kissing couples? Why?
+1. Obviously our choice is not restricted to those five values of $\theta$. Describe in principle the process you would follow to find the estimate of $\theta$ based on of observing $y=8$ couples leaning to the right in a sample of 12 kissing couples.
+1. Let $f(y|\theta)$ denote the probability of observing $y$ couples leaning to the right in a sample of 12 kissing couples.  Determine $f(y=8|\theta)$ and sketch a graph of it.  What is this a function of? What is an appropriate name for this function?
+1. From the previous part, what seems like a reasonable estimate of $\theta$ based solely on the data of observing $y=8$ couples leaning to the right in a sample of 12 kissing couples?
+
+
+
+```{solution, kissing-mle-sol}
+to Example \@ref(exm:kissing-mle)
+```
+
+```{asis, fold.chunk = TRUE}
+
+1. Seems reasonable to use the sample proportion 8/12 = 0.667. 
+1. $Y$ has a Binomial($n$, $\theta$) distribution.
+1. If $\theta=0.1$ then $Y$ has a Binomial(12, 0.1) distribution and $P(Y = 8|\theta = 0.1) = \binom{12}{8}0.1^8(1-0.1)^{12-8}\approx 0.000$; `dbinom(8, 12, 0.1)`.
+1. If $\theta=0.3$ then $Y$ has a Binomial(12, 0.3) distribution and $P(Y = 8|\theta = 0.3) = \binom{12}{8}0.3^8(1-0.3)^{12-8}\approx 0.008$; `dbinom(8, 12, 0.3)`.
+1. If $\theta=0.5$ then $Y$ has a Binomial(12, 0.5) distribution and $P(Y = 8|\theta = 0.5) = \binom{12}{8}0.5^8(1-0.5)^{12-8}\approx 0.121$; `dbinom(8, 12, 0.5)`.
+1. If $\theta=0.7$ then $Y$ has a Binomial(12, 0.7) distribution and $P(Y = 8|\theta = 0.7) = \binom{12}{8}0.7^8(1-0.7)^{12-8}\approx 0.231$; `dbinom(8, 12, 0.7)`.
+1. If $\theta=0.9$ then $Y$ has a Binomial(12, 0.9) distribution and $P(Y = 8|\theta = 0.9) = \binom{12}{8}0.9^8(1-0.9)^{12-8}\approx 0.021$; `dbinom(8, 12, 0.9)`.
+1. Compare the above values, and see the plots below.
+The probability of observing $y=8$ is greatest when $\theta=0.7$, so in some sense the data seems most "consistent" with $\theta=0.7$.
+The sample that we actually observed has the greatest likelihood of occurring when $\theta = 0.7$ (among these choices for $\theta$).
+From a different perspective, if $\theta=0.1$ then the likelihood of observing 8 successes in a sample of size 12 is very small.
+Therefore, since we actually did observed 8 successes in a sample of size 12, the data do not seem consistent with $\theta=0.1$.
+1. For each value of $\theta$ between 0 and 1 compute the probability of observing $y=8$, $P(Y = 8|\theta)$, and find which value of $\theta$ maximizes this probability.    
+1. $f(y=8|\theta)=P(Y=8|\theta) = \binom{12}{8}\theta^8(1-\theta)^{12-8}$.  This is a function of $\theta$, with the data $y=8$ fixed. Since this function computes the likelihood of observing the data (evidence) under different values of $\theta$, "likelihood function" seems like an appropriate name.  See the plots below.
+1. The value which maximizes the likelihood of $y=8$ is $8/12$.  So the maximum likelihood estimate of $\theta$ is $8/12$.
+
+``` 
+
+
+```{r, likelihood-plots, echo = FALSE}
+
+knitr::include_graphics(c("_graphics/likelihood1.png"))
+
+``` 
+
+
+```{r, likelihood-plots-full, echo = FALSE, fig.show="hold", out.width="50%"}
+
+knitr::include_graphics(c("_graphics/likelihood2.png"))
+
+``` 
+
+- For given data $y$, the **likelihood function** $f(y|\theta)$ is the probability (or density for continuous data) of observing the sample data $y$ viewed as a *function of the parameter* $\theta$.
+- In the likelihood function, the observed value of the data $y$ is treated as a fixed constant.
+- The value of a parameter that maximizes the likelihood function is called a **maximum likelihood estimate** (MLE).
+- The MLE depends on the data $y$. For given data $y$, the MLE is the value of $\theta$ which gives the largest likelihood of having produced the observed data $y$.
+- Maximum likelihood estimation is a common *frequentist* technique for estimating the value of a parameter based on data from a sample.
+
+
+```{example, kissing-discrete1}
+
+We'll now take a Bayesian approach to estimating $\theta$ in Example \@ref(exm:kissing-mle).
+We treat the unknown parameter $\theta$ as a *random variable* and wish to find its posterior distribution after observing $y=8$ couples leaning to the right in a sample of 12 kissing couples.
+
+We will start with a very simplified, unrealistic prior distribution that assumes only five possible, equally likely values for $\theta$: 0.1, 0.3, 0.5, 0.7, 0.9.
+
+```
+
+1. Sketch a plot of the prior distribution and fill in the prior column of the Bayes table.
+1. Now suppose that $y=8$ couples in a sample of size $n=12$ lean right.  Sketch a plot of the likelihood function and fill in the likelihood column in the Bayes table.
+1. Complete the Bayes table and sketch a plot of the posterior distribution.  What does the posterior distribution say about $\theta$? How does it compare to the prior and the likelihood?
+If you had to estimate $\theta$ with a single number based on this posterior distribution, what number might you pick?
+1. Now consider a prior distribution which places probability 1/9, 2/9, 3/9, 2/9, 1/9 on the values 0.1, 0.3, 0.5, 0.7, 0.9, respectively.
+Redo the previous parts.  How does the posterior distribution change?
+1. Now consider a prior distribution which places probability 5/15, 4/15, 3/15, 2/15, 1/15 on the values 0.1, 0.3, 0.5, 0.7, 0.9, respectively.
+Redo the previous parts.  How does the posterior distribution change?
+
+```{solution, kissing-discrete1-sol}
+to Example \@ref(exm:kissing-discrete1)
+```
+
+
+1. See plot below; the prior is "flat".
+1. The likelihood is computed as in Example \@ref(exm:kissing-mle).
+See the plots above.
+1. See the Bayes table below.  Since the prior is flat, the posterior is proportional to the likelihood.  The values 0.7 and 0.5 account for the bulk of posterior plausibility, and 0.7 is about twice as plausible as 0.5.
+If we had to estimate $\theta$ with a single number, we might pick 0.7 because that has the highest posterior probability.
+
+    ```{r}
+
+theta = seq(0.1, 0.9, 0.2)
+
+# prior
+
+prior = rep(1, length(theta))
+prior = prior / sum(prior)
+
+# data
+n = 12 # sample size
+y = 8 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+kable(bayes_table %>%
+        adorn_totals("row"),
+      digits = 4,
+      align = 'r')
+
+# plots
+plot(theta-0.01, prior, type='h', xlim=c(0, 1), ylim=c(0, 1), col="skyblue", xlab='theta', ylab='')
+par(new=T) 
+plot(theta+0.01, likelihood/sum(likelihood), type='h', xlim=c(0, 1), ylim=c(0, 1), col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='h', xlim=c(0, 1), ylim=c(0, 1), col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+    ```
+
+1. See table and plot below. Because the prior probability is now greater for 0.5 than for 0.7, the posterior probability of $\theta=0.5$ is greater than in the previous part, and the posterior probability of $\theta=0.7$ is less than in the previous part.
+The values 0.7 and 0.5 still account for the bulk of posterior plausibility, but now 0.7 is only about 1.3 times more plausible than 0.5.
+If we had to estimate $\theta$ with a single number, we might pick 0.7 because that has the highest posterior probability.
+
+    ```{r, echo = FALSE}
+
+theta = seq(0.1, 0.9, 0.2)
+
+# prior
+prior = c(1, 2, 3, 2, 1)
+prior = prior / sum(prior)
+
+# data
+n = 12 # sample size
+y = 8 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+kable(bayes_table %>%
+        adorn_totals("row"),
+      digits = 4,
+      align = 'r')
+
+# plots
+plot(theta-0.01, prior, type='h', xlim=c(0, 1), ylim=c(0, 1), col="skyblue", xlab='theta', ylab='')
+par(new=T) 
+plot(theta+0.01, likelihood/sum(likelihood), type='h', xlim=c(0, 1), ylim=c(0, 1), col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='h', xlim=c(0, 1), ylim=c(0, 1), col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+    ```
+
+
+1. See the table and plot below.  The prior probability is large for 0.1 and 0.3, but since the likelihood corresponding to these values is so small, the posterior probabilities are small.  This posterior distribution is similar to the one from the previous part.
+
+    ```{r, echo = FALSE}
+# prior
+theta = seq(0.1, 0.9, 0.2)
+prior = c(5, 4, 3, 2, 1)
+prior = prior / sum(prior)
+
+# data
+n = 12 # sample size
+y = 8 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+kable(bayes_table %>%
+        adorn_totals("row"),
+      digits = 4,
+      align = 'r')
+
+# plots
+plot(theta-0.01, prior, type='h', xlim=c(0, 1), ylim=c(0, 1), col="skyblue", xlab='theta', ylab='')
+par(new=T) 
+plot(theta+0.01, likelihood/sum(likelihood), type='h', xlim=c(0, 1), ylim=c(0, 1), col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='h', xlim=c(0, 1), ylim=c(0, 1), col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+    ```
+
+
+**Bayesian estimation**
+
+- Regards parameters as *random variables* with probability distributions
+- Assigns a subjective **prior distribution** to parameters
+- Conditions on the observed data
+- Applies Bayes' rule to produce a **posterior distribution** for parameters
+\[
+\text{posterior} \propto \text{likelihood} \times \text{prior}
+\]
+- Determines parameter estimates from the posterior distribution 
+
+In a Bayesian analysis, the *posterior distribution* contains all relevant information about parameters.  That is, all Bayesian inference is based on the posterior distribution.  The posterior distribution is a compromise between
+
+- prior "beliefs", as represented by the prior distribution
+- data, as represented by the likelihood function
+
+In contrast, a frequentist approach regards parameters as unknown but fixed (not random) quantities.  Frequentist estimates are commonly determined by the likelihood function.
+
+
+It is helpful to plot prior, likelihood, and posterior on the same plot.  Since prior and likelihood are probability distributions, they are on the same scale.  However, remember that the likelihood does not add up to anything in particular.  To put the likelihood on the same scale as prior and posterior, it is helpful to rescale the likelihood so that it adds up to 1.  Such a rescaling does not change the shape of the likelihood, it merely allows for easier comparison with prior and posterior.
+
+
+```{example, kissing-discrete2}
+
+Continuing Example \@ref(exm:kissing-discrete1). While the previous exercise introduced the main ideas, it was unrealistic to consider only five possible values of $\theta$.  
+
+```
+
+1. What are the *possible* values of $\theta$?
+Does the *parameter* $\theta$ take values on a continuous or discrete scale?
+(Careful: we're talking about the parameter and not the data.)
+1. Let's assume that any multiple of 0.0001 is a possible value of $\theta$: $0, 0.0001, 0.0002, \ldots, 0.9999, 1$.
+Assume a discrete uniform prior distribution on these values.
+Suppose again that $y=8$ couples in a sample of $n=12$ kissing couples lean right.
+Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it. Describe the posterior distribution.
+What does it say about $\theta$?
+If you had to estimate $\theta$ with a single number based on this posterior distribution, what number might you pick?
+1. Now assume a prior distribution which is proportional to $1-2|\theta-0.5|$ for $\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1$.
+Use software to plot this prior; what does it say about $\theta$?
+Then suppose again that $y=8$ couples in a sample of $n=12$ kissing couples lean right.
+Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it.
+What does the posterior distribution say about $\theta$?
+If you had to estimate $\theta$ with a single number based on this posterior distribution, what number might you pick?
+1. Now assume a prior distribution which is proportional to $1-\theta$ for $\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1$.
+Use software to plot this prior; what does it say about $\theta$?
+Then suppose again that $y=8$ couples in a sample of $n=12$ kissing couples lean right.
+Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it.
+What does the posterior distribution say about $\theta$?
+If you had to estimate $\theta$ with a single number based on this posterior distribution, what number might you pick?
+1. Compare the posterior distributions corresponding to the three different priors. How does each posterior distribution compare to the prior and the likelihood?  Does the prior distribution influence the posterior distribution?
+
+
+```{solution, kissing-discrete2-sol}
+to Example \@ref(exm:kissing-discrete2)
+```
+
+
+1. The *parameter* $\theta$ is a proportion, so it can possibly take any value in the continuous interval from 0 to 1.
+1. See plot below.  Since the prior is flat, the posterior is proportional to the likelihood.  So the posterior distribution places highest posterior probability on values near the sample proportion 8/12.
+The interval of values from about 0.4 to 0.9 accounts for almost all of the posterior plausibility.
+If we had to estimate $\theta$ with a single number, we might pick 8/12 = 0.667 because that has the highest posterior probability.
+
+
+    ```{r}
+
+theta = seq(0, 1, 0.0001)
+    
+# prior
+prior = rep(1, length(theta))
+prior = prior / sum(prior)
+
+# data
+n = 12 # sample size
+y = 8 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+
+# plots
+plot_posterior <- function(theta, prior, likelihood){
+
+  # posterior
+  product = likelihood * prior
+  posterior = product / sum(product)
+  
+  ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+  plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+  par(new=T) 
+  plot(theta, likelihood/sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='', ylab='')
+  par(new=T)
+  plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+  legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+}
+
+plot_posterior(theta, prior, likelihood)
+
+    ```
+
+
+1. See plot below.  The posterior is a compromise between the "triangular" prior which places highest prior probability near 0.5, and the likelihood.  For this posterior, the posterior probability is greater near 0.5 than for the one in the previous part; the posterior here has been "shifted" towards 0.5 relative to the posterior from the previous part.
+If we had to estimate $\theta$ with a single number, we might pick 0.615 because that has the highest posterior probability.
+
+
+    ```{r, echo = TRUE}
+# prior
+theta = seq(0, 1, 0.0001)
+prior = 1 - 2 * abs(theta - 0.5)
+prior = prior / sum(prior)
+
+# data
+n = 12 # sample size
+y = 8 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+
+# plots
+plot_posterior(theta, prior, likelihood)
+
+    ```
+
+1. Again the posterior is a compromise between prior and likelihood.  The prior probabilities are greatest for values of $\theta$ near 0; however, the likelihood corresponding to these values is small, so the posterior probabilities are close to 0. As in the previous part, some of the posterior probability is shifted towards 0.5, as opposed to what happens with the uniform prior.
+The posterior here is fairly similar to the one from the previous part, and the maximum posterior probability still occurs around 0.61.
+
+
+    ```{r, echo = TRUE}
+
+theta = seq(0, 1, 0.0001)
+    
+# prior
+prior = 1 - theta
+prior = prior / sum(prior)
+
+# data
+n = 12 # sample size
+y = 8 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# plots
+plot_posterior(theta, prior, likelihood)
+
+    ```
+
+
+1. For the "flat" prior, the posterior is proportional to the likelihood.  For the other priors, the posterior is a compromise between prior and likelihood.  The prior does have some influence. We do see three somewhat different posterior distributions corresponding to these three prior distributions.
+
+
+
+
+
+
+
+
+- Even in situations where the data are discrete (e.g., binary success/failure data, count data), most statistical *parameters* take values on a *continuous* scale.
+- Thus in a Bayesian analysis, parameters are usually *continuous random variables*, and have *continuous probability distributions*, a.k.a., *densities*.
+- An alternative to dealing with continuous distributions is to use **grid approximation**: Treat the parameter as discrete, on a sufficiently fine grid of values, and use discrete distributions.
+
+
+
+
+```{example, kissing-discrete3}
+
+Continuing Example \@ref(exm:kissing-mle).
+Now we'll perform a Bayesian analysis on the actual study data in which 80 couples out of a sample of 124 leaned right.
+We'll again use a grid approximation and assume that any multiple of 0.0001 between 0 and 1 is a possible value of $\theta$: $0, 0.0001, 0.0002, \ldots, 0.9999, 1$.
+
+```
+
+1. Before performing the Bayesian analysis, use software to plot the likelihood when $y=80$ couples in a sample of $n=124$ kissing couples lean right, and compute the maximum likelihood estimate of $\theta$ based on this data.
+How does the likelihood for this sample compare to the likelihood based on the smaller sample (8/12) from previous exercises?
+1. Now back to Bayesian analysis. Assume a discrete uniform prior distribution for $\theta$.
+Suppose that $y=80$ couples in a sample of $n=124$ kissing couples lean right.
+Use software to plot the prior distribution, the likelihood function, and then find the posterior and plot it. Describe the posterior distribution.
+What does it say about $\theta$?
+1. Now assume a prior distribution which is proportional to $1-2|\theta-0.5|$ for $\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1$.
+Then suppose again that $y=80$ couples in a sample of $n=124$ kissing couples lean right.
+Use software to plot the prior distribution, the likelihood function, and then find the posterior and plot it.
+What does the posterior distribution say about $\theta$?
+1. Now assume a prior distribution which is proportional to $1-\theta$ for $\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1$.
+Then suppose again that $y=80$ couples in a sample of $n=124$ kissing couples lean right.
+Use software to plot the prior distribution, the likelihood function, and then find the posterior and plot it.
+What does the posterior distribution say about $\theta$?
+1. Compare the posterior distributions corresponding to the three different priors. How does each posterior distribution compare to the prior and the likelihood?  Comment on the influence that the prior distribution has.  Does the Bayesian inference for these data appear to be highly sensitive to the choice of prior? How does this compare to the $n=12$ situation?
+1. If you had to produce a single number Bayesian estimate of $\theta$ based on the sample data, what number might you pick?
+
+
+
+```{solution, kissing-discrete3-sol}
+to Example \@ref(exm:kissing-discrete3)
+```
+
+
+
+1. See plot below.  The likelihood function is $f(y=80|\theta) = \binom{124}{80}\theta^{80}(1-\theta)^{124-80}, 0 \le\theta\le1$, the likelihood of observing a value of $y=80$ from a Binomial(124, $\theta$) distribution (`dbinom(80, 124, theta)`). The maximum likelihood estimate of $\theta$ is the sample proportion $80/124=0.645$.
+With the largest sample, the likelihood function is more "peaked" around its maximum.
+1. See plot below.  Since the prior is flat, the posterior is proportional to the likelihood.  The posterior places almost all of its probability on $\theta$ values between about 0.55 and 0.75, with the highest probability near the observed sample proportion of 0.645.
+
+    ```{r}
+# prior
+theta = seq(0, 1, 0.0001)
+prior = rep(1, length(theta))
+prior = prior / sum(prior)
+
+# data
+n = 124 # sample size
+y = 80 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# plots
+plot_posterior(theta, prior, likelihood)
+
+    ```
+
+
+1. See the plot below.  The posterior is very similar to the one from the previous part.
+
+
+    ```{r, echo = FALSE}
+# prior
+theta = seq(0, 1, 0.0001)
+prior = 1 - 2 * abs(theta - 0.5)
+prior = prior / sum(prior)
+
+# data
+n = 124 # sample size
+y = 80 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# plots
+plot_posterior(theta, prior, likelihood)
+
+    ```
+
+
+1. See the plot below.  The posterior is very similar to the one from the previous part.
+
+    ```{r, echo = FALSE}
+# prior
+theta = seq(0, 1, 0.0001)
+prior = 1 - theta
+prior = prior / sum(prior)
+
+# data
+n = 124 # sample size
+y = 80 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# plots
+plot_posterior(theta, prior, likelihood)
+
+    ```
+
+
+
+1. Even though the priors are different, the posterior distributions are all similar to each other and all similar to the shape of the likelihood.  Comparing these priors it does not appear that the posterior is highly sensitive to choice of prior.  The data carry more weight when $n=124$ than it did when $n=12$.  In other words, the prior has less influence when the sample size is larger.  When the sample size is larger, the likelihood is more "peaked" and so the likelihood, and hence posterior, is small outside a narrower range of values than when the sample size is small.
+
+1. It seems that regardless of the prior, the posterior distribution is about the same, yielding the highest posterior probability around the sample proportion 0.645.
+So if we had to estimate $\theta$ with a single number, we might just choose the sample proportion.
+In this case, we end up with the same numerical estimate of $\theta$ in both the Bayesian and frequentist analysis.
+But the process and interpretation differs between the two approaches; we'll discuss in more detail soon.
+
+
+## Point estimation
+
+In a Bayesian analysis, the posterior distribution contains all relevant information about parameters after observing sample data.
+We often use certain summary characteristics of the posterior distribution to make inferences about parameters.
+
+```{example, kissing-summary}
+
+Continuing the kissing study in Example \@ref(exm:kissing-discrete1) where $\theta$ can only take values 0.1, 0.3, 0.5, 0.7, 0.9.
+Consider a prior distribution which places probability 5/15, 4/15, 3/15, 2/15, 1/15 on the values 0.1, 0.3, 0.5, 0.7, 0.9, respectively.
+Suppose we want a single number *point estimate* of $\theta$.
+What are some reasonable choices?
+
+```
+
+1. Suppose we want a single number point estimate of $\theta$ *before* observing sample data.
+Find the mode of the prior distribution of $\theta$, a.k.a., the "prior mode".
+1. Find the median of the prior distribution of $\theta$, a.k.a., the "prior median".
+1. Find the expected value of the prior distribution of $\theta$, a.k.a., the "prior mean".
+
+    Now suppose that $y=8$ couples in a sample of size $n=12$ lean right.  Recall the Bayes table.
+
+    ```{r, echo = FALSE}
+
+theta = seq(0.1, 0.9, 0.2)
+
+# prior
+prior = c(5, 4, 3, 2, 1)
+prior = prior / sum(prior)
+
+# data
+n = 12 # sample size
+y = 8 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+# bayes table
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+kable(bayes_table %>%
+        adorn_totals("row"),
+      digits = 4,
+      align = 'r')
+
+
+
+```
+
+1. Find the mode of the posterior distribution of $\theta$, a.k.a., the "posterior mode".
+1. Find the median of the posterior distribution of $\theta$, a.k.a., the "posterior median".
+1. Find the expected value of the posterior distribution of $\theta$, a.k.a., the "posterior mean".
+1. How have the posterior values changed from the respective prior values?
+
+
+
+```{solution, kissing-summary-sol}
+to Example \@ref(exm:kissing-summary)
+```
+
+```{asis, fold.chunk = TRUE}
+
+1. The prior mode is 0.1, the value of $\theta$ with the greatest prior probability.
+1. The prior median is 0.3.
+Start with the smallest possible value of $\theta$ and add up the prior probabilities until they go from below 0.5 to above 0.5.
+This happens when you add in the prior probability for $\theta=0.3$.
+1. The prior mean is 0.367.
+Remember that an expected value is a probability-weighted average value
+\[
+0.1(5/15) + 0.3(4/15) + 0.5(3/15) + 0.7(2/15) + 0.9(1/15) = 0.367.
+\]
+1. The posterior mode is 0.7, the value of $\theta$ with the greatest posterior probability.
+1. The posterior median is 0.7.
+Start with the smallest possible value of $\theta$ and add up the posterior probabilities until they go from below 0.5 to above 0.5.
+This happens when you add in the posterior probability for $\theta=0.7$.
+1. The posterior mean is 0.608.
+Now the posterior probabilities are used in the  probability-weighted average value
+\[
+0.1(0.000) + 0.3(0.036) + 0.5(0.413) + 0.7(0.527) + 0.9(0.024) = 0.608.
+\]
+1. The point estimates (mode, median, mean) shift from their prior values (0.1, 0.3, 0.367) towards the observed sample proportion of 8/12.
+However, the posterior distribution is not symmetric, and the posterior mean is less than the posterior median.
+In particular, note that the posterior mean (0.608) lies between the prior mean (0.367) and the sample proportion (0.667).
+
+
+```
+
+
+A **point estimate** of an unknown parameter is a single-number estimate of the parameter.
+Given a posterior distribution of a parameter $\theta$, three possible Bayesian point estimates of $\theta$ are:
+
+- the posterior mean
+- the posterior median
+- the posterior mode.
+
+In particular, the **posterior mean** is the expected value of $\theta$ according to the posterior distribution.
+
+Recall that the expected value, a.k.a., mean, of a discrete random variable $U$ is its probability-weighted average value
+\[
+\text{E}(U) = \sum_u u\, P(U = u)
+\]
+In the calculation of a posterior mean, the parameter $\theta$ plays the role of the random variable $U$ and the posterior distribution provides the probability-weights.
+
+In many situations, the posterior distribution will be roughly symmetric with a single peak, in which case posterior mean, median, and mode will all be about the same.
+
+Reducing the posterior distribution to a single-number point estimate loses a lot of the information the posterior distribution provides.
+The entire posterior distribution quantifies the uncertainty about $\theta$ after observing sample data.
+We will soon see how to more fully use the posterior distribution in making inference about $\theta$.
+
+```{example, kissing-summary2}
+
+Continuing the kissing study in Example \@ref(exm:kissing-discrete2).
+Now assume a prior distribution which is proportional to $1-\theta$ for $\theta = 0, 0.0001, 0.0002, \ldots, 0.9999, 1$.
+Use software to answer the following.
+
+```
+
+1. Find the mode of the prior distribution of $\theta$, a.k.a., the "prior mode".
+1. Find the median of the prior distribution of $\theta$, a.k.a., the "prior median".
+1. Find the expected value of the prior distribution of $\theta$, a.k.a., the "prior mean".
+
+    Now suppose that $y=8$ couples in a sample of size $n=12$ lean right.  Recall the prior, likelihood, and posterior.
+
+
+
+    ```{r, echo = TRUE}
+
+theta = seq(0, 1, 0.0001)
+
+# prior
+prior = 1 - theta # shape of prior
+prior = prior / sum(prior) # scales so that prior sums to 1
+
+# data
+n = 12 # sample size
+y = 8 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+```
+  
+    ```{r, echo = FALSE}
+  
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+par(new=T) 
+plot(theta, likelihood/sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+```
+
+1. Find the mode of the posterior distribution of $\theta$, a.k.a., the "posterior mode".
+1. Find the median of the posterior distribution of $\theta$, a.k.a., the "posterior median".
+1. Find the expected value of the posterior distribution of $\theta$, a.k.a., the "posterior mean".
+1. How have the posterior values changed from the respective prior values?
+
+
+
+```{solution, kissing-summary2-sol}
+to Example \@ref(exm:kissing-summary2)
+```
+
+1. See the code below. The prior mode is 0.
+1. See the code below. The prior median is `r round(min(theta[which(cumsum(prior) >= 0.5)]),3)`.
+1. See the code below. The prior mean is `r round(sum(theta * prior),3)`.
+
+    ```{r}
+## prior
+
+# prior mode
+theta[which.max(prior)]
+
+# prior median
+min(theta[which(cumsum(prior) >= 0.5)])
+
+# prior mean
+sum(theta * prior)
+
+```
+
+1. See the code below. The posterior mode is `r round(theta[which.max(posterior)], 3)`.
+1. See the code below. The posterior median is `r round(min(theta[which(cumsum(posterior) >= 0.5)]),3)`.
+1. See the code below. The posterior mean is `r round(sum(theta * posterior),3)`.
+1. Each of the posterior point estimates has shifted from its prior value towards the sample proportion of 0.667.
+But note that each of the posterior point estimates is in between the prior point estimate and the sample proportion.
+
+    ```{r}
+## posterior
+
+# posterior mode
+theta[which.max(posterior)]
+
+# posterior median
+min(theta[which(cumsum(posterior) >= 0.5)])
+
+# posterior mean
+sum(theta * posterior)
+
+```
+
+
+
+
+```{example, kissing-summary3}
+
+Continuing Example \@ref(exm:kissing-summary2), now suppose that $y=80$ couples in a sample of size $n=124$ lean right (the actual study data).
+Recall the prior, likelihood, and posterior.
+
+```
+
+
+```{r, echo = TRUE}
+
+# data
+n = 124 # sample size
+y = 80 # sample count of success
+
+# likelihood, using binomial
+likelihood = dbinom(y, n, theta) # function of theta
+
+# posterior
+product = likelihood * prior
+posterior = product / sum(product)
+
+```
+
+
+```{r, echo = FALSE}
+  
+ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood))))
+plot(theta, prior, type='l', xlim=c(0, 1), ylim=ylim, col="skyblue", xlab='theta', ylab='')
+par(new=T) 
+plot(theta, likelihood/sum(likelihood), type='l', xlim=c(0, 1), ylim=ylim, col="orange", xlab='', ylab='')
+par(new=T)
+plot(theta, posterior, type='l', xlim=c(0, 1), ylim=ylim, col="seagreen", xlab='', ylab='')
+legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("skyblue", "orange", "seagreen"))
+
+```
+
+
+1. Find the mode of the posterior distribution of $\theta$, a.k.a., the "posterior mode".
+1. Find the median of the posterior distribution of $\theta$, a.k.a., the "posterior median".
+1. Find the expected value of the posterior distribution of $\theta$, a.k.a., the "posterior mean".
+1. How have the posterior values changed from the respective prior values?
+How does this compare to the smaller sample (8 out of 12)?
+
+
+
+```{solution, kissing-summary3-sol}
+to Example \@ref(exm:kissing-summary3)
+```
+
+
+1. See the code below. The posterior mode is `r round(theta[which.max(posterior)], 3)`.
+1. See the code below. The posterior median is `r round(min(theta[which(cumsum(posterior) >= 0.5)]),3)`.
+1. See the code below. The posterior mean is `r round(sum(theta * posterior),3)`.
+1. The posterior distribution is roughly symmetric, and posterior mean, median, and mode are about the same.
+Each of the posterior point estimates has shifted from its prior value towards the sample proportion of 0.645.
+The posterior point estimates are now closer to the sample proportion than they were with the smaller sample size.
+With the larger sample size, the data carry more weight.
+
+    ```{r}
+## posterior
+
+# posterior mode
+theta[which.max(posterior)]
+
+# posterior median
+min(theta[which(cumsum(posterior) >= 0.5)])
+
+# posterior mean
+sum(theta * posterior)
+
+```
+
+<!-- Recall that the likelihood function is the probability (or density for continuous data) of observing the sample data $y$ viewed as a *function of the parameter* $\theta$. -->
+<!-- When the data $y$ takes values on a  continuous scale, the likelihood is determined by the *probability density function* of $Y$ given $\theta$, $f(y|\theta)$. -->
+<!-- In the likelihood function, the observed value of the data $y$ is treated as a fixed constant, and the likelihood of observing that $y$ is evaluated for all potential values of $\theta$. -->
+
+<!-- Recall that a continuous random variable^[Why $U$ and not $X$ or $Y$?  In a Bayesian analysis, we might assume the data follows a Normal distribution, but we might also use a Normal distribution to quantify the uncertainty about a parameter.  We generally associate $X$ and $Y$ with data.  $U$ is supposed to represent a more general variable, which could be either data or a parameter.] $U$ follows a **Normal (a.k.a., Gaussian) distribution** with mean $\mu$ and standard deviation $\sigma>0$ if its probability density function is^[$\exp$ is just another way of writing the exponential function, $\exp(u)=e^u$.] -->
+<!-- \begin{align*} -->
+<!-- f_U(u) & = \frac{1}{\sigma\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{u-\mu}{\sigma}\right)^2\right), \quad -\infty<u<\infty.\\ -->
+<!-- & \propto \frac{1}{\sigma}\,\exp\left(-\frac{1}{2}\left(\frac{u-\mu}{\sigma}\right)^2\right), \quad -\infty<u<\infty. -->
+<!-- \end{align*} -->
+<!-- The constant $1/\sqrt{2\pi}$ ensures that the total area under the density is 1, but it doesn't effect the shape of the density. -->
+
+<!-- In R, `dnorm(u, mu, sigma)`. -->
+
+<!-- ```{example, body-temp-discrete} -->
+
+<!-- Assume body temperatures (degrees Fahrenheit) of healthy adults follow a Normal distribution with unknown mean $\mu$ and known^[It's unrealistic to assume the population standard deviation is known.  We'll consider the case of unknown standard deviation later.] standard deviation $\sigma=1$. -->
+<!-- Suppose we wish to estimate $\mu$, the population mean healthy human body temperature.   -->
+
+<!-- ``` -->
+
+<!-- 1. Assume first the following discrete prior distribution for $\mu$ which places probability 0.10, 0.25, 0.30, 0.25, 0.10 on the values 97.6, 98.1, 98.6, 99.1, 99.6, respectively.  Suppose a single temperature value of 97.9 is observed.  Construct a Bayes table and find the posterior distribution of $\mu$.  In particular, how do you determine the likelihood? -->
+<!-- 1. Now suppose a second temperature value, 97.5, is observed, independently of the first.  Construct a Bayes table and find the posterior distribution of $\mu$ after observing these two measurements, using the posterior distribution from the previous part as the prior distribution in this part.  -->
+<!-- 1. Now consider the original prior again. -->
+<!-- Determine the likelihood of observing temperatures of 97.9 and 97.5 in a sample of size 2. Then construct a Bayes table and find the posterior distribution of $\mu$ after observing these two measurements.  Compare to the previous part. -->
+<!-- 1. Consider the original prior again. Suppose that we take a random sample of two temperature measurements, but instead of observing the two individual values, we only observe that the sample mean is 97.7. Determine the likelihood of observing a sample mean of 97.7 in a sample of size 2. (Hint: if $\bar{Y}$ is the sample mean of $n$ values from a $N(\mu, \sigma)$ distribution, what is the distribution of $\bar{Y}$?) Then construct a Bayes table and find the posterior distribution of $\mu$ after observing this sample mean.  Compare to the previous part. -->
+
+
+
+
+<!-- ```{solution, body-temp-discrete-sol} -->
+<!-- to Example \@ref(exm:body-temp-discrete) -->
+<!-- ``` -->
+
+
+
+
+<!-- 1. The likelihood is determined by evaluating the Normal($\mu$, 1) density at $y=97.9$ for different values of $\mu$: `dnorm(97.9, mu, 1)` or -->
+<!-- \[ -->
+<!-- f(97.9|\mu)  = \frac{1}{\sqrt{2\pi}}\,\exp\left(-\frac{1}{2}\left(\frac{97.9-\mu}{1}\right)^2\right) -->
+<!-- \] -->
+<!-- See the table below. Posterior probability is shifted towards the smaller values of $\mu$ since those give the higher likelihood of the observed value $y=97.9$. -->
+
+<!--     ```{r} -->
+<!-- # prior -->
+<!-- theta = seq(97.6, 99.6, 0.5) -->
+<!-- prior = c(0.10, 0.25, 0.30, 0.25, 0.10) -->
+<!-- prior = prior / sum(prior) -->
+
+<!-- # data -->
+<!-- y = 97.9 # single observed value -->
+<!-- sigma = 1 -->
+
+
+<!-- # likelihood -->
+<!-- likelihood = dnorm(y, theta, sigma) # function of theta -->
+
+<!-- # posterior -->
+<!-- product = likelihood * prior -->
+<!-- posterior = product / sum(product) -->
+
+<!-- # bayes table -->
+<!-- bayes_table = data.frame(theta, -->
+<!--                          prior, -->
+<!--                          likelihood, -->
+<!--                          product, -->
+<!--                          posterior) -->
+
+<!-- kable(bayes_table, digits = 4, align = 'r') -->
+
+
+
+<!--     ``` -->
+
+
+<!-- 1. See the table below.  More posterior probability is shifted towards the smaller values of $\mu$. -->
+
+<!--     ```{r} -->
+<!-- # prior -->
+<!-- prior = posterior -->
+
+<!-- # data -->
+<!-- y = 97.5 # single observed value -->
+<!-- sigma = 1 -->
+
+
+<!-- # likelihood -->
+<!-- likelihood = dnorm(y, theta, sigma) # function of theta -->
+
+<!-- # posterior -->
+<!-- product = likelihood * prior -->
+<!-- posterior = product / sum(product) -->
+
+<!-- # bayes table -->
+<!-- bayes_table = data.frame(theta, -->
+<!--                          prior, -->
+<!--                          likelihood, -->
+<!--                          product, -->
+<!--                          posterior) -->
+
+<!-- kable(bayes_table, digits = 4, align = 'r') -->
+
+
+
+<!--     ``` -->
+
+<!-- 1. See the table below. -->
+<!-- Since the two measurements are independent, the likelihood is the product of the likelihoods for $y=97.9$ and $y=97.5$. -->
+<!-- The posterior is the same in the previous part.  It doesn't matter if we update the posterior after each observations, or all at once. -->
+
+<!--     ```{r} -->
+<!-- # prior -->
+<!-- theta = seq(97.6, 99.6, 0.5) -->
+<!-- prior = c(0.10, 0.25, 0.30, 0.25, 0.10) -->
+<!-- prior = prior / sum(prior) -->
+
+<!-- # data -->
+<!-- y = c(97.9, 97.5) # two observed values -->
+<!-- sigma = 1 -->
+
+
+<!-- # likelihood -->
+<!-- likelihood = dnorm(y[1], theta, sigma) * dnorm(y[2], theta, sigma)  # function of theta -->
+
+<!-- # posterior -->
+<!-- product = likelihood * prior -->
+<!-- posterior = product / sum(product) -->
+
+<!-- # bayes table -->
+<!-- bayes_table = data.frame(theta, -->
+<!--                          prior, -->
+<!--                          likelihood, -->
+<!--                          product, -->
+<!--                          posterior) -->
+
+<!-- kable(bayes_table, digits = 4, align = 'r') -->
+
+
+
+<!--     ``` -->
+
+
+<!-- 1. For a sample of size $n$ from a $N(\mu,\sigma)$ distribution, the sample mean follows a $N\left(\mu, \frac{\sigma}{\sqrt{n}}\right)$ distribution. The likelihood is determined by evaluating the Normal($\mu$, $\frac{1}{\sqrt{2}}$) density at $y=97.7$ for different values of $\mu$: `dnorm(97.7, mu, 1 / sqrt(2))` or -->
+<!-- \[ -->
+<!-- f_{\bar{Y}}(97.7|\mu)  \propto \exp\left(-\frac{1}{2}\left(\frac{97.7-\mu}{1/\sqrt{2}}\right)^2\right) -->
+<!-- \] -->
+<!-- See the table below. While the likelihood is not the same as in the previous part, it is *proportionally* the same; that is, the likelihood in this part has the same *shape* as the likelihood in the previous part.  Therefore, the posterior distributions are the same. -->
+
+
+<!--     ```{r} -->
+<!-- # prior -->
+<!-- theta = seq(97.6, 99.6, 0.5) -->
+<!-- prior = c(0.10, 0.25, 0.30, 0.25, 0.10) -->
+<!-- prior = prior / sum(prior) -->
+
+<!-- # data -->
+<!-- n = 2 -->
+<!-- y = 97.7 # sample mean -->
+<!-- sigma = 1 -->
+
+
+<!-- # likelihood -->
+<!-- likelihood = dnorm(y, theta, sigma / sqrt(n)) # function of theta -->
+
+<!-- # posterior -->
+<!-- product = likelihood * prior -->
+<!-- posterior = product / sum(product) -->
+
+<!-- # bayes table -->
+<!-- bayes_table = data.frame(theta, -->
+<!--                          prior, -->
+<!--                          likelihood, -->
+<!--                          product, -->
+<!--                          posterior) -->
+
+<!-- kable(bayes_table, digits = 4, align = 'r') -->
+
+<!--     ``` -->
+
+
+<!-- It is often not necessary to know all the individual data values to evaluate the *shape* of the likelihood as a function of the parameter $\theta$, but rather simply the values of a few summary statistics.    -->
+<!-- For example, when  estimating the population mean of a Normal distribution with known standard deviation $\sigma$, it is sufficient to know the sample mean for the purposes of evaluating the shape of the likelihood of the observed data under different potential values of the population mean. -->
+
+<!-- If $Y_1, \ldots, Y_n$ is a random sample from a $N(\mu, \sigma)$ distribution, then $\bar{Y}$ has a $N\left(\mu, \frac{\sigma}{\sqrt{n}}\right)$ distribution -->
+
+<!-- - $\sigma$ measures the unit-to-unit variability of individual values of the variable over all possible units in the population. For example, how much do body temperatures vary from person-to-person over many people? -->
+<!-- - $\frac{\sigma}{\sqrt{n}}$ measures the sample-to-sample variability of sample means over all possible samples of size $n$ from the population. For example, how much do sample mean body temperatures from sample to sample over many samples of $n$ people? -->
+
+<!-- ```{example, body-temp-discrete2} -->
+
+<!-- Continuing the previous example. We'll now use a grid approximation and assume that any multiple of 0.0001 between 96.0 and 100.0 is a possible value of $\mu$: $96.0, 96.0001, 96.0002, \ldots, 99.9999, 100.0$. -->
+
+<!-- ``` -->
+
+
+
+<!-- 1. Assume a discrete uniform prior distribution over $\mu$ values in the grid. -->
+<!-- Suppose that the sample mean temperature is $\bar{y}=97.7$ in a sample of $n=2$ temperature measurements.  -->
+<!-- Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it. Describe the posterior distribution. -->
+<!-- What does it say about $\mu$? -->
+<!-- 1. Now assume a prior distribution which is proportional to a Normal distribution with mean 98.6 and standard deviation 0.7 over $\mu$ values in the grid. -->
+<!-- Suppose that the sample mean temperature is $\bar{y}=97.7$ in a sample of $n=2$ temperature measurements.  -->
+<!-- Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it. Describe the posterior distribution. -->
+<!-- What does it say about $\mu$? -->
+<!-- 1. Compare the posterior distributions corresponding to the two different priors. How does each posterior distribution compare to the prior and the likelihood?  Comment on the influence that the prior distribution has. -->
+
+
+
+<!-- ```{solution, body-temp-discrete2-sol} -->
+<!-- to Example \@ref(exm:body-temp-discrete2) -->
+<!-- ``` -->
+
+
+<!-- 1. Since the prior is flat, the posterior has the same shape as the likelihood.  The highest posterior probability is near the observed sample mean of 97.7. -->
+
+<!--     ```{r} -->
+<!-- # prior -->
+<!-- theta = seq(96, 100, 0.0001) -->
+<!-- prior = rep(1, length(theta)) -->
+<!-- prior = prior / sum(prior) -->
+
+<!-- # data -->
+<!-- n = 2 # sample size -->
+<!-- y = 97.7 # sample mean -->
+<!-- sigma = 1 -->
+
+<!-- # likelihood -->
+<!-- likelihood = dnorm(y, theta, sigma / sqrt(n)) # function of theta -->
+
+<!-- # plots -->
+<!-- plot_posterior <- function(theta, prior, likelihood){ -->
+
+<!--   # posterior -->
+<!--   product = likelihood * prior -->
+<!--   posterior = product / sum(product) -->
+
+<!--   ylim = c(0, max(c(prior, posterior, likelihood / sum(likelihood)))) -->
+<!--   plot(theta, prior, type='l', xlim=range(theta), ylim=ylim, col="orange", xlab='theta', ylab='') -->
+<!--   par(new=T)  -->
+<!--   plot(theta, likelihood/sum(likelihood), type='l', xlim=range(theta), ylim=ylim, col="skyblue", xlab='', ylab='') -->
+<!--   par(new=T) -->
+<!--   plot(theta, posterior, type='l', xlim=range(theta), ylim=ylim, col="seagreen", xlab='', ylab='') -->
+<!--   legend("topleft", c("prior", "scaled likelihood", "posterior"), lty=1, col=c("orange", "skyblue", "seagreen")) -->
+<!-- } -->
+
+<!-- plot_posterior(theta, prior, likelihood) -->
+
+<!--     ``` -->
+
+<!-- 1. Be sure to distinguish between the Normal distribution in the prior, which quantifies our prior uncertainty about $\mu$, and the Normal distribution used to determine the likelihood which models variability of temperatures in the population.  The poster is a compromise between likelihood and prior. -->
+
+<!--     ```{r} -->
+<!-- # prior -->
+<!-- theta = seq(96, 100, 0.0001) -->
+<!-- prior = dnorm(theta, 98.6, 0.7) -->
+<!-- prior = prior / sum(prior) -->
+
+<!-- # data -->
+<!-- n = 2 # sample size -->
+<!-- y = 97.7 # sample mean -->
+<!-- sigma = 1 -->
+
+<!-- # likelihood -->
+<!-- likelihood = dnorm(y, theta, sigma / sqrt(n)) # function of theta -->
+
+<!-- plot_posterior(theta, prior, likelihood) -->
+
+<!--     ``` -->
+
+
+<!-- 1. When the prior is flat, the posterior has the shape of the likelihood.  Otherwise, the posterior is a compromise between prior and likelihood.  When the sample size is so small, the prior will have a lot of influence on the posterior. -->
+
+
+
+<!-- ```{example, body-temp-discrete3} -->
+
+<!-- Continuing the previous example. -->
+<!-- In a recent study^[[Source](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6258625/) and a [related article](https://www.scientificamerican.com/article/are-human-body-temperatures-cooling-down/).], the sample mean body temperature in a sample of 208 healthy adults was 97.7 degrees F. -->
+
+<!-- We'll again use a grid approximation and assume that any multiple of 0.0001 between 96.0 and 100.0 is a possible value of $\mu$: $96.0, 96.0001, 96.0002, \ldots, 99.9999, 100.0$. -->
+
+
+<!-- ``` -->
+
+
+<!-- 1. Before performing a Bayesian analysis, use software to plot the likelihood, and compute the maximum likelihood estimate of $\mu$ based on this data. -->
+<!-- 1. Assume a discrete uniform prior distribution over $\mu$ values in the grid. -->
+<!-- Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it. Describe the posterior distribution. -->
+<!-- What does it say about $\mu$? -->
+<!-- 1. Now assume a prior distribution which is proportional a Normal distribution with mean 98.6 and standard deviation 0.7 over $\mu$ values in the grid. -->
+<!-- Use software to plot the prior distribution, the (scaled) likelihood function, and then find the posterior and plot it. Describe the posterior distribution. -->
+<!-- What does it say about $\mu$? -->
+<!-- 1. Compare the posterior distributions corresponding to the two different priors. How does each posterior distribution compare to the prior and the likelihood?  Comment on the influence that the prior distribution has. How does this compare to the $n=2$ situation? -->
+
+
+
+<!-- ```{solution, body-temp-discrete3-sol} -->
+<!-- to Example \@ref(exm:body-temp-discrete3) -->
+<!-- ``` -->
+
+
+<!-- 1. The likelihood is determined by evaluating the Normal($\mu$, $\frac{1}{\sqrt{208}}$) density at $y=97.7$ for different values of $\mu$: `dnorm(97.7, mu, 1 / sqrt(208))` or -->
+<!-- \[ -->
+<!-- f_{\bar{Y}}(97.7|\mu)  \propto \exp\left(-\frac{1}{2}\left(\frac{97.7-\mu}{1/\sqrt{208}}\right)^2\right) -->
+<!-- \] See a plot of the likelihood below.  The MLE of $\mu$ is the observed sample mean of 97.7. -->
+
+
+<!-- 1. Since the prior is flat, the posterior has the same shape as the likelihood. -->
+<!-- With such a large sample size, the likelihood is pretty peaked. -->
+<!-- So the posterior probability is concentrated in a fairly narrow range of values around 97.7. -->
+
+<!--     ```{r} -->
+<!-- # prior -->
+<!-- theta = seq(96, 100, 0.0001) -->
+<!-- prior = rep(1, length(theta)) -->
+<!-- prior = prior / sum(prior) -->
+
+<!-- # data -->
+<!-- n = 208 # sample size -->
+<!-- y = 97.7 # sample mean -->
+<!-- sigma = 1 -->
+
+<!-- # likelihood -->
+<!-- likelihood = dnorm(y, theta, sigma / sqrt(n)) # function of theta -->
+
+<!-- plot_posterior(theta, prior, likelihood) -->
+
+<!--     ``` -->
+
+<!-- 1. Even though the prior probability is highest near 98.6, the likelihood at these values is so small that they have small posterior probability.  The posterior distribution is about the same as in the previous part. -->
+
+<!--     ```{r} -->
+<!-- # prior -->
+<!-- theta = seq(96, 100, 0.0001) -->
+<!-- prior = dnorm(theta, 98.6, 0.7) -->
+<!-- prior = prior / sum(prior) -->
+
+<!-- # data -->
+<!-- n = 208 # sample size -->
+<!-- y = 97.7 # sample mean -->
+<!-- sigma = 1 -->
+
+<!-- # likelihood -->
+<!-- likelihood = dnorm(y, theta, sigma / sqrt(n)) # function of theta -->
+
+<!-- plot_posterior(theta, prior, likelihood) -->
+
+<!--     ``` -->
+
+<!-- 1. The posterior distributions are about the same in each case.  With a large sample size, the likelihood is fairly peaked, and so the likelihood is close to 0 outside of a narrow range of values around the observed sample mean of 97.7.  Therefore, the posterior probability is concentrated in this range, regardless of the prior. -->
