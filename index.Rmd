@@ -46,9 +46,10 @@ library(knitr)
 # library(learnr)
 library(bookdown)
 library(tidyverse)
-library(reticulate)
 library(ggplot2)
 library(scales)
+library(janitor)
+library(viridis)
 
 blank_theme <- theme_minimal()+
   theme(
@@ -65,9 +66,13 @@ knitr::write_bib(c(
   .packages(), 'bookdown', 'knitr', 'rmarkdown'
 ), 'packages.bib')
 
-knitr::opts_chunk$set(echo = TRUE)
 
-options(scipen = 999)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = TRUE)
+
+options(scipen = 999, digits = 4)
+
+set.seed(21234)
+
 
 # knitr::opts_chunk$set(eval = FALSE)
 
@@ -104,7 +109,9 @@ knitr::knit_hooks$set(
 
 
 ```{r, include = FALSE}
-py_install("symbulate", pip = TRUE)
+library(reticulate)
+use_condaenv("Anaconda3")
+# py_install("symbulate", pip = TRUE)
 ```
 
 
@@ -121,6 +128,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 # from IPython.display import Markdown, display, HTML
 
+import numpy as np
+
 ```
 
 
@@ -133,7 +142,40 @@ import matplotlib.pyplot as plt
 
 <!-- ### Learn by doing {-} -->
 
-This textbook presents an introduction to Bayesian reasoning and methods.
+
+Statistics is the science of learning from data.
+Statistics involves
+
+- Asking questions
+- Formulating conjectures
+- Designing studies
+- Collecting data
+- Wrangling data
+- Summarizing data
+- Visualizing data
+- *Analyzing data*
+- *Developing models*
+- *Drawing conclusions*
+- *Communicating results*
+
+
+
+We will assume some familiarity with many of these aspects, and we will focus on the items in italics.
+That is, we will focus on **statistical inference**, the process of using data analysis to draw conclusions about a population or process beyond the existing data.
+"Traditional" hypothesis tests and confidence intervals that you are familiar with are components of *"frequestist" statistics*.
+This book will introduce aspects of *"Bayesian" statistics*.
+We will focus on analyzing data, developing models, drawing conclusions, and communicating results from a Bayesian perspective.
+We will also discuss some similarities and differences between frequentist and Bayesian approaches, and some advantages and disadvantages of each approach.
+
+We want to make clear from the start: Bayesian versus frequentist is NOT a question of "right versus wrong".
+Both Bayesian and frequentist are valid approaches to statistical analyses, each with advantages and disadvantages.
+We'll address some of the issues along the way.
+But at no point in your career do you need to make a definitive decision to be a Bayesian or a frequentist; a good modern statistician is probably a [bit of both](https://tenor.com/view/star-lord-bit-of-both-chris-pratt-guardians-of-the-galaxy-peter-quill-gif-11821953).
+
+
+While our focus will be on statistical inference, remember that the other parts of Statistics are equally important, if not more important.
+In particular, any statistical analysis is only as good as the data upon which it is based.
+
 
 The exercises in this book are used to both motivate new topics and to help you practice your understanding of the material.  You should attempt the exercises on your own before reading the solutions.  To encourage you to do so, the solutions have been hidden.  You can reveal the solution by clicking on the **Show/hide solution** button.  
 

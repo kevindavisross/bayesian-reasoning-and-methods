@@ -12,51 +12,28 @@ Body mass index (BMI), which is easily computed based on height and weight ($\te
 What is the relationship between BMI and percent body fat?
 How can we use a person's BMI to estimate their percent body fat?
 
-The following summarizes data  on a nationally representative sample of 2157 U.S. males from the [National Health and Nutrition Examination Survey (NHANES)](http://www.cdc.gov/nchs/nhanes/about_nhanes.htm).
-
-
-```{r}
-myData = read.csv("_data/nhanes_males.csv")
-y = myData$PBF
-x = myData$BMI
-n = length(y)
-
-hist(y, xlab = "Percent body fat (%)", main = paste("Mean=", mean(y), ", SD=", sd(y)))
-hist(x, xlab = "BMI (kg/m^2)", main = paste("Mean=",mean(x), ", SD=", sd(x)))
-plot(x, y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)", main = paste("Correlation=", cor(x, y)))
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ```{example, regression-freq}
-Before considering a Bayesian analysis, let's recall a simple linear regression model for predicting percent body fat from BMI.
+We'll consider a  Bayesian simple linear regression model for predicting percent body fat from BMI.
 
 ```
 
 
 
-1. What are the assumptions of the simple linear regression model? (There are many different regression models. We're referring to the one that is usually the first one you see in introductory statistics.  Sometimes the assumptions are introduced with the acronym "LINE".)
-1. Find and interpret the slope of the fitted regression line.
-1. Find and interpret a 95% confidence interval for the slope of the regression line.
-1. Find the equation of the fitted regression line.
-1. Find and interpret the fitted value for men with a BMI of 15 kg/m^2^.
-1. Find and interpret a 95% confidence interval based on the fitted value for men with a BMI of 15 kg/m^2^.
-1. Find and interpret the estimate of $\sigma$.
-1. Find and interpret a 95% *prediction* interval for men with a BMI of 15 kg/m^2^.
+1. What are the assumptions of the simple linear regression model?
+(There are many different regression models.
+We're referring to the one that is usually the first one you see in introductory statistics.
+Sometimes the assumptions are introduced with the acronym "LINE".)
 
+1. What are the parameters in the model?
+That is, what do we need to put a prior distribution on (in order to eventually get a posterior distribution given sample data)?
 
+1. Suggest a prior distribution.
+
+1. Simulate the prior predictive distribution of percent body fat for a range of BMI values.
+Does the distribution seem reasonable?
+
+1. Experiment with different priors until you find one that produces a reasonable prior predictive distribution.
 
 
 
@@ -65,58 +42,116 @@ to Example \@ref(exm:regression-freq)
 ```
 
 
-1. See below for the general assumptions.
+1. The regression model assumes that mean percent body fat is a linear function of BMI.
+Among men with the same BMI, values of percent body fat are Normally distributed with a mean that depends on BMI and some (conditional) standard deviation.
+See below for the general assumptions.
 
-1. Recall that the slope of the fitted ("least squares") regression line is
-\[
-\frac{rs_y}{s_x} = \frac{\text{correlation}\times\text{SD of response variable}}{\text{SD of explanatory variable}} = \frac{0.398\times 8.7}{5.69} = 0.609
-\]
-Among males, a one kg/$\text{m}^2$ increase in BMI is associated with a 0.609 percentage point increase in percent body fat *on average*.  ("Percentage points" are the measurement units of percent body fat.)
+1. The parameters are the slope $\beta_1$, the intercept $\beta_0$, and the (conditional) standard deviation $\sigma$.
+The parameters $\beta_0$ and $\beta_1$ are related to the conditional mean of $Y$ given $x$, and the parameter $\sigma$ is the conditional SD of $Y$ given $x$.
 
-    ```{r}
-plot(x, y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)", main = paste("Correlation=", cor(x, y)))
+1. We'll assume a prior under which $\beta_0$, $\beta_1$, and $\sigma$ are independent.
+A quick Google search reveals that for men [percent body fat ranges from about 6% to 30%](https://www.webmd.com/diet/features/body-fat-measurement), and [BMI ranges from about 15 to 35 kg/m^2^](https://www.cdc.gov/healthyweight/assessing/bmi/adult_bmi/index.html).
+If we assume percent body fat varies by about 5 percent among men of the same BMI, we can choose a prior for $\sigma$ that has a mean of 5, say Exponential(1/5).
+We expect a positive association between percent body fat and BMI, so we want a prior for $\beta_1$ that places most of its credibility on positive values.
+Disregarding measurement units, the two variables take values on similar numerical scales.
+For the slope $\beta_1$, we might assume a Normal prior with a mean of 1 and a standard deviation of 0.5 (to keep most of the credibility on positive values).
+The intercept $\beta_0$, in principle, represents the percent body fat for a man with a BMI of 0, so  we might assume a Normal prior with a mean of 0 and a standard deviation of 1 (to put most of the prior credibility near 0).
 
-lm1 = lm(y ~ x)
-abline(lm1, col = "orange", lwd = 2)
-summary(lm1)
-```
+1. Given a value of BMI $x$, first simulate $\beta_0, \beta_1$, and $\sigma$ from the joint prior distribution, then simulate a value of percent body fat $y$ from a Normal distribution with mean $\beta_0 + \beta_1x$ and standard deviation $\sigma$.
+For example, for simulated $\beta_0 = 0.1$, $\beta_1 = 0.8$, and $\sigma = 4.2$ and a given $x = 20$, we would simulate $y$ from a Normal distribution with mean $0.1 + 0.8(20)$ and standard deviation 4.2.
 
-1. The SE of the slope is 0.03 so a 95% confidence interval has endpoints $0.609 \pm 2 \times 0.030$.
-We estimate with 95% confidence that among males, a one kg/$\text{m}^2$ increase in BMI is associated with between a 0.550 and a 0.669 percentage point increase in percent body fat *on average*.
-
-
-    ```{r}
-confint(lm1)
-```
-
-
-1. The slope is 0.609.  The intercept is
-\[
-\text{Intercept} = \bar{y} - \text{slope}\times \bar{x} = 23.43 - 0.609 \times 24.45 = 8.534
-\]
-The equation of the regression line is
-\[
-\widehat{\text{Percent body fat (%)}} = 8.534 + 0.609\times \text{BMI(kg/m^2)}
-\]
-
-1. For a BMI of 15.0 kg/$\text{m}^2$
-\[
-\widehat{\text{Percent body fat (%)}} = 8.534 + 0.609\times 15.0 = 17.67 \text{ percent}
-\]
-The *mean* percent body fat for males with a BMI of kg/$\text{m}^2$ is 17.67%.
+    The code below simulates a sample of 1000 pairs.
 
     ```{r}
-xnew = data.frame(x = c(15))
-predict(lm1, xnew, interval = "confidence", se.fit = TRUE)
+
+Nrep = 1000
+
+x = rnorm(Nrep, 25, 5) # just some possible values of BMI
+
+beta0 = rnorm(Nrep, 0, 1)
+beta1 = rnorm(Nrep, 1, 0.5)
+sigma = rexp(Nrep, 1 / 5)
+
+y = rnorm(Nrep, beta0 + beta1 * x, sigma)
+
+plot(x, y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)")
+
 ```
 
-1. We estimate with 95% confidence that the *mean* percent body fat for males with a BMI of kg/$\text{m}^2$ is between 17.02% and 18.33%.
-1. The "residual standard error" of $s=7.99$ percent is an estimate of $\sigma$.  This value measures the variability of percent body fat *among males with the same BMI*. Roughly, $s\approx s_Y\sqrt{1-r^2}=8.7\sqrt{1-0.398^2}=7.99$. There is less variability in percent body fat among males with the same BMI, than among men in general.
-1. Assuming that percent body fats of males with a BMI of 15 kg/m^2^ follow a Normal distribution, with mean 17.67 and standard deviation 7.99, 95% of values lie in the interval with endpoints^[This interval isn't quite correct because the 7.99 doesn't account for the sample-to-sample variability (SE) of the mean BMI for these men.  But that SE (0.3335) is very small in comparison to the variability in individual percent body fats (7.986).  Adjusting the prediction interval to reflect the estimation of the mean yields $17.67\pm 2 \times 7.993$, where $7.993=\sqrt{7.986^2 + 0.3335^2}$] $17.67\pm2\times 7.99$.  We estimate that 95% *of males with BMI of 15 kg/m^2^* have percent body fat between 2.00% and 33.35%.
+    The code below simulates what some possible regression lines might look like.
+Remember, the regression line represents the mean percent body fat for any given value of BMI.
+
+
 
     ```{r}
-predict(lm1, xnew, interval = "prediction")
+
+nlines = 100
+
+plot(x, y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)", type = "n",
+     xlim = c(15, 35),
+     ylim = c(0, 30))
+
+
+for (l in 1:nlines){
+  abline(beta0[l], beta1[l], col = "skyblue", lwd = 1)
+}
 ```
+
+    We can tell from these plots that there are problems with the model.
+    The model predicts many negative values of percent body fat.
+    The possible regression lines are all over the place, indicating that for almost any given BMI, the mean percent body fat can be anywhere from 0 to 30 (or more) percent. 
+    We also see a few negative slopes, which doesn't seem realistic.
+    Therefore, we should revise our assumptions so that our prior predictive distribution produces more reasonable values of percent body fat.
+    
+
+1. The previous part illustrates that when there are multiple parameters it can be difficult to interpret the prior distribution of any particular parameter in isolation.
+For example, the intercept in theory should be 0; however, a BMI of 0 is unreasonable and would never appear in the data.
+The intercept needs to work together with the slope so that men with average BMI have average percent body fat.
+
+    The code below reflects one choice of prior, arrived at after some tuning.
+    There are many others, and no one prior will be perfect.
+    What's important is that the prior distribution works together with the model for the data to produce reasonable values of the variables.
+    
+    We see that with the prior below, fewer extreme values of percent body fat are predicted, most notably far fewer negative values than before.
+    The possible regression lines do a better job of spanning the scale of percent body fat variable.
+    For any given BMI, the prior range of plausible values for mean percent body fat is much narrower than before.
+    
+    
+
+```{r}
+
+Nrep = 1000
+
+beta0 = rnorm(Nrep, 2, 2)
+beta1 = rnorm(Nrep, 0.5, 0.1)
+sigma = rexp(Nrep, 1 / 1.5)
+
+y = rnorm(Nrep, beta0 + beta1 * x, sigma)
+
+plot(x, y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)")
+
+```
+
+
+```{r}
+
+nlines = 100
+
+plot(x, y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)", type = "n",
+     xlim = c(15, 35),
+     ylim = c(0, 30))
+
+
+for (l in 1:nlines){
+  abline(beta0[l], beta1[l], col = "skyblue", lwd = 1)
+}
+```
+
+
+
+
+
+
 
 
 
@@ -159,20 +194,58 @@ Thus, $\sigma^2 = (1-\rho^2)\sigma^2_Y$, where $\rho$ is the population correlat
 The assumptions of the linear regression model can be relaxed in a number of ways, some of which we'll mention briefly at the end of the section.
 
 
+In models with multiple parameters, it can be difficult to interpret the prior or posterior distribution of any single parameter in isolation.
+Therefore, it becomes even more important to check predictive distributions for reasonableness.
+Do the prior and likelihood fit together to produce a reasonable distribution of values of the response variable?
+At the very least, the predicted values should lie in a reasonable range of the measurement unit scale of the variable.
+But remember: the prior distribution is just a starting point; it doesn't have to be perfect (it never will be), just reasonable.
+Rather than fussing over the prior, we should focus our attention on the posterior distribution given sample data.
+
+The following summarizes data  on a nationally representative sample of 2157 U.S. males from the [National Health and Nutrition Examination Survey (NHANES)](http://www.cdc.gov/nchs/nhanes/about_nhanes.htm).
+
+
+```{r}
+myData = read.csv("_data/nhanes_males.csv")
+y = myData$PBF
+x = myData$BMI
+n = length(y)
+
+hist(y, xlab = "Percent body fat (%)", main = paste("Mean=", mean(y), ", SD=", sd(y)))
+hist(x, xlab = "BMI (kg/m^2)", main = paste("Mean=",mean(x), ", SD=", sd(x)))
+plot(x, y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)", main = paste("Correlation=", cor(x, y)))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ```{example, regression-setup}
-Continuing the previous, example, now we'll consider a Bayesian approach.
+Continuing the previous example, now we'll use JAGS to find the posterior distribution given the sample data.
+
+For the prior assume
+
+- $\beta_0$, $\beta_1$, and $\sigma$ are independent
+- $\beta_0$ has a Normal(2, 2) distribution
+- $\beta_1$ has a Normal(0.5, 1) distribution
+- $\sigma$ has an Exponential distribution with rate 1/1.5
+
 ```
 
 
 
 1. Suppose there are just two observations of (BMI, PBF): (15, 20) and (40, 30).
 How would you compute the likelihood?
-1. What are the parameters of the Bayesian model?
-That is, what do we need to put a prior distribution on?
-1. We'll use a non-informative prior.
-Suppose $\beta_0$, $\beta_1$, and $\sigma$ are independent with $\beta_0$ and $\beta_1$ each having a Normal distribution with mean 0 and SD 100, and $\sigma$ having a Uniform(1/1000, 1000) distribution.
-Use JAGS to fit the Bayesian model to the data.
+1. Use JAGS to fit the Bayesian model to the data.
 Inspect diagnostic plots; do you notice any problems?
 
 
@@ -188,9 +261,8 @@ Given a BMI of 15, PBFs follow a Normal distribution with mean $\beta_0+15\beta_
 Similarly the likelihood for the observation (40, 30) is  `dnorm(40, beta0 + 30 * beta1, sigma)`.
 Since the regression model assumes independence between the response values, the likelihood for the sample would be, as a function of $(\beta_0, \beta_1, \sigma)$, proportional to
 \[
-\propto \exp\left(-\frac{1}{2}\left(\frac{20-(\beta_0+15\beta_1)}{\sigma}\right)^2\right)\exp\left(-\frac{1}{2}\left(\frac{40-(\beta_0+30\beta_1)}{\sigma}\right)^2\right)
+\propto \left[\frac{1}{\sigma}\exp\left(-\frac{1}{2}\left(\frac{20-(\beta_0+15\beta_1)}{\sigma}\right)^2\right)\right]\left[\frac{1}{\sigma}\exp\left(-\frac{1}{2}\left(\frac{40-(\beta_0+30\beta_1)}{\sigma}\right)^2\right)\right]
 \]
-1. The parameters $\beta_0$ and $\beta_1$ are related to the conditional mean of $Y$ given $x$, and the parameter $\sigma$ is the conditional SD of $Y$ given $x$.
 1. The JAGS code is below.
 For observation `i`, the likelihood of `y[i]` is determined using the Normal distribution with mean $\beta_0 + \beta_1 x_i$ and SD $\sigma$: `y[i] ~ dnorm(beta[1] + beta[2] * x[i], 1 / sigma ^ 2)`. (Remember: JAGS uses precision for `dnorm`, and JAGS indices start at 1.)
 Diagnostics for $\sigma$ seem fine.
@@ -209,12 +281,11 @@ model_string <- "model{
   }
 
   # Prior for beta
-  for(j in 1:2){
-    beta[j] ~ dnorm(0, 1 / 100 ^ 2)
-  }
+  beta[1] ~ dnorm(2, 1 / 2 ^ 2)
+  beta[2] ~ dnorm(0.5, 1 / 0.1 ^ 2)
 
   # Prior for sigma
-  sigma ~ dunif(0.001, 1000)
+  sigma ~ dexp(1 / 1.5)
 
 }"
 
@@ -344,12 +415,11 @@ model_string <- "model{
   }
 
   # Prior for beta
-  for(j in 1:2){
-    beta[j] ~ dnorm(0, 1 / 100 ^ 2)
-  }
+  beta[1] ~ dnorm(2, 1 / 2 ^ 2)
+  beta[2] ~ dnorm(0.5, 1 / 0.1 ^ 2)
 
   # Prior for sigma
-  sigma ~ dunif(0.001, 1000)
+  sigma ~ dexp(1 / 1.5)
 
 }"
 
@@ -398,23 +468,23 @@ plotPost(sigma)
 
 
 
-
+```{r}
+mcmc_scatter(posterior_sample,
+             pars = c("beta[1]", "beta[2]"),
+             alpha = 0.25)
+```
 
 
 
 ```{example, regression-bayes}
-Now we'll summarize the posterior distribution and report conclusions analagous to those in Example \@ref(exm:regression-freq).
+Now we'll summarize the posterior distribution and report conclusions.
 ```
 
 
 1. Find and interpret a 95% posterior credible interval for $\beta_1$.
 1. Find and interpret a 95% posterior credible interval for the mean PBF for men with a BMI of 15 kg/m^2^.
 1. Find and interpret a 95% posterior credible interval for $\sigma$.
-1. Compare the 95% posterior credible intervals with the corresponding frequentist 95% confidence intervals.
-How are they similar?  How are they different?
 1. Find and interpret a 95% posterior *predictive* interval for men with a BMI of 15 kg/m^2^.
-1. Compare the 95% posterior prediction interval with the corresponding frequentist 95% prediction interval.
-How are they similar?  How are they different?
 1. Perform a posterior predictive check of the model by computing posterior predictive intervals for PBF for a variety of values of BMI.  Does the model seem reasonable based on the data?
 
 
@@ -434,7 +504,7 @@ plot(x,y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)",
 nlines = sample(1:length(beta0), 1000)
 
 for (l in nlines){
-  abline(beta0[l] - mean(x) * beta1[l], beta1[l], col = "orange", lwd = 1)
+  abline(beta0[l] - mean(x) * beta1[l], beta1[l], col = "seagreen", lwd = 1)
 }
 ```
 
@@ -448,7 +518,6 @@ quantile(mu_15, c(0.025, 0.975))
 
 1. The posterior distribution of $\sigma$ is approximately Normal with mean 7.99 and SD 0.12.  There is a 95% posterior probability that $\sigma$, which measures the SD of percent body fat *among males with the same BMI*, is between 7.76 and 8.23 percent.
 
-1. The values are similar to the frequentist analysis, but the interpretation is different.
 
 1. Simulate values of $\beta_0, \beta_1, \sigma$ from their joint posterior distribution, then given these values simulate a value of $y$ from a Normal distribution with mean $\beta_0+\beta_1(15-\bar{x})$ and SD $\sigma$.
 There is a posterior predictive probability of 95% that the PBF of a male with a BMI of 15 kg/m^2^ is between 2.0 and 33.3 percent.
@@ -464,7 +533,6 @@ lines(density(ynew))
 quantile(ynew, c(0.025, 0.975))
 ```
 
-1. Again, the values are very similar to the frequentist analysis.  The interpretation of predictions about $y$ is roughly the same between Bayesian and frequentist, but the uncertainty in the values of $\beta_0, \beta_1, \sigma$ is accounted for in different ways.
 
 1. See the plot below.  Most of the observed values of PBF fall within the predictive intervals.  The model seems reasonable.
 
@@ -477,11 +545,100 @@ xnew = seq(10, 50, 2.5)
 for (xx in xnew){
   ynew = beta0 + beta1 * (xx - mean(x)) + sigma * rnorm(50000, 0, 1)
   segments(x0 = xx, y0 = quantile(ynew, 0.025), x1 = xx,
-           y1 = quantile(ynew, 0.975), col = "orange", lwd=2)
-  points(x = xx, y = mean(ynew), pch = 19, col = "orange")
+           y1 = quantile(ynew, 0.975), col = "seagreen", lwd=2)
+  points(x = xx, y = mean(ynew), pch = 19, col = "seagreen")
 }
 ```
 
+
+
+```{example, regression-freq2}
+Now we'll perform a frequentist simple linear regression model for comparison
+
+```
+
+
+
+1. Find and interpret the slope of the fitted regression line.
+1. Find and interpret a 95% confidence interval for the slope of the regression line.
+1. Find the equation of the fitted regression line.
+1. Find and interpret the fitted value for men with a BMI of 15 kg/m^2^.
+1. Find and interpret a 95% confidence interval based on the fitted value for men with a BMI of 15 kg/m^2^.
+1. Find and interpret the estimate of $\sigma$.
+1. Compare the 95% posterior credible intervals with the corresponding frequentist 95% confidence intervals.
+How are they similar?  How are they different?
+1. Find and interpret a 95% *prediction* interval for men with a BMI of 15 kg/m^2^.
+1. Compare the 95% posterior prediction interval with the corresponding frequentist 95% prediction interval.
+How are they similar?  How are they different?
+
+
+
+
+
+```{solution}
+to Example \@ref(exm:regression-freq2)
+```
+
+
+
+1. Recall that the slope of the fitted ("least squares") regression line is
+\[
+\frac{rs_y}{s_x} = \frac{\text{correlation}\times\text{SD of response variable}}{\text{SD of explanatory variable}} = \frac{0.398\times 8.7}{5.69} = 0.609
+\]
+Among males, a one kg/$\text{m}^2$ increase in BMI is associated with a 0.609 percentage point increase in percent body fat *on average*.  ("Percentage points" are the measurement units of percent body fat.)
+
+    ```{r}
+plot(x, y, xlab = "BMI (kg/m^2)", ylab = "Percent body fat (%)", main = paste("Correlation=", cor(x, y)))
+
+lm1 = lm(y ~ x)
+abline(lm1, col = "seagreen", lwd = 2)
+summary(lm1)
+```
+
+1. The SE of the slope is 0.03 so a 95% confidence interval has endpoints $0.609 \pm 2 \times 0.030$.
+We estimate with 95% confidence that among males, a one kg/$\text{m}^2$ increase in BMI is associated with between a 0.550 and a 0.669 percentage point increase in percent body fat *on average*.
+
+
+    ```{r}
+confint(lm1)
+```
+
+
+1. The slope is 0.609.  The intercept is
+\[
+\text{Intercept} = \bar{y} - \text{slope}\times \bar{x} = 23.43 - 0.609 \times 24.45 = 8.534
+\]
+The equation of the regression line is
+\[
+\widehat{\text{Percent body fat (%)}} = 8.534 + 0.609\times \text{BMI(kg/m^2)}
+\]
+
+1. For a BMI of 15.0 kg/$\text{m}^2$
+\[
+\widehat{\text{Percent body fat (%)}} = 8.534 + 0.609\times 15.0 = 17.67 \text{ percent}
+\]
+The *mean* percent body fat for males with a BMI of kg/$\text{m}^2$ is 17.67%.
+
+    ```{r}
+xnew = data.frame(x = c(15))
+predict(lm1, xnew, interval = "confidence", se.fit = TRUE)
+```
+
+1. We estimate with 95% confidence that the *mean* percent body fat for males with a BMI of kg/$\text{m}^2$ is between 17.02% and 18.33%.
+
+1. The "residual standard error" of $s=7.99$ percent is an estimate of $\sigma$.  This value measures the variability of percent body fat *among males with the same BMI*. Roughly, $s\approx s_Y\sqrt{1-r^2}=8.7\sqrt{1-0.398^2}=7.99$. There is less variability in percent body fat among males with the same BMI, than among men in general.
+
+1. The values are similar to the frequentist analysis, but the interpretation is different.
+
+
+1. Assuming that percent body fats of males with a BMI of 15 kg/m^2^ follow a Normal distribution, with mean 17.67 and standard deviation 7.99, 95% of values lie in the interval with endpoints^[This interval isn't quite correct because the 7.99 doesn't account for the sample-to-sample variability (SE) of the mean BMI for these men.  But that SE (0.3335) is very small in comparison to the variability in individual percent body fats (7.986).  Adjusting the prediction interval to reflect the estimation of the mean yields $17.67\pm 2 \times 7.993$, where $7.993=\sqrt{7.986^2 + 0.3335^2}$] $17.67\pm2\times 7.99$.  We estimate that 95% *of males with BMI of 15 kg/m^2^* have percent body fat between 2.00% and 33.35%.
+
+    ```{r}
+predict(lm1, xnew, interval = "prediction")
+```
+
+
+1. Again, the values are very similar to the frequentist analysis.  The interpretation of predictions about $y$ is roughly the same between Bayesian and frequentist, but the uncertainty in the values of $\beta_0, \beta_1, \sigma$ is accounted for in different ways.
 
 
 
