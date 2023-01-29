@@ -1,0 +1,4 @@
+# Preface {.unnumbered}
+
+
+Handouts containing examples, exercises, and notes covering selected topics from Cal Poly STAT 415.

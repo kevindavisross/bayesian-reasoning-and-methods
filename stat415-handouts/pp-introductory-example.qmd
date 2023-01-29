@@ -1,0 +1,94 @@
+# Practice Problems: Introductory Example {.unnumbered}
+
+{{< include _r_setup.qmd >}}
+
+{{< include _python_setup.qmd >}}
+
+
+
+
+
+Suppose we want to estimate the proportion of Cal Poly students that are left handed, denoted $\theta$.
+Suppose first that only the values 0.05, 0.10, 0.15, 0.20, 0.25 are plausible.
+
+1. Create a table and plot of your prior plausibility assessment, like we did in Example 2.1.
+Assume that each of the five values has some plausibility, no matter how small; don’t assign 0 plausibility to any of the values.
+There is no one right answer; just explain your reasoning.
+
+1. Suppose we'll collect data on a sample of 30 Cal Poly students; let $y$ be the number of students in the sample who are left handed.
+Explain in words how you could use physical objects (dice, spinners, etc) to simulate a $(\theta, y)$ pair, in a way that reflects your plausibility assessment from the previous part.
+
+1. Now suppose you collect data on a random sample of 30 Cal Poly students and 4 are left-handed.
+Explain in words how you could use simulation to assess your plausibility of the five possible values of $\theta$ after observing sample data.
+In particular, describe in words how you would use the simulation to approximate what percent of your total plausibility the value 0.10 accounts for after observing the sample data.
+(To be clear: you don't have to actually carry out the simulation or write code. You just need to describe the process in words.)
+
+1. Which of the values 0.05, 0.10, 0.15, 0.20, 0.25 do you think are more plausible after observing the sample data (4/30) than before?
+Less plausible after than before?
+Explain intuitively, without actually running the simulation or computing the posterior plausibility.
+
+## Solution
+
+(@) A quick online search reveals that somewhere around 10% of people in general are left-handed.
+There is no reason to assume Cal Poly would be different, so we'll assume 0.10 is most plausible and 0.25 is least plausible, say:
+
+- 0.25 is the least plausible value
+- 0.20 is 5 times more plausible than 0.25
+- 0.15 is 2.4 times more plausible than 0.20
+- 0.05 is as plausible as 0.15
+- 0.10 is 5/3 times more plausible than 0.05.
+
+```{r}
+theta = seq(0.05, 0.25, by = 0.05)
+
+prior_units = c(2.4 * 5, 5/3 * 2.4 * 5, 2.4 * 5, 5, 1)
+
+prior = prior_units / sum(prior_units)
+
+data.frame(theta, prior_units, prior) |>
+  adorn_totals("row") |>
+  kbl() |> kable_styling()
+```
+
+(@) Stage 1: Create a spinner corresponding to your prior plausibility: it lands on 0.10 with probability 0.40, ..., 0.25 with probability 0.02.
+Spin the spinner to simulate $\theta$.
+
+    Stage 2: Given $\theta$, create a spinner that lands on "success" with probability $\theta$, then spin it 30 times and count the number of spins that land on "success" to simulate $y$.
+For example, if $\theta = 0.05$, create a spinner than lands on "success" with probability 0.05 then spin it 30 times and count the number of spins that land on "success".
+
+(@) First, repeat the two-stage simulation in the previous part to simulate many $(\theta, y)$ pairs.
+Then discard $(\theta, y)$ pairs for which $y\neq 4$.
+Among the remaining $(\theta, y)$ pairs (all with $y=4$), summarize the relative frequencies of the $\theta$ values.
+These conditional relative frequencies approximate the posterior plausibility.
+For example, to approximate the posterior plausibility that $\theta$ is 0.10, among the non-discarded repetitions count the number of repetitions with $\theta = 0.1$ and divide by the total number of non-discarded repetitions.
+
+(@) The observed sample proportion is $4/30=0.133$.
+So plausibility probably increases for 0.10 and 0.15 and decreases for 0.25.
+The values 0.05 and 0.15 started off as equally plausible, but after observing sample data 0.15 will be more plausible than 0.05.
+
+
+
+```{r}
+n_rep = 100000
+
+theta_sim = sample(theta, n_rep, replace = TRUE, prob = prior)
+
+n = 30
+
+y_sim = rbinom(n_rep, n, theta_sim)
+
+sim = data.frame(theta_sim, y_sim)
+
+y_obs = 4
+
+sim_conditional = sim |>
+  filter(y_sim == y_obs)
+
+sim_conditional |>
+  count(theta_sim, name = "freq") |>
+  mutate(rel_freq = freq / sum(freq)) |>
+  adorn_totals("row") |>
+  kbl(digits = 4) |> kable_styling()
+
+```
+

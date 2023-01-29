@@ -1,0 +1,355 @@
+# Bayes Rule
+
+{{< include _r_setup.qmd >}}
+
+{{< include _python_setup.qmd >}}
+
+
+
+The mechanism that underpins all of Bayesian statistical analysis is *Bayes' rule*, which describes how to update uncertainty in light of new information, evidence, or data. 
+
+
+::: {#exm-bayes-rule-iterative-twoway}
+
+A [recent survey](https://www.pewresearch.org/science/2019/03/28/what-americans-know-about-science/) of American adults asked:
+"Based on what you have heard or read, which of the following two statements best describes
+the scientific method?"
+
+- 70% selected "The scientific method produces findings meant to be continually tested
+and updated over time". (We'll call this the "iterative" opinion.)
+- 14% selected "The scientific method identifies unchanging core principles and truths". (We'll call this the "unchanging" opinion).
+- 16% were not sure which of the two statements was best.
+
+How does the response to this question change based on education level?
+Suppose education level is classified as: high school or less (HS), some college but no Bachelor's degree (college), Bachelor's degree (Bachelor's), or postgraduate degree (postgraduate).
+The education breakdown is
+
+- Among those who agree with "iterative": 31.3% HS, 27.6% college, 22.9% Bachelor's, and 18.2% postgraduate.
+- Among those who agree with "unchanging": 38.6% HS, 31.4% college, 19.7% Bachelor's, and 10.3% postgraduate.
+- Among those "not sure": 57.3% HS, 27.2% college, 9.7% Bachelor's, and 5.8% postgraduate
+
+:::
+
+
+
+
+1. Use the information to construct an appropriate two-way table.
+\
+\
+\
+\
+\
+1. Overall what percentage of adults have a postgraduate degree?  How is this related to the values 18.2%, 10.3%, and 5.8%?
+\
+\
+\
+\
+\
+1. What percent of those with a postgraduate degree agree that the scientific method is "iterative"?  How is this related to the values provided?
+\
+\
+\
+\
+\
+
+**Bayes' rule for events** specifies how a prior probability $P(H)$ of event $H$ is updated in response to the evidence $E$ to obtain the posterior probability $P(H|E)$.
+
+$$
+P(H|E) = \frac{P(E|H)P(H)}{P(E)}
+$$
+
+- Event $H$ represents a particular hypothesis (or model or case)
+- Event $E$ represents observed evidence (or data or information)
+- $P(H)$ is the unconditional or **prior probability** of $H$ (prior to observing $E$)
+- $P(H|E)$ is the conditional or **posterior probability** of $H$ after observing evidence $E$.
+- $P(E|H)$ is the **likelihood** of evidence $E$ given hypothesis (or model or case) $H$
+
+
+::: {#exm-bayes-rule-iterative-bayestable}
+Continuing @exm-bayes-rule-iterative-twoway.
+Randomly select an American adult.
+
+:::
+
+1. Consider the conditional probability that a randomly selected American adult agrees that the scientific method is "iterative" given that they have a postgraduate degree. Identify the prior probability, hypothesis, evidence, likelihood, and posterior probability, and use Bayes' rule to compute the posterior probability. 
+\
+\
+\
+\
+\
+1. Find the conditional probability that a randomly selected American adult with a postgraduate degree agrees that the scientific method is "unchanging".
+\
+\
+\
+\
+\
+1. Find the conditional probability that a randomly selected American adult with a postgraduate degree is not sure about which statement is best.
+\
+\
+\
+\
+\
+1. How many times more likely is it for an *American adult* to have a postgraduate degree and agree with the "iterative" statement than to have a postgraduate degree and agree with the "unchanging" statement?
+\
+\
+\
+\
+\
+1. How many times more likely is it for an *American adult with a postgraduate degree* to agree with the "iterative" statement than to agree with the "unchanging" statement?
+\
+\
+\
+\
+\
+1. What do you notice about the answers to the two previous parts?
+\
+\
+\
+\
+\
+1. How many times more likely is it for an *American adult* to agree with the "iterative" statement than to agree with the "unchanging" statement?
+\
+\
+\
+\
+\
+1. How many times more likely is it for an American adult to have a postgraduate degree when the adult agrees with the "iterative" statement than when the adult agree with the "unchanging" statement?
+\
+\
+\
+\
+\
+1. How many times more likely is it for an *American adult with a postgraduate degree* to agree with the "iterative" statement than to agree with the "unchanging" statement?
+\
+\
+\
+\
+\
+1. How are the values in the three previous parts related?
+\
+\
+\
+\
+\
+
+Bayes rule is often used when there are multiple hypotheses or cases. Suppose $H_1,\ldots, H_k$ is a series of distinct hypotheses which together account for all possibilities, and $E$ is any event (evidence).  Then Bayes' rule implies that the posterior probability of any particular hypothesis $H_j$ satisfies
+
+$$
+P(H_j |E) = \frac{P(E|H_j)P(H_j)}{P(E)}
+$$
+
+The marginal probability of the evidence, $P(E)$, in the denominator can be calculated using the *law of total probability*
+
+$$
+P(E) = \sum_{i=1}^k P(E|H_i) P(H_i)
+$$
+
+The law of total probability says that we can interpret the unconditional probability $P(E)$ as a probability-weighted average of the case-by-case conditional probabilities $P(E|H_i)$ where the weights $P(H_i)$ represent the probability of encountering each case.
+
+Combining Bayes' rule with the law of total probability,
+
+\begin{align*}
+P(H_j |E) & = \frac{P(E|H_j)P(H_j)}{P(E)}\\
+& = \frac{P(E|H_j)P(H_j)}{\sum_{i=1}^k P(E|H_i) P(H_i)}\\
+P(H_j |E) & \propto P(E|H_j)P(H_j)
+\end{align*}
+
+
+**In short, Bayes' rule says**
+
+$$
+\textbf{posterior} \propto \textbf{likelihood} \times \textbf{prior}
+$$
+
+
+Bayes rule calculations are often organized in a **Bayes' table** which illustrates  "posterior is proportional to likelihood times prior".
+The table has one row for each hypothesis and columns for
+
+- prior probability: column sum is 1
+- likelihood of the evidence given each hypothesis
+    - likelihood depends on the evidence; if the evidence changes, the likelihood column changes
+    - the sum of the likelihood column is a meaningless number and can be any value
+- product of prior and likelihood: column sum is the marginal probability of the evidence
+- posterior probability: column sum is 1
+
+
+
+
+
+The process of conditioning can be thought of as **"slicing and renormalizing".**
+
+- Extract the "slice" corresponding to the event being conditioned on (and discard the rest).
+For example, a slice might correspond to a particular row or column of a two-way table.  
+- "Renormalize" the values in the slice so that corresponding probabilities add up to 1.
+
+
+
+
+
+::: {#exm-bayes-rule-iterative-bayestable2}
+Continuing @exm-bayes-rule-iterative-twoway.  Randomly select an American adult.
+Now suppose we want to compute the posterior probabilities  for an American adult's perception of the scientific method given that the randomly selected American adult has some college but no Bachelor’s degree ("College").
+:::
+
+1. Before computing, make an educated guess for the posterior probabilities.
+In particular, will the changes from prior to posterior be more or less extreme given the American has some college but no Bachelor's degree than when given the American has a postgraduate degree?
+Why?
+\
+\
+\
+\
+\
+1. Construct a Bayes table and compute the posterior probabilities.
+Compare to the posterior probabilities given postgraduate degree from the previous examples.
+\
+\
+\
+\
+\
+
+
+
+::: {#exm-bayes-marbles}
+Suppose that you are presented with six boxes, labeled 0, 1, 2, $\ldots$, 5, each containing five marbles.
+Box 0 contains 0 green and 5 gold marbles, box 1 contains 1 green and 4 gold, and so on with box $i$ containing $i$ green and $5-i$ gold.
+One of the boxes is chosen uniformly at random (perhaps by rolling a fair six-sided die), and then you will randomly select marbles from that box, without replacement.
+Based on the colors of the marbles selected, you will update the probabilities of which box had been chosen.
+
+:::
+
+1. Suppose that a single marble is selected and it is green.
+Which box do you think is the most likely to have been chosen?
+Make a guess for the posterior probabilities for each box.
+Then construct a Bayes table to compute the posterior probabilities.
+How do they compare to the prior probabilities?
+\
+\
+\
+\
+\
+1. Now suppose a second marble is selected from the same box, without replacement, and its color is gold.
+Which box do you think is the most likely to have been chosen given these two marbles?
+Make a guess for the posterior probabilities for each box.
+Then construct a Bayes table to compute the posterior probabilities, *using the posterior probabilities from the previous part after the selection of the green marble as the new prior probabilities before seeing the gold marble.*
+\
+\
+\
+\
+\
+1. Now construct a Bayes table corresponding to the original prior probabilities (1/6 each) and the combined evidence that the first ball selected was green and the second was gold.  How do the posterior probabilities compare to the previous part?
+\
+\
+\
+\
+\
+1. In the previous part, the first ball selected was green and the second was gold.
+Suppose you only knew that in a sample of two marbles, 1 was green and 1 was gold.
+That is, you didn't know which was first or second.
+How would the previous part change?
+Should knowing the order matter?  Does it?
+\
+\
+\
+\
+\
+
+
+
+- Bayesian analyses are often performed sequentially.
+- Posterior probabilities can be sequentially updated as new data becomes available, with the posterior probabilities after the previous stage serving as the prior probabilities for the next stage.
+- The final posterior probabilities only depend upon the cumulative data.  It doesn't matter if we sequentially update the posterior after each new piece of data or only once after all the data is available; the final posterior probabilities will be the same either way.
+- Also, the final posterior probabilities are not impacted by the order in which the data are observed.
+
+
+
+## Notes
+
+### Two-way table
+
+
+```{r}
+hypothesis = c("iterative", "unchanging", "not sure")
+
+prior = c(0.70, 0.14, 0.16)
+
+evidence = c("HS", "College", "Bachelors", "Postgrad")
+
+likelihood_E_given_H1 = c(0.313, 0.276, 0.229, 0.182) # given iterative
+likelihood_E_given_H2 = c(0.386, 0.314, 0.197, 0.103) # given unchanging
+likelihood_E_given_H3 = c(0.573, 0.272, 0.097, 0.058) # given not sure
+
+n = 100000
+
+twoway_table = data.frame(n * rbind( 
+             prior[1] * likelihood_E_given_H1,
+             prior[2] * likelihood_E_given_H2,
+             prior[3] * likelihood_E_given_H3))
+
+colnames(twoway_table) = evidence
+
+twoway_table |>
+  add_column(hypothesis, .before = 1) |>
+  adorn_totals(c("row", "col")) |>
+  kbl() |>
+  kable_styling()
+
+```
+
+### Bayes table, given postgraduate degree
+
+```{r}
+
+hypothesis = c("iterative", "unchanging", "not sure")
+
+prior = c(0.70, 0.14, 0.16)
+
+# likelihood of hypothesis, given evidence = postgraduate degree
+likelihood = c(0.182, 0.103, 0.058) 
+
+product = prior * likelihood
+
+posterior = product / sum(product)
+
+bayes_table = data.frame(hypothesis,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+bayes_table |>
+  adorn_totals("row") |>
+  kbl(digits = 4) |>
+  kable_styling()
+
+```
+
+
+
+### Bayes table, given college
+
+```{r}
+
+hypothesis = c("iterative", "unchanging", "not sure")
+
+prior = c(0.70, 0.14, 0.16)
+
+# likelihood of hypothesis, given evidence = college
+likelihood = c(0.276, 0.314, 0.272)
+
+product = prior * likelihood
+
+posterior = product / sum(product)
+
+bayes_table = data.frame(hypothesis,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+bayes_table |>
+  adorn_totals("row") |>
+  kbl(digits = 4) |>
+  kable_styling()
+
+```
+

@@ -1,0 +1,106 @@
+# Practice Problems: Ideas of Bayesian Reasoning  {.unnumbered}
+
+{{< include _r_setup.qmd >}}
+
+{{< include _python_setup.qmd >}}
+
+
+
+
+Suppose we want to estimate the proportion of Cal Poly students that are left handed, denoted $\theta$.
+Suppose first that only the values 0.05, 0.10, 0.15, 0.20, 0.25 are plausible, and that your prior assessment of plausibility is
+
+| Value | Plausibility |
+|-------|-------------:|
+| 0.05  |         0.24 |
+| 0.10  |         0.40 |
+| 0.15  |         0.24 |
+| 0.20  |         0.10 |
+| 0.25  |         0.02 |
+
+
+Suppose you collect data on a random sample of 30 Cal Poly students and 4 are left-handed.
+
+1. Explain in words how you could use simulation to approximate the probability that in a sample of 30 students 4 are left-handed if $\theta$ is 0.05.
+
+1. Use software or a simulation applet to compute/approximate the probability from the previous part.
+Interpret this value.
+
+1. Use software or a simulation simulation to compute/approximate the probability that in a sample of 30 students 4 are left-handed for each of the five possible values of $\theta$.
+Add the "likelihood" column to the table.
+
+1. Prior to observing the sample data, how many times more plausible is the value 0.10 for 
+$\theta$ than 0.05?
+
+
+1. How many times more likely is it to observe 4 left-handed students in a sample of 30 students when 
+$\theta$ is 0.10 than when it is 0.05?
+
+1. After observing a sample of 30 students with 4 left-handed, how many times more plausible is the value 0.10 for $\theta$ than 0.05?
+
+1. Complete a table like the one in Example 3.2 and find the posterior plausibility of each of the five values for $\theta$ after observing a sample of 30 students with 4 left-handed.
+
+1. How has our assessment of plausibility changed from prior to observing the sample data?
+Which values are more plausible in our posterior assessment than they were in the prior?
+Less plausible? Does this make sense?
+
+## Solution
+
+
+
+(@) If $\theta = 0.05$, create a spinner than lands on "success" with probability 0.05 then spin it 30 times and let $y$ be the number of spins (out of 30) that land on "success".
+Repeat many times --- always using the same $\theta=0.05$ spinner --- to get many values of $y$ when $\theta = 0.05$.
+Count the number of repetitions with $y = 4$ and divide by the total number of repetitions to approximate the probability that in a sample of 30 students 4 are left-handed if $\theta$ is 0.05.
+
+```{r}
+dbinom(4, 30, 0.05)
+```
+
+
+(@) If 5% of CP students are left-handed, about `r round(100 * dbinom(4, 30, 0.05), 1)` percent of samples of size 30 will have 4 left-handed students.
+
+(@) Compute `dbinom(4, 30, theta)` for each value of `theta`.
+
+```{r}
+theta = seq(0.05, 0.25, by = 0.05)
+
+prior = c(0.24, 0.40, 0.24, 0.10, 0.02)
+
+n = 30
+y_obs = 4
+
+likelihood = dbinom(y_obs, n, theta)
+
+data.frame(theta, prior, likelihood) |>
+  adorn_totals("row") |>
+  kbl(digits = 4) |> kable_styling()
+
+```
+
+
+(@) Prior to observing the sample data, 0.10 is $0.40 / 0.24 = 5/3 = 1.667$ times more plausible for $\theta$ than 0.05.
+
+
+(@) It is `r round(dbinom(y_obs, n, 0.10), 4)` / `r round(dbinom(y_obs, n, 0.05), 4)` = `r round(dbinom(y_obs, n, 0.10) / dbinom(y_obs, n, 0.05), 4)`  times more likely to observe 4 left-handed students in a sample of 30 students when 
+$\theta$ is 0.10 than when it is 0.05.
+
+```{r}
+product = prior * likelihood
+
+posterior = product / sum(product)
+
+data.frame(theta, prior, likelihood,
+           product, posterior) |>
+  adorn_totals("row") |>
+  kbl(digits = 4) |> kable_styling()
+```
+
+
+(@) After observing a sample of 30 students with 4 left-handed, 0.10 is `r round(prior[2] / prior[1], 4)` $\times$ `r round(likelihood[2] / likelihood[1], 4)` = `r round(posterior[2] / posterior[1], 4)` times more plausible for $\theta$ than 0.05.
+Check that `r round(posterior[2], 4)` / `r posterior[1], 4)` = `r round(posterior[2] / posterior[1], 4)`.
+
+(@) See table above.
+
+(@) The observed sample proportion is $4/30=0.133$.
+So plausibility increases for 0.10 and 0.15 and decreases for 0.25.
+The values 0.05 and 0.15 started off as equally plausible, but after observing sample data 0.15 is more plausible than 0.05.

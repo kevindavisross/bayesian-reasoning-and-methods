@@ -1,0 +1,1388 @@
+# Introduction to Prediction
+
+{{< include _r_setup.qmd >}}
+
+{{< include _python_setup.qmd >}}
+
+
+- A Bayesian analysis leads directly and naturally to making predictions about future observations from the random process that generated the data.
+- Prediction is also useful for tuning prior distributions, and for checking if model assumptions seem reasonable in light of observed data.
+
+
+::: {#exm-data-singular-prior-predict}
+Do people prefer to use the word "data" as singular or plural?
+[FiveThirtyEight conducted a poll](https://fivethirtyeight.com/features/elitist-superfluous-or-popular-we-polled-americans-on-the-oxford-comma/) to address this question (and others).
+Rather than simply ask whether the respondent considered "data" to be singular or plural, they asked which of the following sentences they prefer:
+
+a. Some experts say it's important to drink milk, but the data is inconclusive.
+a. Some experts say it's important to drink milk, but the data are inconclusive.
+
+Suppose we wish to study the opinions of students in Cal Poly statistics classes regarding this issue.
+That is, let $\theta$ represent the population proportion of students in Cal Poly statistics classes who prefer to consider data as a *singular* noun, as in option a) above ("the data is").
+
+Before proceeding, consider the context of this problem and sketch your prior distribution for $\theta$.
+What are the main features of your prior?
+
+To illustrate ideas, we'll start with a prior distribution which places probability 0.01, 0.05, 0.15, 0.30, 0.49 on the values 0.1, 0.3, 0.5, 0.7, 0.9, respectively.
+
+:::
+
+1. Before observing any data, suppose we plan to randomly select a single Cal Poly statistics student.
+Consider the *unconditional* prior probability that the selected student prefers data as singular.
+(This is called a *prior predictive probability*.)
+Explain how you could use simulation to approximate this probability.
+\
+\
+\
+\
+\
+
+1. Compute the prior predictive probability from the previous part.
+\
+\
+\
+\
+\
+
+1. Before observing any data, suppose we plan to randomly select a sample of 35 Cal Poly statistics students.
+Consider the *unconditional* prior distribution of the number of students in the sample who prefer data as singular.
+(This is called a *prior predictive distribution*.)
+Explain how you could use simulation to approximate this distribution.
+In particular, how could you use simulation to approximate the prior predictive probability that exactly 31 students in the sample prefer data as singular?
+\
+\
+\
+\
+\
+
+1. Compute and interpret the prior predictive probability that exactly 31 students in a sample of size 35 prefer data as singular.
+\
+\
+\
+\
+\
+
+::: {#exm-data-singular-posterior}
+Continuing @exm-data-singular-prior-predict.
+Suppose that we observe a sample of 35 Cal Poly statistics students in which 31 prefer data as singular.
+
+:::
+
+1. Explain how you would use simulation to approximate the posterior distribution of $\theta$.
+\
+\
+\
+\
+\
+    
+1. Find the posterior distribution of $\theta$.
+\
+\
+\
+\
+\
+
+
+::: {#exm-data-singular-posterior-predict}
+Continuing @exm-data-singular-posterior.
+After observing a sample of 35 Cal Poly statistics students in which 31 prefer data as singular, suppose we plan to collect more data.
+:::
+
+1. Suppose we plan to randomly select an additional Cal Poly statistics student.
+Consider the *posterior predictive probability* that this student prefers data as singular.
+Explain how you could use simulation to estimate this probability.
+\
+\
+\
+\
+\
+
+1. Compute the posterior predictive probability from the previous part.
+\
+\
+\
+\
+\
+
+1. Suppose we plan to collect data on another sample of 35 Cal Poly statistics students.
+Consider the *posterior predictive distribution* of the number of students in the new sample who prefer data as singular.
+Explain how you could use simulation to approximate this distribution.
+In particular, how could you use simulation to approximate the posterior predictive probability that exactly 31 students in the sample prefer data as singular?
+(Of course, the sample size of the new sample does not have to be 35; however, we're keeping it the same so we can compare the prior and posterior predictions.)
+\
+\
+\
+\
+\
+
+1. Compute and interpret the posterior predictive probability that exactly 31 students in a sample of size 35 prefer data as singular.
+\
+\
+\
+\
+\
+
+
+
+- The **predictive distribution** of a measured variable $y$ is the marginal distribution (of the
+unobserved values) after accounting for the uncertainty in the parameters $\theta$.
+- A **prior predictive distribution** is calculated using the prior distribution of the
+parameters.
+- A **posterior predictive distribution** is calculated using the posterior distribution
+of the parameters, conditional on the observed data.
+- Be sure to carefully distinguish between posterior distributions and posterior predictive distributions (or between prior distributions and prior predictive distributions.)
+    - **Prior and posterior distributions** are distributions on values of the *parameters*.
+    These distributions quantify the degree of uncertainty about unknown parameters $\theta$ (before and after observing data).
+    - **Prior and posterior *predictive* distributions** are distributions on *potential* values of the *measured variable* (data).
+    Predictive distributions reflect sample-to-sample variability of the sample data, while also accounting for the uncertainty in the parameters.
+- Simulation is an effective tool in approximating posterior (or prior) predictive distributions. 
+    - Step 1: Simulate a value of $\theta$ from its posterior distribution (or prior distribution).
+    - Step 2: Given this value of $\theta$ simulate a value of $y$ from $f(y|\theta)$, the data model conditional on $\theta$.
+    - Repeat many times to simulate many $(\theta, y)$ pairs, and summarize the values of $y$ to approximate the posterior predictive distribution (or prior predictive distribution).
+
+
+::: {#exm-data-singular-prior-predict-grid}
+Continuing @exm-data-singular-prior-predict.
+We'll use a grid approximation and assume that any multiple of 0.0001 is a possible value of $\theta$: 0, 0.0001, 0.0002, ..., 0.9999, 1.
+  
+:::
+
+
+
+1. Assume the prior distribution for $\theta$ is proportional to $\theta^2$.
+Plot this prior distribution and describe its main features.
+Is the prior distribution truly discrete or essentially continuous?
+\
+\
+\
+\
+\
+
+1. Given the shape of the prior distribution, explain why we might not want to compute *central* prior credible intervals.
+Suggest an alternative approach, and compute a 98% prior credible interval for $\theta$.
+\
+\
+\
+\
+\
+
+1. Before observing any data, suppose we plan to randomly select a sample of 35 Cal Poly statistics students.
+Let $y$ represent the number of students in the selected sample who prefer data as singular.
+Use simulation to approximate the prior predictive distribution of $y$ and plot it.
+Is the prior predictive distribution truly discrete or essentially continuous?
+\
+\
+\
+\
+\
+
+1. Find a 95% prior *prediction* interval for $y$.
+Write a clearly worded sentence interpreting this interval in context.
+\
+\
+\
+\
+\
+
+
+::: {#exm-data-singular-posterior-predict-grid}
+Continuing @exm-data-singular-prior-predict-grid.
+Suppose that we observe a sample of 35 Cal Poly statistics students in which 31 prefer data as singular.
+:::
+
+    
+1. Find the posterior distribution of $\theta$, plot it and describe its main features, and find and interpret a 98% central posterior credible interval for $\theta$.
+Is the posterior distribution truly discrete or essentially continuous?
+\
+\
+\
+\
+\
+
+1. Suppose we plan to randomly select another sample of 35 Cal Poly statistics students.
+Let $\tilde{y}$ represent the number of students in the new sample who prefer data as singular.
+Use simulation to approximate the posterior predictive distribution of $\tilde{y}$ and plot it.
+Is the posterior predictive distribution truly discrete or essentially continuous?
+(Of course, the sample size of the new sample does not have to be 35.
+However, we're keeping it the same so we can compare the prior and posterior predictions.)
+\
+\
+\
+\
+\
+
+1. Find a 95% posterior *prediction* interval for $\tilde{y}$.
+Write a clearly worded sentence interpreting this interval in context.
+\
+\
+\
+\
+\
+
+::: {#exm-data-singular-posterior-predict-compare}
+Continuing @exm-data-singular-posterior-predict-grid.
+Now suppose instead of using the Cal Poly sample data (31/35) to form the posterior distribution of $\theta$, we had used the [data from the FiveThirtyEight study ](https://github.com/fivethirtyeight/data/tree/master/comma-survey) in which 865 out of 1093 respondents preferred data as singular.
+:::
+
+1. Find the posterior distribution of $\theta$, plot it and describe its main features, and find and interpret a 98% central posterior credible interval for $\theta$.
+How does the posterior based on the FiveThirtyEight data compare to the posterior distribution based on the Cal Poly sample data (31/35)?
+Why?
+\
+\
+\
+\
+\
+
+1. Again, suppose we use the FiveThirtyEight data to form the posterior distribution of $\theta$.
+Suppose we plan to randomly select a new sample of size 35.
+Let $\tilde{y}$ represent the number in the new sample who prefer data as singular.
+Use simulation to approximate the posterior predictive distribution of $\tilde{y}$ and plot it.
+Find a 95% posterior *prediction* interval for $\tilde{y}$.
+How does the predictive distribution which uses the posterior distribution based on the FiveThirtyEight data compare to the one based on the Cal Poly sample data (31/35)?
+Why?
+\
+\
+\
+\
+\
+
+
+- Be sure to distinguish between a prior/posterior *distribution* and a prior/posterior *predictive distribution*.
+- A prior/posterior *distribution* is a distribution on potential values of the *parameters* $\theta$.
+These distributions quantify the degree of uncertainty about the unknown parameter $\theta$ (before and after observing data).
+- A prior/posterior *predictive distribution* is a distribution on potential values of the *data* $y$.
+Predictive distributions reflect sample-to-sample variability of the sample data, while accounting for the uncertainty in the parameters.
+- Even if parameters are essentially "known" --- that is, even if the prior/posterior SD of parameters is small --- there will still be sample-to-sample variability reflected in the predictive distribution of the data, mainly influenced by the size $n$ of the sample being "predicted" (or unit-to-unit variability for the predictive distribution of a single observation).
+
+
+::: {#exm-sleep-predict}
+Suppose we want to estimate $\theta$, the population mean hours of sleep on a typical night for Cal Poly students.
+Assume that sleep hours, $y$, for students follow a Normal distribution with unknown mean $\theta$ and known standard deviation 1.5 hours.
+(Known population SD is an unrealistic assumption that we use for simplicity here.)
+
+Assume a Normal(7.5, 0.5) prior distribution for $\theta$.
+:::
+
+
+1. Describe what the prior distribution represents.
+Find and interpret a 98% prior credible interval.
+\
+\
+\
+\
+\
+
+1. Explain how you would use simulation to approximate the prior predictive distribution of $y$.
+Use simulation to approximate a 95% prior prediction interval, and interpret it.
+\
+\
+\
+\
+\
+
+
+1. Now suppose you observe sleep hours (rounded to one decimal place) of 6.8 and 7.2 for a sample of 2 students.
+Explain how, in principle, you could use simulation to approximate the posterior distribution.
+(To preview what lies ahead: what issues would you experience with this method in practice?)
+\
+\
+\
+\
+\
+
+1. Suppose that the posterior distribution is approximately Normal with mean 7.4 and SD 0.4.
+Describe what the posterior distribution represents.
+Find and interpret a 98% posterior credible interval.
+\
+\
+\
+\
+\
+
+1. Explain how you would use simulation to approximate the posterior predictive distribution of $y$.
+Use simulation to approximate a 95% posterior prediction interval, and interpret it.
+\
+\
+\
+\
+\
+
+1. Now suppose you observe a very large sample of students (with a sample mean of 7.0), and the posterior distribution is Normal with mean 7.0 and SD 0.001.
+Without doing any calculations, approximate the posterior predictive distribution of $y$ and a 95% posterior prediction interval.
+\
+\
+\
+\
+\
+
+
+## Notes
+
+### Prior predictive probability of success for single trial
+
+1. Simulate a value of $\theta$ from the prior distribution.
+1. Given the value of $\theta$, construct a spinner that lands on success with probability $\theta$.
+Spin the spinner once and record the result, success or not.
+1. Repeat steps 1 and 2 many times, and find the proportion of repetitions which result in success. 
+This proportion approximates the (unconditional) prior predictive probability of success.
+
+
+```{r}
+n_rep = 1000
+
+theta = seq(0.1, 0.9, 0.2)
+
+prior = c(0.01, 0.05, 0.15, 0.30, 0.49)
+
+# simulate values of theta from the prior
+theta_sim = sample(theta, n_rep, replace = TRUE, prob = prior)
+
+# for each simulated value of theta, simulate a single trial from Binomial(1, theta): "success" = 1, "failure" = 0 
+y_sim = rbinom(n_rep, size = 1, theta_sim)
+
+sim = data.frame(theta_sim, y_sim)
+
+sim |> head(10) |> kbl() |> kable_styling()
+```
+
+
+```{r}
+#| label: fig-data-singular-prior-prediction-single
+#| warning: false
+#| fig-cap: "Prior predictive simulation"
+#| fig-subcap: 
+#|   - "(theta, y) pairs for single trials: theta simulated from prior; y = 1 (succes) with probability theta"
+#|   - "Summary of simulated y values to approximate prior predictive probability of success"
+#| layout-ncol: 2
+
+
+sim |>
+  mutate(theta = factor(theta_sim),
+         y = factor(y_sim)) |>
+  ggplot(aes(x = theta,
+             y = y)) +
+  geom_jitter(aes(color = theta, shape = y)) +
+  scale_color_viridis_d(option = "magma", guide = "none") +
+  scale_shape_manual(values = c(1, 19), guide = "none") +
+  theme_bw()
+
+sim |>
+  mutate(theta = factor(theta_sim),
+         y = factor(y_sim)) |>
+  ggplot(aes(y)) +
+  geom_bar(aes(fill = theta)) +
+  scale_fill_viridis_d(option = "magma") +
+  theme_bw()
+```
+
+
+Law of total probability calculation of prior predictive probability:
+
+$$
+0.1(0.01) + 0.3(0.05) + 0.5(0.15) + 0.7(0.30) + 0.9(0.49) = 0.742 
+$$
+
+
+
+```{r}
+#| label: fig-data-singular-prior-prediction-single-ltp
+#| echo: false
+#| warning: false
+#| #| fig-cap: "Prior predictive probability"
+#| fig-subcap: 
+#|   - "Probability of success on single trial, for different values of theta in @exm-data-singular-prior-predict. Color represents the prior probability of theta, with darker colors corresponding to higher prior probability."
+#|   - "Prior predictive probability of success on single trial"
+#| layout-ncol: 2
+
+n = 1
+
+predict_table = expand_grid(theta,
+                            y = 0:n)
+
+prior_table = data.frame(theta, prior)
+
+predict_table = predict_table %>%
+  left_join(prior_table) %>%
+  mutate(prob = dbinom(y, n, theta),
+         theta = factor(theta))
+
+
+ggplot(predict_table,
+       aes(x = factor(y),
+           ymax = prob,
+           ymin = 0,
+           col = prior)) +
+  # geom_linerange(aes(alpha = prior)) +
+  geom_linerange(linewidth = 1) +
+  scale_color_viridis_c(limits = c(0, 1), direction = -1) +
+  labs(y = "p(y|theta)",
+       x = "y",
+       col = "Prior(theta)") +
+  facet_wrap(vars(theta), labeller = "label_both") +
+  theme_bw()
+
+predict_total = predict_table %>%
+  group_by(y) %>%
+  summarize(prob = sum(prob * prior))
+
+ggplot(predict_total,
+       aes(x = factor(y),
+           ymax = prob,
+           ymin = 0)) +
+  # geom_linerange(aes(alpha = prior)) +
+  geom_linerange(col = "#CC79A7", linewidth = 1) +
+  labs(y = "p(y)",
+       x = "y") +
+  theme_bw()
+```
+
+
+
+### Prior predictive distribution of sample count of success
+
+1. Simulate a value of $\theta$ from the prior distribution.
+1. Given the value of $\theta$, construct a spinner that lands on success with probability $\theta$.
+Spin the spinner 35 times and count $y$, the number of spins that land on success.
+1. Repeat steps 1 and 2 many times, and record the number of successes (out of 35) for each repetition.
+**Summarize the simulated $y$ values to approximate the prior predictive distribution.**
+To approximate the prior predictive probability that exactly 31 students in a sample of size 35 prefer data as singular, count the number of simulated repetitions that result in 31 successes ($y = 31$) and divide by the total number of simulated repetitions.
+
+
+
+```{r}
+n_rep = 10000
+
+theta = seq(0.1, 0.9, 0.2)
+
+prior = c(0.01, 0.05, 0.15, 0.30, 0.49)
+
+# simulate values of theta from the prior
+theta_sim = sample(theta, n_rep, replace = TRUE, prob = prior)
+
+# for each simulated value of theta, simulate number of successes from Binomial(35, theta)
+
+y_sim = rbinom(n_rep, size = 35, theta_sim)
+
+sim = data.frame(theta_sim, y_sim)
+
+sim |> head(10) |> kbl() |> kable_styling()
+```
+
+
+```{r}
+#| label: fig-data-singular-prior-prediction-sample
+#| warning: false
+#| fig-cap: "Prior predictive simulation"
+#| fig-subcap: 
+#|   - "(theta, y) pairs for samples of size 35: theta simulated from prior; y simulated from Binomial(35, theta)"
+#|   - "Summary of simulated y values to approximate prior predictive distribution of sample count of success"
+#| layout-ncol: 2
+
+
+theta_y_sim_plot <- sim |>
+  mutate(theta = factor(theta_sim)) |>
+  ggplot(aes(x = theta_sim,
+             y = y_sim)) +
+  geom_jitter(aes(color = theta)) +
+  scale_color_viridis_d(option = "magma", guide = "none") +
+  scale_x_continuous(breaks = theta) +
+  labs(y = "y") +
+  theme_bw()
+
+theta_y_sim_plot
+
+sim |>
+  mutate(theta = factor(theta_sim),
+         y = y_sim) |>
+  ggplot(aes(y)) +
+  geom_bar(aes(fill = theta)) +
+  scale_fill_viridis_d(option = "magma") +
+  theme_bw()
+```
+
+Law of total probability calculation for prior predictive probability that $y = 31$ when $n=35$
+
+\begin{align*}
+& \left(\binom{35}{31}(0.1)^{31}(1-0.1)^{4}\right)(0.01) +
+\left(\binom{35}{31}(0.3)^{31}(1-0.3)^{4}\right)(0.05)\\
+& + \left(\binom{35}{31}(0.5)^{31}(1-0.5)^{4}\right)(0.15)
++ \left(\binom{35}{31}(0.7)^{31}(1-0.7)^{4}\right)(0.30)\\
+& + \left(\binom{35}{31}(0.9)^{31}(1-0.9)^{4}\right)(0.49)
+\end{align*}
+
+
+```{r}
+#| label: fig-data-singular-prior-prediction-sample-ltp
+#| warning: false
+#| echo: false
+#| fig-cap: "Prior predictive simulation"
+#| fig-subcap: 
+#|   - "Sample-to-sample distribution of $y$, the number of successes in samples of size $n=35$ for different values of theta in @exm-data-singular-prior-predict. Color represents the prior probability of $\theta$, with darker colors corresponding to higher prior probability."
+#|   - "Prior predictive distribution of $y$"
+#| layout-ncol: 2
+
+
+n = 35
+
+predict_table = expand_grid(theta,
+                            y = 0:n)
+
+prior_table = data.frame(theta, prior)
+
+predict_table = predict_table %>%
+  left_join(prior_table) %>%
+  mutate(prob = dbinom(y, n, theta),
+         theta = factor(theta))
+
+
+ggplot(predict_table,
+       aes(x = y,
+           ymax = prob,
+           ymin = 0,
+           col = prior)) +
+  # geom_linerange(aes(alpha = prior)) +
+  geom_linerange() +
+  scale_color_viridis_c(limits = c(0, 1), direction = -1) +
+  labs(y = "p(y|theta)",
+       x = "y",
+       col = "Prior(theta)") +
+  facet_wrap(vars(theta), labeller = "label_both") +
+  theme_bw()
+
+
+predict_total = predict_table %>%
+  group_by(y) %>%
+  summarize(prob = sum(prob * prior))
+
+ggplot(predict_total,
+       aes(x = y,
+           ymax = prob,
+           ymin = 0)) +
+  # geom_linerange(aes(alpha = prior)) +
+  geom_linerange(col = "#CC79A7") +
+  labs(y = "p(y)",
+       x = "y") +
+  theme_bw()
+
+```
+
+### Posterior distribution - simulation
+
+1. Simulate a value of $\theta$ from the prior distribution.
+1. Given the value of $\theta$, construct a spinner that lands on success with probability $\theta$.
+Spin the spinner 35 times and count $y$, the number of spins that land on success.
+1. Repeat steps 1 and 2 many times, and record the number of successes (out of 35) for each repetition.
+1. **Discard any repetitions for which $y\neq 31$.**
+**For the remaining repetitions (with $y=31$) summarize the simulated $\theta$ values** to approximate the posterior distribution of $\theta$.
+
+```{r}
+#| label: fig-data-singular-posterior-simulation
+#| warning: false
+#| fig-cap: "Approximating the posterior distribution via simulation"
+#| fig-subcap: 
+#|   - "(theta, y) pairs for samples of size 35: theta simulated from the prior; y simulated from Binomial(35, theta)" 
+#|   - "Summary of simulated theta values from repetitions with $y=31$ values to approximate  posterior distribution of theta given $y=31$"
+#| layout-ncol: 2
+
+y_obs = 31
+
+# same (theta, y) simulation as before; highlight y == 31
+theta_y_sim_plot +
+  annotate("rect", xmin = 0, xmax = 1,
+           ymin = y_obs - 0.4, ymax = y_obs + 0.4, alpha = 0.5,
+           color = bayes_col["posterior"],
+           fill = bayes_col["posterior"]) +
+  theme_bw()
+
+# Only keep (theta, y) pairs with y = 31, and summarize the theta values
+sim_posterior_table = sim |>
+  filter(y_sim == y_obs) |>
+  count(theta_sim, name = "freq") |>
+  mutate(rel_freq = freq / sum(freq))
+
+
+
+sim_posterior_table |>
+  ggplot(aes(x = theta_sim,
+             y = rel_freq)) +
+  geom_point(col = bayes_col["posterior"], size = 3) +
+  geom_line(linetype = "dashed", col = bayes_col["posterior"]) +
+  scale_x_continuous(limits = c(0, 1), breaks = theta) +
+  labs(x = "theta",
+       y = "Posterior") +
+  theme_bw()
+```
+
+
+
+
+
+### Posterior distribution - calculation
+
+
+```{r}
+
+# observed data
+n = 35
+y_obs = 31
+
+# likelihood of observed data for each theta
+likelihood = dbinom(y_obs, n, theta)
+
+# posterior is proportional to product of prior and likelihood
+product = prior * likelihood
+posterior = product / sum(product)
+
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+bayes_table |>
+  adorn_totals("row") |>
+  kbl(digits = 4) |>
+  kable_styling()
+```
+
+
+```{r}
+#| echo: false
+
+bayes_table |>
+  # scale likelihood for plotting only
+  mutate(likelihood = likelihood / sum(likelihood)) |>
+  select(theta, prior, likelihood, posterior) |>
+  pivot_longer(!theta,
+               names_to = "source",
+               values_to = "prob") |>
+  mutate(source = fct_relevel(source, "prior", "likelihood", "posterior")) |>
+  ggplot(aes(x = theta,
+             y = prob,
+             col = source)) +
+  geom_point(size = 3) +
+  geom_line(aes(linetype = source)) +
+  scale_x_continuous(breaks = theta) +
+  scale_color_manual(values = bayes_col) +
+  scale_linetype_manual(values = bayes_lty) +
+  labs(y = "Probability") +
+  theme_bw()
+```
+
+
+
+### Posterior predictive probability of success for single trial
+
+Similar to the prior predictive, but now simulate $\theta$ from the posterior distribution instead of the prior distribution.
+
+1. Simulate a value of $\theta$ from the *posterior* distribution.
+1. Given the value of $\theta$, construct a spinner that lands on success with probability $\theta$.
+Spin the spinner once and record the result, success or not.
+1. Repeat steps 1 and 2 many times, and find the proportion of repetitions which result in success. 
+This proportion approximates the (unconditional) *posterior* predictive probability of success.
+
+
+```{r}
+n_rep = 1000
+
+# simulate values of theta from the posterior
+theta_sim = sample(theta, n_rep, replace = TRUE, prob = posterior)
+
+# for each simulated value of theta, simulate a single trial from Binomial(1, theta): "success" = 1, "failure" = 0 
+y_sim = rbinom(n_rep, size = 1, theta_sim)
+
+sim = data.frame(theta_sim, y_sim)
+
+sim |> head(10) |> kbl() |> kable_styling()
+```
+
+
+```{r}
+#| label: fig-data-singular-posterior-prediction-single
+#| warning: false
+#| fig-cap: "Posterior predictive simulation"
+#| fig-subcap: 
+#|   - "(theta, y) pairs for single trials: theta simulated from posterior; y = 1 (succes) with probability theta"
+#|   - "Summary of simulated y values to approximate posterior predictive probability of success"
+#| layout-ncol: 2
+
+
+sim |>
+  mutate(theta = factor(theta_sim),
+         y = factor(y_sim)) |>
+  ggplot(aes(x = theta,
+             y = y)) +
+  geom_jitter(aes(color = theta, shape = y)) +
+  scale_color_viridis_d(option = "magma", guide = "none", limits = factor(theta)) +
+  scale_shape_manual(values = c(1, 19), guide = "none") +
+  theme_bw()
+
+sim |>
+  mutate(theta = factor(theta_sim),
+         y = factor(y_sim)) |>
+  ggplot(aes(y)) +
+  geom_bar(aes(fill = theta)) +
+  scale_fill_viridis_d(option = "magma", limits = factor(theta)) +
+  theme_bw()
+```
+
+
+Law of total probability calculation of posterior predictive probability:
+
+$$
+0.1(0.0000) + 0.3(0.0000) + 0.5(0.0000) + 0.7(0.0201
+) + 0.9(0.9799) = 0.8960
+$$
+
+
+
+```{r}
+#| label: fig-data-singular-posterior-prediction-single-ltp
+#| echo: false
+#| warning: false
+#| #| fig-cap: "Posterior predictive probability"
+#| fig-subcap: 
+#|   - "Probability of success on single trial, for different values of theta in @exm-data-singular-prior-predict. Color represents the posterior probability of $\theta$, with darker colors corresponding to higher posterior probability."
+#|   - "Posterior predictive probability of success on single trial"
+#| layout-ncol: 2
+
+n = 1
+
+predict_table = expand_grid(theta,
+                            y = 0:n)
+
+posterior_table = data.frame(theta, posterior)
+
+predict_table = predict_table %>%
+  left_join(posterior_table) %>%
+  mutate(prob = dbinom(y, n, theta),
+         theta = factor(theta))
+
+
+ggplot(predict_table,
+       aes(x = factor(y),
+           ymax = prob,
+           ymin = 0,
+           col = posterior)) +
+  # geom_linerange(aes(alpha = prior)) +
+  geom_linerange(linewidth = 1) +
+  scale_color_viridis_c(limits = c(0, 1), direction = -1) +
+  labs(y = "p(y|theta)",
+       x = "y",
+       col = "Posterior(theta)") +
+  facet_wrap(vars(theta), labeller = "label_both") +
+  theme_bw()
+
+predict_total = predict_table %>%
+  group_by(y) %>%
+  summarize(prob = sum(prob * posterior))
+
+ggplot(predict_total,
+       aes(x = factor(y),
+           ymax = prob,
+           ymin = 0)) +
+  # geom_linerange(aes(alpha = prior)) +
+  geom_linerange(col = "#CC79A7", linewidth = 1) +
+  labs(y = "p(y)",
+       x = "y") +
+  theme_bw()
+```
+
+
+
+### Posterior predictive distribution of sample count of success
+
+1. Simulate a value of $\theta$ from the *posterior* distribution.
+1. Given the value of $\theta$, construct a spinner that lands on success with probability $\theta$.
+Spin the spinner 35 times and count $y$, the number of spins that land on success.
+1. Repeat steps 1 and 2 many times, and record the number of successes (out of 35) for each repetition.
+**Summarize the simulated $y$ values to approximate the *posterior* predictive distribution.**
+To approximate the *posterior* predictive probability that exactly 31 students in a sample of size 35 prefer data as singular, count the number of simulated repetitions that result in 31 successes ($y = 31$) and divide by the total number of simulated repetitions.
+
+
+
+```{r}
+n_rep = 10000
+
+# simulate values of theta from the posterior
+theta_sim = sample(theta, n_rep, replace = TRUE, prob = posterior)
+
+# for each simulated value of theta, simulate number of successes from Binomial(35, theta)
+y_sim = rbinom(n_rep, size = 35, theta_sim)
+
+sim = data.frame(theta_sim, y_sim)
+
+sim |> head(10) |> kbl() |> kable_styling()
+```
+
+
+```{r}
+#| label: fig-data-singular-posterior-prediction-sample
+#| warning: false
+#| fig-cap: "Posterior predictive simulation"
+#| fig-subcap: 
+#|   - "(theta, y) pairs for samples of size 35: theta simulated from posterior; y simulated from Binomial(35, theta)"
+#|   - "Summary of simulated y values to approximate posterior predictive distribution of sample count of success"
+#| layout-ncol: 2
+
+
+sim |>
+  mutate(theta = factor(theta_sim)) |>
+  ggplot(aes(x = theta,
+             y = y_sim)) +
+  geom_jitter(aes(color = theta)) +
+  scale_color_viridis_d(option = "magma", guide = "none", limits = factor(theta)) +
+  scale_shape_manual(values = c(1, 19), guide = "none") +
+  labs(y = "y") +
+  theme_bw()
+
+sim |>
+  mutate(theta = factor(theta_sim),
+         y = y_sim) |>
+  ggplot(aes(y)) +
+  geom_bar(aes(fill = theta)) +
+  scale_fill_viridis_d(option = "magma", limits = factor(theta)) +
+  theme_bw()
+```
+
+Law of total probability calculation for posterior predictive probability that $y = 31$ when $n=35$
+
+\begin{align*}
+& \left(\binom{35}{31}(0.1)^{31}(1-0.1)^{4}\right)(0.0000) +
+\left(\binom{35}{31}(0.3)^{31}(1-0.3)^{4}\right)(0.0000)\\
+& + \left(\binom{35}{31}(0.5)^{31}(1-0.5)^{4}\right)(0.0000)
++ \left(\binom{35}{31}(0.7)^{31}(1-0.7)^{4}\right)(0.0201)\\
+& + \left(\binom{35}{31}(0.9)^{31}(1-0.9)^{4}\right)(0.9799)
+\end{align*}
+
+
+```{r}
+#| label: fig-data-singular-posterior-prediction-sample-ltp
+#| warning: false
+#| echo: false
+#| fig-cap: "Posterior predictive distribution"
+#| fig-subcap: 
+#|   - "Sample-to-sample distribution of $y$, the number of successes in samples of size $n=35$ for different values of theta in @exm-data-singular-prior-predict. Color represents the posterior probability of theta, with darker colors corresponding to higher posterior probability."
+#|   - "Posterior predictive distribution of $y$"
+#| layout-ncol: 2
+
+
+n = 35
+
+predict_table = expand_grid(theta,
+                            y = 0:n)
+
+posterior_table = data.frame(theta, posterior)
+
+predict_table = predict_table %>%
+  left_join(posterior_table) %>%
+  mutate(prob = dbinom(y, n, theta),
+         theta = factor(theta))
+
+
+ggplot(predict_table,
+       aes(x = y,
+           ymax = prob,
+           ymin = 0,
+           col = posterior)) +
+  geom_linerange() +
+  scale_color_viridis_c(limits = c(0, 1), direction = -1) +
+  labs(y = "p(y|theta)",
+       x = "y",
+       col = "Posterior(theta)") +
+  facet_wrap(vars(theta), labeller = "label_both") +
+  theme_bw()
+
+
+predict_total = predict_table %>%
+  group_by(y) %>%
+  summarize(prob = sum(prob * posterior))
+
+ggplot(predict_total,
+       aes(x = y,
+           ymax = prob,
+           ymin = 0)) +
+  geom_linerange(col = "#CC79A7") +
+  labs(y = "p(y)",
+       x = "y") +
+  theme_bw()
+
+```
+
+
+### Continuous theta: Prior distribution
+
+```{r}
+theta = seq(0, 1, 0.0001)
+
+# prior
+prior = theta ^ 2
+prior = prior / sum(prior)
+
+# Lower bound of one-sided 98% prior credible interval
+prior_cdf = cumsum(prior)
+theta[max(which(prior_cdf <= 0.02))]
+```
+
+```{r}
+#| echo: false
+data.frame(theta, prior) |>
+  ggplot(aes(x = theta,
+             y = prior)) +
+  geom_line(linewidth = 1,
+            color = bayes_col["prior"]) +
+  theme_bw() +
+  # remove y-axis labels
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+### Continuous theta: Prior predictive distribution
+
+```{r}
+n = 35
+
+n_sim = 10000
+
+theta_sim = sample(theta, n_sim, replace = TRUE, prob = prior)
+
+y_sim = rbinom(n_sim, n, theta_sim)
+
+sim = data.frame(theta_sim, y_sim)
+
+sim |> head(10) |> kbl() |> kable_styling()
+```
+
+```{r}
+quantile(y_sim, 0.05)
+
+```
+
+
+
+```{r}
+#| echo: false
+
+
+sim |>
+  count(y_sim, name = "freq") |>
+  mutate(rel_freq = freq / sum(freq)) |>
+  ggplot(aes(x = y_sim,
+           ymax = rel_freq,
+           ymin = 0)) +
+  geom_linerange(col = "#CC79A7") +
+  labs(y = "p(y)",
+       x = "y") +
+  theme_bw()
+```
+
+
+### Continuous theta: Posterior distribution
+
+```{r}
+# observed data
+n = 35
+y_obs = 31
+
+# likelihood of observed data for each theta
+likelihood = dbinom(y_obs, n, theta)
+
+# posterior is proportional to product of prior and likelihood
+product = prior * likelihood
+posterior = product / sum(product)
+
+# Bound of 98% posterior credible interval
+posterior_cdf = cumsum(posterior)
+# posterior 98% central credible interval
+c(theta[max(which(posterior_cdf <= 0.01))],
+  theta[min(which(posterior_cdf >= 0.99))])
+```
+
+
+```{r}
+#| echo: false
+
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+bayes_table |>
+  # scale likelihood for plotting only
+  mutate(likelihood = likelihood / sum(likelihood)) |> 
+  select(theta, prior, likelihood, posterior) |>
+  pivot_longer(!theta,
+               names_to = "source",
+               values_to = "probability") |>
+  mutate(source = fct_relevel(source, "prior", "likelihood", "posterior")) |>
+  ggplot(aes(x = theta,
+             y = probability,
+             col = source)) +
+  geom_line(aes(linetype = source), linewidth = 1) +
+  scale_color_manual(values = bayes_col) +
+  scale_linetype_manual(values = bayes_lty) +
+  theme_bw() +
+  # remove y-axis labels
+  theme(axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+
+
+### Continuous theta: Posterior predictive distribution
+
+```{r}
+n = 35
+
+n_sim = 10000
+
+theta_sim = sample(theta, n_sim, replace = TRUE, prob = posterior)
+
+y_sim = rbinom(n_sim, n, theta_sim)
+
+sim = data.frame(theta_sim, y_sim)
+
+sim |> head(10) |> kbl() |> kable_styling()
+```
+
+```{r}
+quantile(y_sim, c(0.025, 0.975))
+
+```
+
+
+
+```{r}
+#| echo: false
+
+
+sim |>
+  count(y_sim, name = "freq") |>
+  mutate(rel_freq = freq / sum(freq)) |>
+  ggplot(aes(x = y_sim,
+           ymax = rel_freq,
+           ymin = 0)) +
+  geom_linerange(col = "#CC79A7") +
+  labs(y = "p(y)",
+       x = "y") +
+  theme_bw()
+```
+
+
+
+
+### Continuous theta: Posterior distribution after observing large sample
+
+```{r}
+
+# observed data
+n = 1093
+y_obs = 865
+
+# likelihood of observed data for each theta
+likelihood = dbinom(y_obs, n, theta)
+
+# posterior is proportional to product of prior and likelihood
+product = prior * likelihood
+posterior = product / sum(product)
+
+# Bound of 98% posterior credible interval
+posterior_cdf = cumsum(posterior)
+# posterior 98% central credible interval
+c(theta[max(which(posterior_cdf <= 0.01))],
+  theta[min(which(posterior_cdf >= 0.99))])
+```
+
+
+```{r}
+#| echo: false
+
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+bayes_table |>
+  # scale likelihood for plotting only
+  mutate(likelihood = likelihood / sum(likelihood)) |> 
+  select(theta, prior, likelihood, posterior) |>
+  pivot_longer(!theta,
+               names_to = "source",
+               values_to = "probability") |>
+  mutate(source = fct_relevel(source, "prior", "likelihood", "posterior")) |>
+  ggplot(aes(x = theta,
+             y = probability,
+             col = source)) +
+  geom_line(aes(linetype = source), linewidth = 1) +
+  scale_color_manual(values = bayes_col) +
+  scale_linetype_manual(values = bayes_lty) +
+  theme_bw() +
+  # remove y-axis labels
+  theme(axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+
+
+### Continuous theta: Posterior predictive distribution (after observing large sample)
+
+```{r}
+n = 35
+
+n_sim = 10000
+
+theta_sim = sample(theta, n_sim, replace = TRUE, prob = posterior)
+
+y_sim = rbinom(n_sim, n, theta_sim)
+
+sim = data.frame(theta_sim, y_sim)
+
+sim |> head(10) |> kbl() |> kable_styling()
+```
+
+```{r}
+quantile(y_sim, c(0.025, 0.975))
+
+```
+
+
+
+```{r}
+#| echo: false
+
+
+sim |>
+  count(y_sim, name = "freq") |>
+  mutate(rel_freq = freq / sum(freq)) |>
+  ggplot(aes(x = y_sim,
+           ymax = rel_freq,
+           ymin = 0)) +
+  geom_linerange(col = "#CC79A7") +
+  labs(y = "p(y)",
+       x = "y") +
+  theme_bw()
+```
+
+
+
+### Sleep hours: Prior distribution
+
+98% prior credible interval for mean sleep hours
+
+```{r}
+qnorm(c(0.01, 0.99), 7.5, 0.5)
+```
+
+```{r}
+#| label: fig-sleep-hours-prior
+#| echo: false
+#| fig-cap: "@exm-sleep-predict: Prior distribution of mean hours of sleep per night"
+
+theta = seq(6.0, 9.0, 0.01)
+
+# prior
+prior = dnorm(theta, 7.5, 0.5)
+prior = prior / sum(prior)
+
+
+data.frame(theta, prior) |>
+  ggplot(aes(x = theta,
+             y = prior)) +
+  geom_line(linewidth = 1,
+            color = bayes_col["prior"]) +
+  theme_bw() +
+  # remove y-axis labels
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+
+
+### Sleep hours: Prior predictive distribution
+
+1. Simulate mean sleep hours $\theta$ from Normal(7.5, 0.5) prior distribution
+1. Given $\theta$, simulate sleep hours for a single student $y$ from Normal($\theta$, 1.5) distribution
+1. Repeat many times to get many $(\theta, y)$ pairs.
+1. **Summarize the simulated $y$ values to approximate the prior predictive distribution of sleep hours**
+
+```{r}
+n_rep = 10000
+
+# simulate theta from prior distribution
+theta_sim = rnorm(n_rep, 7.5, 0.5)
+
+# simulate y from Normal(theta, sigma) distribution
+sigma = 1.5
+y_sim = rnorm(n_rep, theta, sigma)
+
+# 95% prior prediction interval
+quantile(y_sim, c(0.025, 0.975))
+```
+
+
+
+```{r}
+#| label: fig-sleep-hours-prior-predict
+#| echo: false
+#| fig-cap: "@exm-sleep-predict: Prior predictive distribution of sleep hours"
+
+
+hist(y_sim, xlab = "Sleep hours (y)", breaks = 100)
+abline(v = quantile(y_sim, c(0.025, 0.975)), col = "#CC79A7")
+
+
+```
+
+
+
+
+
+### Sleep hours: Posterior distribution
+
+In principle, the posterior distribution of $\theta$ given the observed sample (6.8, 7.2) can be found via the following.
+
+1. Simulate $\theta$ from the Normal(7.5, 0.5) prior distribution
+1. Given $\theta$, simulate a sample of size 2 from a $N(\theta, 1.5)$ distribution (rounded to the nearest minute.)
+1. If the simulated sample is (6.8, 7.2) keep the repetition; otherwise discard it
+1. **Repeat the process until enough non-discarded repetitions are obtained --- all corresponding to samples with (6.8, 7.2).**
+**Summarize the simulated $\mu$ values to approximate the posterior distribution.**
+
+However, the likelihood of producing a sample that matches the observed data is essentially 0, simply because there are so many possible samples (even if we round values to one decimal point and only discard samples for which the sample mean is not 7.0.)
+
+```{r}
+n_rep = 10
+
+data.frame(rep = 1:n_rep,
+       theta = rnorm(n_rep, 7.5, 0.5)) |>
+  mutate(samples = map(rep, ~sort(round(rnorm(2, theta, sigma), 1)))) |>
+  kbl(align = 'r', digits = 1) |>
+  kable_styling()
+```
+
+
+
+```{r}
+#| label: fig-sleep-hours-posterior
+#| echo: false
+#| fig-cap: "@exm-sleep-predict: Posterior distribution of mean hours of sleep per night"
+
+theta = seq(6.0, 9.0, 0.01)
+
+# posterior
+posterior = dnorm(theta, 7.4, 0.4)
+posterior = posterior / sum(posterior)
+
+
+data.frame(theta, prior, posterior) |>
+  pivot_longer(!theta,
+               names_to = "source",
+               values_to = "probability") |>
+  mutate(source = fct_relevel(source, "prior", "posterior")) |>
+  ggplot(aes(x = theta,
+             y = probability,
+             col = source)) +
+  geom_line(aes(linetype = source), linewidth = 1) +
+  scale_color_manual(values = bayes_col[c("prior", "posterior")]) +
+  scale_linetype_manual(values = bayes_lty[c("prior", "posterior")]) +
+  theme_bw() +
+  # remove y-axis labels
+  theme(axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
+```
+
+98% posterior credible interval for mean sleep hours
+
+```{r}
+qnorm(c(0.01, 0.99), 7.4, 0.4)
+```
+
+
+
+### Sleep hours: Posterior predictive distribution
+
+
+1. Simulate mean sleep hours $\theta$ from Normal(7.4, 0.4) *posterior* distribution
+1. Given $\theta$, simulate sleep hours for a single student $y$ from Normal($\theta$, 1.5) distribution
+1. Repeat many times to get many $(\theta, y)$ pairs.
+1. **Summarize the simulated $y$ values to approximate the *posterior* predictive distribution of sleep hours**
+
+```{r}
+n_rep = 10000
+
+# simulate theta from posterior distribution
+theta_sim = rnorm(n_rep, 7.4, 0.4)
+
+# simulate y from Normal(theta, sigma) distribution
+sigma = 1.5
+y_sim = rnorm(n_rep, theta, sigma)
+
+# 95% posterior prediction interval
+quantile(y_sim, c(0.025, 0.975))
+```
+
+
+```{r}
+#| label: fig-sleep-hours-posterior-predict
+#| echo: false
+#| fig-cap: "@exm-sleep-predict: Posterior predictive distribution of sleep hours"
+
+
+hist(y_sim, xlab = "Sleep hours (y)", breaks = 100)
+abline(v = quantile(y_sim, c(0.025, 0.975)), col = "#CC79A7")
+
+
+
+```
+
+
+
+
+
+
+
+### Sleep hours: Posterior predictive distribution after observing large sample
+
+
+1. Simulate mean sleep hours $\theta$ from Normal(7.0, 0.001) *posterior* distribution
+1. Given $\theta$, simulate sleep hours for a single student $y$ from Normal($\theta$, 1.5) distribution
+1. Repeat many times to get many $(\theta, y)$ pairs.
+1. **Summarize the simulated $y$ values to approximate the *posterior* predictive distribution of sleep hours**
+
+
+```{r}
+n_rep = 10000
+
+# simulate theta from posterior distribution
+theta_sim = rnorm(n_rep, 7.0, 0.001)
+
+# simulate y from Normal(theta, sigma) distribution
+sigma = 1.5
+y_sim = rnorm(n_rep, theta_sim, sigma)
+
+# 95% posterior prediction interval
+quantile(y_sim, c(0.025, 0.975))
+
+# Compare to Normal(7.0, 1.5)
+qnorm(c(0.025, 0.975), 7.0, 1.5)
+```
+
+
+```{r}
+#| label: fig-sleep-hours-posterior-predict-large-sample
+#| echo: false
+#| fig-cap: "@exm-sleep-predict: Posterior predictive distribution of sleep hours (after observing large sample)"
+
+
+hist(y_sim, xlab = "Sleep hours (y)",
+     freq = FALSE, breaks = 100)
+abline(v = quantile(y_sim, c(0.025, 0.975)), col = "#CC79A7")
+# add Normal curve
+lines(seq(1, 13, 0.01), dnorm(seq(1, 13, 0.01), 7.0, 1.5), col = "#CC79A7", lwd = 2)
+
+
+```

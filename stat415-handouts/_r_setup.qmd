@@ -1,0 +1,32 @@
+```{r}
+#| include: false
+#| warning: false
+
+library(tidyverse)
+library(janitor)
+library(kableExtra)
+library(viridis)
+library(scales)
+
+bayes_col = c("#56B4E9", "#E69F00", "#009E73", "#CC79A7", "#CC79A7")
+names(bayes_col) = c("prior", "likelihood", "posterior", "prior_predict", "posterior_predict")
+
+bayes_lty = c("dashed", "dotted", "solid")
+names(bayes_lty) = c("prior", "likelihood", "posterior")
+
+set.seed(21234)
+```
+
+
+```{r}
+#| eval: false
+#| include: false
+#| warning: false
+
+options(ggplot2.continuous.colour = "viridis")
+
+cb_palette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+  
+options(ggplot2.discrete.colour = cb_palette,
+        ggplot2.discrete.fill = cb_palette)
+```

@@ -1,0 +1,260 @@
+# Comparing Bayesian and Frequentist Analysis
+
+{{< include _r_setup.qmd >}}
+
+{{< include _python_setup.qmd >}}
+
+
+The most widely used elements of “traditional” frequentist inference are confidence intervals and hypothesis tests (a.k.a, null hypothesis significance tests).
+The numerical results of Bayesian and frequentist analysis are often similar.
+However, the interpretations are very different.
+
+
+::: {#exm-read-book-freq-interval}
+Recall @exm-read-book-data which concerned $\theta$, the population proportion of American adults who have read a book in the last year.
+Recall the actual study data in which 75% of the 1502 American adults surveyed said they read a book in the last year.
+
+We'll compare our Bayesian analysis in @exm-read-book-data to a frequentist analysis.
+:::
+
+1. Compute a 98% frequentist confidence interval for $\theta$.
+\
+\
+\
+\
+\
+    
+1. Write a clearly worded sentence reporting the confidence interval in context.
+\
+\
+\
+\
+\
+
+1. Explain what "98% confidence" means.
+\
+\
+\
+\
+\
+ 
+
+
+1. Compare the *numerical results* of the Bayesian and frequentist analysis.
+Are they similar or different?
+\
+\
+\
+\
+\
+
+1. How does the *interpretation* of these results differ between the two approaches?
+\
+\
+\
+\
+\
+
+1. From a frequentist perspective, which value, 0.73 or 0.75, is more plausible for $\theta$, rounded to two decimal places?
+Explain.
+\
+\
+\
+\
+\
+
+1. From a Bayesian perspective, which value, 0.73 or 0.75, is more plausible for $\theta$, rounded to two decimal places?
+Explain.
+\
+\
+\
+\
+\
+
+::: {#exm-read-book-freq-test}
+Continuing @exm-read-book-freq-interval.
+Have more than 70% of Americans read a book in the last year?
+We'll now compare a Bayesian analysis to a frequentist (null) hypothesis (significance) test.
+
+Recall the actual study data in which 75% of the 1502 American adults surveyed said they read a book in the last year.
+:::
+
+1. Conduct an appropriate hypothesis test.
+\
+\
+\
+\
+\
+    
+1. Write a clearly worded sentence reporting the conclusion of the hypothesis test in context.
+\
+\
+\
+\
+\
+    
+1. Write a clearly worded sentence interpreting the p-value in context.
+\
+\
+\
+\
+\
+    
+1. Now back to the Bayesian analysis of @exm-read-book-data.
+Compute the posterior probability that $\theta$ is less than or equal to 0.70.
+\
+\
+\
+\
+\
+    
+1. Compare the *numerical values* of the posterior probability and the p-value.
+Are they similar or different?
+\
+\
+\
+\
+\
+    
+1. How does the *interpretation* of these results differ between the two approaches?
+\
+\
+\
+\
+\
+
+
+
+
+
+In a Bayesian approach
+
+- Parameters are random variables and have distributions.
+- Observed data are treated as fixed, not random.
+- All inference is based on the posterior distribution of parameters which quantifies our uncertainty about the parameters.
+- The posterior distribution quantifies our uncertainty in the parameters, after observing the sample data.
+- The posterior (or prior) distribution can be used to make probability statements about parameters.
+- For example, "95% credible" quantifies our assessment that the parameter is 19 times more likely/plausible to lie inside the credible interval than outside.
+(Roughly, we'd be willing to bet at 19-to-1 odds on whether $\theta$ lies inside the interval.)
+
+
+In a frequentist approach
+
+- Parameters are treated as fixed (not random), but unknown numbers
+- Data are treated as random
+- All inference is based on the sampling distribution of the data which quantifies how the data behaves over many hypothetical samples.
+- For example, "95% confidence" is confidence in the procedure: confidence intervals vary from sample-to-sample; over many samples 95% of confidence intervals contain the parameter being estimated.
+- p-values are confusing
+
+
+
+::: {#exm-temp-freq-interval}
+Recall @exm-temp-data in which we assumed body temperatures (degrees Fahrenheit) of healthy adults follow a Normal distribution with unknown mean $\theta$ and known standard deviation $\sigma=1$, and our goal was to estimate $\theta$, the population mean healthy human body temperature.
+
+We performed a Bayesian analysis based on a sample of 208 healthy adults with a sample mean body temperature of 97.7 degrees F.
+:::
+
+
+
+
+1. Compute a 98% frequentist confidence interval for $\theta$.
+\
+\
+\
+\
+\
+    
+1. Write a clearly worded sentence reporting the confidence interval in context.
+\
+\
+\
+\
+\
+
+
+1. Compare the *numerical results* of the Bayesian and frequentist analysis.
+Are they similar or different?
+\
+\
+\
+\
+\
+
+1. How does the *interpretation* of these results differ between the two approaches?
+\
+\
+\
+\
+\
+
+1. From a frequentist perspective, which value, 97.6 or 97.7, is more plausible for $\theta$, rounded to one decimal place?
+Explain.
+\
+\
+\
+\
+\
+
+1. From a Bayesian perspective, which value, 97.6 or 97.7, is more plausible for $\theta$, rounded to one decimal place?
+Explain.
+\
+\
+\
+\
+\
+
+
+
+::: {#exm-temp-freq-test}
+Continuing @exm-temp-freq-interval.
+Is population mean healthy human body temperature less than 98.6 degrees Fahrenheit?
+We'll now compare a Bayesian analysis to a frequentist (null) hypothesis (significance) test.
+:::
+
+1. Conduct an appropriate hypothesis test.
+\
+\
+\
+\
+\
+    
+1. Write a clearly worded sentence reporting the conclusion of the hypothesis test in context.
+\
+\
+\
+\
+\
+    
+1. Write a clearly worded sentence interpreting the p-value in context.
+\
+\
+\
+\
+\
+    
+1. Now back to the Bayesian analysis of @exm-temp-data.
+Compute the posterior probability that $\theta$ is greater than or equal to 98.6.
+\
+\
+\
+\
+\
+    
+1. Compare the *numerical values* of the posterior probability and the p-value.
+Are they similar or different?
+\
+\
+\
+\
+\
+    
+1. How does the *interpretation* of these results differ between the two approaches?
+\
+\
+\
+\
+\
+
+
+
+

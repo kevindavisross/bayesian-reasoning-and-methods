@@ -1,0 +1,471 @@
+# Ideas of Bayesian Reasoning
+
+{{< include _r_setup.qmd >}}
+
+{{< include _python_setup.qmd >}}
+
+
+A [recent survey](https://www.discovermagazine.com/health/dry-january-can-help-you-form-healthy-habits) claims that in 2022, 35% of U.S. adults participated in "Dry January" (abstaining from alcohol for the month).
+Suppose we're interested in **the proportion of all current Cal Poly students who will complete a Dry January in 2023**.
+We'll refer to this proportion as the "population proportion" and denote it as $\theta$ (the Greek letter "theta").
+
+Before collecting any data, consider: What do you think is the most plausible value of $\theta$?
+What range of values would account for most, say 98%, of your plausibility?
+
+::: {#exm-dry-january-prior}
+
+We'll start by considering only the values 0.1, 0.2, 0.3, 0.4, 0.5, 0.6 as initially plausible for the population proportion $\theta$.
+Suppose that before collecting sample data, our *prior* assessment is that:
+
+- 0.2 is four times more plausible than 0.1
+- 0.3 is two times more plausible than 0.2
+- 0.3 and 0.4 are equally plausible
+- 0.2 and 0.5 are equally plausible
+- 0.1 and 0.6 are equally plausible
+:::
+
+
+1. Construct a table to represent this *prior distribution* of $\theta$ and sketch a plot of it.
+What does this distribution represent?
+\
+\
+\
+\
+\
+
+1. If we simulate many values of $\theta$ according to the above distribution, on what proportion of repetitions would we expect to see a value of 0.1?
+If we conduct 260000 repetitions of the simulation, on how many repetitions would we expect to see a value of 0.1?
+Repeat for the other plausible values to make a table of what we would expect the simulation results to look like.
+(For now, we're ignoring simulation variability; just consider the values we would expect.)
+\
+\
+\
+\
+\
+
+::: {#exm-dry-january-posterior}
+
+The "prior" describes our initial assessment of plausibility of possible values of the population proportion $\theta$ prior to observing data.
+Now suppose we observe a sample of $n=30$ students in which $y=9$ students complete Dry January.
+We want to update our assessment of the population proportion in light of the observed data.
+
+In a previous example, we used a simulation to arrive at our "posterior" plausibility.
+Now we'll look a little more closely at how the simulation works.
+Remember that to obtain the posterior from the simulation results, we conditioned on the observed data.
+:::
+
+1. Suppose that the actual population proportion is $\theta=0.1$.
+How could we use simulation to determine the likelihood of observing $y=9$ students who complete Dry January in a sample of $n=30$ students?
+How could we use math?
+(Hint: what is the probability distribution of the number of "successes" in a sample of size 30 when $\theta=0.1$?)
+\
+\
+\
+\
+\
+    
+
+
+1. Recall the simulation with 260000 repetitions that we started above.
+Consider the 10000 repetitions in which $\theta$ is 0.1.
+Suppose that for each of these 10000 repetitions we simulate the number of students in a sample of $n=30$ who complete Dry January. 
+On what proportion of these repetitions would we expect to see a sample count of $y=9$?
+On how many of these 10000 repetitions would we expect to see a sample count of $y=9$?
+\
+\
+\
+\
+\
+
+1. Repeat the previous parts for each of the possible values of $\theta$: $0.1, \ldots, 0.6$.
+Add two columns to the table: one column for the "likelihood" of observing a count of $y=9$ in a sample of size $n=30$ for each value of $\theta$, and one column for the expected number of repetitions in the simulation which would result in the count of $y=9$ for each value of $\theta$.
+\
+\
+\
+\
+\
+
+1. Consider just the repetitions that resulted in a simulated sample count of $y=9$.
+What proportion of these repetitions correspond to a $\theta$ value of 0.1?
+Continue for the other possible values of $\theta$ to construct the *posterior distribution*, and sketch a plot of it.
+\
+\
+\
+\
+\
+
+1. After observing a sample of $n=30$ Cal Poly students with a sample proportion of $y/n=9/30=0.3$ who complete Dry January, what can we say about the plausibility of possible values of the *population* proportion $\theta$?
+How has our assessment of plausibility changed from prior to observing the sample data?
+Which values are more plausible in our posterior assessment than they were in the prior?
+Less plausible?
+Does this make sense?
+\
+\
+\
+\
+\
+
+
+::: {#exm-dry-january-proportional}
+
+The posterior distribution is a synthesis between the prior distribution and the observed data.
+Now we'll investigate more closely how the prior and the data combine to produce the posterior distribution.
+
+:::
+
+1. Prior to observing data, how many times more plausible is a value of 0.3 than 0.2 for the population proportion $\theta$?
+\
+\
+\
+\
+\
+
+1. Recall that we observed a sample count of $y=9$ in a sample of size $n=30$.
+How many times more likely is a count of $y=9$ in a sample of size $n=30$ if the population proportion $\theta$ is 0.3 than if it is 0.2?
+\
+\
+\
+\
+\
+
+1. After observing data, how many times more plausible is 0.3 than 0.2 for the population proportion $\theta$?
+\
+\
+\
+\
+\
+
+1. How are the values from the three previous parts related?
+\
+\
+\
+\
+\
+
+1. Suggest a general principle for finding the posterior distribution of $\theta$.
+Think in terms of a spreadsheet; what are the rows?
+What are the necessary columns and how would you fill them in?
+\
+\
+\
+\
+\
+
+
+::: {#exm-dry-january-grid}
+
+In the previous examples we only considered the values 0.1, 0.2, ..., 0.6 as plausible.
+Now we'll consider a more realistic scenario.
+:::
+
+    
+1. What is the problem with considering only the values 0.1, 0.2, ..., 0.6 as plausible?
+How could we resolve this issue?
+\
+\
+\
+\
+\
+
+1. Suppose we have a prior distribution that assigns initial relative plausibility to a fine grid of possible values of the population proportion $\theta$, e.g., 0, 0.0001, 0.0002, 0.0003, ..., 0.9999, 1.
+We then observe a sample count of 9 in a sample of size 30.
+Explain the process we would use to construct a table like the one in the previous example to find the posterior distribution of the population proportion $\theta$.
+\
+\
+\
+\
+\
+
+1. What are some questions of interest regarding $\theta$?
+How could you use the posterior distribution to answer them?
+That is, once you have the posterior distribution, what would you do with it?
+(See @fig-dry-january-grid-posterior for a plot of a posterior distribution.
+The shape of this posterior distribution roughly follows a Normal distribution with mean 0.32 and standard deviation 0.10.)
+\
+\
+\
+\
+\
+
+## Notes
+
+
+
+### Prior distribution
+
+```{r}
+# possible values of theta
+theta = seq(0.1, 0.6, by = 0.1)
+
+# prior plausibility
+prior_units = c(1, 4, 8, 8, 4, 1)
+
+# rescale to sum to 1
+prior = prior_units / sum(prior_units)
+
+bayes_table = data.frame(theta, prior_units, prior)
+
+# expected simulation
+n_reps = sum(prior_units) * 10000
+
+bayes_table = bayes_table |>
+  mutate(prior_reps = prior * n_reps)
+
+bayes_table |>
+  adorn_totals("row") |>
+  kbl(col.names = c("Population proportion",
+                    "Prior \"Units\" ",
+                    "Prior",
+                    "Number of reps"),
+      digits = 4) |>
+  kable_styling()
+```
+
+```{r}
+#| label: fig-dry-january-prior
+#| fig-cap: "Prior distribution"
+
+# Plot of prior distribution
+
+bayes_table |>
+  ggplot(aes(x = theta,
+             y = prior)) +
+  geom_point(col = bayes_col["prior"], size = 3) +
+  scale_x_continuous(breaks = theta) +
+  labs(y = "Prior plausibility") +
+  theme_bw()
+```
+
+
+
+### Likelihood
+
+Distribution of sample count $y$ for each possible value of $\theta$.
+Evaluate the probability of observing $y=9$ for each value of $\theta$ to obtain the likelihood (from a Binomial($n=30$, $\theta$) distribution).
+
+```{r}
+#| label: fig-dry-january-likelihood
+#| layout-ncol: 2
+#| fig-cap:
+#|   - "Distribution of y for each theta (y = 9 is highlighted)"
+#|   - "Likelihood of observing y = 9 for each theta"
+
+# observed data
+n = 30
+y_obs = 9
+
+# distribution of y for each value of theta
+sampling_distribution_table = expand_grid(theta,
+                                          y = 0:n) |>
+  mutate(prob = dbinom(y, n, theta))
+
+sampling_distribution_table |>
+  mutate(theta = factor(theta)) |>
+  ggplot(aes(x = y,
+             y = prob,
+             col = theta)) +
+  geom_point() +
+  geom_line(linetype = "dotted") +
+  scale_color_viridis_d(option = "magma") +
+  
+  # highlight observed y
+  annotate("rect", xmin = y_obs - 0.1, xmax = y_obs + 0.1,
+           ymin = 0, ymax = max(sampling_distribution_table["prob"]), alpha = 0.5,
+           color = bayes_col["likelihood"],
+           fill = bayes_col["likelihood"]) +
+  labs(y = "Probability of y given theta") +
+  theme_bw()
+
+# evaluate likelihood of y = 9 for each theta
+bayes_table = bayes_table |>
+  mutate(likelihood = dbinom(y_obs, n, theta))
+
+# plot the likelihood
+bayes_table |>
+  ggplot(aes(x = theta,
+             y = likelihood)) +
+  geom_point(col = bayes_col["likelihood"], size = 3) +
+  scale_x_continuous(breaks = theta) + 
+  labs(y = paste("Likelihood of y = ", y_obs, " given theta")) +
+  theme_bw()
+  
+```
+
+
+### Posterior distribution
+
+
+```{r}
+bayes_table = bayes_table |>
+  mutate(post_reps = round(likelihood * prior_reps, 0),
+         posterior = post_reps / sum(post_reps))
+
+bayes_table |>
+  adorn_totals("row") |>
+  kbl(
+    align = "r",
+    col.names = c("theta",
+                  "Prior \"Units\" ",
+                  "Prior",
+                  "Number of reps",
+                  paste("Likelihood of y = ", y_obs),
+                  paste("Reps with y = ", y_obs),
+                  "Posterior"),
+    digits = 4) |>
+  kable_styling()
+
+    
+```
+
+
+```{r}
+#| label: fig-dry-january-posterior
+#| fig-cap: "Comparison of prior distribution, (scaled) likelihood, and posterior distribution"
+
+
+bayes_table |>
+  # scale likelihood for plotting only
+  mutate(likelihood = likelihood / sum(likelihood)) |>
+  select(theta, prior, likelihood, posterior) |>
+  pivot_longer(!theta,
+               names_to = "source",
+               values_to = "prob") |>
+  mutate(source = fct_relevel(source, "prior", "likelihood", "posterior")) |>
+  ggplot(aes(x = theta,
+             y = prob,
+             col = source)) +
+  geom_point(size = 3) +
+  geom_line(aes(linetype = source)) +
+  scale_x_continuous(breaks = theta) +
+  scale_color_manual(values = bayes_col) +
+  scale_linetype_manual(values = bayes_lty) +
+  labs(y = "Plausibility") +
+  theme_bw()
+```
+
+
+
+### Posterior is proportional to the product of prior and likelihood 
+
+These are the same calculations as before, just streamlined a little.
+
+```{r}
+# possible values of theta
+theta = seq(0.1, 0.6, by = 0.1)
+
+# prior distribution
+prior_units = c(1, 4, 8, 8, 4, 1)
+prior = prior_units / sum(prior_units)
+
+# observed data
+n = 30
+y_obs = 9
+
+# likelihood of observed data for each theta
+likelihood = dbinom(y_obs, n, theta)
+
+# posterior is proportional to product of prior and likelihood
+product = prior * likelihood
+posterior = product / sum(product)
+
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+bayes_table |>
+  adorn_totals("row") |>
+  kbl(digits = 4) |>
+  kable_styling()
+```
+
+### Grid approximation
+
+This is just one possible prior, that matches up with our prior from before at $\theta =$ 0.1, ..., 0.6.
+(This particular prior follows the shape of a Normal distribution with mean 0.35 and standard deviation 0.12, but just think of this shape as "smoothly connecting the dots" in our original prior.)
+
+```{r}
+#| label: fig-dry-january-grid-prior
+#| fig-cap: "A smooth prior"
+#| echo: false
+
+mu = 0.35
+sigma = 0.12
+
+theta0 = (0:10) * 0.1
+prior0 = dnorm(theta0, mu, sigma)
+
+theta1 = (0:100) * 0.01
+prior1 = dnorm(theta1, mu, sigma)
+
+
+plot(theta1, prior1,
+     type = "l", col = bayes_col["prior"], lty = 1, lwd = 3,
+     xaxt = "n",
+     yaxt = "n", ylab = "Prior plausibility", xlab = "theta")
+segments(x0 = theta1, y0 = rep(0, length(theta1)), x1 = theta1, y1 = prior1,
+         lwd = (1 + 2 * (((theta1 * 10) %% 1) == 0)), col = bayes_col["prior"])
+axis(1, at = (0:10) * 0.1, labels = (0:10) * 0.1)
+
+```
+
+The "spreadsheet" calculation is the same as before; there are just more rows in the spreadsheet.
+(And we define prior plausibility for all possible values of $\theta$.)
+
+```{r}
+# possible values of theta
+theta = seq(0, 1, by = 0.0001)
+
+# prior distribution
+prior_units = dnorm(theta, 0.35, 0.12)
+prior = prior_units / sum(prior_units)
+
+# observed data
+n = 30
+y_obs = 9
+
+# likelihood of observed data for each theta
+likelihood = dbinom(y_obs, n, theta)
+
+# posterior is proportional to product of prior and likelihood
+product = prior * likelihood
+posterior = product / sum(product)
+
+bayes_table = data.frame(theta,
+                         prior,
+                         likelihood,
+                         product,
+                         posterior)
+
+bayes_table |>
+  # select a few rows to display
+  slice(seq(2001, 4001, 250)) |> 
+  kbl(digits = 8) |>
+  kable_styling()
+```
+
+
+```{r}
+#| label: fig-dry-january-grid-posterior
+#| fig-cap: "Comparison of prior distribution, (scaled) likelihood, and posterior distribution"
+
+
+bayes_table |>
+  # scale likelihood for plotting only
+  mutate(likelihood = likelihood / sum(likelihood)) |> 
+  select(theta, prior, likelihood, posterior) |>
+  pivot_longer(!theta,
+               names_to = "source",
+               values_to = "prob") |>
+  mutate(source = fct_relevel(source, "prior", "likelihood", "posterior")) |>
+  ggplot(aes(x = theta,
+             y = prob,
+             col = source)) +
+  geom_line(aes(linetype = source)) +
+  scale_color_manual(values = bayes_col) +
+  scale_linetype_manual(values = bayes_lty) +
+  scale_x_continuous(breaks = seq(0, 1, 0.1)) +
+  theme_bw()
+```
+
